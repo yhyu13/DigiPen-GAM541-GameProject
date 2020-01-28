@@ -23,6 +23,8 @@ namespace gswy {
 	}
 	
 	Engine::~Engine() {
+		// Code review (Yohan 01/21/2019) : added deallocation of dynamically allocated member.
+		delete m_window;
 	}
 
 	void Engine::Run() {

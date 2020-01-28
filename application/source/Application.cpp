@@ -20,7 +20,7 @@ public:
 	Application() {
 	}
 
-	~Application() {
+	virtual ~Application() {
 	}
 
 protected:

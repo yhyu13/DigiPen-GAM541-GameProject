@@ -24,15 +24,13 @@ namespace gswy {
 	public:
 
 		Engine();
-		~Engine();
+		// Code review (Yohan 01/26/2019) : Make destructor virtual, so that derived class could call it upon destruction.
+		virtual ~Engine();
+		// Code review (Yohan 01/26/2019) : Make Run() virtual, so that derived class could override it.
+		virtual void Run();
 
-		void Run();
-
+	// Code review (Yohan 01/26/2019) : Make private members to be protected instead, so that derived class could access them
 	protected:
-
-	private:
-
-	private:
 		Window* m_window;
 		bool m_isRunning = true;
 	};
