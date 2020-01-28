@@ -17,8 +17,8 @@ IncludeDir["glm"]      = "engine/vendors/glm"
 IncludeDir["jsoncpp"]  = "engine/vendors/jsoncpp/include"
 
 project "engine"
-  location "engine"
-	kind "StaticLib"
+	location "engine"
+	kind "SharedLib"
 	language "C++"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -71,17 +71,25 @@ project "engine"
 
 		defines
 		{
+			"ENGINE_BUILD_DLL",
 			"GLFW_INCLUDE_NONE"
 		}
 
+		postbuildcommands
+		{
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/application/\"")
+		}
+
 	filter "configurations:Debug"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
+		buildoptions "/MD"
 		optimize "On"
 
 project "application"
-  location "application"
+	location "application"
 	kind "ConsoleApp"
 	language "C++"
 
@@ -117,7 +125,9 @@ project "application"
 		}
 
 	filter "configurations:Debug"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
+		buildoptions "/MD"
 		optimize "On"

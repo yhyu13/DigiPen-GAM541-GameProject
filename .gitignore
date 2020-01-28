@@ -4,3 +4,10 @@
 
 /.vs/ProjectSettings.json
 /.vs
+
+/bin/
+/bin-intermediate/
+/engine/vendors/glm/glm/out/build/x64-Debug/.cmake/api/v1/reply/index-2020-01-26T15-02-42-0978.json
+*.user
+*.filters
+*.vcxproj
