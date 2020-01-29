@@ -11,3 +11,4 @@
 *.user
 *.filters
 *.vcxproj
+/game-project.sln

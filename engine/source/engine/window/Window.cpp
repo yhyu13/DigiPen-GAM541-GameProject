@@ -64,8 +64,6 @@ namespace gswy {
 		success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ASSERT(success, "Could not initialize Glad!");
 
-		// Code review (Yohan 01/26/2019) : Where should be create callbacks? In the part or in the application part? 
-		//									If in the application part, then we need to add <glfw> into the engine export.
 		// TODO: registering callbacks for keyboard, mouse and other inputs in your application
 	}
 
