@@ -21,8 +21,10 @@ namespace gswy {
 		FramerateController will always have only one instance throughout the execution of the application.
 	*/
 	FramerateController* FramerateController::GetInstance(unsigned int maxFrameRate) {
-		static FramerateController* frameRateController = new FramerateController(maxFrameRate);
-		return frameRateController;
+		// Code reivew (Yohan) : using static varibale instead of static pointer
+		static FramerateController frameRateController = FramerateController(maxFrameRate);
+		//static FramerateController* frameRateController = new FramerateController(maxFrameRate);
+		return &frameRateController;
 	}
 
 	FramerateController::FramerateController(unsigned int maxFrameRate) : m_maxFramerate(maxFrameRate), m_tickStart(0), m_tickEnd(0), m_ticksPerFrame(0.0f), m_frameTime(0.0f) {
@@ -30,8 +32,8 @@ namespace gswy {
 		if (0 >= m_maxFramerate) {
 			m_maxFramerate = UINT_MAX;
 		}
-
-		m_ticksPerFrame = 1000 / m_maxFramerate;
+		// Code reivew (Yohan) : type casting from int to float
+		m_ticksPerFrame = 1000.0f / m_maxFramerate;
 	}
 
 	FramerateController::~FramerateController() {

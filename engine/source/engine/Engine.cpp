@@ -31,13 +31,18 @@ namespace gswy {
 		FramerateController* rateController = FramerateController::GetInstance(60);
 		while (m_isRunning) {
 			rateController->FrameStart();
-			std::cout << "App is running..." << std::endl;
-			std::cout << "Frame time: " << rateController->GetFrameTime();
+			// Code review (Yohan) : using debug print instead of plain std cout
+			DEBUG_PRINT("App is running...");
+			DEBUG_PRINT("Frame time: " << rateController->GetFrameTime());
+			//std::cout << "App is running..." << std::endl;
+			//std::cout << "Frame time: " << rateController->GetFrameTime();
 			m_window->Update();
 			m_isRunning = !m_window->ShouldExit();
 			rateController->FrameEnd();
 		}
-		delete rateController;
+		// Code review (Yohan) : FramerateController::GetInstance() retuns a static in data segment instead of a pointer on the heap,
+		//						 we don't have to delete it here
+		// delete rateController;
 	}
 
 }

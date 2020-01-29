@@ -23,3 +23,12 @@ Creation date	: 01/26/2020
 #endif
 
 #define ASSERT(x, ...) { if(!x) { std::cout << "Assertion failed: " << __VA_ARGS__; __debugbreak(); } }
+
+#ifdef _DEBUG 
+#define DEBUG_PRINT(x) std::cout << x << std::endl
+#else
+#define DEBUG_PRINT(x)
+#endif // DEBUG
+
+#define PRINT(x) std::cout << x << std::endl
+
