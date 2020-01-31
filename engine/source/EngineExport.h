@@ -18,3 +18,8 @@ Creation date: 01/26/2020
 
 ///// entry point /////
 #include "engine/Main.h"
+
+///// rendering /////
+#include "engine/renderer/Renderer2D.h"
+#include "engine/renderer/Shader.h"
+#include "engine/renderer/OrthographicCameraController.h"

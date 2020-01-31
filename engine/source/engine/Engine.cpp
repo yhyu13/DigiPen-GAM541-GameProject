@@ -13,6 +13,7 @@ Creation date: 01/26/2020
 
 #include "Engine.h"
 #include "engine/window/Window.h"
+#include <glfw3.h>
 
 #include <iostream>
 
@@ -29,12 +30,23 @@ namespace gswy {
 
 	void Engine::Run() {
 	
+		double previousTime = (double)glfwGetTime();
 		while (m_isRunning) {
 			std::cout << "App is running..." << std::endl;
+
+			//Calculate time
+			double currentTime = (double)glfwGetTime();
+			double elapsedTime = currentTime - previousTime;
+			previousTime = currentTime;
+
 			m_window->Update();
+			Update(elapsedTime);
 			m_isRunning = !m_window->ShouldExit();
 		}
 	
 	}
 
+	void Engine::Update(double ts) {
+
+	}
 }

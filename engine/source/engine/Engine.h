@@ -28,6 +28,7 @@ namespace gswy {
 		virtual ~Engine();
 		// Code review (Yohan 01/26/2019) : Make Run() virtual, so that derived class could override it.
 		virtual void Run();
+		virtual void Update(double ts);
 
 	// Code review (Yohan 01/26/2019) : Make private members to be protected instead, so that derived class could access them
 	protected:
