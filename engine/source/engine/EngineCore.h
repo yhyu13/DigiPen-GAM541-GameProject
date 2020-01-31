@@ -22,7 +22,7 @@ Creation date	: 01/26/2020
 	#define ENGINE_API __declspec(dllimport)
 #endif
 
-#define ASSERT(x, ...) { if(!x) { std::cout << "Assertion failed: " << __VA_ARGS__; __debugbreak(); } }
+#define ASSERT(x, ...) { if(x == true) { std::cout << "Assertion failed: " << __VA_ARGS__; __debugbreak(); } }
 
 #ifdef _DEBUG 
 #define DEBUG_PRINT(x) std::cout << x << std::endl

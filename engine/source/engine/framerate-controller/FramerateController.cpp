@@ -53,7 +53,7 @@ namespace gswy {
 		m_frameTime /= 1000; // converting milliseconds to seconds
 	}
 
-	const float& FramerateController::GetFrameTime() const {
+	const double& FramerateController::GetFrameTime() const {
 		return m_frameTime;
 	}
 }
