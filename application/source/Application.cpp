@@ -13,14 +13,35 @@ Creation date: 01/26/2020
 
 #include "EngineExport.h"
 
-class Application : public gswy::Engine {
+using namespace gswy;
+
+class Application : public Engine {
 
 public:
 
 	Application() {
+		auto audioManager = AudioManager::GetInstance();
+		audioManager->Init();
 	}
 
 	virtual ~Application() {
+		auto audioManager = AudioManager::GetInstance();
+		audioManager->Shutdown();
+	}
+
+	virtual void Run() override
+	{
+		auto audioManager = AudioManager::GetInstance();
+		while (m_isRunning) {
+			std::cout << "App is running..." << std::endl;
+
+			static int bgm_channel = audioManager->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
+
+			audioManager->Update(0);
+			m_window->Update();
+
+			m_isRunning = !m_window->ShouldExit();
+		}
 	}
 
 protected:
@@ -28,7 +49,7 @@ protected:
 private:
 };
 
-gswy::Engine* gswy::CreateEngineApplication() {
+Engine* gswy::CreateEngineApplication() {
 	return new Application();
 }
 

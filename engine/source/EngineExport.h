@@ -14,7 +14,10 @@ Creation date: 01/26/2020
 #pragma once
 
 // This file must be imported by game application
+
 #include "engine/Engine.h"
+#include "engine/window/Window.h"
+#include "engine/audio/AudioManager.h"
 
 ///// entry point /////
 #include "engine/Main.h"

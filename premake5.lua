@@ -15,6 +15,27 @@ IncludeDir["glad"]     = "engine/vendors/glad/include"
 IncludeDir["stbi"]     = "engine/vendors/stbi"
 IncludeDir["glm"]      = "engine/vendors/glm"
 IncludeDir["jsoncpp"]  = "engine/vendors/jsoncpp/include"
+IncludeDir["fmod_core"]  = "engine/vendors/fmod/api/core/inc"
+IncludeDir["fmod_bank"]  = "engine/vendors/fmod/api/fsbank/inc"
+IncludeDir["fmod_studio"]  = "engine/vendors/fmod/api/studio/inc"
+
+LibDir = {}
+LibDir["glfw"] = "engine/vendors/glfw"
+LibDir["fmod_core"] = "engine/vendors/fmod/api/core/lib/x64"
+LibDir["fmod_bank"] = "engine/vendors/fmod/api/fsbank/lib/x64"
+LibDir["fmod_studio"] = "engine/vendors/fmod/api/studio/lib/x64"
+
+LibName = {}
+LibName["glfw"] = "glfw3.lib"
+LibName["fmod_core"] = "fmod_vc.lib"
+LibName["fmod_bank"] = "fsbank_vc.lib"
+LibName["fmod_studio"] = "fmodstudio_vc.lib"
+
+DllName = {}
+DllName["fmod_core"] = "fmod.dll"
+DllName["fmod_bank"] = "fsbank.dll"
+DllName["fmod_bank2"] = "libfsbvorbis64.dll"
+DllName["fmod_studio"] = "fmodstudio.dll"
 
 project "engine"
 	location "engine"
@@ -50,18 +71,28 @@ project "engine"
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.stbi}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.jsoncpp}"
+		"%{IncludeDir.jsoncpp}",
+		"%{IncludeDir.fmod_core}",
+		"%{IncludeDir.fmod_bank}",
+		"%{IncludeDir.fmod_studio}"
 	}
 
 	libdirs
 	{
-		"%{prj.name}/vendors/glfw"
+		"%{LibDir.glfw}",
+		"%{LibDir.fmod_core}",
+		"%{LibDir.fmod_bank}",
+		"%{LibDir.fmod_studio}"
 	}
 
 	links
 	{
-		"glfw3.lib",
-		"opengl32.lib"
+		"opengl32.lib",
+		"%{LibName.glfw}",
+		"%{LibName.fmod_core}",
+		"%{LibName.fmod_bank}",
+		"%{LibName.fmod_studio}"
+		
 	}
 
 	filter "system:windows"
@@ -77,7 +108,11 @@ project "engine"
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/application/\"")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/application/\""),
+			("{COPY} $(SolutionDir)%{LibDir.fmod_core}/%{DllName.fmod_core} \"$(SolutionDir)bin/" .. outputdir .. "/application/\""),
+			("{COPY} $(SolutionDir)%{LibDir.fmod_bank}/%{DllName.fmod_bank} \"$(SolutionDir)bin/" .. outputdir .. "/application/\""),
+			("{COPY} $(SolutionDir)%{LibDir.fmod_bank}/%{DllName.fmod_bank2} \"$(SolutionDir)bin/" .. outputdir .. "/application/\""),
+			("{COPY} $(SolutionDir)%{LibDir.fmod_studio}/%{DllName.fmod_studio} \"$(SolutionDir)bin/" .. outputdir .. "/application/\"") 
 		}
 
 	filter "configurations:Debug"
@@ -106,12 +141,21 @@ project "application"
 	{
 		"engine/source",
 		"engine/vendors",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.fmod_core}",
+		"%{IncludeDir.fmod_bank}",
+		"%{IncludeDir.fmod_studio}"
 	}
 
 	links
 	{
 		"engine"
+	}
+	
+
+	postbuildcommands
+	{
+		("{COPY} $(SolutionDir)application/asset \"$(SolutionDir)bin/" .. outputdir .. "/application/asset\"") 
 	}
 
 	filter "system:windows"
