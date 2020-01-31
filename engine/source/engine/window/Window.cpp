@@ -2,13 +2,13 @@
 Copyright (C) 2020 DigiPen Institute of Technology.
 Reproduction or disclosure of this file or its contents without the
 prior written consent of DigiPen Institute of Technology is prohibited.
-Language: c++ 11
-Platform: Windows 10 (X64)
-Project: GAM541
-Filename: Window.cpp
-Purpose: Abstraction for window creation logic.
-Author: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
-Creation date: 01/26/2020
+Language		: C++ 11
+Platform		: Windows 10 (X64)
+Project			: GAM541
+Filename		: Window.cpp
+Purpose			: Abstraction for window creation logic.
+Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
+Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
 #include "engine/window/Window.h"
@@ -64,8 +64,6 @@ namespace gswy {
 		success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ASSERT(success, "Could not initialize Glad!");
 
-		// Code review (Yohan 01/26/2019) : Where should be create callbacks? In the part or in the application part? 
-		//									If in the application part, then we need to add <glfw> into the engine export.
 		// TODO: registering callbacks for keyboard, mouse and other inputs in your application
 	}
 
