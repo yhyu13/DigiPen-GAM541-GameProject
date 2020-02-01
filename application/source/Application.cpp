@@ -24,7 +24,7 @@ public:
 	Application() 
 		: m_CameraController(1280.0f / 720.0f)
 	{
-		m_Texture = gswy::Texture2D::Create("../assets/container.png");
+		m_Texture = gswy::Texture2D::Create("./asset/container.png");
 		gswy::Renderer2D::Init();
 	}
 

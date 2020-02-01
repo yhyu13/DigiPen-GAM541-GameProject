@@ -61,7 +61,7 @@ namespace gswy {
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data->QuadTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
-		s_Data->QuadShader = Shader::Create("../shaders/QuadShader.vs", "../shaders/QuadShader.fs");
+		s_Data->QuadShader = Shader::Create("./asset/shaders/QuadShader.vs", "./asset/shaders/QuadShader.fs");
 		s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetInt("u_Texture", 0);
 	}
