@@ -33,3 +33,8 @@ Creation date	: 01/26/2020
 
 ///// Input system /////
 #include "engine/input/Input.h"
+
+///// rendering /////
+#include "engine/renderer/Renderer2D.h"
+#include "engine/renderer/Shader.h"
+#include "engine/renderer/OrthographicCameraController.h"

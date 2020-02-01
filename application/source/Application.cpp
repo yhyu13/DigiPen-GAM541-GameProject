@@ -12,6 +12,7 @@ Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
 #include "EngineExport.h"
+#include "engine/renderer/Renderer2D.h"
 
 using namespace gswy;
 
@@ -19,14 +20,15 @@ class Application : public Engine {
 
 public:
 
-	Application() {
-		auto audioManager = AudioManager::GetInstance();
-		audioManager->Init();
+
+	Application() 
+		: m_CameraController(1280.0f / 720.0f)
+	{
+		m_Texture = gswy::Texture2D::Create("../assets/container.png");
+		gswy::Renderer2D::Init();
 	}
 
 	virtual ~Application() {
-		auto audioManager = AudioManager::GetInstance();
-		audioManager->Shutdown();
 	}
 
 	virtual void Run() override
@@ -78,9 +80,22 @@ public:
 		}
 	}
 
+	virtual void Update(double ts) {
+		m_CameraController.OnUpdate(ts);
+
+		gswy::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		gswy::RenderCommand::Clear();
+
+		gswy::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		gswy::Renderer2D::DrawQuad(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, m_Texture);
+		gswy::Renderer2D::EndScene();
+	}
+
 protected:
 
 private:
+	gswy::OrthographicCameraController m_CameraController;
+	std::shared_ptr<gswy::Texture2D> m_Texture;
 };
 
 Engine* gswy::CreateEngineApplication() {

@@ -15,6 +15,7 @@ Creation date	: 01/26/2020
 #include "engine/window/Window.h"
 #include "engine/framerate-controller/FramerateController.h"
 #include "engine/input/Input.h"
+#include "engine/audio/AudioManager.h"
 
 #include <iostream>
 #include <glfw3.h>
@@ -24,9 +25,11 @@ namespace gswy {
 
 	Engine::Engine(): m_isRunning(true) {
 		m_window = Window::CreateWindow();
+		AudioManager::GetInstance()->Init();
 	}
 	
 	Engine::~Engine() {
+		AudioManager::GetInstance()->Shutdown();
 		delete m_window;
 	}
 
@@ -68,9 +71,16 @@ namespace gswy {
 			stream1 << "cursor-y: " << input->GetMousePositionY();
 			PRINT(stream1.str());
 
+			Update(rateController->GetFrameTime());
+
 			m_isRunning = !m_window->ShouldExit();
 			rateController->FrameEnd();
 		}
+	}
+
+	void Engine::Update(double ts)
+	{
+
 	}
 
 }

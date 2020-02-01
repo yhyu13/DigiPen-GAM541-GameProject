@@ -26,6 +26,7 @@ namespace gswy {
 		Engine();
 		virtual ~Engine();
 		virtual void Run();
+		virtual void Update(double ts);
 
 	protected:
 		Window* m_window;
