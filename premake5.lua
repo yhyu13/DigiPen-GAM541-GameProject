@@ -141,7 +141,11 @@ project "application"
 	{
 		"engine/source",
 		"engine/vendors",
+		"%{IncludeDir.glfw}",
+		"%{IncludeDir.glad}",
+		"%{IncludeDir.stbi}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.jsoncpp}",
 		"%{IncludeDir.fmod_core}",
 		"%{IncludeDir.fmod_bank}",
 		"%{IncludeDir.fmod_studio}"
