@@ -13,11 +13,20 @@ Creation date	: 01/26/2020
 
 #pragma once
 
-// This file must be imported by game application
+/*
+	 This file must be imported by game application
+*/
+
+
+///// Must be inherited by the client application /////
 #include "engine/Engine.h"
 
-///// entry point /////
+///// Entry point /////
 #include "engine/Main.h"
+
+
+///// Input system /////
+#include "engine/input/Input.h"
 
 ///// rendering /////
 #include "engine/renderer/Renderer2D.h"

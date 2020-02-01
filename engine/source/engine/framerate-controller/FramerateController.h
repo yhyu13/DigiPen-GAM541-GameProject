@@ -30,7 +30,7 @@ namespace gswy {
 		/*
 			Returns the frame-time in seconds
 		*/
-		const float& GetFrameTime() const;
+		const double& GetFrameTime() const;
 
 	private:
 
@@ -39,11 +39,11 @@ namespace gswy {
 	private:
 
 		unsigned int m_maxFramerate;
-		unsigned int m_tickStart;
-		unsigned int m_tickEnd;
+		double m_tickStart;
+		double m_tickEnd;
 
-		float m_ticksPerFrame;
-		float m_frameTime;
+		double m_ticksPerFrame;
+		double m_frameTime;
 
 	};
 
