@@ -21,7 +21,7 @@ namespace gswy {
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 		: m_WindowHandle(windowHandle)
 	{
-		ASSERT(windowHandle, "Window handle is null");
+		ASSERT(windowHandle == nullptr, "Window handle is null");
 	}
 
 	void OpenGLContext::Init()
