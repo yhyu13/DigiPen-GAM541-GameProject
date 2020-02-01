@@ -33,14 +33,12 @@ public:
 
 	virtual void Run() override
 	{
-		
-		FramerateController* rateController = FramerateController::GetInstance(60);
-		Input* input = Input::GetInstance();
+		// TODO : remove audio test code below
 		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
 
+		FramerateController* rateController = FramerateController::GetInstance(60);
+		Input* input = Input::GetInstance();
 		while (m_isRunning) {
-			
-
 			rateController->FrameStart();
 
 #ifdef _DEBUG
@@ -74,6 +72,8 @@ public:
 			stream1 << "cursor-x: " << input->GetMousePositionX() << "\t";
 			stream1 << "cursor-y: " << input->GetMousePositionY();
 			PRINT(stream1.str());
+
+			Update(rateController->GetFrameTime());
 
 			m_isRunning = !m_window->ShouldExit();
 			rateController->FrameEnd();
