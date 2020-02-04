@@ -13,6 +13,8 @@ Creation date	: 01/26/2020
 
 #include "EngineExport.h"
 #include "engine/renderer/Renderer2D.h"
+#include "engine/renderer/Sprite.h"
+
 
 using namespace gswy;
 
@@ -24,8 +26,13 @@ public:
 	Application() 
 		: m_CameraController(1280.0f / 720.0f)
 	{
-		m_Texture = gswy::Texture2D::Create("./asset/container.png");
 		gswy::Renderer2D::Init();
+
+		//Texture Test
+		m_Texture = gswy::Texture2D::Create("./asset/container.png");
+
+		//Sprite Test
+		m_ControlSprite = std::make_shared<gswy::Sprite>("./asset/SpriteSheetExample.png", 8, 4);
 	}
 
 	virtual ~Application() {
@@ -73,6 +80,54 @@ public:
 			stream1 << "cursor-y: " << input->GetMousePositionY();
 			PRINT(stream1.str());
 
+			//Control Sprite Trigger
+			if (input->IsKeyTriggered(GLFW_KEY_W)) {
+				PRINT("KEY W TRIGGERED!");
+				m_ControlSprite->SetAnimSequence(16, 8);
+				m_ControlSprite->SetAnimLooping(true);
+			}
+			else if (input->IsKeyTriggered(GLFW_KEY_S)) {
+				PRINT("KEY S TRIGGERED!");
+				m_ControlSprite->SetAnimSequence(24, 8);
+				m_ControlSprite->SetAnimLooping(true);
+			}
+			else if (input->IsKeyTriggered(GLFW_KEY_A)) {
+				PRINT("KEY A TRIGGERED!");
+				m_ControlSprite->SetAnimSequence(8, 8);
+				m_ControlSprite->SetAnimLooping(true);
+			}
+			else if (input->IsKeyTriggered(GLFW_KEY_D)) {
+				PRINT("KEY D TRIGGERED!");
+				m_ControlSprite->SetAnimSequence(0, 8);
+				m_ControlSprite->SetAnimLooping(true);
+			}
+
+			//Control Sprite KeyPress
+			if (input->IsKeyPressed(GLFW_KEY_W)) {
+				PRINT("KEY W PRESSED!");
+				m_ControlSpritePos.x += -sin(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
+				m_ControlSpritePos.y += cos(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
+				m_ControlSprite->SetSpritePosition(m_ControlSpritePos);
+			}
+			else if (input->IsKeyPressed(GLFW_KEY_S)) {
+				PRINT("KEY S PRESSED!");
+				m_ControlSpritePos.x -= -sin(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
+				m_ControlSpritePos.y -= cos(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
+				m_ControlSprite->SetSpritePosition(m_ControlSpritePos);
+			}
+			
+			if (input->IsKeyPressed(GLFW_KEY_A)) {
+				PRINT("KEY A PRESSED!");
+				m_ControlSpritePos.x -= cos(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
+				m_ControlSpritePos.y -= sin(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
+				m_ControlSprite->SetSpritePosition(m_ControlSpritePos);
+			}
+			else if (input->IsKeyPressed(GLFW_KEY_D)) {
+				PRINT("KEY D PRESSED!");
+				m_ControlSpritePos.x += cos(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
+				m_ControlSpritePos.y += sin(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
+				m_ControlSprite->SetSpritePosition(m_ControlSpritePos);
+			}
 			Update(rateController->GetFrameTime());
 
 			m_isRunning = !m_window->ShouldExit();
@@ -87,7 +142,14 @@ public:
 		gswy::RenderCommand::Clear();
 
 		gswy::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		gswy::Renderer2D::DrawQuad(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, m_Texture);
+		
+		//Draw Quad with Texture
+		//gswy::Renderer2D::DrawQuad(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, m_Texture);
+		
+		//Draw Sprite Sheet
+		m_ControlSprite->Update(ts * 1000.0f);
+		m_ControlSprite->Draw();
+
 		gswy::Renderer2D::EndScene();
 	}
 
@@ -96,6 +158,11 @@ protected:
 private:
 	gswy::OrthographicCameraController m_CameraController;
 	std::shared_ptr<gswy::Texture2D> m_Texture;
+
+	//Control Sprite
+	std::shared_ptr<gswy::Sprite> m_ControlSprite;
+	glm::vec3 m_ControlSpritePos = glm::vec3(0.0f, 0.0f, 1.0f);
+	float m_ControlSpriteMoveSpeed = 5.0f;
 };
 
 Engine* gswy::CreateEngineApplication() {
