@@ -35,31 +35,24 @@ namespace gswy {
 	Input::~Input() {
 	}
 
-	void Input::UpdateKeyboardState(const int& key, const bool& state, const bool& repeat) {
-
-		if (!state) { // if released
-			m_previousKeyBoardState[key] = m_currentKeyBoardState[key];
-			m_currentKeyBoardState[key] = false;
+	void Input::Update()
+	{
+		for (int i = 0; i < KEY_LAST + 1; ++i)
+		{
+			m_previousKeyBoardState[i] = m_currentKeyBoardState[i];
 		}
-		else if (state && repeat) { // if pressed
-			m_previousKeyBoardState[key] = true;
-			m_currentKeyBoardState[key] = true;
-		}
-		else if (state && !repeat) { // if triggered
-			m_previousKeyBoardState[key] = false;
-			m_currentKeyBoardState[key] = true;
+		for (int i = 0; i < MOUSE_BUTTON_LAST + 1; ++i)
+		{
+			m_previousMouseButtonState[i] = m_currentMouseButtonState[i];
 		}
 	}
 
+	void Input::UpdateKeyboardState(const int& key, const bool& state, const bool& repeat) {
+		m_currentKeyBoardState[key] = state;
+	}
+
 	void Input::UpdateMouseButtonState(const int& button, const bool& state) {
-		if (!state) { // if released
-			m_previousMouseButtonState[button] = m_currentMouseButtonState[button];
-			m_currentMouseButtonState[button] = false;
-		}
-		else { // if pressed
-			m_previousMouseButtonState[button] = false;
-			m_currentMouseButtonState[button] = true;
-		}
+		m_currentMouseButtonState[button] = state;
 	}
 
 
@@ -72,7 +65,6 @@ namespace gswy {
 		ASSERT(keyCode > KEY_LAST, "Invalid key-code.");
 
 		if (m_currentKeyBoardState[keyCode] && !m_previousKeyBoardState[keyCode]) {
-			m_currentKeyBoardState[keyCode] = false; // reset the state once the input has been polled
 			return true;
 		}
 		return false;
@@ -82,7 +74,6 @@ namespace gswy {
 		ASSERT(keyCode > KEY_LAST, "Invalid key-code.");
 
 		if (!m_currentKeyBoardState[keyCode] && m_previousKeyBoardState[keyCode]) {
-			m_previousKeyBoardState[keyCode] = false; // reset the state once the input has been polled
 			return true;
 		}
 		return false;
@@ -97,7 +88,6 @@ namespace gswy {
 		ASSERT(mouseButton > MOUSE_BUTTON_LAST, "Invalid mouse-button.");
 
 		if (!m_currentMouseButtonState[mouseButton] && m_previousMouseButtonState[mouseButton]) {
-			m_previousMouseButtonState[mouseButton] = false; // reset the state once the input has been polled
 			return true;
 		}
 		return false;

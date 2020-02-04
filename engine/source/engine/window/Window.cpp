@@ -77,7 +77,7 @@ namespace gswy {
 
 			case GLFW_PRESS:
 			{
-				properties.m_input->UpdateKeyboardState(key, true, false);
+				properties.m_input->UpdateKeyboardState(key, true, true);
 				break;
 			}
 
@@ -87,11 +87,11 @@ namespace gswy {
 				break;
 			}
 
-			case GLFW_REPEAT:
-			{
-				properties.m_input->UpdateKeyboardState(key, true, true);
-				break;
-			}
+			//case GLFW_REPEAT:
+			//{
+			//	properties.m_input->UpdateKeyboardState(key, true, true);
+			//	break;
+			//}
 
 			}
 		});

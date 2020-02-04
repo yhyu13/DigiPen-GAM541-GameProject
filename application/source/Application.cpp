@@ -128,8 +128,10 @@ public:
 				m_ControlSpritePos.y += sin(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
 				m_ControlSprite->SetSpritePosition(m_ControlSpritePos);
 			}
-			Update(rateController->GetFrameTime());
 
+			Update(rateController->GetFrameTime());
+			Input::GetInstance()->Update();
+			
 			m_isRunning = !m_window->ShouldExit();
 			rateController->FrameEnd();
 		}
