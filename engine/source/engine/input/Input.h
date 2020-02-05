@@ -24,7 +24,7 @@ namespace gswy {
 
 		static Input* GetInstance();
 		~Input();
-		void Update();
+		void Update(double dt);
 
 		void UpdateKeyboardState(const int& key, const bool& state, const bool& repeat);
 		bool IsKeyPressed(const int& keyCode);

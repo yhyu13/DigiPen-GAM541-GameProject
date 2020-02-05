@@ -35,7 +35,7 @@ namespace gswy {
 	Input::~Input() {
 	}
 
-	void Input::Update()
+	void Input::Update(double dt)
 	{
 		for (int i = 0; i < KEY_LAST + 1; ++i)
 		{

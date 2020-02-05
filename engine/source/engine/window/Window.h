@@ -41,7 +41,7 @@ namespace gswy {
 
 		static Window* CreateWindow(const WindowProperties& properties = WindowProperties());
 
-		void Update();
+		void Update(double dt);
 		void Shutdown();
 		bool ShouldExit();
 		void UpdateTitle(std::string title);

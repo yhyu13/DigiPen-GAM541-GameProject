@@ -139,6 +139,7 @@ project "application"
 
 	includedirs
 	{
+		"application/source",
 		"engine/source",
 		"engine/vendors",
 		"%{IncludeDir.glfw}",

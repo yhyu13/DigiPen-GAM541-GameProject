@@ -44,7 +44,7 @@ namespace gswy {
 			stream << "Frame Time: " << rateController->GetFrameTime() * 1000  << "ms";
 			m_window->UpdateTitle(stream.str());
 #endif
-			m_window->Update();
+			m_window->Update(rateController->GetFrameTime());
 
 			if (input->IsKeyPressed(GLFW_KEY_A)) {
 				PRINT("KEY A PRESSED!");

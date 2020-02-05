@@ -14,31 +14,10 @@ Creation date: 02/01/2020
 #include "Renderer2D.h"
 
 namespace gswy {
-	
+
 	Sprite::Sprite()
 	{
-		m_SpriteVertexArray = VertexArray::Create();
-		
-		//Test
-		//--------------------------------------------------------------------------
-		m_Texture2D = Texture2D::Create("assets/textures/SpriteSheetExample.png");
-		m_TotalHorizontalFrame = 8;
-		m_TotalVerticalFrame = 4;
-		//--------------------------------------------------------------------------
-		m_Position = glm::vec3(0.0f);
 
-		m_CurrentFrame = 0;
-		m_StartFrame = 0;
-		m_TotalFrames = m_TotalHorizontalFrame * m_TotalVerticalFrame;
-		m_LastFrame = m_TotalFrames - 1;
-
-		m_SpriteWidth = GetTextureWidth() / m_TotalHorizontalFrame;
-		m_SpriteHeight = GetTextureHeight() / m_TotalVerticalFrame;
-		m_ElapsedTime = 0;
-		m_MSPerFrame = 1000 / 15;
-
-		m_IsPaused = false;
-		m_LoopingAnim = false;
 	}
 
 	Sprite::Sprite(std::shared_ptr<Texture2D>& texture2D)
@@ -46,22 +25,12 @@ namespace gswy {
 	{
 		m_SpriteVertexArray = VertexArray::Create();
 		m_Position = glm::vec3(0.0f);
-
-		m_CurrentFrame = 0;
-		m_StartFrame = 0;
-		m_TotalFrames = m_TotalHorizontalFrame * m_TotalVerticalFrame;
-		m_LastFrame = m_TotalFrames - 1;
-		m_SpriteWidth = GetTextureWidth() / m_TotalHorizontalFrame;
-		m_SpriteHeight = GetTextureHeight() / m_TotalVerticalFrame;
-		m_ElapsedTime = 0;
-		m_MSPerFrame = 1000 / 15;
-
-		m_IsPaused = false;
-		m_LoopingAnim = false;
+		m_SpriteWidth = GetTextureWidth();
+		m_SpriteHeight = GetTextureHeight();
 	}
 
-	Sprite::Sprite(std::shared_ptr<Texture2D>& texture2D, int numRowFrames, int numColumnFrames)
-		: m_Texture2D(texture2D), m_TotalHorizontalFrame(numRowFrames), m_TotalVerticalFrame(numColumnFrames)
+	Sprite::Sprite(std::shared_ptr<Texture2D>& texture2D, int numRowFrames, int numColumnFrames, int delayPerFrame)
+		: m_Texture2D(texture2D), m_TotalVerticalFrame(numRowFrames), m_TotalHorizontalFrame(numColumnFrames)
 	{
 		m_SpriteVertexArray = VertexArray::Create();
 		m_Position = glm::vec3(0.0f);
@@ -73,14 +42,15 @@ namespace gswy {
 		m_SpriteWidth = GetTextureWidth() / m_TotalHorizontalFrame;
 		m_SpriteHeight = GetTextureHeight() / m_TotalVerticalFrame;
 		m_ElapsedTime = 0;
-		m_MSPerFrame = 1000 / 15;
+		m_MSPerFrame = delayPerFrame;
 
+		m_IsIdle = true;
 		m_IsPaused = false;
 		m_LoopingAnim = false;
 	}
 
-	Sprite::Sprite(const std::string& path, int numRowFrames, int numColumnFrames)
-		: m_Texture2D(Texture2D::Create(path)), m_TotalHorizontalFrame(numRowFrames), m_TotalVerticalFrame(numColumnFrames)
+	Sprite::Sprite(const std::string& path, int numRowFrames, int numColumnFrames, int delayPerFrame)
+		: m_Texture2D(Texture2D::Create(path)), m_TotalVerticalFrame(numRowFrames), m_TotalHorizontalFrame(numColumnFrames)
 	{
 		m_SpriteVertexArray = VertexArray::Create();
 		m_Position = glm::vec3(0.0f);
@@ -92,8 +62,9 @@ namespace gswy {
 		m_SpriteWidth = GetTextureWidth() / m_TotalHorizontalFrame;
 		m_SpriteHeight = GetTextureHeight() / m_TotalVerticalFrame;
 		m_ElapsedTime = 0;
-		m_MSPerFrame = 1000 / 15;
+		m_MSPerFrame = delayPerFrame;
 
+		m_IsIdle = true;
 		m_IsPaused = false;
 		m_LoopingAnim = false;
 	}
@@ -102,51 +73,60 @@ namespace gswy {
 	{
 	}
 
-	bool Sprite::LoadFromFile(const std::string& path, int numRowFrames, int numColumnFrames)
+	bool Sprite::LoadFromFile(const std::string& path)
 	{
-		
-		//Test
-		//--------------------------------------------------------------------------
 		if ((m_Texture2D = Texture2D::Create(path)) == nullptr)
 		{
 			return false;
 		}
 		m_SpriteVertexArray = VertexArray::Create();
-		m_TotalHorizontalFrame = numRowFrames;
-		m_TotalVerticalFrame = numColumnFrames;
-		//--------------------------------------------------------------------------
 		m_Position = glm::vec3(0.0f);
 
-		m_CurrentFrame = 0;
-		m_StartFrame = 0;
+		m_SpriteWidth = GetTextureWidth();
+		m_SpriteHeight = GetTextureHeight();
+		return true;
+	}
+
+	void Sprite::SetAnimationKeyFactors(int numRowFrames, int numColumnFrames, int delayPerFrame)
+	{
+		m_TotalHorizontalFrame = numColumnFrames;
+		m_TotalVerticalFrame = numRowFrames;
+
 		m_TotalFrames = m_TotalHorizontalFrame * m_TotalVerticalFrame;
 		m_LastFrame = m_TotalFrames - 1;
 
 		m_SpriteWidth = GetTextureWidth() / m_TotalHorizontalFrame;
 		m_SpriteHeight = GetTextureHeight() / m_TotalVerticalFrame;
-		m_ElapsedTime = 0;
-		m_MSPerFrame = 1000 / 15;
 
+		m_ElapsedTime = 0;
+		m_MSPerFrame = delayPerFrame;
+
+		m_IsIdle = true;
 		m_IsPaused = false;
 		m_LoopingAnim = false;
-		return true;
 	}
 
-	void Sprite::Update(float ts)
+	void Sprite::Update(double ts)
 	{
 		if (m_IsPaused)
 		{
 			return;
 		}
 
-		m_ElapsedTime += ts;
+		if (m_IsIdle)
+		{
+			SetCurrentFrame(GetStartFrame());
+			return;
+		}
+
+		m_ElapsedTime += ts*1000;
 		if (m_ElapsedTime >= m_MSPerFrame)
 		{
 			const unsigned long numFramesToAdvance = m_ElapsedTime / m_MSPerFrame;
 			m_ElapsedTime -= numFramesToAdvance * m_MSPerFrame;
-			
+
 			int targetFrame = GetCurrentFrame() + numFramesToAdvance;
-			
+
 			//Go back the start frame if in the animation sequence
 			if (m_LoopingAnim == true && (targetFrame >= GetLastFrame()))
 			{
@@ -167,7 +147,7 @@ namespace gswy {
 	{
 		float texWidth = GetTextureWidth();
 		float texHeight = GetTextureHeight();
-		
+
 		float perTexCoordOffsetX = (float)(m_SpriteWidth / texWidth);
 		float perTexCoordOffsetY = (float)(m_SpriteHeight / texHeight);
 

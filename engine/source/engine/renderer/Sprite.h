@@ -17,19 +17,19 @@ Creation date: 02/01/2020
 #include <glm/glm.hpp>
 
 namespace gswy {
-	
+
 	class ENGINE_API Sprite
 	{
 	public:
 		Sprite();
 		Sprite(std::shared_ptr<Texture2D>& texture2D);
-		Sprite(std::shared_ptr<Texture2D>& texture2D, int numRowFrames, int numColumnFrames);
-		Sprite(const std::string& path, int numRowFrames, int numColumnFrames);
+		Sprite(std::shared_ptr<Texture2D>& texture2D, int numRowFrames, int numColumnFrames, int delayPerFrame);
+		Sprite(const std::string& path, int numRowFrames, int numColumnFrames, int delayPerFrame);
 		~Sprite();
+		bool LoadFromFile(const std::string& path);
+		void SetAnimationKeyFactors(int numRowFrames, int numColumnFrames, int delayPerFrame);
 
-		bool LoadFromFile(const std::string& path, int numRowFrames, int numColumnFrames);
-
-		void Update(float ts);
+		void Update(double ts);
 		void Draw();
 		void DrawInternal(const glm::vec2& rect, const glm::vec2& texCoord, const glm::vec2& texCoordOffset);
 
@@ -49,6 +49,8 @@ namespace gswy {
 
 		void SetAnimSequence(int startWithFrame, int numFrames);
 		void SetAnimLooping(bool b) { m_LoopingAnim = b; };
+		void SetAnimIdle(bool b) { m_IsIdle = b; };
+		void SetAnimPaused(bool b) { m_IsPaused = b; };
 
 	private:
 		std::shared_ptr<Texture2D> m_Texture2D;
@@ -60,6 +62,7 @@ namespace gswy {
 		int m_ElapsedTime;
 		int m_MSPerFrame;
 
+		bool m_IsIdle;
 		bool m_IsPaused;
 		bool m_LoopingAnim;
 	};

@@ -25,12 +25,13 @@ namespace gswy {
 		return &frameRateController;
 	}
 
-	FramerateController::FramerateController(unsigned int maxFrameRate) : m_maxFramerate(maxFrameRate), m_tickStart(0), m_tickEnd(0), m_ticksPerFrame(0.0f), m_frameTime(0.0f) {
+	FramerateController::FramerateController(unsigned int maxFrameRate) : m_maxFramerate(maxFrameRate), m_tickStart(0), m_tickEnd(0), m_ticksPerFrame(0.0f) {
 
 		if (0 >= m_maxFramerate) {
 			m_maxFramerate = UINT_MAX;
 		}
 		m_ticksPerFrame = 1000.0f / m_maxFramerate;
+		m_frameTime = m_ticksPerFrame;
 	}
 
 	FramerateController::~FramerateController() {

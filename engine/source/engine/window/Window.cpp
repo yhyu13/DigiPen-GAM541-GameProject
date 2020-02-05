@@ -23,7 +23,7 @@ namespace gswy {
 		return new Window(properties);
 	}
 
-	void Window::Update() {
+	void Window::Update(double dt) {
 		glfwPollEvents();
 		glfwSwapBuffers(m_window);
 	}
