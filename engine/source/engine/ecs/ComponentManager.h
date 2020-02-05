@@ -1,28 +1,32 @@
+/* Start Header -------------------------------------------------------
+Copyright (C) 2020 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+Language		: C++ 11
+Platform		: Windows 10 (X64)
+Project			: GAM541
+Filename		: ComponentManager.h
+Purpose			: Contains declarations for component-manager.
+Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
+Creation date	: 02/03/2020
+- End Header ----------------------------*/
+
 #pragma once
 
 #include <map>
 #include <array>
 
-#include "engine/EngineCore.h"
 #include "Entity.h"
 
 namespace gswy {
 
-	/*struct ComponentIndex {
-		unsigned int m_index;
-
-		ComponentIndex(int index) {
-			m_index = index;
-		}
-	};*/
-
 	template<typename ComponentType>
-	struct ENGINE_API ComponentData {
+	struct ComponentData {
 		unsigned int m_size = 0;
 		std::array<ComponentType, 1024>* m_data;
 	};
 
-	class ENGINE_API BaseComponentManager {
+	class BaseComponentManager {
 	public:
 		BaseComponentManager() = default;
 		virtual ~BaseComponentManager() = default;
@@ -31,7 +35,7 @@ namespace gswy {
 	};
 
 	template<typename ComponentType>
-	class ENGINE_API ComponentManager :public BaseComponentManager {
+	class ComponentManager :public BaseComponentManager {
 
 	public:
 
