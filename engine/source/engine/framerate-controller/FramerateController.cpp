@@ -13,7 +13,7 @@ Creation date	: 01/28/2020
 
 #include "FramerateController.h"
 
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 
 namespace gswy {
 

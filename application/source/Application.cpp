@@ -13,7 +13,40 @@ Creation date	: 01/26/2020
 
 #include "EngineExport.h"
 
-using namespace gswy;	
+#include "engine/ecs/BaseComponentSystem.h"
+#include "engine/ecs/BaseComponent.h"
+#include "engine/ecs/ComponentDecorator.h"
+#include "engine/ecs/GameWorld.h"
+#include "engine/ecs/EntityManager.h"
+#include "engine/ecs/EntityDecorator.h"
+
+using namespace gswy;
+
+struct Position : gswy::BaseComponent<Position> {
+	Position() = default;
+	Position(float x) : x(x) {};
+	float x;
+};
+
+class Wind : public gswy::BaseComponentSystem {
+public:
+	Wind() {
+		m_systemSignature.AddComponent<Position>();
+	}
+
+	virtual void Update(double dt) override {
+		for (auto& entity : m_registeredEntities) {
+			gswy::ComponentDecorator<Position> position;
+			m_parentWorld->Unpack(entity, position);
+
+			// Move 1 every second
+			position->x += 1.0f * (dt / 1000.0f);
+
+			// Print entity position
+			std::cout << "Entity " << entity.m_id << ": " << position->x << std::endl; // have to override -> operator
+		}
+	}
+};
 
 class Application : public Engine {
 
@@ -44,6 +77,28 @@ public:
 
 		FramerateController* rateController = FramerateController::GetInstance(60);
 		Input* input = Input::GetInstance();
+
+		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
+		auto entityManager = std::make_unique<gswy::EntityManager>();
+		auto world = std::make_unique<gswy::GameWorld>(std::move(entityManager));
+
+		// Add systems
+		std::unique_ptr<gswy::BaseComponentSystem> wind = std::make_unique<Wind>();
+		world->RegisterSystem(std::move(wind));
+
+		// Initialize game
+		world->Init();
+
+		// Add an entity with a position
+		auto tumbleweed = world->GenerateEntity();
+		tumbleweed.AddComponent(Position(0));
+
+		// Run game for "1 second at 50fps"
+		for (int i = 0; i < 50; i++) {
+			world->Update(20);
+		}
+		/////////// END OF ECS TEST //////////////
+
 		while (m_isRunning) {
 			rateController->FrameStart();
 
@@ -54,11 +109,15 @@ public:
 #endif
 			m_window->Update();
 
+			/*if (input->IsKeyTriggered(GLFW_KEY_A)) {
+				PRINT("KEY A TRIGGERED!");
+			}*/
+
 			if (input->IsKeyPressed(GLFW_KEY_A)) {
 				PRINT("KEY A PRESSED!");
 			}
 
-			if (input->IsKeyTriggered(GLFW_KEY_SPACE)) {
+			/*if (input->IsKeyTriggered(GLFW_KEY_SPACE)) {
 				PRINT("KEY SPACE TRIGGERED!");
 			}
 
@@ -77,7 +136,7 @@ public:
 			std::stringstream stream1;
 			stream1 << "cursor-x: " << input->GetMousePositionX() << "\t";
 			stream1 << "cursor-y: " << input->GetMousePositionY();
-			PRINT(stream1.str());
+			PRINT(stream1.str());*/
 
 			//Control Sprite Trigger
 			if (input->IsKeyTriggered(GLFW_KEY_W)) {

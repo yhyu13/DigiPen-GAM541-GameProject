@@ -12,7 +12,7 @@ Creation date: 01/26/2020
 
 #include "OpenGLContext.h"
 #include "engine/EngineCore.h"
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include <gl/GL.h>
 
