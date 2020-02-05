@@ -12,11 +12,8 @@ Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
 #include "EngineExport.h"
-#include "engine/renderer/Renderer2D.h"
-#include "engine/renderer/Sprite.h"
 
-
-using namespace gswy;
+using namespace gswy;	
 
 class Application : public Engine {
 
@@ -27,12 +24,14 @@ public:
 		: m_CameraController(1280.0f / 720.0f)
 	{
 		gswy::Renderer2D::Init();
-
 		//Texture Test
 		m_Texture = gswy::Texture2D::Create("./asset/container.png");
 
+		ResourceAllocator::GetInstance()->SetPath("./asset/");
+		int spriteExampleID = ResourceAllocator::GetInstance()->Add("SpriteSheetExample.png", 8, 4);
+
 		//Sprite Test
-		m_ControlSprite = std::make_shared<gswy::Sprite>("./asset/SpriteSheetExample.png", 8, 4);
+		m_ControlSprite = ResourceAllocator::GetInstance()->Get(spriteExampleID);//std::make_shared<gswy::Sprite>("./asset/SpriteSheetExample.png", 8, 4);
 	}
 
 	virtual ~Application() {

@@ -31,4 +31,3 @@ Creation date	: 01/26/2020
 #endif // DEBUG
 
 #define PRINT(x) std::cout << x << std::endl
-

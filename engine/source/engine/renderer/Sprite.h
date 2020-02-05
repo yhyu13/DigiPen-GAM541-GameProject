@@ -27,6 +27,8 @@ namespace gswy {
 		Sprite(const std::string& path, int numRowFrames, int numColumnFrames);
 		~Sprite();
 
+		bool LoadFromFile(const std::string& path, int numRowFrames, int numColumnFrames);
+
 		void Update(float ts);
 		void Draw();
 		void DrawInternal(const glm::vec2& rect, const glm::vec2& texCoord, const glm::vec2& texCoordOffset);

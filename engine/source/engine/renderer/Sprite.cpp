@@ -102,6 +102,36 @@ namespace gswy {
 	{
 	}
 
+	bool Sprite::LoadFromFile(const std::string& path, int numRowFrames, int numColumnFrames)
+	{
+		
+		//Test
+		//--------------------------------------------------------------------------
+		if ((m_Texture2D = Texture2D::Create(path)) == nullptr)
+		{
+			return false;
+		}
+		m_SpriteVertexArray = VertexArray::Create();
+		m_TotalHorizontalFrame = numRowFrames;
+		m_TotalVerticalFrame = numColumnFrames;
+		//--------------------------------------------------------------------------
+		m_Position = glm::vec3(0.0f);
+
+		m_CurrentFrame = 0;
+		m_StartFrame = 0;
+		m_TotalFrames = m_TotalHorizontalFrame * m_TotalVerticalFrame;
+		m_LastFrame = m_TotalFrames - 1;
+
+		m_SpriteWidth = GetTextureWidth() / m_TotalHorizontalFrame;
+		m_SpriteHeight = GetTextureHeight() / m_TotalVerticalFrame;
+		m_ElapsedTime = 0;
+		m_MSPerFrame = 1000 / 15;
+
+		m_IsPaused = false;
+		m_LoopingAnim = false;
+		return true;
+	}
+
 	void Sprite::Update(float ts)
 	{
 		if (m_IsPaused)
