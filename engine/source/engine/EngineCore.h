@@ -16,10 +16,16 @@ Creation date	: 01/26/2020
 #include <iostream>
 
 
+//#ifdef ENGINE_BUILD_DLL
+//	#define ENGINE_API __declspec(dllexport)
+//#else
+//	#define ENGINE_API __declspec(dllimport)
+//#endif
+
 #ifdef ENGINE_BUILD_DLL
-	#define ENGINE_API __declspec(dllexport)
+#define ENGINE_API 
 #else
-	#define ENGINE_API __declspec(dllimport)
+#define ENGINE_API 
 #endif
 
 #define ASSERT(x, ...) { if(x == true) { std::cout << "Assertion failed: " << __VA_ARGS__; __debugbreak(); } }
