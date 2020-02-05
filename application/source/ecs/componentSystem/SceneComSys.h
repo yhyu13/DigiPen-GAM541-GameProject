@@ -16,7 +16,6 @@ Creation date: 02/04/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
-#include "engine/input/Input.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/SpriteCom.h"
 

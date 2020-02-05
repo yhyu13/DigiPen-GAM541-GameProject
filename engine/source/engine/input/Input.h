@@ -15,16 +15,19 @@ Creation date	: 01/29/2020
 
 #include "MouseButton.h"
 #include "KeyboardKeys.h"
+#include "engine/interface/IRunTimeModule.h"
 
 namespace gswy {
 
-	class ENGINE_API Input {
+	class ENGINE_API Input : public IRunTimeModule {
 
 	public:
 
 		static Input* GetInstance();
 		~Input();
-		void Update(double dt);
+		virtual void Init() override {};
+		virtual void Update(double deltaTime) override;
+		virtual void Shutdown() override {};
 
 		void UpdateKeyboardState(const int& key, const bool& state, const bool& repeat);
 		bool IsKeyPressed(const int& keyCode);

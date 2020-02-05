@@ -36,6 +36,22 @@ namespace gswy {
 		virtual void Update(double deltaTime) override {};
 		virtual void Shutdown() override {};
 
+		T* Create(std::string filePath, std::string name)
+		{
+			auto it = m_resources.find(filePath);
+			if (it != m_resources.end())
+			{
+				return it->second.second.get();
+			}
+			std::shared_ptr<T> resource = T::Create(filePath);
+			if (!resource)
+			{
+				// TODO : Engine exception
+				return nullptr;
+			}
+			m_resources.insert(std::make_pair(name, std::make_pair(++m_currentId, resource)));
+			return resource.get();
+		}
 
 		T* Add(std::string filePath, std::string name)
 		{
@@ -44,16 +60,13 @@ namespace gswy {
 			{
 				return it->second.second.get();
 			}
-
 			std::shared_ptr<T> resource = std::make_shared<T>();
 			if (!resource->LoadFromFile(filePath))
 			{
 				// TODO : Engine exception
 				return nullptr;
 			}
-
 			m_resources.insert(std::make_pair(name, std::make_pair(++m_currentId, resource)));
-
 			return resource.get();
 		}
 
@@ -70,12 +83,10 @@ namespace gswy {
 
 		void Remove(std::string name)
 		{
-			for (auto it = m_resources.begin(); it != m_resources.end(); ++it)
+			auto it = m_resources.find(name);
+			if (it != m_resources.end())
 			{
-				if (it->first.compare(name) == 0)
-				{
-					m_resources.erase(it->first);
-				}
+				m_resources.erase(it->first);
 			}
 		}
 
@@ -88,20 +99,16 @@ namespace gswy {
 					return it->second.second.get();
 				}
 			}
-
 			return nullptr;
 		}
 
 		T* Get(std::string name)
 		{
-			for (auto it = m_resources.begin(); it != m_resources.end(); ++it)
+			auto it = m_resources.find(name);
+			if (it != m_resources.end())
 			{
-				if (it->first.compare(name) == 0)
-				{
-					return it->second.second.get();
-				}
+				return it->second.second.get();
 			}
-
 			return nullptr;
 		}
 

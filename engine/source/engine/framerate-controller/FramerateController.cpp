@@ -31,7 +31,7 @@ namespace gswy {
 			m_maxFramerate = UINT_MAX;
 		}
 		m_ticksPerFrame = 1000.0f / m_maxFramerate;
-		m_frameTime = m_ticksPerFrame;
+		m_frameTime = 1.0 / m_maxFramerate;
 	}
 
 	FramerateController::~FramerateController() {

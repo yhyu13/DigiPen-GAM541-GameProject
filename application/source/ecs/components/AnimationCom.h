@@ -13,27 +13,27 @@ Creation date: 02/04/2020
 
 #include "engine/ecs/BaseComponent.h"
 #include "engine/allocator/ResouceAllocator.h"
-#include "engine/renderer/Sprite.h"
+#include "engine/renderer/Animation.h"
 
 namespace gswy
 {
-	struct SpriteCom : BaseComponent<SpriteCom> {
+	struct AnimationCom : BaseComponent<AnimationCom> {
 
-		SpriteCom() = delete;
+		AnimationCom() = delete;
 
-		explicit SpriteCom(int id)
+		explicit AnimationCom(int id)
 		{
-			m_sprite = ResourceAllocator<Sprite>::GetInstance()->Get(id);
+			m_animation = ResourceAllocator<Animation>::GetInstance()->Get(id);
 		}
-		explicit SpriteCom(std::string name)
+		explicit AnimationCom(std::string name)
 		{
-			m_sprite = ResourceAllocator<Sprite>::GetInstance()->Get(name);
+			m_animation = ResourceAllocator<Animation>::GetInstance()->Get(name);
 		}
-		Sprite* Get()
+		Animation* Get()
 		{
-			return m_sprite;
+			return m_animation;
 		}
 	private:
-		Sprite* m_sprite;
+		Animation* m_animation;
 	};
 }

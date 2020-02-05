@@ -16,27 +16,29 @@ Creation date: 02/04/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
-#include "ecs/components/TransformCom.h"
 #include "ecs/components/SpriteCom.h"
+#include "ecs/components/AnimationCom.h"
 
 namespace gswy
 {
-	class SpriteComSys : public BaseComponentSystem {
+	class AnimationComSys : public BaseComponentSystem {
 	public:
-		SpriteComSys() {
-			m_systemSignature.AddComponent<TransformCom>();
+		AnimationComSys() {
+			m_systemSignature.AddComponent<AnimationCom>();
 			m_systemSignature.AddComponent<SpriteCom>();
 		}
 
 		virtual void Update(double dt) override {
 			for (auto& entity : m_registeredEntities) {
-				ComponentDecorator<TransformCom> position;
+				ComponentDecorator<AnimationCom> animation;
 				ComponentDecorator<SpriteCom> sprite;
-				m_parentWorld->Unpack(entity, position, sprite);
-				auto m_ControlSprite = sprite->Get();
-
-				m_ControlSprite->SetSpritePosition(glm::vec3(position->m_x, position->m_y, position->m_z));
-				m_ControlSprite->Update(dt);
+				m_parentWorld->Unpack(entity, animation, sprite);
+				auto m_sprite = sprite->Get();
+				auto m_animation = animation->Get();
+				
+				m_animation->UpdateFrame(dt);
+				auto currentFrame = m_animation->GetCurrentFrame();
+				ResourceAllocator<Texture2D>::GetInstance()->Get(currentFrame->textureName);
 			}
 		}
 	};
