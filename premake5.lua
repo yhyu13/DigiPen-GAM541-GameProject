@@ -116,11 +116,11 @@ project "engine"
 		}
 
 	filter "configurations:Debug"
-		buildoptions "/MDd"
+		buildoptions "/MTd"
 		symbols "On"
 
 	filter "configurations:Release"
-		buildoptions "/MD"
+		buildoptions "/MT"
 		optimize "On"
 
 project "application"
@@ -173,9 +173,9 @@ project "application"
 		}
 
 	filter "configurations:Debug"
-		buildoptions "/MDd"
+		buildoptions "/MTd"
 		symbols "On"
 
 	filter "configurations:Release"
-		buildoptions "/MD"
+		buildoptions "/MT"
 		optimize "On"
