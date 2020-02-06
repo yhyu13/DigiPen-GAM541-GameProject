@@ -38,6 +38,8 @@ struct Position : gswy::BaseComponent<Position> {
 
 	float* value;
 	std::shared_ptr<float> x_ptr;
+	std::string name;
+	std::map<std::string, std::string> map;
 };
 
 struct Transform : gswy::BaseComponent<Transform> {
@@ -63,10 +65,11 @@ public:
 
 			// Move 1 every second
 			position->x += 1.0f * (dt / 1000.0f);
+			position->name += "x";
 
 			// Print entity position
 			//std::cout << "Entity " << entity.m_id << ": " << position->x << "	" << *(position->value) << "	" << *(position->x_ptr) <<std::endl;
-			std::cout << "Entity " << entity.m_id << ": " << position->x << " : " << transform->x << " : " << transform->y <<std::endl; // have to override -> operator
+			std::cout << "Entity " << entity.m_id << position->name <<": " << position->x << " : " << transform->x << " : " << transform->y <<std::endl; // have to override -> operator
 		}
 	}
 };
