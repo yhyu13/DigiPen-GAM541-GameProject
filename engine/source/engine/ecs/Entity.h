@@ -23,12 +23,13 @@ namespace gswy {
 		For more information on component-managers, please check
 		ComponentManager.h.
 	*/
+	template<typename EntityType>
 	struct Entity {
 
 		unsigned int m_id;
+		EntityType m_type;
 
-		Entity(unsigned int id) {
-			m_id = id;
+		Entity(unsigned int id, EntityType type): m_id(id), m_type(type) {
 		}
 
 		Entity() = default;

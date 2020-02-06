@@ -21,28 +21,14 @@ namespace gswy
 
 		SpriteCom()
 		{
-			m_sprite = new Sprite();
+			m_sprite = std::make_shared<Sprite>();
 		}
 
-		SpriteCom& operator=(const SpriteCom& rhs)
-		{
-			if (this != &rhs)
-			{
-				m_sprite = rhs.m_sprite;
-			}
-			return *this;
-		}
-
-		~SpriteCom()
-		{
-			delete m_sprite;
-		}
-
-		Sprite* Get()
+		std::shared_ptr<Sprite> Get()
 		{
 			return m_sprite;
 		}
 	private:
-		Sprite* m_sprite;
+		std::shared_ptr<Sprite> m_sprite;
 	};
 }

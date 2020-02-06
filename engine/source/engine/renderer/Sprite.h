@@ -30,7 +30,7 @@ namespace gswy {
 		void DrawInternal(const glm::vec2& rect, const glm::vec2& texCoord, const glm::vec2& texCoordOffset);
 
 		void SetSpritePosition(const glm::vec3& pos);
-		void SetSpriteTexture(Texture2D* texture2D);
+		void SetSpriteTexture(std::shared_ptr<Texture2D>& texture2D);
 
 		uint32_t GetTextureWidth() const;
 		uint32_t GetTextureHeight() const;
@@ -46,7 +46,7 @@ namespace gswy {
 
 
 	private:
-		Texture2D* m_Texture2D;
+		std::shared_ptr<Texture2D> m_Texture2D;
 		std::shared_ptr<VertexArray> m_SpriteVertexArray;
 		std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
 		glm::vec3 m_Position;

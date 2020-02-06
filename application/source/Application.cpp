@@ -23,7 +23,6 @@ class Application : public Engine {
 
 public:
 
-
 	Application() 
 		: m_CameraController(1280.0f / 720.0f)
 	{
@@ -66,31 +65,31 @@ public:
 		Input* input = Input::GetInstance();
 
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
-		auto entityManager = std::make_unique<gswy::EntityManager>();
-		auto world = std::make_unique<gswy::GameWorld>(std::move(entityManager));
+		std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = std::make_shared<gswy::EntityManager<GameObjectType>>();
+		std::shared_ptr<GameWorld<GameObjectType>> world = std::make_shared<gswy::GameWorld<GameObjectType>>(entityManager);
+
 		// Add systems
-		std::unique_ptr<gswy::BaseComponentSystem> playerControllerComSys = std::make_unique<PlayerControllerComSys>();
-		std::unique_ptr<gswy::BaseComponentSystem> sceneComSys = std::make_unique<SceneComSys>();
-		std::unique_ptr<gswy::BaseComponentSystem> spriteComSys = std::make_unique<SpriteComSys>();
-		std::unique_ptr<gswy::BaseComponentSystem> animationComSys = std::make_unique<AnimationComSys>();
-		world->RegisterSystem(std::move(playerControllerComSys));
-		world->RegisterSystem(std::move(sceneComSys));
-		world->RegisterSystem(std::move(spriteComSys));
-		world->RegisterSystem(std::move(animationComSys));
+		world->RegisterSystem(std::make_shared<PlayerControllerComSys>());
+		world->RegisterSystem(std::make_shared<SceneComSys>());
+		world->RegisterSystem(std::make_shared<SpriteComSys>());
+		world->RegisterSystem(std::make_shared<AnimationComSys>());
+
 		// Initialize game
 		world->Init();
-		// Add an entity with a position
-		auto player = world->GenerateEntity();
+
+		auto player = world->GenerateEntity(GameObjectType::PLAYER);
 		player.AddComponent(TransformCom(0,0,0));
 		player.AddComponent(SpriteCom());
 		auto animCom = AnimationCom();
-		animCom.Add("PlayerAnimation1", "Move1");
-		animCom.Add("PlayerAnimation2", "Move2");
-		animCom.Add("PlayerAnimation3", "Move3");
-		animCom.Add("PlayerAnimation4", "Move4");
+		animCom.Add("PlayerAnimation1", "MoveRight");
+		animCom.Add("PlayerAnimation2", "MoveLeft");
+		animCom.Add("PlayerAnimation3", "MoveUp");
+		animCom.Add("PlayerAnimation4", "MoveDown");
+		animCom.setCurrentAnimationState("MoveUp");
 		player.AddComponent(animCom);
 
 		while (!m_window->ShouldExit()) {
+
 			rateController->FrameStart();
 			{
 #ifdef _DEBUG

@@ -18,10 +18,11 @@ Creation date: 02/04/2020
 #include "engine/ecs/GameWorld.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/SpriteCom.h"
+#include "ecs/EntityType.h"
 
 namespace gswy
 {
-	class SceneComSys : public BaseComponentSystem {
+	class SceneComSys : public BaseComponentSystem<GameObjectType> {
 	public:
 		SceneComSys() {
 			m_systemSignature.AddComponent<SpriteCom>();
@@ -30,7 +31,7 @@ namespace gswy
 		virtual void Render() override
 		{
 			for (auto& entity : m_registeredEntities) {
-				ComponentDecorator<SpriteCom> sprite;
+				ComponentDecorator<SpriteCom, GameObjectType> sprite;
 				m_parentWorld->Unpack(entity, sprite);
 				auto m_ControlSprite = sprite->Get();
 				m_ControlSprite->Draw();

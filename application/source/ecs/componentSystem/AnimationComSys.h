@@ -18,10 +18,11 @@ Creation date: 02/04/2020
 #include "engine/ecs/GameWorld.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/components/AnimationCom.h"
+#include "ecs/EntityType.h"
 
 namespace gswy
 {
-	class AnimationComSys : public BaseComponentSystem {
+	class AnimationComSys : public BaseComponentSystem<GameObjectType> {
 	public:
 		AnimationComSys() {
 			m_systemSignature.AddComponent<AnimationCom>();
@@ -30,14 +31,16 @@ namespace gswy
 
 		virtual void Update(double dt) override {
 			for (auto& entity : m_registeredEntities) {
-				ComponentDecorator<AnimationCom> animation;
-				ComponentDecorator<SpriteCom> sprite;
-				m_parentWorld->Unpack(entity, animation, sprite);
+				ComponentDecorator<AnimationCom, GameObjectType> animation;
+				ComponentDecorator<SpriteCom, GameObjectType> sprite;
+				m_parentWorld->Unpack(entity, animation);
+				m_parentWorld->Unpack(entity, sprite);
 				auto m_sprite = sprite->Get();
 				auto m_animation = animation->GetCurrentAnimation();
-				
 				m_animation->UpdateFrame(dt);
+
 				auto currentFrame = m_animation->GetCurrentFrame();
+
 				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get(currentFrame->textureName));
 				m_sprite->SetSpriteX(currentFrame->x);
 				m_sprite->SetSpritey(currentFrame->y);

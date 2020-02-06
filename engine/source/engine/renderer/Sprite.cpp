@@ -46,17 +46,13 @@ namespace gswy {
 
 	void Sprite::Draw()
 	{
-		/*float texWidth = GetTextureWidth();
+		float texWidth = GetTextureWidth();
 		float texHeight = GetTextureHeight();
-
 		float perTexCoordOffsetX = (float)(m_SpriteWidth / texWidth);
 		float perTexCoordOffsetY = (float)(m_SpriteHeight / texHeight);
-
-		float texCoordX = (GetCurrentFrame() % m_TotalHorizontalFrame) * perTexCoordOffsetX;
-		float texCoordY = ((GetCurrentFrame() / m_TotalHorizontalFrame) * (perTexCoordOffsetY));
-
-		DrawInternal(glm::vec2(0.5f), glm::vec2(texCoordX, texCoordY), glm::vec2(perTexCoordOffsetX, perTexCoordOffsetY));*/
-		DrawInternal(glm::vec2(0.5f), glm::vec2(m_SpriteX, m_SpriteX), glm::vec2(m_SpriteWidth, m_SpriteHeight));
+		float texCoordX = (float)(m_SpriteX / texWidth);
+		float texCoordY = (float)(m_SpriteY / texHeight);
+		DrawInternal(glm::vec2(0.5f), glm::vec2(texCoordX, texCoordY), glm::vec2(perTexCoordOffsetX, perTexCoordOffsetY));
 	}
 
 	void Sprite::DrawInternal(const glm::vec2& rect, const glm::vec2& texCoord, const glm::vec2& texCoordOffset)
@@ -77,7 +73,7 @@ namespace gswy {
 		Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, glm::vec2(1.0f), 0.0f, m_Texture2D);
 	}
 	void Sprite::SetSpritePosition(const glm::vec3& pos) { m_Position = pos; }
-	void Sprite::SetSpriteTexture(Texture2D* texture2D) {
+	void Sprite::SetSpriteTexture(std::shared_ptr<Texture2D>& texture2D) {
 		m_Texture2D = texture2D;
 		m_SpriteWidth = GetTextureWidth();
 		m_SpriteHeight = GetTextureHeight();

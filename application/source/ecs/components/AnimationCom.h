@@ -19,21 +19,21 @@ namespace gswy
 {
 	struct AnimationCom : BaseComponent<AnimationCom> {
 
-		void Add(std::string name, std::string stateName = "")
+		void Add(std::string name, std::string stateName)
 		{
-			m_animation = ResourceAllocator<Animation>::GetInstance()->Get(name);
-			if (stateName.compare("") == 0)
+			m_animationStateMap[stateName] = ResourceAllocator<Animation>::GetInstance()->Get(name);
+		}
+		std::shared_ptr<Animation> GetCurrentAnimation()
+		{
+			if (auto temp = m_animation.lock())
 			{
-				m_animationStateMap[name] = m_animation;
+				return temp;
 			}
 			else
 			{
-				m_animationStateMap[stateName] = m_animation;
+				// TODO : Engine excpetion
+				return nullptr;
 			}
-		}
-		Animation* GetCurrentAnimation()
-		{
-			return m_animation;
 		}
 		std::string GetCurrentAnimationState()
 		{
@@ -45,7 +45,14 @@ namespace gswy
 			{
 				m_animationState = state;
 				m_animation = m_animationStateMap[state];
-				m_animation->Reset();
+				if (auto temp = m_animation.lock())
+				{
+					temp->Reset();
+				}
+				else
+				{
+					// TODO : Engine excpetion
+				}
 			}
 			else
 			{
@@ -53,8 +60,8 @@ namespace gswy
 			}
 		}
 	private:
-		Animation* m_animation;
+		std::weak_ptr<Animation> m_animation;
 		std::string m_animationState;
-		std::map<std::string, Animation*> m_animationStateMap;
+		std::map<std::string, std::weak_ptr<Animation>> m_animationStateMap;
 	};
 }

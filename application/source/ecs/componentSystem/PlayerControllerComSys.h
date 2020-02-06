@@ -19,10 +19,11 @@ Creation date: 02/04/2020
 #include "engine/input/Input.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/AnimationCom.h"
+#include "ecs/EntityType.h"
 
 namespace gswy
 {
-	class PlayerControllerComSys : public BaseComponentSystem {
+	class PlayerControllerComSys : public BaseComponentSystem<GameObjectType> {
 	public:
 		PlayerControllerComSys() {
 			m_systemSignature.AddComponent<TransformCom>();
@@ -33,63 +34,56 @@ namespace gswy
 			for (auto& entity : m_registeredEntities) {
 
 				auto input = Input::GetInstance();
-				ComponentDecorator<TransformCom> position;
-				ComponentDecorator<AnimationCom> animation;
-				m_parentWorld->Unpack(entity, position, animation);
-				
+				ComponentDecorator<TransformCom, GameObjectType> position;
+				ComponentDecorator<AnimationCom, GameObjectType> animation;
+				m_parentWorld->Unpack(entity, position);
+				m_parentWorld->Unpack(entity, animation);
 				//Control Sprite Trigger
 				if (input->IsKeyTriggered(GLFW_KEY_W)) {
 					PRINT("KEY W TRIGGERED!");
-					animation->setCurrentAnimationState("Move1");
-					/*m_ControlSprite->SetAnimSequence(16, 8);
-					m_ControlSprite->SetAnimLooping(true);*/
+					animation->setCurrentAnimationState("MoveUp");
 				}
 				else if (input->IsKeyTriggered(GLFW_KEY_S)) {
 					PRINT("KEY S TRIGGERED!");
-					animation->setCurrentAnimationState("Move2");
-					/*
-					m_ControlSprite->SetAnimSequence(24, 8);
-					m_ControlSprite->SetAnimLooping(true);*/
+					animation->setCurrentAnimationState("MoveDown");
 				}
 				else if (input->IsKeyTriggered(GLFW_KEY_A)) {
 					PRINT("KEY A TRIGGERED!");
-					animation->setCurrentAnimationState("Move3");
-					/*m_ControlSprite->SetAnimSequence(8, 8);
-					m_ControlSprite->SetAnimLooping(true);*/
+					animation->setCurrentAnimationState("MoveLeft");
 				}
 				else if (input->IsKeyTriggered(GLFW_KEY_D)) {
 					PRINT("KEY D TRIGGERED!");
-					animation->setCurrentAnimationState("Move3");
-				/*	m_ControlSprite->SetAnimSequence(0, 8);
-					m_ControlSprite->SetAnimLooping(true);*/
+					animation->setCurrentAnimationState("MoveRight");
 				}
+
+				bool b_isIdel = true;
 
 				//Control Sprite KeyPress
 				if (input->IsKeyPressed(GLFW_KEY_W)) {
 					PRINT("KEY W PRESSED!");
 					position->m_x += -sin(glm::radians(0.0f)) * 5 * dt;
 					position->m_y += cos(glm::radians(0.0f)) * 5 * dt;
-					
+					b_isIdel = false;
 				}
-				else if (input->IsKeyPressed(GLFW_KEY_S)) {
+				if (input->IsKeyPressed(GLFW_KEY_S)) {
 					PRINT("KEY S PRESSED!");
 					position->m_x -= -sin(glm::radians(0.0f)) * 5 * dt;
 					position->m_y -= cos(glm::radians(0.0f)) * 5 * dt;
-					
+					b_isIdel = false;
 				}
-
 				if (input->IsKeyPressed(GLFW_KEY_A)) {
 					PRINT("KEY A PRESSED!");
 					position->m_x -= cos(glm::radians(0.0f)) * 5 * dt;
 					position->m_y -= sin(glm::radians(0.0f)) * 5 * dt;
-					
+					b_isIdel = false;
 				}
-				else if (input->IsKeyPressed(GLFW_KEY_D)) {
+				if (input->IsKeyPressed(GLFW_KEY_D)) {
 					PRINT("KEY D PRESSED!");
 					position->m_x += cos(glm::radians(0.0f)) * 5 * dt;
 					position->m_y += sin(glm::radians(0.0f)) * 5 * dt;
-					
+					b_isIdel = false;
 				}
+				animation->GetCurrentAnimation()->SetAnimIdle(b_isIdel);
 			}
 		}
 	};

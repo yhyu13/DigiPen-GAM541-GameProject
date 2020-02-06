@@ -36,12 +36,12 @@ namespace gswy {
 		virtual void Update(double deltaTime) override {};
 		virtual void Shutdown() override {};
 
-		T* Create(std::string filePath, std::string name)
+		std::shared_ptr<T> Create(std::string filePath, std::string name)
 		{
 			auto it = m_resources.find(filePath);
 			if (it != m_resources.end())
 			{
-				return it->second.second.get();
+				return it->second.second;
 			}
 			std::shared_ptr<T> resource = T::Create(filePath);
 			if (!resource)
@@ -50,15 +50,15 @@ namespace gswy {
 				return nullptr;
 			}
 			m_resources.insert(std::make_pair(name, std::make_pair(++m_currentId, resource)));
-			return resource.get();
+			return resource;
 		}
 
-		T* Add(std::string filePath, std::string name)
+		std::shared_ptr<T> Add(std::string filePath, std::string name)
 		{
 			auto it = m_resources.find(filePath);
 			if (it != m_resources.end())
 			{
-				return it->second.second.get();
+				return it->second.second;
 			}
 			std::shared_ptr<T> resource = std::make_shared<T>();
 			if (!resource->LoadFromFile(filePath))
@@ -67,7 +67,7 @@ namespace gswy {
 				return nullptr;
 			}
 			m_resources.insert(std::make_pair(name, std::make_pair(++m_currentId, resource)));
-			return resource.get();
+			return resource;
 		}
 
 		void Remove(int id)
@@ -90,24 +90,24 @@ namespace gswy {
 			}
 		}
 
-		T* Get(int id)
+		std::shared_ptr<T> Get(int id)
 		{
 			for (auto it = m_resources.begin(); it != m_resources.end(); ++it)
 			{
 				if (it->second.first == id)
 				{
-					return it->second.second.get();
+					return it->second.second;
 				}
 			}
 			return nullptr;
 		}
 
-		T* Get(std::string name)
+		std::shared_ptr<T> Get(std::string name)
 		{
 			auto it = m_resources.find(name);
 			if (it != m_resources.end())
 			{
-				return it->second.second.get();
+				return it->second.second;
 			}
 			return nullptr;
 		}
