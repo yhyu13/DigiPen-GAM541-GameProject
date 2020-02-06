@@ -22,48 +22,36 @@ namespace gswy {
 	{
 	public:
 		Sprite();
-		Sprite(std::shared_ptr<Texture2D>& texture2D);
-		Sprite(std::shared_ptr<Texture2D>& texture2D, int numRowFrames, int numColumnFrames, int delayPerFrame);
-		Sprite(const std::string& path, int numRowFrames, int numColumnFrames, int delayPerFrame);
+		Sprite(Texture2D* texture2D);
 		~Sprite();
-		bool LoadFromFile(const std::string& path);
-		void SetAnimationKeyFactors(int numRowFrames, int numColumnFrames, int delayPerFrame);
-
+		
 		void Update(double ts);
 		void Draw();
 		void DrawInternal(const glm::vec2& rect, const glm::vec2& texCoord, const glm::vec2& texCoordOffset);
 
-		void SetSpritePosition(const glm::vec3& pos) { m_Position = pos; }
-		void SetSpriteTexture(std::shared_ptr<Texture2D>& texture2D) { m_Texture2D = texture2D; }
+		void SetSpritePosition(const glm::vec3& pos);
+		void SetSpriteTexture(Texture2D* texture2D);
 
-		void SetCurrentFrame(unsigned int targetFrame) { m_CurrentFrame = targetFrame; }
-		unsigned int GetCurrentFrame() const { return m_CurrentFrame; }
-		void SetStartFrame(int targetFrame) { m_StartFrame = targetFrame; }
-		unsigned int GetStartFrame() const { return m_StartFrame; }
-		void SetLastFrame(int targetFrame) { m_LastFrame = targetFrame; }
-		unsigned int GetLastFrame() const { return m_LastFrame; }
-		unsigned int GetTotalFrames() const { return m_TotalFrames; }
+		uint32_t GetTextureWidth() const;
+		uint32_t GetTextureHeight() const;
 
-		uint32_t GetTextureWidth() const { return m_Texture2D->GetWidth(); }
-		uint32_t GetTextureHeight() const { return m_Texture2D->GetHeight(); }
+		uint32_t GetSpriteWidth() const;
+		uint32_t GetSpriteHeight() const;
 
-		void SetAnimSequence(int startWithFrame, int numFrames);
-		void SetAnimLooping(bool b) { m_LoopingAnim = b; };
-		void SetAnimIdle(bool b) { m_IsIdle = b; };
-		void SetAnimPaused(bool b) { m_IsPaused = b; };
+		void SetSpriteWidth(int w);
+		void SetSpriteHeight(int h);
+
+		void SetSpriteX(int x);
+		void SetSpritey(int y);
+
 
 	private:
-		std::shared_ptr<Texture2D> m_Texture2D;
+		Texture2D* m_Texture2D;
 		std::shared_ptr<VertexArray> m_SpriteVertexArray;
 		std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
 		glm::vec3 m_Position;
 		uint32_t m_SpriteWidth, m_SpriteHeight;
-		unsigned int m_CurrentFrame, m_StartFrame, m_LastFrame, m_TotalHorizontalFrame, m_TotalVerticalFrame, m_TotalFrames;
-		int m_ElapsedTime;
-		int m_MSPerFrame;
+		uint32_t m_SpriteX, m_SpriteY;
 
-		bool m_IsIdle;
-		bool m_IsPaused;
-		bool m_LoopingAnim;
 	};
 }

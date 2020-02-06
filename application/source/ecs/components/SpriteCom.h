@@ -18,22 +18,11 @@ Creation date: 02/04/2020
 namespace gswy
 {
 	struct SpriteCom : BaseComponent<SpriteCom> {
-
-		SpriteCom() = delete;
-
-		explicit SpriteCom(int id)
-		{
-			m_sprite = ResourceAllocator<Sprite>::GetInstance()->Get(id);
-		}
-		explicit SpriteCom(std::string name)
-		{
-			m_sprite = ResourceAllocator<Sprite>::GetInstance()->Get(name);
-		}
 		Sprite* Get()
 		{
-			return m_sprite;
+			return &m_sprite;
 		}
 	private:
-		Sprite* m_sprite;
+		Sprite m_sprite;
 	};
 }

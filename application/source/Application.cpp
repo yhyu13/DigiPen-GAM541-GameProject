@@ -52,10 +52,7 @@ public:
 		for (int i = 0; i < 8; ++i)
 		{
 			playerAnim4->AddFrame("SpriteSheetExample", 24 * i, 32 * 3, 24, 32, 1.0 / 15.0);
-		}
-		// Sprite Test
-		ResourceAllocator<Sprite>::GetInstance()->Init();
-		ResourceAllocator<Sprite>::GetInstance()->Add("./asset/SpriteSheetExample.png", "SpriteSheetExample")->SetAnimationKeyFactors(4, 8, 1000 / 15);
+		}	
 	}
 
 	virtual ~Application() {
@@ -75,15 +72,23 @@ public:
 		std::unique_ptr<gswy::BaseComponentSystem> playerControllerComSys = std::make_unique<PlayerControllerComSys>();
 		std::unique_ptr<gswy::BaseComponentSystem> sceneComSys = std::make_unique<SceneComSys>();
 		std::unique_ptr<gswy::BaseComponentSystem> spriteComSys = std::make_unique<SpriteComSys>();
+		std::unique_ptr<gswy::BaseComponentSystem> animationComSys = std::make_unique<AnimationComSys>();
 		world->RegisterSystem(std::move(playerControllerComSys));
 		world->RegisterSystem(std::move(sceneComSys));
 		world->RegisterSystem(std::move(spriteComSys));
+		world->RegisterSystem(std::move(animationComSys));
 		// Initialize game
 		world->Init();
 		// Add an entity with a position
 		auto player = world->GenerateEntity();
 		player.AddComponent(TransformCom(0,0,0));
-		player.AddComponent(SpriteCom("SpriteSheetExample"));
+		player.AddComponent(SpriteCom());
+		auto animCom = AnimationCom();
+		animCom.Add("PlayerAnimation1", "Move1");
+		animCom.Add("PlayerAnimation2", "Move2");
+		animCom.Add("PlayerAnimation3", "Move3");
+		animCom.Add("PlayerAnimation4", "Move4");
+		player.AddComponent(animCom);
 
 		while (!m_window->ShouldExit()) {
 			rateController->FrameStart();
@@ -118,7 +123,6 @@ public:
 					world->Render();
 
 					gswy::Renderer2D::EndScene();
-
 				}
 			}
 			rateController->FrameEnd();

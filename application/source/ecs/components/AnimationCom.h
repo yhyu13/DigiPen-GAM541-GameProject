@@ -18,22 +18,58 @@ Creation date: 02/04/2020
 namespace gswy
 {
 	struct AnimationCom : BaseComponent<AnimationCom> {
+		AnimationCom() = default;
 
-		AnimationCom() = delete;
-
-		explicit AnimationCom(int id)
+		AnimationCom& operator=(const AnimationCom& rhs)
 		{
-			m_animation = ResourceAllocator<Animation>::GetInstance()->Get(id);
+			if (this != &rhs)
+			{
+				m_animation = rhs.m_animation;
+				m_animationState = rhs.m_animationState;
+				m_animationStateMap.clear();
+				for (auto it = rhs.m_animationStateMap.begin(); it != rhs.m_animationStateMap.end(); ++it)
+				{
+					m_animationStateMap[it->first] = it->second;
+				}
+			}
+			return *this;
 		}
-		explicit AnimationCom(std::string name)
+		void Add(std::string name, std::string stateName = "")
 		{
 			m_animation = ResourceAllocator<Animation>::GetInstance()->Get(name);
+			if (stateName.compare("") == 0)
+			{
+				m_animationStateMap[name] = m_animation;
+			}
+			else
+			{
+				m_animationStateMap[stateName] = m_animation;
+			}
 		}
-		Animation* Get()
+		Animation* GetCurrentAnimation()
 		{
 			return m_animation;
 		}
+		std::string GetCurrentAnimationState()
+		{
+			return m_animationState;
+		}
+		void setCurrentAnimationState(const std::string state)
+		{
+			if (m_animationStateMap.find(state) != m_animationStateMap.end())
+			{
+				m_animationState = state;
+				m_animation = m_animationStateMap[state];
+				m_animation->Reset();
+			}
+			else
+			{
+				// TODO : Engine excpetion
+			}
+		}
 	private:
 		Animation* m_animation;
+		std::string m_animationState;
+		std::map<std::string, Animation*> m_animationStateMap;
 	};
 }

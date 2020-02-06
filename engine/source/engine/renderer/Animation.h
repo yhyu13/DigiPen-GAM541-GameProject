@@ -36,12 +36,13 @@ namespace gswy {
 		Animation();
 
 		void AddFrame(std::string textureName, int x, int y, int width, int height, double frameTime);
-
 		const FrameData* GetCurrentFrame() const;
-
 		bool UpdateFrame(double deltaTime);
-
 		void Reset();
+
+		void SetAnimLooping(bool b) { m_IsLooping = b; };
+		void SetAnimIdle(bool b) { m_IsIdle = b; };
+		void SetAnimPaused(bool b) { m_IsPaused = b; };
 
 	private:
 		void IncrementFrame();
@@ -49,5 +50,9 @@ namespace gswy {
 		std::vector<FrameData> frames;
 		int currentFrameIndex;
 		double currentFrameTime;
+
+		bool m_IsIdle;
+		bool m_IsPaused;
+		bool m_IsLooping;
 	};
 }
