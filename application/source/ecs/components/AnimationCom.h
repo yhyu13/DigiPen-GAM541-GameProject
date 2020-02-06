@@ -17,6 +17,9 @@ Creation date: 02/04/2020
 
 namespace gswy
 {
+	/*
+	Data class that stores references to the current animation and maintain an animation state map
+	*/
 	struct AnimationCom : BaseComponent<AnimationCom> {
 
 		void Add(std::string name, std::string stateName)

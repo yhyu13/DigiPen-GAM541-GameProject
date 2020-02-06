@@ -17,6 +17,7 @@ Creation date: 02/04/2020
 
 namespace gswy
 {
+	/* Data class of sprite */
 	struct SpriteCom : BaseComponent<SpriteCom> {
 
 		SpriteCom()

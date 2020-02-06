@@ -55,10 +55,8 @@ namespace gswy
 					PRINT("KEY D TRIGGERED!");
 					animation->setCurrentAnimationState("MoveRight");
 				}
-
-				bool b_isIdel = true;
-
 				//Control Sprite KeyPress
+				bool b_isIdel = true;
 				if (input->IsKeyPressed(GLFW_KEY_W)) {
 					PRINT("KEY W PRESSED!");
 					position->m_x += -sin(glm::radians(0.0f)) * 5 * dt;
