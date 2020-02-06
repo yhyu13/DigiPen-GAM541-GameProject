@@ -23,28 +23,50 @@ Creation date	: 01/26/2020
 
 using namespace gswy;
 
-struct Position : gswy::BaseComponent<Position> {
-	Position() = default;
-	Position(float x) : x(x) {};
-	float x;
+enum GameObjectType {
+	PLAYER,
+	ENEMY
 };
 
-class Wind : public gswy::BaseComponentSystem {
+struct Position : gswy::BaseComponent<Position> {
+	Position() = default;
+	Position(float _x) : x(_x) {
+		value = &x;
+		x_ptr = std::make_shared<float>(x + 2);
+	};
+	float x;
+
+	float* value;
+	std::shared_ptr<float> x_ptr;
+};
+
+struct Transform : gswy::BaseComponent<Transform> {
+	Transform() = default;
+	Transform(float x, float y) : x(x), y(y) {};
+	float x;
+	float y;
+};
+
+class Wind : public gswy::BaseComponentSystem<GameObjectType> {
 public:
 	Wind() {
 		m_systemSignature.AddComponent<Position>();
+		m_systemSignature.AddComponent<Transform>();
 	}
 
 	virtual void Update(double dt) override {
 		for (auto& entity : m_registeredEntities) {
-			gswy::ComponentDecorator<Position> position;
+			gswy::ComponentDecorator<Position, GameObjectType> position;
+			gswy::ComponentDecorator<Transform, GameObjectType> transform;
 			m_parentWorld->Unpack(entity, position);
+			m_parentWorld->Unpack(entity, transform);
 
 			// Move 1 every second
 			position->x += 1.0f * (dt / 1000.0f);
 
 			// Print entity position
-			std::cout << "Entity " << entity.m_id << ": " << position->x << std::endl; // have to override -> operator
+			//std::cout << "Entity " << entity.m_id << ": " << position->x << "	" << *(position->value) << "	" << *(position->x_ptr) <<std::endl;
+			std::cout << "Entity " << entity.m_id << ": " << position->x << " : " << transform->x << " : " << transform->y <<std::endl; // have to override -> operator
 		}
 	}
 };
@@ -73,24 +95,28 @@ public:
 		Input* input = Input::GetInstance();
 
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
-		auto entityManager = std::make_unique<gswy::EntityManager>();
-		auto world = std::make_unique<gswy::GameWorld>(std::move(entityManager));
+		std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = std::make_shared<gswy::EntityManager<GameObjectType>>();
+		std::shared_ptr<GameWorld<GameObjectType>> world = std::make_shared<gswy::GameWorld<GameObjectType>>(entityManager);
+		//auto world = std::make_unique<gswy::GameWorld<GameObjectType>>(std::move(entityManager));
 
 		// Add systems
-		std::unique_ptr<gswy::BaseComponentSystem> wind = std::make_unique<Wind>();
-		world->RegisterSystem(std::move(wind));
+		std::shared_ptr<gswy::BaseComponentSystem<GameObjectType>> wind = std::make_shared<Wind>();
+		world->RegisterSystem(wind);
 
 		// Initialize game
 		world->Init();
 
 		// Add an entity with a position
-		auto tumbleweed = world->GenerateEntity();
-		tumbleweed.AddComponent(Position(0));
+		auto tumbleweed = world->GenerateEntity(GameObjectType::PLAYER);
+		Position position(0);
+		tumbleweed.AddComponent(position);
+		tumbleweed.AddComponent(Transform(1, 2));
 
 		// Run game for "1 second at 50fps"
 		for (int i = 0; i < 50; i++) {
 			world->Update(20);
 		}
+
 		/////////// END OF ECS TEST //////////////
 
 		while (m_isRunning) {

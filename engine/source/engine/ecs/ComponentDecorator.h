@@ -23,14 +23,14 @@ namespace gswy {
 		These decorators help in creating useful abstractions for
 		component specific operations.
 	*/
-	template<typename ComponentType>
+	template<typename ComponentType, typename EntityType>
 	class ComponentDecorator {
 
 	public:
-		ComponentDecorator(): m_owner(NULL), m_component(nullptr), m_manager(nullptr) {
+		ComponentDecorator() {
 		}
 
-		ComponentDecorator(Entity owner, ComponentType* component, ComponentManager<ComponentType>* manager) {
+		ComponentDecorator(Entity<EntityType> owner, ComponentType* component, ComponentManager<ComponentType, EntityType>* manager) {
 			m_owner = owner;
 			m_component = component;
 			m_manager = manager;
@@ -45,9 +45,9 @@ namespace gswy {
 		}
 
 	private:
-		Entity m_owner;
+		Entity<EntityType> m_owner;
 		ComponentType* m_component;
-		ComponentManager<ComponentType>* m_manager;
+		ComponentManager<ComponentType, EntityType>* m_manager;
 
 	};
 

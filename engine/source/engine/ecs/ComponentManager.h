@@ -23,7 +23,7 @@ namespace gswy {
 	template<typename ComponentType>
 	struct ComponentData {
 		unsigned int m_size = 0;
-		std::array<ComponentType, 1024>* m_data;
+		std::array<ComponentType, 1024> m_data;
 	};
 
 	class BaseComponentManager {
@@ -34,43 +34,47 @@ namespace gswy {
 		BaseComponentManager& operator=(const BaseComponentManager&) = default;
 	};
 
-	template<typename ComponentType>
+
+	/*
+		Component manager brings the entities and their corresponding components together.
+		Each component-type gets a component-manager.
+
+		Instead of making entities own their components, it is much more cache efficient
+		to store all components of a type at a single location. This ensures that when
+		systems run their update methods, they access all required components of a type
+		from a contiguous memory.
+	*/
+	template<typename ComponentType, typename EntityType>
 	class ComponentManager :public BaseComponentManager {
 
 	public:
 
 		ComponentManager() {
-			m_components.m_data = static_cast<std::array<ComponentType, 1024>*>(malloc(sizeof(ComponentType) * 1024));
 		}
 
 		~ComponentManager() {
 		}
 
-		/*
-			Add a component to an entity
-		*/
-		unsigned int AddComponentToEntity(Entity entity, ComponentType& component) {
+		unsigned int AddComponentToEntity(Entity<EntityType> entity, ComponentType& component) {
 			unsigned int index = m_components.m_size++;
-			m_components.m_data->at(index) = component;
+			m_components.m_data.at(index) = component;
 			m_entitiesAndComponentIndexes[entity] = index;
 			m_entities[index] = entity;
 			return index;
 		}
 
-		/*
-			Get a component of an entity
-		*/
-		ComponentType* GetComponentByEntity(Entity entity) {
+		ComponentType* GetComponentByEntity(Entity<EntityType> entity) {
 			unsigned int index = m_entitiesAndComponentIndexes[entity];
-			return &m_components.m_data->at(index);
+			return &m_components.m_data.at(index);
 		}
 
 		/*
 			Remove component from an entity.
-			Every time we remove an entity, we update the component data by moving
-			the component-instance to take the place of the removed component instance.
+			Every time we remove an entity, we update the component list by moving
+			the last component-instance in the list to take the place of the removed
+			component instance.
 		*/
-		void RemoveComponentFromEntity(Entity entity) {
+		void RemoveComponentFromEntity(Entity<EntityType> entity) {
 			unsigned int index = m_entitiesAndComponentIndexes[entity];
 			unsigned int lastIndex = --m_components.m_size;
 
@@ -79,7 +83,7 @@ namespace gswy {
 			m_entitiesAndComponentIndexes.erase(entity);
 
 			// updating the mapping for the moved entity
-			Entity movedEntity = m_entities[lastIndex];
+			Entity<EntityType> movedEntity = m_entities[lastIndex];
 			m_entitiesAndComponentIndexes[movedEntity] = index;
 			m_entities[index] = movedEntity;
 		}
@@ -94,12 +98,12 @@ namespace gswy {
 		/*
 			Maps the entity to the index of the component instance in the m_components
 		*/
-		std::map<Entity, unsigned int> m_entitiesAndComponentIndexes;
+		std::map<Entity<EntityType>, unsigned int> m_entitiesAndComponentIndexes;
 
 		/*
 			Stores all entities indexed by the index of the component instance in m_components
 		*/
-		std::array<Entity, 1024> m_entities;
+		std::array<Entity<EntityType>, 1024> m_entities;
 	};
 
 }

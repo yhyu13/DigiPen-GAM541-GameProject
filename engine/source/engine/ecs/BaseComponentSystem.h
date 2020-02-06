@@ -20,6 +20,7 @@ Creation date	: 02/03/2020
 
 namespace gswy {
 
+	template <typename EntityType>
 	class GameWorld;
 
 	/*
@@ -56,29 +57,50 @@ namespace gswy {
 			}
 		};
 	*/
+	template <typename EntityType>
 	class BaseComponentSystem {
 
 	public:
 
-		BaseComponentSystem();
+		BaseComponentSystem::BaseComponentSystem() : m_parentWorld(nullptr) {
+		}
+
 		virtual ~BaseComponentSystem() = default;
 		BaseComponentSystem(const BaseComponentSystem&) = default;
 		BaseComponentSystem& operator=(const BaseComponentSystem&) = default;
 
-		virtual void Init();
-		virtual void Update(double frameTime);
-		virtual void Render();
+		virtual void Init() {
+		}
 
-		void SetWorld(GameWorld* world);
-		void AddEntity(const Entity& entity);
-		void RemoveEntity(const Entity& entityToBeRemoved);
-		BitMaskSignature& GetSystemSignature();
+		virtual void Update(double frameTime) {
+		}
+
+		virtual void Render() {
+		}
+
+		void SetWorld(GameWorld<EntityType>* world) {
+			m_parentWorld = world;
+		}
+
+		void AddEntity(const Entity<EntityType>& entity) {
+			m_registeredEntities.push_back(entity);
+		}
+
+		void RemoveEntity(const Entity<EntityType>& entity) {
+			m_registeredEntities.erase(
+				std::remove(m_registeredEntities.begin(), m_registeredEntities.end(), entity)
+			);
+		}
+
+		BitMaskSignature& GetSystemSignature() {
+			return m_systemSignature;
+		}
 
 	protected:
 
-		std::vector<Entity> m_registeredEntities;
+		std::vector<Entity<EntityType>> m_registeredEntities;
 		BitMaskSignature m_systemSignature;
-		GameWorld* m_parentWorld;
+		GameWorld<EntityType>* m_parentWorld;
 
 	private:
 

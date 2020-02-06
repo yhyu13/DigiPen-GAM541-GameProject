@@ -24,14 +24,20 @@ namespace gswy {
 		These decorators help in creating useful abstractions for
 		entity specific operations.
 	*/
+	template <typename EntityType>
 	class EntityDecorator {
 
 	public:
 
-		EntityDecorator(Entity entity, GameWorld* world);
-		~EntityDecorator();
+		EntityDecorator(Entity<EntityType> entity, GameWorld<EntityType>* world) : m_entity(entity), m_world(world) {
+		}
 
-		void RemoveEntity();
+		~EntityDecorator() {
+		}
+
+		void RemoveEntity() {
+			m_world->RemoveEntity(m_entity);
+		}
 
 		template<typename ComponentType>
 		void AddComponent(ComponentType& component) {
@@ -44,7 +50,7 @@ namespace gswy {
 		}
 
 		template<typename ComponentType>
-		ComponentDecorator<ComponentType> GetComponent() {
+		ComponentDecorator<ComponentType, EntityType> GetComponent() {
 			ComponentDecorator<ComponentType> handle;
 			m_world.Unpack(entity, handle);
 			return handle;
@@ -54,7 +60,7 @@ namespace gswy {
 
 	private:
 
-		Entity m_entity;
-		GameWorld* m_world;
+		Entity<EntityType> m_entity;
+		GameWorld<EntityType>* m_world;
 	};
 }
