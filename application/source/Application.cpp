@@ -66,7 +66,7 @@ public:
 
 			// Print entity position
 			//std::cout << "Entity " << entity.m_id << ": " << position->x << "	" << *(position->value) << "	" << *(position->x_ptr) <<std::endl;
-			std::cout << "Entity " << entity.m_id << ": " << position->x << " : " << transform->x << " : " << transform->y <<std::endl; // have to override -> operator
+			std::cout << "Entity: " << entity.m_type <<"  " << entity.m_id << ": " << position->x << " : " << transform->x << " : " << transform->y <<std::endl; // have to override -> operator
 		}
 	}
 };
@@ -111,6 +111,24 @@ public:
 		Position position(0);
 		tumbleweed.AddComponent(position);
 		tumbleweed.AddComponent(Transform(1, 2));
+
+		auto tumbleweed2 = world->GenerateEntity(GameObjectType::ENEMY);
+		Position position2(10);
+		tumbleweed2.AddComponent(position2);
+		tumbleweed2.AddComponent(Transform(10, 20));
+
+		auto tumbleweed3 = world->GenerateEntity(GameObjectType::ENEMY);
+		Position position3(100);
+		tumbleweed3.AddComponent(position3);
+		tumbleweed3.AddComponent(Transform(100, 200));
+
+		// Run game for "1 second at 50fps"
+		for (int i = 0; i < 50; i++) {
+			world->Update(20);
+		}
+		tumbleweed2.RemoveComponent<Transform>();
+
+		std::cout << "\n\n\n\n\n";
 
 		// Run game for "1 second at 50fps"
 		for (int i = 0; i < 50; i++) {
