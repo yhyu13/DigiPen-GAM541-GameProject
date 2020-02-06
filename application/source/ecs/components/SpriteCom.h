@@ -18,11 +18,31 @@ Creation date: 02/04/2020
 namespace gswy
 {
 	struct SpriteCom : BaseComponent<SpriteCom> {
+
+		SpriteCom()
+		{
+			m_sprite = new Sprite();
+		}
+
+		SpriteCom& operator=(const SpriteCom& rhs)
+		{
+			if (this != &rhs)
+			{
+				m_sprite = rhs.m_sprite;
+			}
+			return *this;
+		}
+
+		~SpriteCom()
+		{
+			delete m_sprite;
+		}
+
 		Sprite* Get()
 		{
-			return &m_sprite;
+			return m_sprite;
 		}
 	private:
-		Sprite m_sprite;
+		Sprite* m_sprite;
 	};
 }

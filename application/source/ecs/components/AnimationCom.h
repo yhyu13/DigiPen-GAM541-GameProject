@@ -18,22 +18,7 @@ Creation date: 02/04/2020
 namespace gswy
 {
 	struct AnimationCom : BaseComponent<AnimationCom> {
-		AnimationCom() = default;
 
-		AnimationCom& operator=(const AnimationCom& rhs)
-		{
-			if (this != &rhs)
-			{
-				m_animation = rhs.m_animation;
-				m_animationState = rhs.m_animationState;
-				m_animationStateMap.clear();
-				for (auto it = rhs.m_animationStateMap.begin(); it != rhs.m_animationStateMap.end(); ++it)
-				{
-					m_animationStateMap[it->first] = it->second;
-				}
-			}
-			return *this;
-		}
 		void Add(std::string name, std::string stateName = "")
 		{
 			m_animation = ResourceAllocator<Animation>::GetInstance()->Get(name);
