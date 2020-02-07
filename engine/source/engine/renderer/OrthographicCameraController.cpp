@@ -22,6 +22,10 @@ namespace gswy {
 
 	void OrthographicCameraController::OnUpdate(double ts)
 	{
-		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		float left = -m_AspectRatio * m_ZoomLevel + m_CameraPosition.x;
+		float right = m_AspectRatio * m_ZoomLevel + m_CameraPosition.x;
+		float button = -m_ZoomLevel + m_CameraPosition.y;
+		float top = m_ZoomLevel + m_CameraPosition.y;
+		m_Camera.SetProjection(left, right, button, top);
 	}
 }

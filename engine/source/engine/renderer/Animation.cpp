@@ -25,7 +25,7 @@ Animation::Animation()
 	currentFrameTime(0.0),
 	m_IsIdle(true),
 	m_IsPaused(false),
-	m_IsLooping(false)
+	m_IsLooping(true)
 {
 }
 

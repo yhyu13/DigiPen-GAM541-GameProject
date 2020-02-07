@@ -87,6 +87,7 @@ public:
 		animCom.Add("PlayerAnimation4", "MoveDown");
 		animCom.setCurrentAnimationState("MoveUp");
 		player.AddComponent(animCom);
+		auto entity = player.GetEntity();
 
 		while (!m_window->ShouldExit()) {
 
@@ -112,6 +113,10 @@ public:
 				}
 
 				{
+					// Setting camera position as the player position (TODO : 1, Making gameworld a singleton 2, making gameworld be able to get entity by ID or something)
+					ComponentDecorator<TransformCom, GameObjectType> position;
+					world->Unpack(entity, position);
+					m_CameraController.SetPosition(glm::vec3(position->m_x, position->m_y, position->m_z));
 					m_CameraController.OnUpdate(rateController->GetFrameTime());
 
 					gswy::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
