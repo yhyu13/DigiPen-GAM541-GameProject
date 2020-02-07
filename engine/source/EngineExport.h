@@ -38,3 +38,12 @@ Creation date	: 01/26/2020
 #include "engine/renderer/Renderer2D.h"
 #include "engine/renderer/Shader.h"
 #include "engine/renderer/OrthographicCameraController.h"
+
+
+///// Entity Component System /////
+#include "engine/ecs/BaseComponentSystem.h"
+#include "engine/ecs/BaseComponent.h"
+#include "engine/ecs/ComponentDecorator.h"
+#include "engine/ecs/GameWorld.h"
+#include "engine/ecs/EntityManager.h"
+#include "engine/ecs/EntityDecorator.h"
