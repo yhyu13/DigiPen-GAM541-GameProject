@@ -18,7 +18,7 @@ Creation date	: 01/26/2020
 #include "engine/audio/AudioManager.h"
 
 #include <iostream>
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 #include <sstream>
 
 namespace gswy {

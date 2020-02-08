@@ -26,7 +26,6 @@ LibDir["fmod_bank"] = "engine/vendors/fmod/api/fsbank/lib/x64"
 LibDir["fmod_studio"] = "engine/vendors/fmod/api/studio/lib/x64"
 
 LibName = {}
-LibName["glfw"] = "glfw3.lib"
 LibName["fmod_core"] = "fmod_vc.lib"
 LibName["fmod_bank"] = "fsbank_vc.lib"
 LibName["fmod_studio"] = "fmodstudio_vc.lib"
@@ -37,9 +36,11 @@ DllName["fmod_bank"] = "fsbank.dll"
 DllName["fmod_bank2"] = "libfsbvorbis64.dll"
 DllName["fmod_studio"] = "fmodstudio.dll"
 
+include "engine/vendors/glfw"
+
 project "engine"
 	location "engine"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -79,7 +80,6 @@ project "engine"
 
 	libdirs
 	{
-		"%{LibDir.glfw}",
 		"%{LibDir.fmod_core}",
 		"%{LibDir.fmod_bank}",
 		"%{LibDir.fmod_studio}"
@@ -88,7 +88,7 @@ project "engine"
 	links
 	{
 		"opengl32.lib",
-		"%{LibName.glfw}",
+		"glfw",
 		"%{LibName.fmod_core}",
 		"%{LibName.fmod_bank}",
 		"%{LibName.fmod_studio}"
@@ -116,11 +116,11 @@ project "engine"
 		}
 
 	filter "configurations:Debug"
-		buildoptions "/MDd"
+		buildoptions "/MTd"
 		symbols "On"
 
 	filter "configurations:Release"
-		buildoptions "/MD"
+		buildoptions "/MT"
 		optimize "On"
 
 project "application"
@@ -173,9 +173,9 @@ project "application"
 		}
 
 	filter "configurations:Debug"
-		buildoptions "/MDd"
+		buildoptions "/MTd"
 		symbols "On"
 
 	filter "configurations:Release"
-		buildoptions "/MD"
+		buildoptions "/MT"
 		optimize "On"
