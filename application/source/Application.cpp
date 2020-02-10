@@ -12,20 +12,18 @@ Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
 #include "EngineExport.h"
-#include "engine/renderer/Renderer2D.h"
-
-#include "engine/ecs/BaseComponentSystem.h"
-#include "engine/ecs/BaseComponent.h"
-#include "engine/ecs/ComponentDecorator.h"
-#include "engine/ecs/GameWorld.h"
-#include "engine/ecs/EntityManager.h"
-#include "engine/ecs/EntityDecorator.h"
 
 using namespace gswy;
 
 enum GameObjectType {
 	PLAYER,
 	ENEMY
+};
+
+enum EventType {
+	A,
+	B,
+	C
 };
 
 struct Position : gswy::BaseComponent<Position> {
@@ -47,11 +45,17 @@ struct Transform : gswy::BaseComponent<Transform> {
 	float y;
 };
 
+EventQueue<GameObjectType, EventType> queue;
+
 class Wind : public gswy::BaseComponentSystem<GameObjectType> {
 public:
 	Wind() {
 		m_systemSignature.AddComponent<Position>();
 		m_systemSignature.AddComponent<Transform>();
+	}
+
+	virtual void Init() {
+		queue.Subscribe<Wind>(this, EventType::A, &Wind::OnEvent);
 	}
 
 	virtual void Update(double dt) override {
@@ -68,6 +72,11 @@ public:
 			//std::cout << "Entity " << entity.m_id << ": " << position->x << "	" << *(position->value) << "	" << *(position->x_ptr) <<std::endl;
 			std::cout << "Entity: " << entity.m_type <<"  " << entity.m_id << ": " << position->x << " : " << transform->x << " : " << transform->y <<std::endl; // have to override -> operator
 		}
+	}
+
+	void OnEvent(Event<GameObjectType, EventType>* collision) {
+		std::cout << "type - 1 : " << collision->m_entityA.m_type << std::endl;
+		std::cout << "type - 2 : " << collision->m_entityB.m_type;
 	}
 };
 
@@ -95,6 +104,7 @@ public:
 		Input* input = Input::GetInstance();
 
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
+
 		std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = std::make_shared<gswy::EntityManager<GameObjectType>>();
 		std::shared_ptr<GameWorld<GameObjectType>> world = std::make_shared<gswy::GameWorld<GameObjectType>>(entityManager);
 		//auto world = std::make_unique<gswy::GameWorld<GameObjectType>>(std::move(entityManager));
@@ -126,6 +136,13 @@ public:
 		for (int i = 0; i < 50; i++) {
 			world->Update(20);
 		}
+
+		Event<GameObjectType, EventType> e;
+		e.m_entityA = tumbleweed.GetEntity();
+		e.m_entityB = tumbleweed2.GetEntity();
+		e.m_type = EventType::A;
+		queue.Publish(&e);
+
 		tumbleweed2.RemoveComponent<Transform>();
 
 		std::cout << "\n\n\n\n\n";

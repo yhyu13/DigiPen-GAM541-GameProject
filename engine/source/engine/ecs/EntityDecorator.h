@@ -56,6 +56,10 @@ namespace gswy {
 			return handle;
 		}
 
+		Entity<EntityType> GetEntity() {
+			return m_entity;
+		}
+
 	protected:
 
 	private:

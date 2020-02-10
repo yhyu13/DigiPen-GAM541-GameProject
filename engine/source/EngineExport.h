@@ -47,3 +47,8 @@ Creation date	: 01/26/2020
 #include "engine/ecs/GameWorld.h"
 #include "engine/ecs/EntityManager.h"
 #include "engine/ecs/EntityDecorator.h"
+
+///// Event System /////
+#include "engine/events/Event.h"
+#include "engine/events/EventHandler.h"
+#include "engine/events/EventQueue.h"
