@@ -56,6 +56,7 @@ public:
 
 	virtual void Init() {
 		queue.Subscribe<Wind>(this, EventType::A, &Wind::OnEvent);
+		queue.Subscribe<Wind>(this, EventType::B, &Wind::OnEvent);
 	}
 
 	virtual void Update(double dt) override {
@@ -75,8 +76,9 @@ public:
 	}
 
 	void OnEvent(Event<GameObjectType, EventType>* collision) {
-		std::cout << "type - 1 : " << collision->m_entityA.m_type << std::endl;
-		std::cout << "type - 2 : " << collision->m_entityB.m_type;
+		std::cout << "event-type: " << collision->m_type << std::endl;
+		std::cout << "entity-1 type: " << collision->m_entityA.m_type << std::endl;
+		std::cout << "entity-2 type: " << collision->m_entityB.m_type << std::endl << std::endl;
 	}
 };
 
@@ -137,11 +139,19 @@ public:
 			world->Update(20);
 		}
 
+		std::cout << "\n\nTesting event queue.... start\n";
 		Event<GameObjectType, EventType> e;
 		e.m_entityA = tumbleweed.GetEntity();
 		e.m_entityB = tumbleweed2.GetEntity();
 		e.m_type = EventType::A;
 		queue.Publish(&e);
+
+		Event<GameObjectType, EventType> e1;
+		e1.m_entityA = tumbleweed.GetEntity();
+		e1.m_entityB = tumbleweed2.GetEntity();
+		e1.m_type = EventType::B;
+		queue.Publish(&e1);
+		std::cout << "\n\nTesting event queue.... finished\n";
 
 		tumbleweed2.RemoveComponent<Transform>();
 
