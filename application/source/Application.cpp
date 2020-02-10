@@ -26,6 +26,12 @@ enum EventType {
 	C
 };
 
+struct CollisionEvent : Event<GameObjectType, EventType> {
+
+	float a;
+	int b;
+};
+
 struct Position : gswy::BaseComponent<Position> {
 	Position() = default;
 	Position(float _x) : x(_x) {
@@ -57,6 +63,7 @@ public:
 	virtual void Init() {
 		queue.Subscribe<Wind>(this, EventType::A, &Wind::OnEvent);
 		queue.Subscribe<Wind>(this, EventType::B, &Wind::OnEvent);
+		queue.Subscribe<Wind>(this, EventType::C, &Wind::OnEvent);
 	}
 
 	virtual void Update(double dt) override {
@@ -76,9 +83,22 @@ public:
 	}
 
 	void OnEvent(Event<GameObjectType, EventType>* collision) {
+
+		CollisionEvent* e = dynamic_cast<CollisionEvent*> (collision);
+		if (e) {
+			std::cout << "a: " << e->a << std::endl;
+			std::cout << "b: " << e->b << std::endl;
+		}
+
+		if (collision->m_type == EventType::C) {
+			CollisionEvent* event = static_cast<CollisionEvent*> (collision);
+			std::cout << "a: " << event->a << std::endl;
+			std::cout << "b: " << event->b << std::endl;
+		}
 		std::cout << "event-type: " << collision->m_type << std::endl;
 		std::cout << "entity-1 type: " << collision->m_entityA.m_type << std::endl;
 		std::cout << "entity-2 type: " << collision->m_entityB.m_type << std::endl << std::endl;
+
 	}
 };
 
@@ -151,6 +171,15 @@ public:
 		e1.m_entityB = tumbleweed2.GetEntity();
 		e1.m_type = EventType::B;
 		queue.Publish(&e1);
+
+		CollisionEvent e2;
+		e2.m_entityA = tumbleweed.GetEntity();
+		e2.m_entityB = tumbleweed2.GetEntity();
+		e2.m_type = EventType::C;
+		e2.a = 10.8f;
+		e2.b = 10;
+		queue.Publish(&e2);
+
 		std::cout << "\n\nTesting event queue.... finished\n";
 
 		tumbleweed2.RemoveComponent<Transform>();

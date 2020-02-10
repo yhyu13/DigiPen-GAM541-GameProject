@@ -18,11 +18,21 @@ Creation date	: 02/09/2020
 namespace gswy {
 
 	struct BaseEvent {
+
+		BaseEvent() = default;
+		
+		virtual ~BaseEvent() {
+		}
 	};
 	
 	template <typename EntityType, typename EventType>
 	struct Event: BaseEvent {
 	
+		Event() = default;
+
+		virtual ~Event() {
+		}
+
 		EventType m_type;
 
 		Entity<EntityType> m_entityA;
