@@ -39,7 +39,7 @@ namespace gswy {
 
 		~Window();
 
-		static Window* CreateWindow(const WindowProperties& properties = WindowProperties());
+		static Window* InitializeWindow(const WindowProperties& properties = WindowProperties());
 
 		void Update(double dt);
 		void Shutdown();

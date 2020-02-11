@@ -15,6 +15,7 @@ Creation date	: 01/26/2020
 
 #include <iostream>
 
+#include "engine/logging/LoggingCore.h"
 
 //#ifdef ENGINE_BUILD_DLL
 //	#define ENGINE_API __declspec(dllexport)
@@ -28,12 +29,13 @@ Creation date	: 01/26/2020
 #define ENGINE_API 
 #endif
 
-#define ASSERT(x, ...) { if(x == true) { std::cout << "Assertion failed: " << __VA_ARGS__; __debugbreak(); } }
+
+#define ASSERT(x, ...) { if(x == true) { ENGINE_CRITICAL("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
 
 #ifdef _DEBUG 
-#define DEBUG_PRINT(x) std::cout << x << std::endl
+#define DEBUG_PRINT(x) ENGINE_DEBUG(#x)
 #else
 #define DEBUG_PRINT(x)
 #endif // DEBUG
 
-#define PRINT(x) std::cout << x << std::endl
+#define PRINT(x) ENGINE_INFO(#x);

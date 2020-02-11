@@ -16,6 +16,7 @@ Creation date	: 01/26/2020
 #include "engine/framerate-controller/FramerateController.h"
 #include "engine/input/Input.h"
 #include "engine/audio/AudioManager.h"
+#include "engine/logging/Logger.h"
 
 #include <iostream>
 #include <GLFW/glfw3.h>
@@ -24,7 +25,11 @@ Creation date	: 01/26/2020
 namespace gswy {
 
 	Engine::Engine(): m_isRunning(true) {
-		m_window = Window::CreateWindow();
+		Logger::Init();
+		ENGINE_INFO("Initialized Engine Log!");
+		APP_INFO("Initialized Application Log!");
+
+		m_window = Window::InitializeWindow();
 		AudioManager::GetInstance()->Init();
 	}
 	
