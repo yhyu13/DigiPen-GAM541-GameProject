@@ -121,29 +121,30 @@ bool gswy::CircleAABBCollisions(Circle* Circle1, float PosX1, float PosY1,
 bool gswy::AABBCircleCollisions(AABB* AABB1, float PosX1, float PosY1,
 	Circle* Circle2, float PosX2, float PosY2)
 {
-	//Collision Math And Logic
-	float Radius2;
-	Radius2 = Circle2->GetRadius();
+	return CircleAABBCollisions(Circle2, PosX2, PosY2, AABB1, PosX1, PosY1);
+	////Collision Math And Logic
+	//float Radius2;
+	//Radius2 = Circle2->GetRadius();
 
-	Circle* pCircle2 = (Circle*)Circle2;
-	AABB* pAABB1 = (AABB*)AABB1;
+	//Circle* pCircle2 = (Circle*)Circle2;
+	//AABB* pAABB1 = (AABB*)AABB1;
 
-	//Half Extents for reaching the edge point from center
-	glm::vec2 AABB_HalfExtents(pAABB1->GetWidth() / 2, pAABB1->GetHeight() / 2);
-	glm::vec2 Circle_Center(PosX2/* + Radius2*/, PosY2/* + Radius2*/);
-	glm::vec2 AABB_Center(PosX1/* + AABB_HalfExtents.x*/, PosY1/* + AABB_HalfExtents.y*/);
+	////Half Extents for reaching the edge point from center
+	//glm::vec2 AABB_HalfExtents(pAABB1->GetWidth() / 2, pAABB1->GetHeight() / 2);
+	//glm::vec2 Circle_Center(PosX2/* + Radius2*/, PosY2/* + Radius2*/);
+	//glm::vec2 AABB_Center(PosX1/* + AABB_HalfExtents.x*/, PosY1/* + AABB_HalfExtents.y*/);
 
-	glm::vec2 difference = Circle_Center - AABB_Center;
-	glm::vec2 clamped = clamp(difference, -AABB_HalfExtents, AABB_HalfExtents);
+	//glm::vec2 difference = Circle_Center - AABB_Center;
+	//glm::vec2 clamped = clamp(difference, -AABB_HalfExtents, AABB_HalfExtents);
 
-	glm::vec2 edgepoint = AABB_Center + clamped;
+	//glm::vec2 edgepoint = AABB_Center + clamped;
 
-	difference = edgepoint - Circle_Center;
+	//difference = edgepoint - Circle_Center;
 
-	if (glm::length(difference) <= Radius2)
-		return true;
+	//if (glm::length(difference) <= Radius2)
+	//	return true;
 
-	return false;
+	//return false;
 }
 
 bool CheckCollisionAndGenerateContact(Shape* pShape1, float PosX1, float PosY1,
