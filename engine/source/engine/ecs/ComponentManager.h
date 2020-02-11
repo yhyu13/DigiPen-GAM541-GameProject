@@ -14,7 +14,7 @@ Creation date	: 02/03/2020
 #pragma once
 
 #include <map>
-#include <array>
+#include <vector>
 
 #include "Entity.h"
 
@@ -23,7 +23,11 @@ namespace gswy {
 	template<typename ComponentType>
 	struct ComponentData {
 		unsigned int m_size = 0;
-		std::array<ComponentType, 1024> m_data;
+		std::vector<ComponentType> m_data;
+
+		ComponentData() {
+			m_data.reserve(1024);
+		}
 	};
 
 	class BaseComponentManager {
@@ -50,6 +54,7 @@ namespace gswy {
 	public:
 
 		ComponentManager() {
+			m_entities.reserve(1024);
 		}
 
 		~ComponentManager() {
@@ -57,9 +62,9 @@ namespace gswy {
 
 		unsigned int AddComponentToEntity(Entity<EntityType> entity, ComponentType& component) {
 			unsigned int index = m_components.m_size++;
-			m_components.m_data.at(index) = component;
+			m_components.m_data.push_back(component);
 			m_entitiesAndComponentIndexes[entity] = index;
-			m_entities[index] = entity;
+			m_entities.push_back(entity);
 			return index;
 		}
 
@@ -103,7 +108,7 @@ namespace gswy {
 		/*
 			Stores all entities indexed by the index of the component instance in m_components
 		*/
-		std::array<Entity<EntityType>, 1024> m_entities;
+		std::vector<Entity<EntityType>> m_entities;
 	};
 
 }

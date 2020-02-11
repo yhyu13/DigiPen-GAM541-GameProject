@@ -84,7 +84,7 @@ namespace gswy {
 			m_systems.push_back(system);
 		}
 
-		void RemoveEntity(Entity<EntityType> entityToBeRemoved) {
+		void RemoveEntity(Entity<EntityType> entity) {
 			for (auto&& system : m_systems) {
 				system->RemoveEntity(entity);
 			}
@@ -106,8 +106,7 @@ namespace gswy {
 		template<typename ComponentType>
 		void RemoveComponent(const Entity<EntityType>& entity) {
 			ComponentManager<ComponentType, EntityType>* manager = GetComponentManager<ComponentType>();
-			ComponentDecorator<ComponentType, EntityType> component = manager->GetComponentByEntity(entity);
-			component.RemoveComponent();
+			manager->RemoveComponentFromEntity(entity);
 			BitMaskSignature oldMask = m_entityMasks[entity];
 			m_entityMasks[entity].RemoveComponent<ComponentType>();
 			UpdateComponentSystems(entity, oldMask);
