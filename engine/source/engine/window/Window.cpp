@@ -19,7 +19,7 @@ Creation date	: 01/26/2020
 
 namespace gswy {
 	
-	Window* Window::CreateWindow(const WindowProperties& properties) {
+	Window* Window::InitializeWindow(const WindowProperties& properties) {
 		return new Window(properties);
 	}
 

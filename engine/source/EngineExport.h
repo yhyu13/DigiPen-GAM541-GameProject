@@ -18,9 +18,6 @@ Creation date	: 01/26/2020
 
 
 ///// Must be inherited by the client application /////
-#include <iostream>
-#include <GLFW/glfw3.h>
-#include <sstream>
 #include "engine/Engine.h"
 #include "engine/window/Window.h"
 #include "engine/audio/AudioManager.h"

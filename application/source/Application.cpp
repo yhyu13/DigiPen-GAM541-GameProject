@@ -17,6 +17,8 @@ Creation date	: 01/26/2020
 #include "ecs/componentSystem/SpriteComSys.h"
 #include "ecs/componentSystem/AnimationComSys.h"
 
+#include <sstream>
+
 using namespace gswy;
 
 enum EventType {
@@ -75,9 +77,8 @@ public:
 			// Move 1 every second
 			position->x += 1.0f * (dt / 1000.0f);
 
-			// Print entity position
-			//std::cout << "Entity " << entity.m_id << ": " << position->x << "	" << *(position->value) << "	" << *(position->x_ptr) <<std::endl;
-			std::cout << "Entity: " << entity.m_type <<"  " << entity.m_id << ": " << position->x << " : " << transform->x << " : " << transform->y <<std::endl; // have to override -> operator
+			// Print entity information
+			//APP_DEBUG("Entity: {0}   {1}: {2} : {3} : {4}", entity.m_type, entity.m_id, position->x, transform->x, transform->y);
 		}
 	}
 
@@ -91,12 +92,12 @@ public:
 
 		if (collision->m_type == EventType::C) {
 			CollisionEvent* event = static_cast<CollisionEvent*> (collision);
-			std::cout << "a: " << event->a << std::endl;
-			std::cout << "b: " << event->b << std::endl;
+			APP_ERROR("a: {0}", event->a);
+			APP_CRITICAL("b: {0}", event->b);
 		}
-		std::cout << "event-type: " << collision->m_type << std::endl;
-		std::cout << "entity-1 type: " << collision->m_entityA.m_type << std::endl;
-		std::cout << "entity-2 type: " << collision->m_entityB.m_type << std::endl << std::endl;
+		APP_TRACE("event-type: {0}", collision->m_type);
+		APP_TRACE("entity-1 type: {0}", collision->m_entityA.m_type);
+		APP_TRACE("entity-2 type: {0}", collision->m_entityB.m_type);
 
 	}
 };
@@ -156,6 +157,7 @@ public:
 		world->RegisterSystem(std::make_shared<SceneComSys>());
 		world->RegisterSystem(std::make_shared<SpriteComSys>());
 		world->RegisterSystem(std::make_shared<AnimationComSys>());
+		world->RegisterSystem(std::make_shared<Wind>());
 
 		// Initialize game
 		world->Init();
@@ -232,6 +234,7 @@ public:
 				std::stringstream stream;
 				stream << "Frame Time: " << rateController->GetFrameTime() * 1000 << "ms";
 				m_window->UpdateTitle(stream.str());
+				ENGINE_DEBUG("Frame Time: {0}", stream.str());
 #endif
 				{
 					// window update
