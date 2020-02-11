@@ -55,3 +55,6 @@ Creation date	: 01/26/2020
 #include "engine/events/Event.h"
 #include "engine/events/EventHandler.h"
 #include "engine/events/EventQueue.h"
+
+///// Physics /////
+#include "engine/physics/Collisions.h"
