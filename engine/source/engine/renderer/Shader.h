@@ -12,8 +12,6 @@ Creation date: 01/26/2020
 
 #pragma once
 
-#include <memory>
-#include <string>
 #include <glm/glm.hpp>
 #include "engine/EngineCore.h"
 

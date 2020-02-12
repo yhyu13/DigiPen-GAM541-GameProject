@@ -11,16 +11,14 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "Engine.h"
 #include "engine/window/Window.h"
 #include "engine/framerate-controller/FramerateController.h"
 #include "engine/input/Input.h"
 #include "engine/audio/AudioManager.h"
-#include "engine/logging/Logger.h"
 
-#include <iostream>
 #include <GLFW/glfw3.h>
-#include <sstream>
 
 namespace gswy {
 

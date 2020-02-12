@@ -13,8 +13,6 @@ Creation date	: 01/26/2020
 
 #pragma once
 
-#include <iostream>
-
 #include "engine/logging/LoggingCore.h"
 
 //#ifdef ENGINE_BUILD_DLL

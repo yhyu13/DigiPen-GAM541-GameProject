@@ -11,6 +11,7 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "engine/window/Window.h"
 #include "engine/EngineCore.h"
 

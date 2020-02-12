@@ -11,6 +11,7 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
 Creation date	: 02/10/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "Logger.h"
 
 namespace gswy {

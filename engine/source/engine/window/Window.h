@@ -13,8 +13,6 @@ Creation date	: 01/26/2020
 
 #pragma once
 
-#include <string>
-
 #include "engine/EngineCore.h"
 #include "engine/input/Input.h"
 

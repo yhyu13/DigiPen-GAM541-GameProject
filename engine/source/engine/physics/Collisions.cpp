@@ -11,8 +11,8 @@ Author			: Taksh Goyal (taksh.goyal@digipen.edu | 60001319)
 Creation date	: 02/11/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "Collisions.h"
-#include <math.h>
 #include "glm/glm.hpp"
 
 using namespace gswy;

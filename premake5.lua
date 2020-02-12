@@ -46,6 +46,9 @@ project "engine"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-intermediate/" .. outputdir .. "/%{prj.name}")
+	
+	pchheader "engine-precompiled-header.h"
+	pchsource "engine/source/engine-precompiled-header.cpp"
 
 	files
 	{
@@ -94,8 +97,10 @@ project "engine"
 		"%{LibName.fmod_core}",
 		"%{LibName.fmod_bank}",
 		"%{LibName.fmod_studio}"
-		
 	}
+	
+	filter { "files:**.c" }
+		compileas "C++"
 
 	filter "system:windows"
 		cppdialect "C++17"

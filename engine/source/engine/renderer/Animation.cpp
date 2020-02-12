@@ -9,6 +9,7 @@ Author: Hang Yu (hang.yu@digipen.edu | 60001119)
 Creation date: 02/04/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "Animation.h"
 
 using namespace gswy;

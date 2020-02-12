@@ -10,11 +10,8 @@ Author: Kyle Wang (kyle.wang@digipen.edu | 60000719)
 Creation date: 01/26/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "OpenGLShader.h"
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>

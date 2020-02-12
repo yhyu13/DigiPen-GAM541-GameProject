@@ -13,9 +13,6 @@ Creation date	: 02/09/2020
 
 #pragma once
 
-#include <list>
-#include <map>
-
 #include "EventHandler.h"
 
 namespace gswy {

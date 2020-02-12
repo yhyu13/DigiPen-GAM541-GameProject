@@ -1,3 +1,5 @@
+
+#include "engine-precompiled-header.h"
 #include "EngineException.h"
 
 const std::wstring& gswy::EngineException::GetNote() const

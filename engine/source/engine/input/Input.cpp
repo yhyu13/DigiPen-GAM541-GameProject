@@ -11,8 +11,7 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
 Creation date	: 01/29/2020
 - End Header ----------------------------*/
 
-#include <memory>
-#include <sstream>
+#include "engine-precompiled-header.h"
 
 #include "engine/EngineCore.h"
 #include "Input.h"

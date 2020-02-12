@@ -10,6 +10,7 @@ Author: Kyle Wang (kyle.wang@digipen.edu | 60000719)
 Creation date: 01/26/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "OpenGLContext.h"
 #include "engine/EngineCore.h"
 #include <GLFW/glfw3.h>

@@ -17,6 +17,7 @@ Creation date	: 01/26/2020
 #include "ecs/componentSystem/SpriteComSys.h"
 #include "ecs/componentSystem/AnimationComSys.h"
 
+
 #include <sstream>
 
 using namespace gswy;
@@ -86,8 +87,8 @@ public:
 
 		CollisionEvent* e = dynamic_cast<CollisionEvent*> (collision);
 		if (e) {
-			std::cout << "a: " << e->a << std::endl;
-			std::cout << "b: " << e->b << std::endl;
+			APP_DEBUG("a: {0}", e->a);
+			APP_DEBUG("b: {0}", e->b);
 		}
 
 		if (collision->m_type == EventType::C) {
@@ -194,7 +195,7 @@ public:
 			world->Update(20);
 		}
 
-		std::cout << "\n\nTesting event queue.... start\n";
+		APP_DEBUG("\n\nTesting event queue.... start\n");
 		Event<GameObjectType, EventType> e;
 		e.m_entityA = tumbleweed.GetEntity();
 		e.m_entityB = tumbleweed2.GetEntity();
@@ -215,11 +216,11 @@ public:
 		e2.b = 10;
 		queue.Publish(&e2);
 
-		std::cout << "\n\nTesting event queue.... finished\n";
+		APP_DEBUG("\n\nTesting event queue.... finished\n");
 
 		tumbleweed2.RemoveComponent<Transform>();
 
-		std::cout << "\n\n\n\n\n";
+		APP_DEBUG("\n\n\n\n\n");
 
 		// Run game for "1 second at 50fps"
 		for (int i = 0; i < 50; i++) {

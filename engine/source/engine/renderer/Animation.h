@@ -11,8 +11,6 @@ Creation date: 02/04/2020
 
 #pragma once
 #include "engine/EngineCore.h"
-#include <vector>
-
 
 namespace gswy {
 

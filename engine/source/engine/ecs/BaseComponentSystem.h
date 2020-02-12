@@ -13,9 +13,6 @@ Creation date	: 02/03/2020
 
 #pragma once
 
-#include <vector>
-#include <algorithm>
-
 #include "Entity.h"
 #include "BitMaskSignature.h"
 

@@ -11,6 +11,7 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
 Creation date	: 01/28/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "FramerateController.h"
 
 #include <GLFW/glfw3.h>

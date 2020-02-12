@@ -10,6 +10,7 @@ Author: Kyle Wang (kyle.wang@digipen.edu | 60000719)
 Creation date: 01/26/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "Shader.h"
 #include "Renderer2D.h"
 #include "../platform/OpenGL/OpenGLShader.h"

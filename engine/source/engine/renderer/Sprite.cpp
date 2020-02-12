@@ -10,6 +10,7 @@ Author: Kyle Wang (kyle.wang@digipen.edu | 60000719)
 Creation date: 02/01/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "Sprite.h"
 #include "Renderer2D.h"
 

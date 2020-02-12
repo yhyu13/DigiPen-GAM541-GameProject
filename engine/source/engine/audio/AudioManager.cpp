@@ -8,6 +8,8 @@ Project: GAM541
 Author: Hang Yu (hang.yu@digipen.edu | 60001119)
 Creation date: 01/28/2020
 - End Header ----------------------------*/
+
+#include "engine-precompiled-header.h"
 #include "AudioManager.h"
 
 gswy::FMODInstance::FMODInstance()

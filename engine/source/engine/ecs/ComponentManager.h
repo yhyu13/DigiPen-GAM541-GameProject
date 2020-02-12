@@ -13,9 +13,6 @@ Creation date	: 02/03/2020
 
 #pragma once
 
-#include <map>
-#include <vector>
-
 #include "Entity.h"
 
 namespace gswy {
