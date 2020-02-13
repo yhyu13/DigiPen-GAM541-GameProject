@@ -13,8 +13,6 @@ Creation date	: 01/26/2020
 
 #pragma once
 
-#include <string>
-
 #include "engine/EngineCore.h"
 #include "engine/input/Input.h"
 
@@ -39,9 +37,9 @@ namespace gswy {
 
 		~Window();
 
-		static Window* CreateWindow(const WindowProperties& properties = WindowProperties());
+		static Window* InitializeWindow(const WindowProperties& properties = WindowProperties());
 
-		void Update();
+		void Update(double dt);
 		void Shutdown();
 		bool ShouldExit();
 		void UpdateTitle(std::string title);

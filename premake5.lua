@@ -18,6 +18,7 @@ IncludeDir["jsoncpp"]  = "engine/vendors/jsoncpp/include"
 IncludeDir["fmod_core"]  = "engine/vendors/fmod/api/core/inc"
 IncludeDir["fmod_bank"]  = "engine/vendors/fmod/api/fsbank/inc"
 IncludeDir["fmod_studio"]  = "engine/vendors/fmod/api/studio/inc"
+IncludeDir["spdlog"] 		= "engine/vendors/spdlog/include"
 
 LibDir = {}
 LibDir["glfw"] = "engine/vendors/glfw"
@@ -45,6 +46,9 @@ project "engine"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-intermediate/" .. outputdir .. "/%{prj.name}")
+	
+	pchheader "engine-precompiled-header.h"
+	pchsource "engine/source/engine-precompiled-header.cpp"
 
 	files
 	{
@@ -75,7 +79,8 @@ project "engine"
 		"%{IncludeDir.jsoncpp}",
 		"%{IncludeDir.fmod_core}",
 		"%{IncludeDir.fmod_bank}",
-		"%{IncludeDir.fmod_studio}"
+		"%{IncludeDir.fmod_studio}",
+		"%{IncludeDir.spdlog}"
 	}
 
 	libdirs
@@ -92,8 +97,10 @@ project "engine"
 		"%{LibName.fmod_core}",
 		"%{LibName.fmod_bank}",
 		"%{LibName.fmod_studio}"
-		
 	}
+	
+	filter { "files:**.c" }
+		compileas "C++"
 
 	filter "system:windows"
 		cppdialect "C++17"
@@ -139,6 +146,7 @@ project "application"
 
 	includedirs
 	{
+		"application/source",
 		"engine/source",
 		"engine/vendors",
 		"%{IncludeDir.glfw}",
@@ -148,7 +156,8 @@ project "application"
 		"%{IncludeDir.jsoncpp}",
 		"%{IncludeDir.fmod_core}",
 		"%{IncludeDir.fmod_bank}",
-		"%{IncludeDir.fmod_studio}"
+		"%{IncludeDir.fmod_studio}",
+		"%{IncludeDir.spdlog}"
 	}
 
 	links

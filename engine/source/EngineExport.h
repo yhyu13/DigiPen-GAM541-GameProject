@@ -18,9 +18,6 @@ Creation date	: 01/26/2020
 
 
 ///// Must be inherited by the client application /////
-#include <iostream>
-#include <GLFW/glfw3.h>
-#include <sstream>
 #include "engine/Engine.h"
 #include "engine/window/Window.h"
 #include "engine/audio/AudioManager.h"
@@ -37,8 +34,11 @@ Creation date	: 01/26/2020
 ///// rendering /////
 #include "engine/renderer/Renderer2D.h"
 #include "engine/renderer/Shader.h"
+#include "engine/renderer/Sprite.h"
 #include "engine/renderer/OrthographicCameraController.h"
 
+///// Resource Allocator /////
+#include "engine/allocator/ResouceAllocator.h"
 
 ///// Entity Component System /////
 #include "engine/ecs/BaseComponentSystem.h"
@@ -47,3 +47,11 @@ Creation date	: 01/26/2020
 #include "engine/ecs/GameWorld.h"
 #include "engine/ecs/EntityManager.h"
 #include "engine/ecs/EntityDecorator.h"
+
+///// Event System /////
+#include "engine/events/Event.h"
+#include "engine/events/EventHandler.h"
+#include "engine/events/EventQueue.h"
+
+///// Physics /////
+#include "engine/physics/Collisions.h"

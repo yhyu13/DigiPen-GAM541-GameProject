@@ -11,7 +11,6 @@ Creation date: 01/26/2020
 - End Header ----------------------------*/
 
 #pragma once
-#include <memory>
 #include "Buffer.h"
 
 namespace gswy {

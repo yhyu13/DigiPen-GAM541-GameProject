@@ -11,10 +11,6 @@ Creation date: 01/26/2020
 - End Header ----------------------------*/
 
 #pragma once
-#include <cstdint>
-#include <string>
-#include <memory>
-#include <vector>
 
 namespace gswy {
 

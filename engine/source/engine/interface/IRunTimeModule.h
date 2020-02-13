@@ -11,6 +11,8 @@ Creation date: 01/28/2020
 
 #pragma once
 
+#include "engine/EngineCore.h"
+
 namespace gswy {
 	class ENGINE_API IRunTimeModule
 	{

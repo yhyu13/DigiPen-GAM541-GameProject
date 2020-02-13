@@ -12,7 +12,6 @@ Creation date: 01/26/2020
 
 #pragma once
 #include "../../renderer/VertexArray.h"
-#include <vector>
 
 namespace gswy {
 

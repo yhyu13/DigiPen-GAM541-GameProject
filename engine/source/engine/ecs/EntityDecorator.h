@@ -52,8 +52,20 @@ namespace gswy {
 		template<typename ComponentType>
 		ComponentDecorator<ComponentType, EntityType> GetComponent() {
 			ComponentDecorator<ComponentType> handle;
-			m_world.Unpack(entity, handle);
+			m_world.Unpack(m_entity, handle);
 			return handle;
+		}
+
+		unsigned int GetID() {
+			return m_entity.m_id;
+		}
+
+		EntityType GetType() {
+			return m_entity.m_type;
+		}
+
+		Entity<EntityType>& GetEntity() {
+			return m_entity;
 		}
 
 	protected:

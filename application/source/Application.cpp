@@ -12,22 +12,26 @@ Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
 #include "EngineExport.h"
-#include "engine/renderer/Renderer2D.h"
-#include "engine/renderer/Sprite.h"
+#include "ecs/componentSystem/PlayerControllerComSys.h"
+#include "ecs/componentSystem/SceneComSys.h"
+#include "ecs/componentSystem/SpriteComSys.h"
+#include "ecs/componentSystem/AnimationComSys.h"
 
 
-#include "engine/ecs/BaseComponentSystem.h"
-#include "engine/ecs/BaseComponent.h"
-#include "engine/ecs/ComponentDecorator.h"
-#include "engine/ecs/GameWorld.h"
-#include "engine/ecs/EntityManager.h"
-#include "engine/ecs/EntityDecorator.h"
+#include <sstream>
 
 using namespace gswy;
 
-enum GameObjectType {
-	PLAYER,
-	ENEMY
+enum EventType {
+	A,
+	B,
+	C
+};
+
+struct CollisionEvent : Event<GameObjectType, EventType> {
+
+	float a;
+	int b;
 };
 
 struct Position : gswy::BaseComponent<Position> {
@@ -49,11 +53,19 @@ struct Transform : gswy::BaseComponent<Transform> {
 	float y;
 };
 
+EventQueue<GameObjectType, EventType> queue;
+
 class Wind : public gswy::BaseComponentSystem<GameObjectType> {
 public:
 	Wind() {
 		m_systemSignature.AddComponent<Position>();
 		m_systemSignature.AddComponent<Transform>();
+	}
+
+	virtual void Init() {
+		queue.Subscribe<Wind>(this, EventType::A, &Wind::OnEvent);
+		queue.Subscribe<Wind>(this, EventType::B, &Wind::OnEvent);
+		queue.Subscribe<Wind>(this, EventType::C, &Wind::OnEvent);
 	}
 
 	virtual void Update(double dt) override {
@@ -66,10 +78,28 @@ public:
 			// Move 1 every second
 			position->x += 1.0f * (dt / 1000.0f);
 
-			// Print entity position
-			//std::cout << "Entity " << entity.m_id << ": " << position->x << "	" << *(position->value) << "	" << *(position->x_ptr) <<std::endl;
-			std::cout << "Entity: " << entity.m_type <<"  " << entity.m_id << ": " << position->x << " : " << transform->x << " : " << transform->y <<std::endl; // have to override -> operator
+			// Print entity information
+			//APP_DEBUG("Entity: {0}   {1}: {2} : {3} : {4}", entity.m_type, entity.m_id, position->x, transform->x, transform->y);
 		}
+	}
+
+	void OnEvent(Event<GameObjectType, EventType>* collision) {
+
+		CollisionEvent* e = dynamic_cast<CollisionEvent*> (collision);
+		if (e) {
+			APP_DEBUG("a: {0}", e->a);
+			APP_DEBUG("b: {0}", e->b);
+		}
+
+		if (collision->m_type == EventType::C) {
+			CollisionEvent* event = static_cast<CollisionEvent*> (collision);
+			APP_ERROR("a: {0}", event->a);
+			APP_CRITICAL("b: {0}", event->b);
+		}
+		APP_TRACE("event-type: {0}", collision->m_type);
+		APP_TRACE("entity-1 type: {0}", collision->m_entityA.m_type);
+		APP_TRACE("entity-2 type: {0}", collision->m_entityB.m_type);
+
 	}
 };
 
@@ -77,17 +107,35 @@ class Application : public Engine {
 
 public:
 
-
 	Application() 
 		: m_CameraController(1280.0f / 720.0f)
 	{
 		gswy::Renderer2D::Init();
-
-		//Texture Test
-		m_Texture = gswy::Texture2D::Create("./asset/container.png");
-
-		//Sprite Test
-		m_ControlSprite = std::make_shared<gswy::Sprite>("./asset/SpriteSheetExample.png", 8, 4);
+		// Texture Test
+		ResourceAllocator<Texture2D>::GetInstance()->Init();
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SpriteSheetExample.png", "SpriteSheetExample");
+		// Animation Test
+		ResourceAllocator<Animation>::GetInstance()->Init();
+		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
+		for (int i = 0; i < 8; ++i)
+		{
+			playerAnim1->AddFrame("SpriteSheetExample", 24*i, 32 * 0, 24, 32, 1.0 / 15.0);
+		}
+		auto playerAnim2 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation2.txt", "PlayerAnimation2");
+		for (int i = 0; i < 8; ++i)
+		{
+			playerAnim2->AddFrame("SpriteSheetExample", 24 * i, 32*1, 24, 32, 1.0 / 15.0);
+		}
+		auto playerAnim3 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation3.txt", "PlayerAnimation3");
+		for (int i = 0; i < 8; ++i)
+		{
+			playerAnim3->AddFrame("SpriteSheetExample", 24 * i, 32 * 2, 24, 32, 1.0 / 15.0);
+		}
+		auto playerAnim4 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation4.txt", "PlayerAnimation4");
+		for (int i = 0; i < 8; ++i)
+		{
+			playerAnim4->AddFrame("SpriteSheetExample", 24 * i, 32 * 3, 24, 32, 1.0 / 15.0);
+		}	
 	}
 
 	virtual ~Application() {
@@ -95,24 +143,47 @@ public:
 
 	virtual void Run() override
 	{
-		// TODO : remove audio test code below
 		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
 
 		FramerateController* rateController = FramerateController::GetInstance(60);
 		Input* input = Input::GetInstance();
 
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
+
 		std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = std::make_shared<gswy::EntityManager<GameObjectType>>();
 		std::shared_ptr<GameWorld<GameObjectType>> world = std::make_shared<gswy::GameWorld<GameObjectType>>(entityManager);
-		//auto world = std::make_unique<gswy::GameWorld<GameObjectType>>(std::move(entityManager));
 
 		// Add systems
-		std::shared_ptr<gswy::BaseComponentSystem<GameObjectType>> wind = std::make_shared<Wind>();
-		world->RegisterSystem(wind);
+		world->RegisterSystem(std::make_shared<PlayerControllerComSys>());
+		world->RegisterSystem(std::make_shared<SceneComSys>());
+		world->RegisterSystem(std::make_shared<SpriteComSys>());
+		world->RegisterSystem(std::make_shared<AnimationComSys>());
+		world->RegisterSystem(std::make_shared<Wind>());
 
 		// Initialize game
 		world->Init();
 
+		auto player = world->GenerateEntity(GameObjectType::PLAYER);
+		player.AddComponent(TransformCom(0,0,0));
+		player.AddComponent(SpriteCom());
+		auto animCom = AnimationCom();
+		animCom.Add("PlayerAnimation1", "MoveRight");
+		animCom.Add("PlayerAnimation2", "MoveLeft");
+		animCom.Add("PlayerAnimation3", "MoveUp");
+		animCom.Add("PlayerAnimation4", "MoveDown");
+		animCom.SetCurrentAnimationState("MoveUp");
+		player.AddComponent(animCom);
+
+		auto enemy = world->GenerateEntity(GameObjectType::ENEMY);
+		enemy.AddComponent(TransformCom(1, 0, 0));
+		enemy.AddComponent(SpriteCom());
+		auto animCom2 = AnimationCom();
+		animCom2.Add("PlayerAnimation1", "MoveRight");
+		animCom2.SetCurrentAnimationState("MoveRight");
+		enemy.AddComponent(animCom2);
+
+
+		auto entity = player.GetEntity();
 		// Add an entity with a position
 		auto tumbleweed = world->GenerateEntity(GameObjectType::PLAYER);
 		Position position(0);
@@ -133,139 +204,94 @@ public:
 		for (int i = 0; i < 50; i++) {
 			world->Update(20);
 		}
+
+		APP_DEBUG("\n\nTesting event queue.... start\n");
+		Event<GameObjectType, EventType> e;
+		e.m_entityA = tumbleweed.GetEntity();
+		e.m_entityB = tumbleweed2.GetEntity();
+		e.m_type = EventType::A;
+		queue.Publish(&e);
+
+		Event<GameObjectType, EventType> e1;
+		e1.m_entityA = tumbleweed.GetEntity();
+		e1.m_entityB = tumbleweed2.GetEntity();
+		e1.m_type = EventType::B;
+		queue.Publish(&e1);
+
+		CollisionEvent e2;
+		e2.m_entityA = tumbleweed.GetEntity();
+		e2.m_entityB = tumbleweed2.GetEntity();
+		e2.m_type = EventType::C;
+		e2.a = 10.8f;
+		e2.b = 10;
+		queue.Publish(&e2);
+
+		APP_DEBUG("\n\nTesting event queue.... finished\n");
+
 		tumbleweed2.RemoveComponent<Transform>();
 
-		std::cout << "\n\n\n\n\n";
+		APP_DEBUG("\n\n\n\n\n");
 
 		// Run game for "1 second at 50fps"
 		for (int i = 0; i < 50; i++) {
 			world->Update(20);
 		}
 
-		/////////// END OF ECS TEST //////////////
-
 		while (m_isRunning) {
+
 			rateController->FrameStart();
-
+			{
 #ifdef _DEBUG
-			std::stringstream stream;
-			stream << "Frame Time: " << rateController->GetFrameTime() * 1000 << "ms";
-			m_window->UpdateTitle(stream.str());
+				std::stringstream stream;
+				stream << "Frame Time: " << rateController->GetFrameTime() * 1000 << "ms";
+				m_window->UpdateTitle(stream.str());
+				ENGINE_DEBUG("Frame Time: {0}", stream.str());
 #endif
-			m_window->Update();
+				{
+					// Engine update
+					Update(rateController->GetFrameTime());
+				}
+				{
+					// world update
+					world->Update(rateController->GetFrameTime());
+				}
 
-			/*if (input->IsKeyTriggered(GLFW_KEY_A)) {
-				PRINT("KEY A TRIGGERED!");
-			}*/
+				{
+					// Manger update
+					Input::GetInstance()->Update(rateController->GetFrameTime());
+				}
 
-			if (input->IsKeyPressed(GLFW_KEY_A)) {
-				PRINT("KEY A PRESSED!");
-			}
+				{
+					// Draw Update
+					// Setting camera position as the player position (TODO : 1, Making gameworld a singleton 2, making gameworld be able to get entity by ID or something)
+					ComponentDecorator<TransformCom, GameObjectType> position;
+					world->Unpack(entity, position);
+					m_CameraController.SetPosition(glm::vec3(position->m_x, position->m_y, position->m_z));
+					m_CameraController.OnUpdate(rateController->GetFrameTime());
 
-			/*if (input->IsKeyTriggered(GLFW_KEY_SPACE)) {
-				PRINT("KEY SPACE TRIGGERED!");
-			}
+					gswy::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+					gswy::RenderCommand::Clear();
 
-			if (input->IsKeyReleased(GLFW_KEY_A)) {
-				PRINT("KEY A RELEASED!");
-			}
+					gswy::Renderer2D::BeginScene(m_CameraController.GetCamera());
+					// world render
+					world->Render();
 
-			if (input->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
-				PRINT("Mouse button 1 PRESSED!");
+					gswy::Renderer2D::EndScene();
+				}
+				m_isRunning = !m_window->ShouldExit();
 			}
-
-			if (input->IsMouseButtonReleased(GLFW_MOUSE_BUTTON_1)) {
-				PRINT("Mouse button 1 RELEASED!");
-			}
-
-			std::stringstream stream1;
-			stream1 << "cursor-x: " << input->GetMousePositionX() << "\t";
-			stream1 << "cursor-y: " << input->GetMousePositionY();
-			PRINT(stream1.str());*/
-
-			//Control Sprite Trigger
-			if (input->IsKeyTriggered(GLFW_KEY_W)) {
-				PRINT("KEY W TRIGGERED!");
-				m_ControlSprite->SetAnimSequence(16, 8);
-				m_ControlSprite->SetAnimLooping(true);
-			}
-			else if (input->IsKeyTriggered(GLFW_KEY_S)) {
-				PRINT("KEY S TRIGGERED!");
-				m_ControlSprite->SetAnimSequence(24, 8);
-				m_ControlSprite->SetAnimLooping(true);
-			}
-			else if (input->IsKeyTriggered(GLFW_KEY_A)) {
-				PRINT("KEY A TRIGGERED!");
-				m_ControlSprite->SetAnimSequence(8, 8);
-				m_ControlSprite->SetAnimLooping(true);
-			}
-			else if (input->IsKeyTriggered(GLFW_KEY_D)) {
-				PRINT("KEY D TRIGGERED!");
-				m_ControlSprite->SetAnimSequence(0, 8);
-				m_ControlSprite->SetAnimLooping(true);
-			}
-
-			//Control Sprite KeyPress
-			if (input->IsKeyPressed(GLFW_KEY_W)) {
-				PRINT("KEY W PRESSED!");
-				m_ControlSpritePos.x += -sin(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
-				m_ControlSpritePos.y += cos(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
-				m_ControlSprite->SetSpritePosition(m_ControlSpritePos);
-			}
-			else if (input->IsKeyPressed(GLFW_KEY_S)) {
-				PRINT("KEY S PRESSED!");
-				m_ControlSpritePos.x -= -sin(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
-				m_ControlSpritePos.y -= cos(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
-				m_ControlSprite->SetSpritePosition(m_ControlSpritePos);
-			}
-			
-			if (input->IsKeyPressed(GLFW_KEY_A)) {
-				PRINT("KEY A PRESSED!");
-				m_ControlSpritePos.x -= cos(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
-				m_ControlSpritePos.y -= sin(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
-				m_ControlSprite->SetSpritePosition(m_ControlSpritePos);
-			}
-			else if (input->IsKeyPressed(GLFW_KEY_D)) {
-				PRINT("KEY D PRESSED!");
-				m_ControlSpritePos.x += cos(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
-				m_ControlSpritePos.y += sin(glm::radians(0.0f)) * m_ControlSpriteMoveSpeed * rateController->GetFrameTime();
-				m_ControlSprite->SetSpritePosition(m_ControlSpritePos);
-			}
-			Update(rateController->GetFrameTime());
-
-			m_isRunning = !m_window->ShouldExit();
 			rateController->FrameEnd();
 		}
 	}
 
 	virtual void Update(double ts) {
-		m_CameraController.OnUpdate(ts);
-
-		gswy::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-		gswy::RenderCommand::Clear();
-
-		gswy::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		
-		//Draw Quad with Texture
-		//gswy::Renderer2D::DrawQuad(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, m_Texture);
-		
-		//Draw Sprite Sheet
-		m_ControlSprite->Update(ts * 1000.0f);
-		m_ControlSprite->Draw();
-
-		gswy::Renderer2D::EndScene();
+		Engine::Update(ts);
 	}
 
 protected:
 
 private:
 	gswy::OrthographicCameraController m_CameraController;
-	std::shared_ptr<gswy::Texture2D> m_Texture;
-
-	//Control Sprite
-	std::shared_ptr<gswy::Sprite> m_ControlSprite;
-	glm::vec3 m_ControlSpritePos = glm::vec3(0.0f, 0.0f, 1.0f);
-	float m_ControlSpriteMoveSpeed = 5.0f;
 };
 
 Engine* gswy::CreateEngineApplication() {

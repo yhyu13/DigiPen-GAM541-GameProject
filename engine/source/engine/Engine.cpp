@@ -11,20 +11,25 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "Engine.h"
 #include "engine/window/Window.h"
 #include "engine/framerate-controller/FramerateController.h"
 #include "engine/input/Input.h"
 #include "engine/audio/AudioManager.h"
 
-#include <iostream>
 #include <GLFW/glfw3.h>
-#include <sstream>
 
 namespace gswy {
 
+	double Engine::TOTAL_TIME = 0.0;
+
 	Engine::Engine(): m_isRunning(true) {
-		m_window = Window::CreateWindow();
+		Logger::Init();
+		ENGINE_INFO("Initialized Engine Log!");
+		APP_INFO("Initialized Application Log!");
+
+		m_window = Window::InitializeWindow();
 		AudioManager::GetInstance()->Init();
 	}
 	
@@ -44,7 +49,7 @@ namespace gswy {
 			stream << "Frame Time: " << rateController->GetFrameTime() * 1000  << "ms";
 			m_window->UpdateTitle(stream.str());
 #endif
-			m_window->Update();
+			Update(rateController->GetFrameTime());
 
 			if (input->IsKeyPressed(GLFW_KEY_A)) {
 				PRINT("KEY A PRESSED!");
@@ -71,8 +76,6 @@ namespace gswy {
 			stream1 << "cursor-y: " << input->GetMousePositionY();
 			PRINT(stream1.str());
 
-			Update(rateController->GetFrameTime());
-
 			m_isRunning = !m_window->ShouldExit();
 			rateController->FrameEnd();
 		}
@@ -80,7 +83,9 @@ namespace gswy {
 
 	void Engine::Update(double ts)
 	{
-
+		TOTAL_TIME += ts;
+		// window update (need to be called in at the begining of each frame)
+		m_window->Update(ts);
 	}
 
 }

@@ -15,20 +15,36 @@ Creation date	: 01/29/2020
 
 #include "MouseButton.h"
 #include "KeyboardKeys.h"
+#include "engine/interface/IRunTimeModule.h"
 
 namespace gswy {
 
-	class ENGINE_API Input {
+	class ENGINE_API Input : public IRunTimeModule {
 
 	public:
 
 		static Input* GetInstance();
 		~Input();
+		virtual void Init() override {};
+		virtual void Update(double deltaTime) override;
+		virtual void Shutdown() override {};
 
 		void UpdateKeyboardState(const int& key, const bool& state, const bool& repeat);
 		bool IsKeyPressed(const int& keyCode);
 		bool IsKeyTriggered(const int& keyCode);
 		bool IsKeyReleased(const int& keyCode);
+
+		template<class ...Args>
+		bool IsAllKeyNotPressed(const Args&... args)
+		{
+			bool ret = false;
+			std::vector<int> vec = { args... };
+			for (unsigned i = 0; i < vec.size(); ++i) 
+			{
+				ret = ret || IsKeyPressed(vec[i]);
+			}
+			return !ret;
+		}
 
 		void UpdateMouseButtonState(const int& button, const bool& state);
 		bool IsMouseButtonPressed(const int& mouseButton);

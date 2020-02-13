@@ -11,6 +11,7 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
+#include "engine-precompiled-header.h"
 #include "engine/window/Window.h"
 #include "engine/EngineCore.h"
 
@@ -19,11 +20,11 @@ Creation date	: 01/26/2020
 
 namespace gswy {
 	
-	Window* Window::CreateWindow(const WindowProperties& properties) {
+	Window* Window::InitializeWindow(const WindowProperties& properties) {
 		return new Window(properties);
 	}
 
-	void Window::Update() {
+	void Window::Update(double dt) {
 		glfwPollEvents();
 		glfwSwapBuffers(m_window);
 	}
@@ -77,19 +78,13 @@ namespace gswy {
 
 			case GLFW_PRESS:
 			{
-				properties.m_input->UpdateKeyboardState(key, true, false);
+				properties.m_input->UpdateKeyboardState(key, true, true);
 				break;
 			}
 
 			case GLFW_RELEASE:
 			{
 				properties.m_input->UpdateKeyboardState(key, false, false);
-				break;
-			}
-
-			case GLFW_REPEAT:
-			{
-				properties.m_input->UpdateKeyboardState(key, true, true);
 				break;
 			}
 

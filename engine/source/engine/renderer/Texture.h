@@ -12,9 +12,6 @@ Creation date: 01/26/2020
 
 #pragma once
 
-#include <memory>
-#include <string>
-#include <vector>
 #include "engine/EngineCore.h"
 
 namespace gswy {

@@ -13,9 +13,6 @@ Creation date	: 02/02/2020
 
 #pragma once
 
-#include <vector>
-#include <map>
-
 #include "ComponentManager.h"
 #include "BaseComponentSystem.h"
 #include "BitMaskSignature.h"

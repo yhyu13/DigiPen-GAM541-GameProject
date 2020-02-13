@@ -17,36 +17,36 @@ Creation date: 02/01/2020
 #include <glm/glm.hpp>
 
 namespace gswy {
-	
+
 	class ENGINE_API Sprite
 	{
 	public:
 		Sprite();
-		Sprite(std::shared_ptr<Texture2D>& texture2D);
-		Sprite(std::shared_ptr<Texture2D>& texture2D, int numRowFrames, int numColumnFrames);
-		Sprite(const std::string& path, int numRowFrames, int numColumnFrames);
+		Sprite(Texture2D* texture2D);
 		~Sprite();
-
-		void Update(float ts);
+		
+		void Update(double ts);
 		void Draw();
 		void DrawInternal(const glm::vec2& rect, const glm::vec2& texCoord, const glm::vec2& texCoordOffset);
 
-		void SetSpritePosition(const glm::vec3& pos) { m_Position = pos; }
-		void SetSpriteTexture(std::shared_ptr<Texture2D>& texture2D) { m_Texture2D = texture2D; }
+		void SetSpritePosition(const glm::vec3& pos);
+		void SetSpriteTexture(std::shared_ptr<Texture2D>& texture2D);
 
-		void SetCurrentFrame(unsigned int targetFrame) { m_CurrentFrame = targetFrame; }
-		unsigned int GetCurrentFrame() const { return m_CurrentFrame; }
-		void SetStartFrame(int targetFrame) { m_StartFrame = targetFrame; }
-		unsigned int GetStartFrame() const { return m_StartFrame; }
-		void SetLastFrame(int targetFrame) { m_LastFrame = targetFrame; }
-		unsigned int GetLastFrame() const { return m_LastFrame; }
-		unsigned int GetTotalFrames() const { return m_TotalFrames; }
+		uint32_t GetTextureWidth() const;
+		uint32_t GetTextureHeight() const;
 
-		uint32_t GetTextureWidth() const { return m_Texture2D->GetWidth(); }
-		uint32_t GetTextureHeight() const { return m_Texture2D->GetHeight(); }
+		uint32_t GetSpriteWidth() const;
+		uint32_t GetSpriteHeight() const;
 
-		void SetAnimSequence(int startWithFrame, int numFrames);
-		void SetAnimLooping(bool b) { m_LoopingAnim = b; };
+		void SetSpriteWidth(int w);
+		void SetSpriteHeight(int h);
+
+		void SetSpriteX(int x);
+		void SetSpritey(int y);
+
+		void SetSpriteScale(float scale);
+		void SetSpriteRotation(float rotation);
+
 
 	private:
 		std::shared_ptr<Texture2D> m_Texture2D;
@@ -54,11 +54,8 @@ namespace gswy {
 		std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
 		glm::vec3 m_Position;
 		uint32_t m_SpriteWidth, m_SpriteHeight;
-		unsigned int m_CurrentFrame, m_StartFrame, m_LastFrame, m_TotalHorizontalFrame, m_TotalVerticalFrame, m_TotalFrames;
-		int m_ElapsedTime;
-		int m_MSPerFrame;
-
-		bool m_IsPaused;
-		bool m_LoopingAnim;
+		uint32_t m_SpriteX, m_SpriteY;
+		float_t m_Scale;
+		float_t m_Rotation;
 	};
 }
