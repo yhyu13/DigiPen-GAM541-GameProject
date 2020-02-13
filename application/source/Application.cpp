@@ -171,8 +171,18 @@ public:
 		animCom.Add("PlayerAnimation2", "MoveLeft");
 		animCom.Add("PlayerAnimation3", "MoveUp");
 		animCom.Add("PlayerAnimation4", "MoveDown");
-		animCom.setCurrentAnimationState("MoveUp");
+		animCom.SetCurrentAnimationState("MoveUp");
 		player.AddComponent(animCom);
+
+		auto enemy = world->GenerateEntity(GameObjectType::ENEMY);
+		enemy.AddComponent(TransformCom(1, 0, 0));
+		enemy.AddComponent(SpriteCom());
+		auto animCom2 = AnimationCom();
+		animCom2.Add("PlayerAnimation1", "MoveRight");
+		animCom2.SetCurrentAnimationState("MoveRight");
+		enemy.AddComponent(animCom2);
+
+
 		auto entity = player.GetEntity();
 		// Add an entity with a position
 		auto tumbleweed = world->GenerateEntity(GameObjectType::PLAYER);

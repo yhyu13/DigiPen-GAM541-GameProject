@@ -24,7 +24,8 @@ namespace gswy
 
 		void Add(std::string name, std::string stateName)
 		{
-			m_animationStateMap[stateName] = ResourceAllocator<Animation>::GetInstance()->Get(name);
+			auto animation = ResourceAllocator<Animation>::GetInstance()->Get(name);
+			m_animationStateMap[stateName] = std::make_shared<Animation>(*animation);
 		}
 		std::shared_ptr<Animation> GetCurrentAnimation()
 		{
@@ -42,9 +43,9 @@ namespace gswy
 		{
 			return m_animationState;
 		}
-		void setCurrentAnimationState(const std::string state)
+		void SetCurrentAnimationState(const std::string state)
 		{
-			if (m_animationStateMap.find(state) != m_animationStateMap.end())
+			if (m_animationStateMap.find(state) != m_animationStateMap.end() && m_animationState.compare(state) != 0)
 			{
 				m_animationState = state;
 				m_animation = m_animationStateMap[state];
@@ -65,6 +66,6 @@ namespace gswy
 	private:
 		std::weak_ptr<Animation> m_animation;
 		std::string m_animationState;
-		std::map<std::string, std::weak_ptr<Animation>> m_animationStateMap;
+		std::map<std::string, std::shared_ptr<Animation>> m_animationStateMap;
 	};
 }

@@ -34,6 +34,18 @@ namespace gswy {
 		bool IsKeyTriggered(const int& keyCode);
 		bool IsKeyReleased(const int& keyCode);
 
+		template<class ...Args>
+		bool IsAllKeyNotPressed(const Args&... args)
+		{
+			bool ret = false;
+			std::vector<int> vec = { args... };
+			for (unsigned i = 0; i < vec.size(); ++i) 
+			{
+				ret = ret || IsKeyPressed(vec[i]);
+			}
+			return !ret;
+		}
+
 		void UpdateMouseButtonState(const int& button, const bool& state);
 		bool IsMouseButtonPressed(const int& mouseButton);
 		bool IsMouseButtonReleased(const int& mouseButton);
