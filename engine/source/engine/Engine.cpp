@@ -22,6 +22,8 @@ Creation date	: 01/26/2020
 
 namespace gswy {
 
+	double Engine::TOTAL_TIME = 0.0;
+
 	Engine::Engine(): m_isRunning(true) {
 		Logger::Init();
 		ENGINE_INFO("Initialized Engine Log!");
@@ -47,7 +49,7 @@ namespace gswy {
 			stream << "Frame Time: " << rateController->GetFrameTime() * 1000  << "ms";
 			m_window->UpdateTitle(stream.str());
 #endif
-			m_window->Update(rateController->GetFrameTime());
+			Update(rateController->GetFrameTime());
 
 			if (input->IsKeyPressed(GLFW_KEY_A)) {
 				PRINT("KEY A PRESSED!");
@@ -74,8 +76,6 @@ namespace gswy {
 			stream1 << "cursor-y: " << input->GetMousePositionY();
 			PRINT(stream1.str());
 
-			Update(rateController->GetFrameTime());
-
 			m_isRunning = !m_window->ShouldExit();
 			rateController->FrameEnd();
 		}
@@ -83,7 +83,9 @@ namespace gswy {
 
 	void Engine::Update(double ts)
 	{
-
+		TOTAL_TIME += ts;
+		// window update (need to be called in at the begining of each frame)
+		m_window->Update(ts);
 	}
 
 }

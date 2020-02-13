@@ -237,7 +237,7 @@ public:
 			world->Update(20);
 		}
 
-		while (!m_window->ShouldExit()) {
+		while (m_isRunning) {
 
 			rateController->FrameStart();
 			{
@@ -248,8 +248,8 @@ public:
 				ENGINE_DEBUG("Frame Time: {0}", stream.str());
 #endif
 				{
-					// window update
-					m_window->Update(rateController->GetFrameTime());
+					// Engine update
+					Update(rateController->GetFrameTime());
 				}
 				{
 					// world update
@@ -262,6 +262,7 @@ public:
 				}
 
 				{
+					// Draw Update
 					// Setting camera position as the player position (TODO : 1, Making gameworld a singleton 2, making gameworld be able to get entity by ID or something)
 					ComponentDecorator<TransformCom, GameObjectType> position;
 					world->Unpack(entity, position);
@@ -277,12 +278,14 @@ public:
 
 					gswy::Renderer2D::EndScene();
 				}
+				m_isRunning = !m_window->ShouldExit();
 			}
 			rateController->FrameEnd();
 		}
 	}
 
 	virtual void Update(double ts) {
+		Engine::Update(ts);
 	}
 
 protected:

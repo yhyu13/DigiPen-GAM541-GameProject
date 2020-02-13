@@ -30,6 +30,10 @@ namespace gswy
 		}
 
 		virtual void Update(double dt) override {
+
+			/*static double total_time = 0.0;
+			total_time+= dt;*/
+
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<AnimationCom, GameObjectType> animation;
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
@@ -47,6 +51,8 @@ namespace gswy
 				m_sprite->SetSpritey(currentFrame->y);
 				m_sprite->SetSpriteWidth(currentFrame->width);
 				m_sprite->SetSpriteHeight(currentFrame->height);
+				/*m_sprite->SetSpriteScale(sin(total_time) + 1.0);
+				m_sprite->SetSpriteRotation(cos(total_time));*/
 			}
 		}
 	};

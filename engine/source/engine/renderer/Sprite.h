@@ -44,6 +44,9 @@ namespace gswy {
 		void SetSpriteX(int x);
 		void SetSpritey(int y);
 
+		void SetSpriteScale(float scale);
+		void SetSpriteRotation(float rotation);
+
 
 	private:
 		std::shared_ptr<Texture2D> m_Texture2D;
@@ -52,6 +55,7 @@ namespace gswy {
 		glm::vec3 m_Position;
 		uint32_t m_SpriteWidth, m_SpriteHeight;
 		uint32_t m_SpriteX, m_SpriteY;
-
+		float_t m_Scale;
+		float_t m_Rotation;
 	};
 }

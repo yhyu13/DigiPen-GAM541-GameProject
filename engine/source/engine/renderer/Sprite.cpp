@@ -20,12 +20,12 @@ namespace gswy {
 	{
 		m_SpriteVertexArray = VertexArray::Create();
 		m_Position = glm::vec3(0.0f);
-
-		m_SpriteX = 0;
-		m_SpriteY = 0;
-
 		m_SpriteWidth = 0;
 		m_SpriteHeight = 0;
+		m_SpriteX = 0;
+		m_SpriteY = 0;
+		m_Scale = 1.0f;
+		m_Rotation = 0.0f;
 	}
 
 	Sprite::Sprite(Texture2D* texture2D)
@@ -35,6 +35,10 @@ namespace gswy {
 		m_Position = glm::vec3(0.0f);
 		m_SpriteWidth = GetTextureWidth();
 		m_SpriteHeight = GetTextureHeight();
+		m_SpriteX = 0;
+		m_SpriteY = 0;
+		m_Scale = 1.0f;
+		m_Rotation = 0.0f;
 	}
 
 	Sprite::~Sprite()
@@ -71,7 +75,7 @@ namespace gswy {
 			{ ShaderDataType::Float2, "a_TexCoord" }
 			});
 		m_SpriteVertexArray->AddVertexBuffer(m_SpriteVertexBuffer);
-		Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, glm::vec2(1.0f), 0.0f, m_Texture2D);
+		Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, glm::vec2(m_Scale), m_Rotation, m_Texture2D);
 	}
 	void Sprite::SetSpritePosition(const glm::vec3& pos) { m_Position = pos; }
 	void Sprite::SetSpriteTexture(std::shared_ptr<Texture2D>& texture2D) {
@@ -87,4 +91,12 @@ namespace gswy {
 	void Sprite::SetSpriteHeight(int h) { m_SpriteHeight = h; }
 	void Sprite::SetSpriteX(int x) { m_SpriteX = x; }
 	void Sprite::SetSpritey(int y) { m_SpriteY = y; }
+	void Sprite::SetSpriteScale(float scale)
+	{
+		m_Scale = scale;
+	}
+	void Sprite::SetSpriteRotation(float rotation)
+	{
+		m_Rotation = rotation;
+	}
 }

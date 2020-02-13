@@ -28,6 +28,8 @@ namespace gswy {
 		virtual void Run();
 		virtual void Update(double ts);
 
+		static double TOTAL_TIME;
+
 	protected:
 		Window* m_window;
 		bool m_isRunning = true;
