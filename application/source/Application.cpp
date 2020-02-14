@@ -282,8 +282,7 @@ public:
 
 					gswy::Renderer2D::BeginScene(m_CameraController.GetCamera());
 					// world render
-					//world->Render();
-					//gswy::Renderer2D::DrawQuad(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+					world->Render();
 					gswy::Renderer2D::EndScene();
 				}
 
