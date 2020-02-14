@@ -135,7 +135,15 @@ public:
 		for (int i = 0; i < 8; ++i)
 		{
 			playerAnim4->AddFrame("SpriteSheetExample", 24 * i, 32 * 3, 24, 32, 1.0 / 15.0);
-		}	
+		}
+		//Particle Test
+		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
+		m_Particle.SizeBegin = 0.2f, m_Particle.SizeVariation = 0.1f, m_Particle.SizeEnd = 0.0f;
+		m_Particle.LifeTime = 1.0f;
+		m_Particle.Velocity = { 0.0f, 1.0f, 0.0f };
+		m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
+		m_Particle.Position = { 0.0f, -0.7f, 0.0f };
 	}
 
 	virtual ~Application() {
@@ -274,10 +282,19 @@ public:
 
 					gswy::Renderer2D::BeginScene(m_CameraController.GetCamera());
 					// world render
-					world->Render();
-
+					//world->Render();
+					//gswy::Renderer2D::DrawQuad(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 					gswy::Renderer2D::EndScene();
 				}
+
+				{
+					//Particle Rendering
+					for (int i = 0; i < 5; i++)
+						m_ParticleSystem.Emit(m_Particle);
+					m_ParticleSystem.Update(rateController->GetFrameTime());
+					m_ParticleSystem.Render();
+				}
+
 				m_isRunning = !m_window->ShouldExit();
 			}
 			rateController->FrameEnd();
@@ -292,6 +309,8 @@ protected:
 
 private:
 	gswy::OrthographicCameraController m_CameraController;
+	gswy::ParticleSystem m_ParticleSystem;
+	gswy::Particle m_Particle;
 };
 
 Engine* gswy::CreateEngineApplication() {
