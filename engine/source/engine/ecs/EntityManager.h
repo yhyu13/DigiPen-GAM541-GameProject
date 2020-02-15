@@ -34,16 +34,19 @@ namespace gswy {
 		}
 
 		const Entity<EntityType> Create(EntityType type) {
+			m_typeToEntity[type].push_back(m_entityCount);
 			return Entity<EntityType>(m_entityCount++, type);
 		}
 
 		void Destroy(Entity<EntityType>& entity) {
+			std::vector<unsigned int>& vec = m_typeToEntity[entity.m_type];
+			vec.erase(std::remove(vec.begin(), vec.end(), entity.m_id), vec.end());
 		}
 
 	protected:
 
 	private:
-
+		std::map<EntityType, std::vector<unsigned int>> m_typeToEntity;
 		unsigned int m_entityCount;
 	};
 }
