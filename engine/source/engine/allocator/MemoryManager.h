@@ -9,10 +9,10 @@ Author: Hang Yu (hang.yu@digipen.edu | 60001119)
 Creation date: 02/14/2020
 - End Header ----------------------------*/
 #pragma once
-#include "engine/EngineCore.h"
 #include <memory>
-#include "engine/interface/IRunTimeModule.h"
 #include "Allocator.h"
+#include "engine/EngineCore.h"
+#include "engine/interface/IRunTimeModule.h"
 #include "engine/exception/EngineException.h"
 
 #define CUSTOM_ALLOCATOR 1

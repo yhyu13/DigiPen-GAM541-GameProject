@@ -12,13 +12,7 @@ Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
 #include "EngineExport.h"
-#include "ecs/componentSystem/PlayerControllerComSys.h"
-#include "ecs/componentSystem/SceneComSys.h"
-#include "ecs/componentSystem/SpriteComSys.h"
-#include "ecs/componentSystem/AnimationComSys.h"
-
-
-#include <sstream>
+#include "Import.h"
 
 using namespace gswy;
 
@@ -93,11 +87,6 @@ public:
 
 			rateController->FrameStart();
 			{
-#ifdef _DEBUG
-				std::stringstream stream;
-				stream << "Frame Time: " << rateController->GetFrameTime() * 1000 << "ms";
-				m_window->UpdateTitle(stream.str());
-#endif
 				{
 					// Engine update
 					Update(rateController->GetFrameTime());
