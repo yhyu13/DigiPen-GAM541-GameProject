@@ -31,6 +31,7 @@ namespace gswy {
         template<class T, typename... Arguments>
         static T* New(Arguments... parameters) noexcept
         {
+			DEBUG_PRINT("New : " + Str(typeid(T).name()) + " " + Str(sizeof(T)));
 #if CUSTOM_ALLOCATOR 
 			return new (Allocate(sizeof(T))) T(parameters...);
 #else
@@ -43,9 +44,11 @@ namespace gswy {
         static void Delete(T* p) noexcept
         {
 #if CUSTOM_ALLOCATOR 
+			DEBUG_PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(*(reinterpret_cast<uint32_t*>(p) - 1)));
 			p->~T();
 			Free(p, sizeof(T));
 #else
+			DEBUG_PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)));
 			delete p;
 #endif // CUSTOM_ALLOCATOR 
            
@@ -56,7 +59,6 @@ namespace gswy {
 		static std::shared_ptr<T> Make_shared(Arguments... parameters) noexcept
 		{
 #if CUSTOM_ALLOCATOR 
-			DEBUG_PRINT("Make_shared : " + Str(sizeof(T)));
 			return std::shared_ptr<T>(New<T>(parameters...), Delete<T>);
 #else
 			MemoryManager::Make_shared<T>(parameters...);

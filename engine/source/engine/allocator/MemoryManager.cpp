@@ -136,16 +136,10 @@ void gswy::MemoryManager::Free(void* p, size_t size) noexcept
 	//       : free(p);
 #if CUSTOM_ALLOCATOR 
 	// Storing m_szDataSize as uint32_t right before each block
-	if (size <= kMaxBlockSize)
-	{
-		DEBUG_PRINT("header : " + Str(*(reinterpret_cast<uint32_t*>(p) - 1)));
-		DEBUG_PRINT("given : " + Str(size));
-		(m_pAllocators + m_pBlockSizeLookup[*(reinterpret_cast<uint32_t*>(p) - 1)])->Free(p);
-	}
-	else
-	{
+	(size <= kMaxBlockSize) ?
+		(m_pAllocators + m_pBlockSizeLookup[*(reinterpret_cast<uint32_t*>(p) - 1)])->Free(p)
+	:
 		free(p);
-	}
 #else
 	free(p);
 #endif // CUSTOM_ALLOCATOR 
