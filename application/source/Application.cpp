@@ -23,118 +23,183 @@ public:
 	Application() 
 		: m_CameraController(1280.0f / 720.0f)
 	{
-		gswy::Renderer2D::Init();
-		// Texture Test
-		ResourceAllocator<Texture2D>::GetInstance()->Init();
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/GAM541_Char1_Moving_Upper_Unarmed.png", "GAM541_Char1_Moving_Upper_Unarmed");
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
-		// Animation Test
-		ResourceAllocator<Animation>::GetInstance()->Init();
-		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
-		for (int i = 0; i < 8; ++i)
-		{
-			playerAnim1->AddFrame("GAM541_Char1_Moving_Upper_Unarmed", 59*i, 32 * 0, 59, 32, 1.0 / 15.0);
-		}	
+		InitFramework();
+		InitGameWorld();
 	}
 
 	virtual ~Application() {
 	}
 
-	virtual void Run() override
+	void InitFramework()
 	{
-		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
+		// Renderer
+		Renderer2D::Init();
+		// Texture loader
+		ResourceAllocator<Texture2D>::GetInstance()->Init();
+		// Animation loader
+		ResourceAllocator<Animation>::GetInstance()->Init();
+		// Frame rate controller
+		m_rateController = FramerateController::GetInstance(60);
 
-		FramerateController* rateController = FramerateController::GetInstance(60);
-		InputManager* input = InputManager::GetInstance();
+		LoadResources();
+	}
 
+	void LoadResources()
+	{
+		// Texture loader
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/GAM541_Char1_Moving_Upper_Unarmed.png", "GAM541_Char1_Moving_Upper_Unarmed");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
+		// Animation loader
+		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
+		for (int i = 0; i < 8; ++i)
+		{
+			playerAnim1->AddFrame("GAM541_Char1_Moving_Upper_Unarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
+		}
+		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true, true, false);
+	}
+
+	void InitGameWorld()
+	{
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
-
-		std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = MemoryManager::Make_shared<gswy::EntityManager<GameObjectType>>();
-		std::shared_ptr<GameWorld<GameObjectType>> world = MemoryManager::Make_shared<gswy::GameWorld<GameObjectType>>(entityManager);
+		m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
 
 		// Add systems
-		world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
-		world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
-		world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
-		world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
 
 		// Initialize game
-		world->Init();
+		m_world->Init();
 
-		auto background = world->GenerateEntity(GameObjectType::ENEMY);
+		LoadGameWorld();
+	}
+
+	void LoadGameWorld()
+	{
+		auto background = m_world->GenerateEntity(GameObjectType::ENEMY);
 		background.AddComponent(TransformCom(0, 0, 0));
 		auto sprite0 = SpriteCom();
 		sprite0.SetTexture("Background3");
 		background.AddComponent(sprite0);
 
-		auto player = world->GenerateEntity(GameObjectType::PLAYER);
-		player.AddComponent(TransformCom(0,0,1));
+		auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
+		player.AddComponent(TransformCom(0, 0, 1));
 		player.AddComponent(SpriteCom());
 		auto animCom = AnimationCom();
 		animCom.Add("PlayerAnimation1", "Move");
 		animCom.SetCurrentAnimationState("Move");
 		player.AddComponent(animCom);
 
-		auto enemy = world->GenerateEntity(GameObjectType::ENEMY);
+		auto enemy = m_world->GenerateEntity(GameObjectType::ENEMY);
 		enemy.AddComponent(TransformCom(1, 0, 1));
 		enemy.AddComponent(SpriteCom());
 		auto animCom2 = AnimationCom();
 		animCom2.Add("PlayerAnimation1", "Move");
 		animCom2.SetCurrentAnimationState("Move");
 		enemy.AddComponent(animCom2);
+	}
 
-		while (m_isRunning) {
+	void BeforeRun()
+	{
+		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
+	}
 
-			rateController->FrameStart();
-			{
-				{
-					// Engine update
-					Update(rateController->GetFrameTime());
-				}
-				{
-					// world update
-					world->Update(rateController->GetFrameTime());
-				}
+	void AfterRun()
+	{
 
-				{
-					// Manger update
-					InputManager::GetInstance()->Update(rateController->GetFrameTime());
-				}
+	}
 
-				{
-					// Draw Update
-					// Setting camera position as the player position (TODO : 1, Making gameworld a singleton 2, making gameworld be able to get entity by ID or something)
-					ComponentDecorator<TransformCom, GameObjectType> position;
-					world->Unpack(world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
-					m_CameraController.SetPosition(glm::vec3(position->m_x, position->m_y, position->m_z));
-					m_CameraController.OnUpdate(rateController->GetFrameTime());
+	void BeforeFrame()
+	{
+		m_rateController->FrameStart();
+	}
 
-					gswy::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-					gswy::RenderCommand::Clear();
+	void AfterFrame()
+	{
+		m_rateController->FrameEnd();
+	}
 
-					gswy::Renderer2D::BeginScene(m_CameraController.GetCamera());
-					// world render
-					world->Render();
+	bool IsRunning()
+	{
+		return isRunning;
+	}
 
-					gswy::Renderer2D::EndScene();
-				}
-				m_isRunning = !m_window->ShouldExit();
-			}
-			rateController->FrameEnd();
-		}
+	void UpdateRunning()
+	{
+		if (isRunning)
+			isRunning = !window->ShouldExit();
 	}
 
 	virtual void Update(double ts) {
-		Engine::Update(ts);
+		{
+			Engine::Update(ts); // Do not delete this line!
+		}
+		{
+			// Manger update
+			InputManager::GetInstance()->Update(ts);
+		}
+		{
+			// m_world update
+			m_world->Update(ts);
+		}
+	}
+
+	void UpdateCamera(double ts)
+	{
+		ComponentDecorator<TransformCom, GameObjectType> position;
+		m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
+		m_CameraController.SetPosition(glm::vec3(position->m_x, position->m_y, position->m_z));
+		m_CameraController.OnUpdate(ts);
+	}
+
+	void Render()
+	{
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::Clear();
+
+		Renderer2D::BeginScene(m_CameraController.GetCamera());
+		// m_world render
+		m_world->Render();
+
+		Renderer2D::EndScene();
+	}
+
+	virtual void Run() override
+	{
+		BeforeRun();
+		while (IsRunning()) {
+			BeforeFrame();
+			{
+				{
+					// Engine update
+					Update(m_rateController->GetFrameTime());
+				}
+				{
+					UpdateCamera(m_rateController->GetFrameTime());
+				}
+				{
+					Render();
+				}
+				UpdateRunning();
+			}
+			AfterFrame();
+		}
+		AfterRun();
 	}
 
 protected:
 
 private:
-	gswy::OrthographicCameraController m_CameraController;
+	OrthographicCameraController m_CameraController;
+	FramerateController* m_rateController;
+	std::shared_ptr<GameWorld<GameObjectType>> m_world;
 };
 
-Engine* gswy::CreateEngineApplication() {
-	return new Application();
+namespace gswy
+{
+	Engine* CreateEngineApplication() {
+		return new Application();
+	}
 }
 

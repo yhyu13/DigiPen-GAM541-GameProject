@@ -24,13 +24,16 @@ Creation date	: 01/26/2020
 namespace gswy {
 
 	double Engine::TOTAL_TIME = 0.0;
+	bool Engine::isRunning = true;
+	Window* Engine::window = nullptr;
 
-	Engine::Engine(): m_isRunning(true) {
+	Engine::Engine() 
+	{
 		Logger::Init();
 		ENGINE_INFO("Initialized Engine Log!");
 		APP_INFO("Initialized Application Log!");
 
-		m_window = Window::InitializeWindow();
+		window = Window::InitializeWindow();
 		MemoryManager::GetInstance()->Init();
 		AudioManager::GetInstance()->Init();
 	}
@@ -38,11 +41,11 @@ namespace gswy {
 	Engine::~Engine() {
 		AudioManager::GetInstance()->Shutdown();
 		MemoryManager::GetInstance()->Shutdown();
-		delete m_window;
+		delete window;
 	}
 
 	void Engine::Run() {
-		FramerateController* rateController = FramerateController::GetInstance(60);
+	/*	FramerateController* rateController = FramerateController::GetInstance(60);
 		InputManager* input = InputManager::GetInstance();
 		while (m_isRunning) {
 			rateController->FrameStart();
@@ -50,7 +53,7 @@ namespace gswy {
 #ifdef _DEBUG
 			std::stringstream stream;
 			stream << "Frame Time: " << rateController->GetFrameTime() * 1000  << "ms";
-			m_window->UpdateTitle(stream.str());
+			window->UpdateTitle(stream.str());
 #endif
 			Update(rateController->GetFrameTime());
 
@@ -79,16 +82,18 @@ namespace gswy {
 			stream1 << "cursor-y: " << input->GetMousePositionY();
 			PRINT(stream1.str());
 
-			m_isRunning = !m_window->ShouldExit();
+			m_isRunning = !window->ShouldExit();
 			rateController->FrameEnd();
-		}
+		}*/
 	}
 
 	void Engine::Update(double ts)
 	{
 		TOTAL_TIME += ts;
 		// window update (need to be called in at the begining of each frame)
-		m_window->Update(ts);
+		window->Update(ts);
+		MemoryManager::GetInstance()->Update(ts);
+		AudioManager::GetInstance()->Update(ts);
 	}
 
 }

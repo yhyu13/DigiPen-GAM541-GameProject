@@ -35,6 +35,11 @@ namespace gswy {
 
 	public:
 
+		GameWorld()
+		{
+			m_entityManager = MemoryManager::Make_shared<gswy::EntityManager<EntityType>>();
+		}
+
 		explicit GameWorld(std::shared_ptr<EntityManager<EntityType>> manager) : m_entityManager(manager) {
 		}
 

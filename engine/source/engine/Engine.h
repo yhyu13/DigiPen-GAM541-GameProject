@@ -31,8 +31,8 @@ namespace gswy {
 		static double TOTAL_TIME;
 
 	protected:
-		Window* m_window;
-		bool m_isRunning = true;
+		static Window* window;
+		static bool isRunning;
 	};
 
 	Engine* CreateEngineApplication();
