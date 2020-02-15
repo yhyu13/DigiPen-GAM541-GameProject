@@ -23,7 +23,7 @@ namespace gswy {
 		switch (Renderer2D::GetAPI())
 		{
 		case RendererAPI::API::None:   ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLTexture2D>(width, height);
+		case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLTexture2D>(width, height);
 		}
 
 		//gswy_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -34,7 +34,7 @@ namespace gswy {
 		switch (Renderer2D::GetAPI())
 		{
 			case RendererAPI::API::None:   ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL: return std::make_shared<OpenGLTexture2D>(path);
+			case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLTexture2D>(path);
 		}
 
 		ASSERT(false, "Unknown RendererAPI!");

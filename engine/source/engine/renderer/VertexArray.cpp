@@ -24,7 +24,7 @@ namespace gswy {
 		switch (Renderer2D::GetAPI())
 		{
 			case RendererAPI::API::None: ASSERT(false, "RendererAPI::API::None is currently not supported!");
-			case RendererAPI::API::OpenGL: return std::make_shared<OpenGLVertexArray>();
+			case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLVertexArray>();
 		}
 
 		ASSERT(false, "Unknown RendererAPI!");

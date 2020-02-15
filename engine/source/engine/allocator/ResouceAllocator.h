@@ -11,6 +11,8 @@ Creation date: 02/04/2020
 
 #pragma once
 #include "engine/interface/IRunTimeModule.h"
+#include "engine/exception/EngineException.h"
+#include "engine/EngineCore.h"
 
 #include <map>
 #include <memory>
@@ -36,6 +38,10 @@ namespace gswy {
 		virtual void Update(double deltaTime) override {};
 		virtual void Shutdown() override {};
 
+		/*
+			Call T::Create(std::string filePath) internally,
+			meaning T must have a Create() function
+		*/
 		std::shared_ptr<T> Create(std::string filePath, std::string name)
 		{
 			auto it = m_resources.find(filePath);
@@ -47,24 +53,28 @@ namespace gswy {
 			if (!resource)
 			{
 				// TODO : Engine exception
-				return nullptr;
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Resource at " + str2wstr(filePath) + L" has failed to load!");
 			}
 			m_resources.insert(std::make_pair(name, std::make_pair(++m_currentId, resource)));
 			return resource;
 		}
 
-		std::shared_ptr<T> Add(std::string filePath, std::string name)
+		/*
+			Call (T*)->LoadFromFile(std::string filePath) internally,
+			meaning T* must have a LoadFromFile() function
+		*/
+		std::shared_ptr<T> LoadFromFile(std::string filePath, std::string name)
 		{
 			auto it = m_resources.find(filePath);
 			if (it != m_resources.end())
 			{
 				return it->second.second;
 			}
-			std::shared_ptr<T> resource = std::make_shared<T>();
+			std::shared_ptr<T> resource = MemoryManager::Make_shared<T>();
 			if (!resource->LoadFromFile(filePath))
 			{
 				// TODO : Engine exception
-				return nullptr;
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Resource at " + str2wstr(filePath) + L" has failed to load!");
 			}
 			m_resources.insert(std::make_pair(name, std::make_pair(++m_currentId, resource)));
 			return resource;
@@ -99,7 +109,8 @@ namespace gswy {
 					return it->second.second;
 				}
 			}
-			return nullptr;
+			// TODO : Engine exception
+			throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Resource with id " + str2wstr(Str(id)) + L" is not managed!");
 		}
 
 		std::shared_ptr<T> Get(std::string name)
@@ -109,18 +120,20 @@ namespace gswy {
 			{
 				return it->second.second;
 			}
-			return nullptr;
+			// TODO : Engine exception
+			throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Resource with id " + str2wstr(name) + L" is not managed!");
 		}
 
-		bool Has(int id)
-		{
-			return (Get(id) != nullptr);
-		}
-
-		bool Has(std::string name)
-		{
-			return (Get(name) != nullptr);
-		}
+		// Deprecated
+		//bool Has(int id)
+		//{
+		//	return (Get(id) != nullptr);
+		//}
+		// Deprecated
+		//bool Has(std::string name)
+		//{
+		//	return (Get(name) != nullptr);
+		//}
 
 	private:
 		int m_currentId;

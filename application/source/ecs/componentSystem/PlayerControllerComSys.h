@@ -16,7 +16,7 @@ Creation date: 02/04/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
-#include "engine/input/Input.h"
+#include "engine/input/InputManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/AnimationCom.h"
 #include "ecs/EntityType.h"
@@ -36,7 +36,7 @@ namespace gswy
 				if (entity.m_type != PLAYER)
 					continue;
 
-				auto input = Input::GetInstance();
+				auto input = InputManager::GetInstance();
 				ComponentDecorator<TransformCom, GameObjectType> position;
 				ComponentDecorator<AnimationCom, GameObjectType> animation;
 				m_parentWorld->Unpack(entity, position);
@@ -49,7 +49,7 @@ namespace gswy
 				if (input->IsKeyPressed(GLFW_KEY_W) && input->IsAllKeyNotPressed<int, int, int>(GLFW_KEY_D, GLFW_KEY_S, GLFW_KEY_A)) {
 					PRINT("KEY W PRESSED!");
 
-					animation->SetCurrentAnimationState("MoveUp");
+					animation->SetCurrentAnimationState("Move");
 					animation->GetCurrentAnimation()->SetAnimIdle(false);
 					position->m_x += -sin(glm::radians(0.0f)) * 5 * dt;
 					position->m_y += cos(glm::radians(0.0f)) * 5 * dt;
@@ -59,7 +59,7 @@ namespace gswy
 				if (input->IsKeyPressed(GLFW_KEY_S)  && input->IsAllKeyNotPressed<int, int, int>(GLFW_KEY_D, GLFW_KEY_A, GLFW_KEY_W)) {
 					PRINT("KEY S PRESSED!");
 
-					animation->SetCurrentAnimationState("MoveDown");
+					animation->SetCurrentAnimationState("Move");
 					animation->GetCurrentAnimation()->SetAnimIdle(false);
 					position->m_x -= -sin(glm::radians(0.0f)) * 5 * dt;
 					position->m_y -= cos(glm::radians(0.0f)) * 5 * dt;
@@ -68,7 +68,7 @@ namespace gswy
 				if (input->IsKeyPressed(GLFW_KEY_A) && input->IsAllKeyNotPressed<int, int, int>(GLFW_KEY_D, GLFW_KEY_S, GLFW_KEY_W)) {
 					PRINT("KEY A PRESSED!");
 
-					animation->SetCurrentAnimationState("MoveLeft");
+					animation->SetCurrentAnimationState("Move");
 					animation->GetCurrentAnimation()->SetAnimIdle(false);
 					position->m_x -= cos(glm::radians(0.0f)) * 5 * dt;
 					position->m_y -= sin(glm::radians(0.0f)) * 5 * dt;
@@ -77,7 +77,7 @@ namespace gswy
 				if (input->IsKeyPressed(GLFW_KEY_D) && input->IsAllKeyNotPressed<int, int, int>(GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A)) {
 					PRINT("KEY D PRESSED!");
 
-					animation->SetCurrentAnimationState("MoveRight");
+					animation->SetCurrentAnimationState("Move");
 					animation->GetCurrentAnimation()->SetAnimIdle(false);
 					position->m_x += cos(glm::radians(0.0f)) * 5 * dt;
 					position->m_y += sin(glm::radians(0.0f)) * 5 * dt;

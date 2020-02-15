@@ -12,17 +12,11 @@ Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
 #pragma once
-
+#include <sstream>
 #include "engine/logging/LoggingCore.h"
 
-//#ifdef ENGINE_BUILD_DLL
-//	#define ENGINE_API __declspec(dllexport)
-//#else
-//	#define ENGINE_API __declspec(dllimport)
-//#endif
-
 #ifdef ENGINE_BUILD_DLL
-#define ENGINE_API 
+#define ENGINE_API __declspec(dllexport)
 #else
 #define ENGINE_API 
 #endif
@@ -31,9 +25,17 @@ Creation date	: 01/26/2020
 #define ASSERT(x, ...) { if(x == true) { ENGINE_CRITICAL("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
 
 #ifdef _DEBUG 
-#define DEBUG_PRINT(x) ENGINE_DEBUG(#x)
+#define DEBUG_PRINT(x) ENGINE_DEBUG(Str(x))
 #else
 #define DEBUG_PRINT(x)
 #endif // DEBUG
 
-#define PRINT(x) ENGINE_INFO(#x);
+#define PRINT(x) ENGINE_INFO(Str(x));
+
+template <typename T>
+std::string Str(const T& t)
+{
+	std::stringstream ss;
+	ss << t;
+	return ss.str();
+}

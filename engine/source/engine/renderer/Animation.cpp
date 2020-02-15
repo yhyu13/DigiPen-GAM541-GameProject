@@ -11,12 +11,13 @@ Creation date: 02/04/2020
 
 #include "engine-precompiled-header.h"
 #include "Animation.h"
+#include "engine/allocator/MemoryManager.h"
 
 using namespace gswy;
 
 std::shared_ptr<Animation> gswy::Animation::Create(const std::string& path)
 {
-	return std::make_shared<Animation>();
+	return MemoryManager::Make_shared<Animation>();
 }
 
 Animation::Animation() 

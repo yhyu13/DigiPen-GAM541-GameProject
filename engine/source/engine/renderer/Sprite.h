@@ -52,6 +52,7 @@ namespace gswy {
 		std::shared_ptr<Texture2D> m_Texture2D;
 		std::shared_ptr<VertexArray> m_SpriteVertexArray;
 		std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
+		std::vector<float> m_Vertices;
 		glm::vec3 m_Position;
 		uint32_t m_SpriteWidth, m_SpriteHeight;
 		uint32_t m_SpriteX, m_SpriteY;

@@ -26,6 +26,15 @@ namespace gswy {
 		m_SpriteY = 0;
 		m_Scale = 1.0f;
 		m_Rotation = 0.0f;
+		
+		m_Vertices = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
+		};
+
+		m_SpriteVertexBuffer = VertexBuffer::Create(&m_Vertices[0], m_Vertices.size() * sizeof(float));
 	}
 
 	Sprite::Sprite(Texture2D* texture2D)
@@ -62,14 +71,14 @@ namespace gswy {
 
 	void Sprite::DrawInternal(const glm::vec2& rect, const glm::vec2& texCoord, const glm::vec2& texCoordOffset)
 	{
-		float quadVertices[] = {
+		m_Vertices = {
 		   -rect.x, -rect.y, 0.0f, texCoord.x, texCoord.y,
 			rect.x, -rect.y, 0.0f, texCoord.x + texCoordOffset.x, texCoord.y,
 			rect.x,  rect.y, 0.0f, texCoord.x + texCoordOffset.x, texCoord.y + texCoordOffset.y,
 		   -rect.x,  rect.y, 0.0f, texCoord.x, texCoord.y + texCoordOffset.y
 		};
 
-		m_SpriteVertexBuffer = VertexBuffer::Create(quadVertices, sizeof(quadVertices));
+		m_SpriteVertexBuffer->UpdateBufferData(&m_Vertices[0], m_Vertices.size() * sizeof(float));
 		m_SpriteVertexBuffer->SetLayout({
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float2, "a_TexCoord" }

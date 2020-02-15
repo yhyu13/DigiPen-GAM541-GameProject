@@ -35,6 +35,11 @@ namespace gswy {
 
 	public:
 
+		GameWorld()
+		{
+			m_entityManager = MemoryManager::Make_shared<gswy::EntityManager<EntityType>>();
+		}
+
 		explicit GameWorld(std::shared_ptr<EntityManager<EntityType>> manager) : m_entityManager(manager) {
 		}
 
@@ -86,6 +91,16 @@ namespace gswy {
 				system->RemoveEntity(entity);
 			}
 			m_entityManager->Destroy(entity);
+		}
+
+		std::vector<Entity<EntityType>> GetAllEntityWithType(EntityType type)
+		{
+			std::vector<Entity<EntityType>> result;
+			for (auto& id : m_entityManager->GetAllEntityIDWithType(type))
+			{
+				result.push_back(Entity<EntityType>(id, type));
+			}
+			return result;
 		}
 
 		/*

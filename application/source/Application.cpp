@@ -12,96 +12,9 @@ Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
 #include "EngineExport.h"
-#include "ecs/componentSystem/PlayerControllerComSys.h"
-#include "ecs/componentSystem/SceneComSys.h"
-#include "ecs/componentSystem/SpriteComSys.h"
-#include "ecs/componentSystem/AnimationComSys.h"
-
-
-#include <sstream>
+#include "Import.h"
 
 using namespace gswy;
-
-enum EventType {
-	A,
-	B,
-	C
-};
-
-struct CollisionEvent : Event<GameObjectType, EventType> {
-
-	float a;
-	int b;
-};
-
-struct Position : gswy::BaseComponent<Position> {
-	Position() = default;
-	Position(float _x) : x(_x) {
-		value = &x;
-		x_ptr = std::make_shared<float>(x + 2);
-	};
-	float x;
-
-	float* value;
-	std::shared_ptr<float> x_ptr;
-};
-
-struct Transform : gswy::BaseComponent<Transform> {
-	Transform() = default;
-	Transform(float x, float y) : x(x), y(y) {};
-	float x;
-	float y;
-};
-
-EventQueue<GameObjectType, EventType> queue;
-
-class Wind : public gswy::BaseComponentSystem<GameObjectType> {
-public:
-	Wind() {
-		m_systemSignature.AddComponent<Position>();
-		m_systemSignature.AddComponent<Transform>();
-	}
-
-	virtual void Init() {
-		queue.Subscribe<Wind>(this, EventType::A, &Wind::OnEvent);
-		queue.Subscribe<Wind>(this, EventType::B, &Wind::OnEvent);
-		queue.Subscribe<Wind>(this, EventType::C, &Wind::OnEvent);
-	}
-
-	virtual void Update(double dt) override {
-		for (auto& entity : m_registeredEntities) {
-			gswy::ComponentDecorator<Position, GameObjectType> position;
-			gswy::ComponentDecorator<Transform, GameObjectType> transform;
-			m_parentWorld->Unpack(entity, position);
-			m_parentWorld->Unpack(entity, transform);
-
-			// Move 1 every second
-			position->x += 1.0f * (dt / 1000.0f);
-
-			// Print entity information
-			//APP_DEBUG("Entity: {0}   {1}: {2} : {3} : {4}", entity.m_type, entity.m_id, position->x, transform->x, transform->y);
-		}
-	}
-
-	void OnEvent(Event<GameObjectType, EventType>* collision) {
-
-		CollisionEvent* e = dynamic_cast<CollisionEvent*> (collision);
-		if (e) {
-			APP_DEBUG("a: {0}", e->a);
-			APP_DEBUG("b: {0}", e->b);
-		}
-
-		if (collision->m_type == EventType::C) {
-			CollisionEvent* event = static_cast<CollisionEvent*> (collision);
-			APP_ERROR("a: {0}", event->a);
-			APP_CRITICAL("b: {0}", event->b);
-		}
-		APP_TRACE("event-type: {0}", collision->m_type);
-		APP_TRACE("entity-1 type: {0}", collision->m_entityA.m_type);
-		APP_TRACE("entity-2 type: {0}", collision->m_entityB.m_type);
-
-	}
-};
 
 class Application : public Engine {
 
@@ -110,209 +23,183 @@ public:
 	Application() 
 		: m_CameraController(1280.0f / 720.0f)
 	{
-		gswy::Renderer2D::Init();
-		// Texture Test
-		ResourceAllocator<Texture2D>::GetInstance()->Init();
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SpriteSheetExample.png", "SpriteSheetExample");
-		// Animation Test
-		ResourceAllocator<Animation>::GetInstance()->Init();
-		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
-		for (int i = 0; i < 8; ++i)
-		{
-			playerAnim1->AddFrame("SpriteSheetExample", 24*i, 32 * 0, 24, 32, 1.0 / 15.0);
-		}
-		auto playerAnim2 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation2.txt", "PlayerAnimation2");
-		for (int i = 0; i < 8; ++i)
-		{
-			playerAnim2->AddFrame("SpriteSheetExample", 24 * i, 32*1, 24, 32, 1.0 / 15.0);
-		}
-		auto playerAnim3 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation3.txt", "PlayerAnimation3");
-		for (int i = 0; i < 8; ++i)
-		{
-			playerAnim3->AddFrame("SpriteSheetExample", 24 * i, 32 * 2, 24, 32, 1.0 / 15.0);
-		}
-		auto playerAnim4 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation4.txt", "PlayerAnimation4");
-		for (int i = 0; i < 8; ++i)
-		{
-			playerAnim4->AddFrame("SpriteSheetExample", 24 * i, 32 * 3, 24, 32, 1.0 / 15.0);
-		}
-		//Particle Test
-		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
-		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
-		m_Particle.SizeBegin = 0.2f, m_Particle.SizeVariation = 0.1f, m_Particle.SizeEnd = 0.0f;
-		m_Particle.LifeTime = 1.0f;
-		m_Particle.Velocity = { 0.0f, 1.0f, 0.0f };
-		m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
-		m_Particle.Position = { 0.0f, -0.7f, 0.0f };
+		InitFramework();
+		InitGameWorld();
 	}
 
 	virtual ~Application() {
 	}
 
-	virtual void Run() override
+	void InitFramework()
 	{
-		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
+		// Renderer
+		Renderer2D::Init();
+		// Texture loader
+		ResourceAllocator<Texture2D>::GetInstance()->Init();
+		// Animation loader
+		ResourceAllocator<Animation>::GetInstance()->Init();
+		// Frame rate controller
+		m_rateController = FramerateController::GetInstance(60);
 
-		FramerateController* rateController = FramerateController::GetInstance(60);
-		Input* input = Input::GetInstance();
+		LoadResources();
+	}
 
+	void LoadResources()
+	{
+		// Texture loader
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/GAM541_Char1_Moving_Upper_Unarmed.png", "GAM541_Char1_Moving_Upper_Unarmed");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
+		// Animation loader
+		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
+		for (int i = 0; i < 8; ++i)
+		{
+			playerAnim1->AddFrame("GAM541_Char1_Moving_Upper_Unarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
+		}
+		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true, true, false);
+	}
+
+	void InitGameWorld()
+	{
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
-
-		std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = std::make_shared<gswy::EntityManager<GameObjectType>>();
-		std::shared_ptr<GameWorld<GameObjectType>> world = std::make_shared<gswy::GameWorld<GameObjectType>>(entityManager);
+		m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
 
 		// Add systems
-		world->RegisterSystem(std::make_shared<PlayerControllerComSys>());
-		world->RegisterSystem(std::make_shared<SceneComSys>());
-		world->RegisterSystem(std::make_shared<SpriteComSys>());
-		world->RegisterSystem(std::make_shared<AnimationComSys>());
-		world->RegisterSystem(std::make_shared<Wind>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
 
 		// Initialize game
-		world->Init();
+		m_world->Init();
 
-		auto player = world->GenerateEntity(GameObjectType::PLAYER);
-		player.AddComponent(TransformCom(0,0,0));
+		LoadGameWorld();
+	}
+
+	void LoadGameWorld()
+	{
+		auto background = m_world->GenerateEntity(GameObjectType::ENEMY);
+		background.AddComponent(TransformCom(0, 0, 0));
+		auto sprite0 = SpriteCom();
+		sprite0.SetTexture("Background3");
+		background.AddComponent(sprite0);
+
+		auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
+		player.AddComponent(TransformCom(0, 0, 1));
 		player.AddComponent(SpriteCom());
 		auto animCom = AnimationCom();
-		animCom.Add("PlayerAnimation1", "MoveRight");
-		animCom.Add("PlayerAnimation2", "MoveLeft");
-		animCom.Add("PlayerAnimation3", "MoveUp");
-		animCom.Add("PlayerAnimation4", "MoveDown");
-		animCom.SetCurrentAnimationState("MoveUp");
+		animCom.Add("PlayerAnimation1", "Move");
+		animCom.SetCurrentAnimationState("Move");
 		player.AddComponent(animCom);
 
-		auto enemy = world->GenerateEntity(GameObjectType::ENEMY);
-		enemy.AddComponent(TransformCom(1, 0, 0));
+		auto enemy = m_world->GenerateEntity(GameObjectType::ENEMY);
+		enemy.AddComponent(TransformCom(1, 0, 1));
 		enemy.AddComponent(SpriteCom());
 		auto animCom2 = AnimationCom();
-		animCom2.Add("PlayerAnimation1", "MoveRight");
-		animCom2.SetCurrentAnimationState("MoveRight");
+		animCom2.Add("PlayerAnimation1", "Move");
+		animCom2.SetCurrentAnimationState("Move");
 		enemy.AddComponent(animCom2);
+	}
 
+	void BeforeRun()
+	{
+		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
+	}
 
-		auto entity = player.GetEntity();
-		// Add an entity with a position
-		auto tumbleweed = world->GenerateEntity(GameObjectType::PLAYER);
-		Position position(0);
-		tumbleweed.AddComponent(position);
-		tumbleweed.AddComponent(Transform(1, 2));
+	void AfterRun()
+	{
 
-		auto tumbleweed2 = world->GenerateEntity(GameObjectType::ENEMY);
-		Position position2(10);
-		tumbleweed2.AddComponent(position2);
-		tumbleweed2.AddComponent(Transform(10, 20));
+	}
 
-		auto tumbleweed3 = world->GenerateEntity(GameObjectType::ENEMY);
-		Position position3(100);
-		tumbleweed3.AddComponent(position3);
-		tumbleweed3.AddComponent(Transform(100, 200));
+	void BeforeFrame()
+	{
+		m_rateController->FrameStart();
+	}
 
-		// Run game for "1 second at 50fps"
-		for (int i = 0; i < 50; i++) {
-			world->Update(20);
-		}
+	void AfterFrame()
+	{
+		m_rateController->FrameEnd();
+	}
 
-		APP_DEBUG("\n\nTesting event queue.... start\n");
-		Event<GameObjectType, EventType> e;
-		e.m_entityA = tumbleweed.GetEntity();
-		e.m_entityB = tumbleweed2.GetEntity();
-		e.m_type = EventType::A;
-		queue.Publish(&e);
+	bool IsRunning()
+	{
+		return isRunning;
+	}
 
-		Event<GameObjectType, EventType> e1;
-		e1.m_entityA = tumbleweed.GetEntity();
-		e1.m_entityB = tumbleweed2.GetEntity();
-		e1.m_type = EventType::B;
-		queue.Publish(&e1);
-
-		CollisionEvent e2;
-		e2.m_entityA = tumbleweed.GetEntity();
-		e2.m_entityB = tumbleweed2.GetEntity();
-		e2.m_type = EventType::C;
-		e2.a = 10.8f;
-		e2.b = 10;
-		queue.Publish(&e2);
-
-		APP_DEBUG("\n\nTesting event queue.... finished\n");
-
-		tumbleweed2.RemoveComponent<Transform>();
-
-		APP_DEBUG("\n\n\n\n\n");
-
-		// Run game for "1 second at 50fps"
-		for (int i = 0; i < 50; i++) {
-			world->Update(20);
-		}
-
-		while (m_isRunning) {
-
-			rateController->FrameStart();
-			{
-#ifdef _DEBUG
-				std::stringstream stream;
-				stream << "Frame Time: " << rateController->GetFrameTime() * 1000 << "ms";
-				m_window->UpdateTitle(stream.str());
-				ENGINE_DEBUG("Frame Time: {0}", stream.str());
-#endif
-				{
-					// Engine update
-					Update(rateController->GetFrameTime());
-				}
-				{
-					// world update
-					world->Update(rateController->GetFrameTime());
-				}
-
-				{
-					// Manger update
-					Input::GetInstance()->Update(rateController->GetFrameTime());
-				}
-
-				{
-					// Draw Update
-					// Setting camera position as the player position (TODO : 1, Making gameworld a singleton 2, making gameworld be able to get entity by ID or something)
-					ComponentDecorator<TransformCom, GameObjectType> position;
-					world->Unpack(entity, position);
-					m_CameraController.SetPosition(glm::vec3(position->m_x, position->m_y, position->m_z));
-					m_CameraController.OnUpdate(rateController->GetFrameTime());
-
-					gswy::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-					gswy::RenderCommand::Clear();
-
-					gswy::Renderer2D::BeginScene(m_CameraController.GetCamera());
-					// world render
-					world->Render();
-					gswy::Renderer2D::EndScene();
-				}
-
-				{
-					//Particle Rendering
-					for (int i = 0; i < 5; i++)
-						m_ParticleSystem.Emit(m_Particle);
-					m_ParticleSystem.Update(rateController->GetFrameTime());
-					m_ParticleSystem.Render();
-				}
-
-				m_isRunning = !m_window->ShouldExit();
-			}
-			rateController->FrameEnd();
-		}
+	void UpdateRunning()
+	{
+		if (isRunning)
+			isRunning = !window->ShouldExit();
 	}
 
 	virtual void Update(double ts) {
-		Engine::Update(ts);
+		{
+			Engine::Update(ts); // Do not delete this line!
+		}
+		{
+			// Manger update
+			InputManager::GetInstance()->Update(ts);
+		}
+		{
+			// m_world update
+			m_world->Update(ts);
+		}
+	}
+
+	void UpdateCamera(double ts)
+	{
+		ComponentDecorator<TransformCom, GameObjectType> position;
+		m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
+		m_CameraController.SetPosition(glm::vec3(position->m_x, position->m_y, position->m_z));
+		m_CameraController.OnUpdate(ts);
+	}
+
+	void Render()
+	{
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::Clear();
+
+		Renderer2D::BeginScene(m_CameraController.GetCamera());
+		// m_world render
+		m_world->Render();
+
+		Renderer2D::EndScene();
+	}
+
+	virtual void Run() override
+	{
+		BeforeRun();
+		while (IsRunning()) {
+			BeforeFrame();
+			{
+				{
+					// Engine update
+					Update(m_rateController->GetFrameTime());
+				}
+				{
+					UpdateCamera(m_rateController->GetFrameTime());
+				}
+				{
+					Render();
+				}
+				UpdateRunning();
+			}
+			AfterFrame();
+		}
+		AfterRun();
 	}
 
 protected:
 
 private:
-	gswy::OrthographicCameraController m_CameraController;
-	gswy::ParticleSystem m_ParticleSystem;
-	gswy::Particle m_Particle;
+	OrthographicCameraController m_CameraController;
+	FramerateController* m_rateController;
+	std::shared_ptr<GameWorld<GameObjectType>> m_world;
 };
 
-Engine* gswy::CreateEngineApplication() {
-	return new Application();
+namespace gswy
+{
+	Engine* CreateEngineApplication() {
+		return new Application();
+	}
 }
 

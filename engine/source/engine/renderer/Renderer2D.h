@@ -16,6 +16,7 @@ Creation date: 01/26/2020
 #include "OrthographicCamera.h"
 #include "Texture.h"
 #include "engine/EngineCore.h"
+#include "engine/allocator/MemoryManager.h"
 
 namespace gswy {
 

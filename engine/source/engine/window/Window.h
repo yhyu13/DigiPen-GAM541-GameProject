@@ -14,7 +14,7 @@ Creation date	: 01/26/2020
 #pragma once
 
 #include "engine/EngineCore.h"
-#include "engine/input/Input.h"
+#include "engine/input/InputManager.h"
 
 struct GLFWwindow;
 
@@ -24,10 +24,10 @@ namespace gswy {
 		unsigned int m_width;
 		unsigned int m_height;
 		std::string m_title;
-		Input* m_input = nullptr;
+		InputManager* m_input = nullptr;
 
 		WindowProperties(unsigned int width = 1000, unsigned int height = 600, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title) {
-			m_input = Input::GetInstance();
+			m_input = InputManager::GetInstance();
 		}
 	};
 
