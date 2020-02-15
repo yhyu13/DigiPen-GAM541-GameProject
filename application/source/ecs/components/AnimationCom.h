@@ -46,7 +46,11 @@ namespace gswy
 		}
 		void SetCurrentAnimationState(const std::string state)
 		{
-			if (m_animationStateMap.find(state) != m_animationStateMap.end() && m_animationState.compare(state) != 0)
+			if (m_animationState.compare(state) == 0)
+			{
+				return;
+			}
+			if (m_animationStateMap.find(state) != m_animationStateMap.end())
 			{
 				m_animationState = state;
 				m_animation = m_animationStateMap[state];
