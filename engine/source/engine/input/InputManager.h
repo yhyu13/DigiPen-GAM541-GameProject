@@ -5,7 +5,7 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 Language		: C++ 11
 Platform		: Windows 10 (X64)
 Project			: GAM541
-Filename		: Input.h
+Filename		: InputManager.h
 Purpose			: Contains declarations for input-system.
 Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
 Creation date	: 01/29/2020
@@ -19,12 +19,12 @@ Creation date	: 01/29/2020
 
 namespace gswy {
 
-	class ENGINE_API Input : public IRunTimeModule {
+	class ENGINE_API InputManager : public IRunTimeModule {
 
 	public:
 
-		static Input* GetInstance();
-		~Input();
+		static InputManager* GetInstance();
+		~InputManager();
 		virtual void Init() override {};
 		virtual void Update(double deltaTime) override;
 		virtual void Shutdown() override {};
@@ -57,7 +57,7 @@ namespace gswy {
 
 	private:
 
-		Input();
+		InputManager();
 
 		bool m_previousKeyBoardState[KEY_LAST + 1];
 		bool m_currentKeyBoardState[KEY_LAST + 1];

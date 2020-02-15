@@ -5,7 +5,7 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 Language		: C++ 11
 Platform		: Windows 10 (X64)
 Project			: GAM541
-Filename		: Input.cpp
+Filename		: InputManager.cpp
 Purpose			: Contains definitions for input-system.
 Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
 Creation date	: 01/29/2020
@@ -14,16 +14,16 @@ Creation date	: 01/29/2020
 #include "engine-precompiled-header.h"
 
 #include "engine/EngineCore.h"
-#include "Input.h"
+#include "InputManager.h"
 
 namespace gswy {
 
-	Input* Input::GetInstance() {
-		static Input input;
+	InputManager* InputManager::GetInstance() {
+		static InputManager input;
 		return &input;
 	}
 
-	Input::Input() : m_cursorPosition( {0.0f, 0.0f} ) {
+	InputManager::InputManager() : m_cursorPosition( {0.0f, 0.0f} ) {
 		memset(m_previousKeyBoardState, false, sizeof(bool) * (KEY_LAST + 1));
 		memset(m_currentKeyBoardState, false, sizeof(bool) * (KEY_LAST + 1));
 
@@ -31,10 +31,10 @@ namespace gswy {
 		memset(m_currentMouseButtonState, false, sizeof(bool) * (MOUSE_BUTTON_LAST + 1));
 	}
 
-	Input::~Input() {
+	InputManager::~InputManager() {
 	}
 
-	void Input::Update(double deltaTime)
+	void InputManager::Update(double deltaTime)
 	{
 		for (int i = 0; i < KEY_LAST + 1; ++i)
 		{
@@ -46,21 +46,21 @@ namespace gswy {
 		}
 	}
 
-	void Input::UpdateKeyboardState(const int& key, const bool& state, const bool& repeat) {
+	void InputManager::UpdateKeyboardState(const int& key, const bool& state, const bool& repeat) {
 		m_currentKeyBoardState[key] = state;
 	}
 
-	void Input::UpdateMouseButtonState(const int& button, const bool& state) {
+	void InputManager::UpdateMouseButtonState(const int& button, const bool& state) {
 		m_currentMouseButtonState[button] = state;
 	}
 
 
-	bool Input::IsKeyPressed(const int& keyCode) {
+	bool InputManager::IsKeyPressed(const int& keyCode) {
 		ASSERT(keyCode > KEY_LAST, "Invalid key-code.");
 		return m_currentKeyBoardState[keyCode];
 	}
 
-	bool Input::IsKeyTriggered(const int& keyCode) {
+	bool InputManager::IsKeyTriggered(const int& keyCode) {
 		ASSERT(keyCode > KEY_LAST, "Invalid key-code.");
 
 		if (m_currentKeyBoardState[keyCode] && !m_previousKeyBoardState[keyCode]) {
@@ -69,7 +69,7 @@ namespace gswy {
 		return false;
 	}
 
-	bool Input::IsKeyReleased(const int& keyCode) {
+	bool InputManager::IsKeyReleased(const int& keyCode) {
 		ASSERT(keyCode > KEY_LAST, "Invalid key-code.");
 
 		if (!m_currentKeyBoardState[keyCode] && m_previousKeyBoardState[keyCode]) {
@@ -78,12 +78,12 @@ namespace gswy {
 		return false;
 	}
 
-	bool Input::IsMouseButtonPressed(const int& mouseButton) {
+	bool InputManager::IsMouseButtonPressed(const int& mouseButton) {
 		ASSERT(mouseButton > MOUSE_BUTTON_LAST, "Invalid mouse-button.");
 		return m_currentMouseButtonState[mouseButton];
 	}
 
-	bool Input::IsMouseButtonReleased(const int& mouseButton) {
+	bool InputManager::IsMouseButtonReleased(const int& mouseButton) {
 		ASSERT(mouseButton > MOUSE_BUTTON_LAST, "Invalid mouse-button.");
 
 		if (!m_currentMouseButtonState[mouseButton] && m_previousMouseButtonState[mouseButton]) {
@@ -92,20 +92,20 @@ namespace gswy {
 		return false;
 	}
 
-	void Input::UpdateCursorPosition(const double& positionX, const double& positionY) {
+	void InputManager::UpdateCursorPosition(const double& positionX, const double& positionY) {
 		m_cursorPosition.first = positionX;
 		m_cursorPosition.second = positionY;
 	}
 
-	const std::pair<double, double>& Input::GetCursorPosition() {
+	const std::pair<double, double>& InputManager::GetCursorPosition() {
 		return m_cursorPosition;
 	}
 
-	const double& Input::GetMousePositionX() {
+	const double& InputManager::GetMousePositionX() {
 		return m_cursorPosition.first;
 	}
 
-	const double& Input::GetMousePositionY() {
+	const double& InputManager::GetMousePositionY() {
 		return m_cursorPosition.second;
 	}
 }

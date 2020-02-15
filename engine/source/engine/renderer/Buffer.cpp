@@ -24,7 +24,7 @@ namespace gswy {
 		switch (Renderer2D::GetAPI())
 		{
 		case RendererAPI::API::None: /*gswy_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");*/ return nullptr;
-		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLVertexBuffer>(vertices, size);
+		case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLVertexBuffer>(vertices, size);
 		}
 
 		ASSERT(false, "Unknown RendererAPI!");
@@ -36,7 +36,7 @@ namespace gswy {
 		switch (Renderer2D::GetAPI())
 		{
 		case RendererAPI::API::None: /*gswy_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");*/ return nullptr;
-		case RendererAPI::API::OpenGL: return std::make_shared<OpenGLIndexBuffer>(indices, size);
+		case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLIndexBuffer>(indices, size);
 		}
 
 		ASSERT(false, "Unknown RendererAPI!");

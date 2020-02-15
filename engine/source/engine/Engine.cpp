@@ -15,8 +15,9 @@ Creation date	: 01/26/2020
 #include "Engine.h"
 #include "engine/window/Window.h"
 #include "engine/framerate-controller/FramerateController.h"
-#include "engine/input/Input.h"
+#include "engine/input/InputManager.h"
 #include "engine/audio/AudioManager.h"
+#include "engine/allocator/MemoryManager.h"
 
 #include <GLFW/glfw3.h>
 
@@ -30,17 +31,19 @@ namespace gswy {
 		APP_INFO("Initialized Application Log!");
 
 		m_window = Window::InitializeWindow();
+		MemoryManager::GetInstance()->Init();
 		AudioManager::GetInstance()->Init();
 	}
 	
 	Engine::~Engine() {
 		AudioManager::GetInstance()->Shutdown();
+		MemoryManager::GetInstance()->Shutdown();
 		delete m_window;
 	}
 
 	void Engine::Run() {
 		FramerateController* rateController = FramerateController::GetInstance(60);
-		Input* input = Input::GetInstance();
+		InputManager* input = InputManager::GetInstance();
 		while (m_isRunning) {
 			rateController->FrameStart();
 

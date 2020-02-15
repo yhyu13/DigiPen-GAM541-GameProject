@@ -22,14 +22,16 @@ Creation date	: 01/26/2020
 #include "engine/window/Window.h"
 #include "engine/audio/AudioManager.h"
 #include "engine/framerate-controller/FramerateController.h"
-#include "engine/input/Input.h"
+#include "engine/input/InputManager.h"
 
 ///// Entry point /////
 #include "engine/Main.h"
 
+///// Memory point /////
+#include "engine/allocator/MemoryManager.h"
 
-///// Input system /////
-#include "engine/input/Input.h"
+///// InputManager system /////
+#include "engine/input/InputManager.h"
 
 ///// rendering /////
 #include "engine/renderer/Renderer2D.h"

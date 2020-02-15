@@ -3,7 +3,10 @@
 namespace gswy
 {
 	enum GameObjectType {
+		BACKGROUND,
 		PLAYER,
-		ENEMY
+		ENEMY,
+
+		NUM
 	};
 }

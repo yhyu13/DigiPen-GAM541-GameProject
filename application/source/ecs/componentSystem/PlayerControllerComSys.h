@@ -16,7 +16,7 @@ Creation date: 02/04/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
-#include "engine/input/Input.h"
+#include "engine/input/InputManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/AnimationCom.h"
 #include "ecs/EntityType.h"
@@ -36,7 +36,7 @@ namespace gswy
 				if (entity.m_type != PLAYER)
 					continue;
 
-				auto input = Input::GetInstance();
+				auto input = InputManager::GetInstance();
 				ComponentDecorator<TransformCom, GameObjectType> position;
 				ComponentDecorator<AnimationCom, GameObjectType> animation;
 				m_parentWorld->Unpack(entity, position);

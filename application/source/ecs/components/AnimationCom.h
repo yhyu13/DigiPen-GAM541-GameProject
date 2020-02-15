@@ -14,6 +14,7 @@ Creation date: 02/04/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/allocator/ResouceAllocator.h"
 #include "engine/renderer/Animation.h"
+#include "engine/exception/EngineException.h"
 
 namespace gswy
 {
@@ -25,7 +26,7 @@ namespace gswy
 		void Add(std::string name, std::string stateName)
 		{
 			auto animation = ResourceAllocator<Animation>::GetInstance()->Get(name);
-			m_animationStateMap[stateName] = std::make_shared<Animation>(*animation);
+			m_animationStateMap[stateName] = MemoryManager::Make_shared<Animation>(*animation);
 		}
 		std::shared_ptr<Animation> GetCurrentAnimation()
 		{
@@ -35,8 +36,8 @@ namespace gswy
 			}
 			else
 			{
-				// TODO : Engine excpetion
-				return nullptr;
+				// TODO : Engine exception
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Animation state " + str2wstr(m_animationState) + L"has failed to be getted!");
 			}
 		}
 		std::string GetCurrentAnimationState()
@@ -55,12 +56,14 @@ namespace gswy
 				}
 				else
 				{
-					// TODO : Engine excpetion
+					// TODO : Engine exception
+					throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Animation state " + str2wstr(m_animationState) + L"has failed to be set!");
 				}
 			}
 			else
 			{
-				// TODO : Engine excpetion
+				// TODO : Engine exception
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Animation state " + str2wstr(m_animationState) + L"has not been managed!");
 			}
 		}
 	private:

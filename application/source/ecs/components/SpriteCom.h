@@ -22,7 +22,12 @@ namespace gswy
 
 		SpriteCom()
 		{
-			m_sprite = std::make_shared<Sprite>();
+			m_sprite = MemoryManager::Make_shared<Sprite>();
+		}
+
+		void SetTexture(const std::string& name)
+		{
+			m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get(name));
 		}
 
 		std::shared_ptr<Sprite> Get()

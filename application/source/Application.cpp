@@ -32,28 +32,14 @@ public:
 		gswy::Renderer2D::Init();
 		// Texture Test
 		ResourceAllocator<Texture2D>::GetInstance()->Init();
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SpriteSheetExample.png", "SpriteSheetExample");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/GAM541_Char1_Moving_Upper_Unarmed.png", "GAM541_Char1_Moving_Upper_Unarmed");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
 		// Animation Test
 		ResourceAllocator<Animation>::GetInstance()->Init();
 		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
 		for (int i = 0; i < 8; ++i)
 		{
-			playerAnim1->AddFrame("SpriteSheetExample", 24*i, 32 * 0, 24, 32, 1.0 / 15.0);
-		}
-		auto playerAnim2 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation2.txt", "PlayerAnimation2");
-		for (int i = 0; i < 8; ++i)
-		{
-			playerAnim2->AddFrame("SpriteSheetExample", 24 * i, 32*1, 24, 32, 1.0 / 15.0);
-		}
-		auto playerAnim3 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation3.txt", "PlayerAnimation3");
-		for (int i = 0; i < 8; ++i)
-		{
-			playerAnim3->AddFrame("SpriteSheetExample", 24 * i, 32 * 2, 24, 32, 1.0 / 15.0);
-		}
-		auto playerAnim4 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation4.txt", "PlayerAnimation4");
-		for (int i = 0; i < 8; ++i)
-		{
-			playerAnim4->AddFrame("SpriteSheetExample", 24 * i, 32 * 3, 24, 32, 1.0 / 15.0);
+			playerAnim1->AddFrame("GAM541_Char1_Moving_Upper_Unarmed", 59*i, 32 * 0, 59, 32, 1.0 / 15.0);
 		}	
 	}
 
@@ -65,39 +51,43 @@ public:
 		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
 
 		FramerateController* rateController = FramerateController::GetInstance(60);
-		Input* input = Input::GetInstance();
+		InputManager* input = InputManager::GetInstance();
 
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
 
-		std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = std::make_shared<gswy::EntityManager<GameObjectType>>();
-		std::shared_ptr<GameWorld<GameObjectType>> world = std::make_shared<gswy::GameWorld<GameObjectType>>(entityManager);
+		//std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = MemoryManager::Make_shared<gswy::EntityManager<GameObjectType>>();
+		std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = MemoryManager::Make_shared<gswy::EntityManager<GameObjectType>>();
+		std::shared_ptr<GameWorld<GameObjectType>> world = MemoryManager::Make_shared<gswy::GameWorld<GameObjectType>>(entityManager);
 
 		// Add systems
-		world->RegisterSystem(std::make_shared<PlayerControllerComSys>());
-		world->RegisterSystem(std::make_shared<SceneComSys>());
-		world->RegisterSystem(std::make_shared<SpriteComSys>());
-		world->RegisterSystem(std::make_shared<AnimationComSys>());
+		world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
+		world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
+		world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
+		world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
 
 		// Initialize game
 		world->Init();
 
+		auto background = world->GenerateEntity(GameObjectType::ENEMY);
+		background.AddComponent(TransformCom(0, 0, 0));
+		auto sprite0 = SpriteCom();
+		sprite0.SetTexture("Background3");
+		background.AddComponent(sprite0);
+
 		auto player = world->GenerateEntity(GameObjectType::PLAYER);
-		player.AddComponent(TransformCom(0,0,0));
+		player.AddComponent(TransformCom(0,0,1));
 		player.AddComponent(SpriteCom());
 		auto animCom = AnimationCom();
-		animCom.Add("PlayerAnimation1", "MoveRight");
-		animCom.Add("PlayerAnimation2", "MoveLeft");
-		animCom.Add("PlayerAnimation3", "MoveUp");
-		animCom.Add("PlayerAnimation4", "MoveDown");
-		animCom.SetCurrentAnimationState("MoveUp");
+		animCom.Add("PlayerAnimation1", "Move");
+		animCom.SetCurrentAnimationState("Move");
 		player.AddComponent(animCom);
 
 		auto enemy = world->GenerateEntity(GameObjectType::ENEMY);
-		enemy.AddComponent(TransformCom(1, 0, 0));
+		enemy.AddComponent(TransformCom(1, 0, 1));
 		enemy.AddComponent(SpriteCom());
 		auto animCom2 = AnimationCom();
-		animCom2.Add("PlayerAnimation1", "MoveRight");
-		animCom2.SetCurrentAnimationState("MoveRight");
+		animCom2.Add("PlayerAnimation1", "Move");
+		animCom2.SetCurrentAnimationState("Move");
 		enemy.AddComponent(animCom2);
 
 		auto entity = player.GetEntity();
@@ -122,7 +112,7 @@ public:
 
 				{
 					// Manger update
-					Input::GetInstance()->Update(rateController->GetFrameTime());
+					InputManager::GetInstance()->Update(rateController->GetFrameTime());
 				}
 
 				{
