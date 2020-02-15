@@ -55,7 +55,6 @@ public:
 
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
 
-		//std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = MemoryManager::Make_shared<gswy::EntityManager<GameObjectType>>();
 		std::shared_ptr<gswy::EntityManager<GameObjectType>> entityManager = MemoryManager::Make_shared<gswy::EntityManager<GameObjectType>>();
 		std::shared_ptr<GameWorld<GameObjectType>> world = MemoryManager::Make_shared<gswy::GameWorld<GameObjectType>>(entityManager);
 
@@ -90,8 +89,6 @@ public:
 		animCom2.SetCurrentAnimationState("Move");
 		enemy.AddComponent(animCom2);
 
-		auto entity = player.GetEntity();
-
 		while (m_isRunning) {
 
 			rateController->FrameStart();
@@ -119,7 +116,7 @@ public:
 					// Draw Update
 					// Setting camera position as the player position (TODO : 1, Making gameworld a singleton 2, making gameworld be able to get entity by ID or something)
 					ComponentDecorator<TransformCom, GameObjectType> position;
-					world->Unpack(entity, position);
+					world->Unpack(world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
 					m_CameraController.SetPosition(glm::vec3(position->m_x, position->m_y, position->m_z));
 					m_CameraController.OnUpdate(rateController->GetFrameTime());
 

@@ -48,6 +48,7 @@ namespace gswy {
 
     size_t*        MemoryManager::m_pBlockSizeLookup;
     Allocator*     MemoryManager::m_pAllocators;
+	size_t		   MemoryManager::m_AllocatedSize = 0;
 }
 
 void gswy::MemoryManager::Init()
@@ -120,8 +121,14 @@ void* gswy::MemoryManager::Allocate(size_t size) noexcept
 {
 	/*return malloc(size);*/
 #if CUSTOM_ALLOCATOR 
-	return (size <= kMaxBlockSize) ? (m_pAllocators + m_pBlockSizeLookup[size])->Allocate()
-		: malloc(size);
+	if (size <= kMaxBlockSize)
+	{
+		return (m_pAllocators + m_pBlockSizeLookup[size])->Allocate();
+	}
+	else
+	{
+		return malloc(size);
+	}
 #else
 	return malloc(size);
 #endif // CUSTOM_ALLOCATOR 
@@ -136,10 +143,14 @@ void gswy::MemoryManager::Free(void* p, size_t size) noexcept
 	//       : free(p);
 #if CUSTOM_ALLOCATOR 
 	// Storing m_szDataSize as uint32_t right before each block
-	(size <= kMaxBlockSize) ?
-		(m_pAllocators + m_pBlockSizeLookup[*(reinterpret_cast<uint32_t*>(p) - 1)])->Free(p)
-	:
+	if (size <= kMaxBlockSize)
+	{
+		(m_pAllocators + m_pBlockSizeLookup[*(reinterpret_cast<uint32_t*>(p) - 1)])->Free(p);
+	}
+	else
+	{
 		free(p);
+	}
 #else
 	free(p);
 #endif // CUSTOM_ALLOCATOR 
