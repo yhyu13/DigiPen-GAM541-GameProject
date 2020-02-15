@@ -14,6 +14,7 @@ Creation date	: 02/03/2020
 #pragma once
 
 #include "Entity.h"
+#include "engine/exception/EngineException.h"
 
 namespace gswy {
 
@@ -43,6 +44,17 @@ namespace gswy {
 			vec.erase(std::remove(vec.begin(), vec.end(), entity.m_id), vec.end());
 		}
 
+		const std::vector<unsigned int>& GetAllEntityIDWithType(EntityType type)
+		{
+			if (m_typeToEntity.find(type) != m_typeToEntity.end())
+			{
+				return m_typeToEntity[type];
+			}
+			else
+			{
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Entity type " + str2wstr(std::to_string(type)) + L" has not been managed!");
+			}
+		}
 	protected:
 
 	private:

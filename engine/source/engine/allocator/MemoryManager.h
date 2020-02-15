@@ -31,7 +31,8 @@ namespace gswy {
         template<class T, typename... Arguments>
         static T* New(Arguments... parameters) noexcept
         {
-			DEBUG_PRINT("New : " + Str(typeid(T).name()) + " " + Str(sizeof(T)));
+			m_AllocatedSize += sizeof(T);
+			DEBUG_PRINT("New : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(m_AllocatedSize));
 #if CUSTOM_ALLOCATOR 
 			return new (Allocate(sizeof(T))) T(parameters...);
 #else
@@ -43,8 +44,9 @@ namespace gswy {
         template<class T>
         static void Delete(T* p) noexcept
         {
+			m_AllocatedSize -= sizeof(T);
 #if CUSTOM_ALLOCATOR 
-			DEBUG_PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(*(reinterpret_cast<uint32_t*>(p) - 1)));
+			DEBUG_PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(*(reinterpret_cast<uint32_t*>(p) - 1)) + " " + Str(m_AllocatedSize));
 			p->~T();
 			Free(p, sizeof(T));
 #else
@@ -63,6 +65,11 @@ namespace gswy {
 #else
 			MemoryManager::Make_shared<T>(parameters...);
 #endif // CUSTOM_ALLOCATOR 
+		}
+
+		static size_t GetCurrentManagedMemory()
+		{
+			return m_AllocatedSize;
 		}
 
     public:
@@ -94,6 +101,7 @@ namespace gswy {
 
         static size_t*        m_pBlockSizeLookup;
         static Allocator*     m_pAllocators;
+		static size_t		  m_AllocatedSize;
     private:
         static Allocator* LookUpAllocator(size_t size) noexcept;
     };

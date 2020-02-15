@@ -15,14 +15,8 @@ Creation date	: 01/26/2020
 
 #include "engine/logging/LoggingCore.h"
 
-//#ifdef ENGINE_BUILD_DLL
-//	#define ENGINE_API __declspec(dllexport)
-//#else
-//	#define ENGINE_API __declspec(dllimport)
-//#endif
-
 #ifdef ENGINE_BUILD_DLL
-#define ENGINE_API 
+#define ENGINE_API __declspec(dllexport)
 #else
 #define ENGINE_API 
 #endif

@@ -88,6 +88,16 @@ namespace gswy {
 			m_entityManager->Destroy(entity);
 		}
 
+		std::vector<Entity<EntityType>> GetAllEntityWithType(EntityType type)
+		{
+			std::vector<Entity<EntityType>> result;
+			for (auto& id : m_entityManager->GetAllEntityIDWithType(type))
+			{
+				result.push_back(Entity<EntityType>(id, type));
+			}
+			return result;
+		}
+
 		/*
 			
 		*/
