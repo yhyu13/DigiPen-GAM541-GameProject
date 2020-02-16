@@ -34,7 +34,7 @@ namespace gswy {
 		void PushOverlay(Layer* layer);
 
 		inline Window& GetWindow() { return *window; }
-		inline static Engine& Get() { return *s_Instance; }
+		inline static Engine& Get() { return *s_instance; }
 		static double TOTAL_TIME;
 	protected:
 		//static Window* window;
@@ -45,7 +45,7 @@ namespace gswy {
 		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
 
-		static Engine* s_Instance;
+		static Engine* s_instance;
 	};
 
 	Engine* CreateEngineApplication();

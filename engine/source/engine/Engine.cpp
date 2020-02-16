@@ -25,6 +25,7 @@ namespace gswy {
 
 	double Engine::TOTAL_TIME = 0.0;
 	bool Engine::isRunning = true;
+	Engine* Engine::s_instance = nullptr;
 
 	Engine::Engine() 
 	{
@@ -32,9 +33,14 @@ namespace gswy {
 		ENGINE_INFO("Initialized Engine Log!");
 		APP_INFO("Initialized Application Log!");
 
+		s_instance = this;
 		window = std::unique_ptr<Window>(Window::InitializeWindow());
 		MemoryManager::GetInstance()->Init();
 		AudioManager::GetInstance()->Init();
+
+		// initializing imgui layer
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 	
 	Engine::~Engine() {
@@ -70,7 +76,7 @@ namespace gswy {
 	void Engine::Update(double ts)
 	{
 		TOTAL_TIME += ts;
-		// window update (need to be called in at the begining of each frame)
+		// window update (need to be called in at the beginning of each frame)
 		window->Update(ts);
 		MemoryManager::GetInstance()->Update(ts);
 		AudioManager::GetInstance()->Update(ts);

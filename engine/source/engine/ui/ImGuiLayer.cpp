@@ -17,6 +17,7 @@ Creation date: 02/15/2020
 #include "examples/imgui_impl_opengl3.h"
 
 #include "../Engine.h"
+#include "../window/Window.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
