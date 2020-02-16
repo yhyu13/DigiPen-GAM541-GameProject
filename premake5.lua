@@ -19,6 +19,7 @@ IncludeDir["fmod_core"]  = "engine/vendors/fmod/api/core/inc"
 IncludeDir["fmod_bank"]  = "engine/vendors/fmod/api/fsbank/inc"
 IncludeDir["fmod_studio"]  = "engine/vendors/fmod/api/studio/inc"
 IncludeDir["spdlog"] 		= "engine/vendors/spdlog/include"
+IncludeDir["ImGui"]      =   "engine/vendors/imgui"
 
 LibDir = {}
 LibDir["glfw"] = "engine/vendors/glfw"
@@ -38,6 +39,7 @@ DllName["fmod_bank2"] = "libfsbvorbis64.dll"
 DllName["fmod_studio"] = "fmodstudio.dll"
 
 include "engine/vendors/glfw"
+include "engine/vendors/imgui"
 
 project "engine"
 	location "engine"
@@ -80,7 +82,8 @@ project "engine"
 		"%{IncludeDir.fmod_core}",
 		"%{IncludeDir.fmod_bank}",
 		"%{IncludeDir.fmod_studio}",
-		"%{IncludeDir.spdlog}"
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	libdirs
@@ -94,6 +97,7 @@ project "engine"
 	{
 		"opengl32.lib",
 		"glfw",
+		"ImGui",
 		"%{LibName.fmod_core}",
 		"%{LibName.fmod_bank}",
 		"%{LibName.fmod_studio}"
@@ -157,7 +161,8 @@ project "application"
 		"%{IncludeDir.fmod_core}",
 		"%{IncludeDir.fmod_bank}",
 		"%{IncludeDir.fmod_studio}",
-		"%{IncludeDir.spdlog}"
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.ImGui}"
 	}
 
 	links

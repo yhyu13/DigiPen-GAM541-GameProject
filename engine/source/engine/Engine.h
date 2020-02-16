@@ -15,6 +15,7 @@ Creation date	: 01/26/2020
 
 #include "engine/EngineCore.h"
 #include "layer/LayerStack.h"
+#include "ui/ImGuiLayer.h"
 
 namespace gswy {
 
@@ -32,14 +33,19 @@ namespace gswy {
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
+		inline Window& GetWindow() { return *window; }
+		inline static Engine& Get() { return *s_Instance; }
 		static double TOTAL_TIME;
-
 	protected:
-		static Window* window;
+		//static Window* window;
 		static bool isRunning;
 
 	private:
+		std::unique_ptr<Window> window;
 		LayerStack m_LayerStack;
+		ImGuiLayer* m_ImGuiLayer;
+
+		static Engine* s_Instance;
 	};
 
 	Engine* CreateEngineApplication();

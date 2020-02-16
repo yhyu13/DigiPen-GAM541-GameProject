@@ -44,6 +44,10 @@ namespace gswy {
 		bool ShouldExit();
 		void UpdateTitle(std::string title);
 
+		GLFWwindow* GetNativeWindow() const { return m_window; }
+		inline unsigned int GetWidth() const { return m_windowProperties.m_width; }
+		inline unsigned int GetHeight() const { return m_windowProperties.m_height; }
+
 	protected:
 
 	private:

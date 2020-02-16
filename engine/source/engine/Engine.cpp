@@ -25,7 +25,6 @@ namespace gswy {
 
 	double Engine::TOTAL_TIME = 0.0;
 	bool Engine::isRunning = true;
-	Window* Engine::window = nullptr;
 
 	Engine::Engine() 
 	{
@@ -33,7 +32,7 @@ namespace gswy {
 		ENGINE_INFO("Initialized Engine Log!");
 		APP_INFO("Initialized Application Log!");
 
-		window = Window::InitializeWindow();
+		window = std::unique_ptr<Window>(Window::InitializeWindow());
 		MemoryManager::GetInstance()->Init();
 		AudioManager::GetInstance()->Init();
 	}
@@ -41,7 +40,6 @@ namespace gswy {
 	Engine::~Engine() {
 		AudioManager::GetInstance()->Shutdown();
 		MemoryManager::GetInstance()->Shutdown();
-		delete window;
 	}
 
 	void Engine::Run() {
@@ -58,6 +56,11 @@ namespace gswy {
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(rateController->GetFrameTime());
+
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
+			m_ImGuiLayer->End();
 
 			isRunning = !window->ShouldExit();
 			rateController->FrameEnd();

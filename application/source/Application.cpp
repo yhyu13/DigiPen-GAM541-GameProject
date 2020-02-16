@@ -13,6 +13,8 @@ Creation date	: 01/26/2020
 
 #include "EngineExport.h"
 #include "Import.h"
+#include "imgui/imgui.h"
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace gswy;
 
@@ -176,11 +178,19 @@ public:
 		AfterFrame();
 	}
 
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
+		ImGui::End();
+	}
+
 protected:
 
 private:
 	OrthographicCameraController m_CameraController;
 	std::shared_ptr<GameWorld<GameObjectType>> m_world;
+	glm::vec3 m_Color;
 };
 
 class Application : public Engine {
