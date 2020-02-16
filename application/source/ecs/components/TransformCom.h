@@ -12,14 +12,58 @@ Creation date: 02/04/2020
 #pragma once
 
 #include "engine/ecs/BaseComponent.h"
+#include <GLFW/glfw3.h>
+
+using namespace glm;
 
 namespace gswy
 {
 	struct TransformCom : BaseComponent<TransformCom> {
 		TransformCom() = default;
-		TransformCom(float x, float y, float z) : m_x(x), m_y(y), m_z(z) {};
-		float m_x;
-		float m_y;
-		float m_z;
+		explicit TransformCom(float x, float y, float z)
+		{
+			pos = vec3(x,y,z);
+			rotation = 0;
+		}
+		explicit TransformCom(const vec3& v)
+		{
+			pos = v;
+			rotation = 0;
+		}
+		void AddXY(const vec2& v)
+		{
+			pos.x += v.x;
+			pos.y += v.y;
+		}
+		void AddXY(float x, float y)
+		{
+			pos.x += x;
+			pos.y += y;
+		}
+		void SetXY(const vec2& v)
+		{
+			pos.x = v.x;
+			pos.y = v.y;
+		}
+		void SetXY(float x, float y)
+		{
+			pos.x = x;
+			pos.y = y;
+		}
+		vec3& GetPos()
+		{
+			return pos;
+		}
+		void SetRotation(float r)
+		{
+			rotation = r;
+		}
+		float GetRotation()
+		{
+			return rotation;
+		}
+	private:
+		vec3 pos;
+		float rotation;
 	};
 }

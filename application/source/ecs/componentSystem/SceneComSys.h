@@ -33,9 +33,8 @@ namespace gswy
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
 				m_parentWorld->Unpack(entity, sprite);
-				auto m_ControlSprite = sprite->Get();
 				/* Drawing sprites */
-				m_ControlSprite->Draw();
+				sprite->Get()->Draw();
 			}
 		}
 	};

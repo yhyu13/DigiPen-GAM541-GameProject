@@ -106,6 +106,8 @@ namespace gswy {
 				properties.m_input->UpdateMouseButtonState(button, false);
 				break;
 			}
+			default:
+				break;
 			}
 		});
 

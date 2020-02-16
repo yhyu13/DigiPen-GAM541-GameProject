@@ -26,9 +26,10 @@ namespace gswy {
 		OrthographicCamera& GetCamera() { return m_Camera; }
 		const OrthographicCamera& GetCamera() const { return m_Camera; }
 		float GetZoomLevel() const { return m_ZoomLevel; }
+		float GetCameraMoveSpeed() const { return m_CameraMoveSpeed; }
 		void SetZoomLevel(float level) { m_ZoomLevel = level; }
 		void SetPosition(glm::vec3 pos) { m_CameraPosition = pos; }
-
+		const glm::vec3& GetPosition() const { return m_CameraPosition; }
 	private:
 		OrthographicCamera m_Camera;
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };

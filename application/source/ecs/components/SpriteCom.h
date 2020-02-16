@@ -30,6 +30,11 @@ namespace gswy
 			m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get(name));
 		}
 
+		void SetScale(const glm::vec2& t)
+		{
+			m_sprite->SetSpriteScale(t);
+		}
+
 		std::shared_ptr<Sprite> Get()
 		{
 			return m_sprite;

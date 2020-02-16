@@ -36,51 +36,46 @@ namespace gswy
 				if (entity.m_type != PLAYER)
 					continue;
 
-				auto input = InputManager::GetInstance();
-				ComponentDecorator<TransformCom, GameObjectType> position;
-				ComponentDecorator<AnimationCom, GameObjectType> animation;
-				m_parentWorld->Unpack(entity, position);
-				m_parentWorld->Unpack(entity, animation);
+				{
+					auto input = InputManager::GetInstance();
+					ComponentDecorator<TransformCom, GameObjectType> position;
+					ComponentDecorator<AnimationCom, GameObjectType> animation;
+					m_parentWorld->Unpack(entity, position);
+					m_parentWorld->Unpack(entity, animation);
 
-				
-				//Control Sprite KeyPress
-				animation->GetCurrentAnimation()->SetAnimIdle(true);
+					// 1. Making player facing the cursor
+					auto cursor = vec2(input->GetMousePositionX(), input->GetMousePositionY());
+					auto center = vec2(input->GetMouseMaxPositionX() / 2, input->GetMouseMaxPositionY() / 2);
+					auto delta = cursor - center;
+					position->SetRotation((delta.y) < 0? atanf(delta.x / (delta.y+1e-4f)) : 3.1415926f + atanf(delta.x / (delta.y + 1e-4f)));
 
-				if (input->IsKeyPressed(GLFW_KEY_W) && input->IsAllKeyNotPressed<int, int, int>(GLFW_KEY_D, GLFW_KEY_S, GLFW_KEY_A)) {
-					PRINT("KEY W PRESSED!");
-
-					animation->SetCurrentAnimationState("Move");
-					animation->GetCurrentAnimation()->SetAnimIdle(false);
-					position->m_x += -sin(glm::radians(0.0f)) * 5 * dt;
-					position->m_y += cos(glm::radians(0.0f)) * 5 * dt;
-					
-					return;
-				}
-				if (input->IsKeyPressed(GLFW_KEY_S)  && input->IsAllKeyNotPressed<int, int, int>(GLFW_KEY_D, GLFW_KEY_A, GLFW_KEY_W)) {
-					PRINT("KEY S PRESSED!");
-
-					animation->SetCurrentAnimationState("Move");
-					animation->GetCurrentAnimation()->SetAnimIdle(false);
-					position->m_x -= -sin(glm::radians(0.0f)) * 5 * dt;
-					position->m_y -= cos(glm::radians(0.0f)) * 5 * dt;
-					return;
-				}
-				if (input->IsKeyPressed(GLFW_KEY_A) && input->IsAllKeyNotPressed<int, int, int>(GLFW_KEY_D, GLFW_KEY_S, GLFW_KEY_W)) {
-					PRINT("KEY A PRESSED!");
-
-					animation->SetCurrentAnimationState("Move");
-					animation->GetCurrentAnimation()->SetAnimIdle(false);
-					position->m_x -= cos(glm::radians(0.0f)) * 5 * dt;
-					position->m_y -= sin(glm::radians(0.0f)) * 5 * dt;
-					return;
-				}
-				if (input->IsKeyPressed(GLFW_KEY_D) && input->IsAllKeyNotPressed<int, int, int>(GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A)) {
-					PRINT("KEY D PRESSED!");
-
-					animation->SetCurrentAnimationState("Move");
-					animation->GetCurrentAnimation()->SetAnimIdle(false);
-					position->m_x += cos(glm::radians(0.0f)) * 5 * dt;
-					position->m_y += sin(glm::radians(0.0f)) * 5 * dt;
+					// 2. Movement with keys
+					bool isIdle = true;
+					if (input->IsKeyPressed(GLFW_KEY_W) && input->IsAllKeyNotPressed<int>(GLFW_KEY_S)) {
+						PRINT("KEY W PRESSED!");
+						isIdle = false;
+						animation->SetCurrentAnimationState("Move");
+						position->AddXY(vec2(sinf(glm::radians(0.0f)) * 1 * dt, cosf(glm::radians(0.0f)) * 1 * dt));
+					}
+					if (input->IsKeyPressed(GLFW_KEY_S) && input->IsAllKeyNotPressed<int>(GLFW_KEY_W)) {
+						PRINT("KEY S PRESSED!");
+						isIdle = false;
+						animation->SetCurrentAnimationState("Move");
+						position->AddXY(vec2(sinf(glm::radians(0.0f)) * 1 * dt, -cosf(glm::radians(0.0f)) * 1 * dt));
+					}
+					if (input->IsKeyPressed(GLFW_KEY_A) && input->IsAllKeyNotPressed<int>(GLFW_KEY_D)) {
+						PRINT("KEY A PRESSED!");
+						isIdle = false;
+						animation->SetCurrentAnimationState("Move");
+						position->AddXY(vec2(-cosf(glm::radians(0.0f)) * 1 * dt, sinf(glm::radians(0.0f)) * 1 * dt));
+					}
+					if (input->IsKeyPressed(GLFW_KEY_D) && input->IsAllKeyNotPressed<int>(GLFW_KEY_A)) {
+						PRINT("KEY D PRESSED!");
+						isIdle = false;
+						animation->SetCurrentAnimationState("Move");
+						position->AddXY(vec2(cosf(glm::radians(0.0f)) * 1 * dt, sinf(glm::radians(0.0f)) * 1 * dt));
+					}
+					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);
 					return;
 				}
 			}

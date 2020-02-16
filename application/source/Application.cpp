@@ -7,7 +7,10 @@ Platform		: Windows 10 (X64)
 Project			: GAM541
 Filename		: Application.cpp
 Purpose			: Game application class. Creates an instance of the game application which plugs into the engine.
-Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
+Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519), 
+				  Hang Yu (hang.yu@digipen.edu | 60001119), 
+				  Kyle Wang (kyle.wang@digipen.edu | 60000719),
+				  Taksh Goyal (taksh.goyal@digipen.edu | 60001319)
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
@@ -57,13 +60,13 @@ public:
 	void LoadResources()
 	{
 		// Texture loader
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/GAM541_Char1_Moving_Upper_Unarmed.png", "GAM541_Char1_Moving_Upper_Unarmed");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/GAM541_Char1_Moving_Upper_Unarmed.png", "PlayerMovingUnarmed");
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
 		// Animation loader
 		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
 		for (int i = 0; i < 8; ++i)
 		{
-			playerAnim1->AddFrame("GAM541_Char1_Moving_Upper_Unarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
+			playerAnim1->AddFrame("PlayerMovingUnarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
 		}
 		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true, true, false);
 	}
@@ -91,11 +94,14 @@ public:
 		background.AddComponent(TransformCom(0, 0, 0));
 		auto sprite0 = SpriteCom();
 		sprite0.SetTexture("Background3");
+		sprite0.SetScale(vec2(5));
 		background.AddComponent(sprite0);
 
 		auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
 		player.AddComponent(TransformCom(0, 0, 1));
-		player.AddComponent(SpriteCom());
+		auto sprite1 = SpriteCom();
+		sprite1.SetScale(vec2(0.25, 0.25 / 59 *32));
+		player.AddComponent(sprite1);
 		auto animCom = AnimationCom();
 		animCom.Add("PlayerAnimation1", "Move");
 		animCom.SetCurrentAnimationState("Move");
@@ -141,9 +147,18 @@ public:
 
 	void UpdateCamera(double ts)
 	{
-		ComponentDecorator<TransformCom, GameObjectType> position;
-		m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
-		m_CameraController.SetPosition(glm::vec3(position->m_x, position->m_y, position->m_z));
+		{
+			// Floating camera that centered around the player character
+			ComponentDecorator<TransformCom, GameObjectType> position;
+			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
+			auto cursor = vec2(InputManager::GetInstance()->GetMousePositionX(), InputManager::GetInstance()->GetMousePositionY());
+			auto center = vec2(InputManager::GetInstance()->GetMouseMaxPositionX() / 2, InputManager::GetInstance()->GetMouseMaxPositionY() / 2);
+			auto len = glm::length(cursor - center);
+			auto delta = glm::normalize(cursor - center) * ((len > 30) ? 30 : len) * (float)ts;
+			auto cameraPos = m_CameraController.GetPosition();
+			auto targetPos = position->GetPos() + glm::vec3(delta.x, -delta.y, 0);
+			m_CameraController.SetPosition(cameraPos + (targetPos - cameraPos) * m_CameraController.GetCameraMoveSpeed() * (float)ts);
+		}
 		m_CameraController.OnUpdate(ts);
 	}
 
