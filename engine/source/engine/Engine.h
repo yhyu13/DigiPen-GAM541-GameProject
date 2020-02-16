@@ -14,6 +14,7 @@ Creation date	: 01/26/2020
 #pragma once
 
 #include "engine/EngineCore.h"
+#include "LayerStack.h"
 
 namespace gswy {
 
@@ -28,11 +29,17 @@ namespace gswy {
 		virtual void Run();
 		virtual void Update(double ts);
 
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
+
 		static double TOTAL_TIME;
 
 	protected:
 		static Window* window;
 		static bool isRunning;
+
+	private:
+		LayerStack m_LayerStack;
 	};
 
 	Engine* CreateEngineApplication();

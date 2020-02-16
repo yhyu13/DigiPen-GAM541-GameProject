@@ -45,9 +45,8 @@ namespace gswy {
 	}
 
 	void Engine::Run() {
-	/*	FramerateController* rateController = FramerateController::GetInstance(60);
-		InputManager* input = InputManager::GetInstance();
-		while (m_isRunning) {
+		FramerateController* rateController = FramerateController::GetInstance(60);
+		while (isRunning) {
 			rateController->FrameStart();
 
 #ifdef _DEBUG
@@ -57,34 +56,12 @@ namespace gswy {
 #endif
 			Update(rateController->GetFrameTime());
 
-			if (input->IsKeyPressed(GLFW_KEY_A)) {
-				PRINT("KEY A PRESSED!");
-			}
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate(rateController->GetFrameTime());
 
-			if (input->IsKeyTriggered(GLFW_KEY_SPACE)) {
-				PRINT("KEY SPACE TRIGGERED!");
-			}
-
-			if (input->IsKeyReleased(GLFW_KEY_A)) {
-				PRINT("KEY A RELEASED!");
-			}
-
-			if (input->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
-				PRINT("Mouse button 1 PRESSED!");
-			}
-
-			if (input->IsMouseButtonReleased(GLFW_MOUSE_BUTTON_1)) {
-				PRINT("Mouse button 1 RELEASED!");
-			}
-
-			std::stringstream stream1;
-			stream1 << "cursor-x: " << input->GetMousePositionX() << "\t";
-			stream1 << "cursor-y: " << input->GetMousePositionY();
-			PRINT(stream1.str());
-
-			m_isRunning = !window->ShouldExit();
+			isRunning = !window->ShouldExit();
 			rateController->FrameEnd();
-		}*/
+		}
 	}
 
 	void Engine::Update(double ts)
@@ -94,6 +71,16 @@ namespace gswy {
 		window->Update(ts);
 		MemoryManager::GetInstance()->Update(ts);
 		AudioManager::GetInstance()->Update(ts);
+	}
+
+	void Engine::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+
+	void Engine::PushOverlay(Layer* layer)
+	{
+		m_LayerStack.PushOverlay(layer);
 	}
 
 }
