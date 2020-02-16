@@ -37,7 +37,8 @@ namespace gswy
 				m_parentWorld->Unpack(entity, sprite);
 				auto m_ControlSprite = sprite->Get();
 				/* Update sprite location */
-				m_ControlSprite->SetSpritePosition(glm::vec3(position->m_x, position->m_y, position->m_z));
+				m_ControlSprite->SetSpritePosition(position->GetPos());
+				m_ControlSprite->SetSpriteRotation(position->GetRotation());
 			}
 		}
 	};

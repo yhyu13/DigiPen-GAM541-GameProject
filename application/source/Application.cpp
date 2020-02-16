@@ -47,13 +47,13 @@ public:
 	void LoadResources()
 	{
 		// Texture loader
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/GAM541_Char1_Moving_Upper_Unarmed.png", "GAM541_Char1_Moving_Upper_Unarmed");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/GAM541_Char1_Moving_Upper_Unarmed.png", "PlayerMovingUnarmed");
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
 		// Animation loader
 		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
 		for (int i = 0; i < 8; ++i)
 		{
-			playerAnim1->AddFrame("GAM541_Char1_Moving_Upper_Unarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
+			playerAnim1->AddFrame("PlayerMovingUnarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
 		}
 		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true, true, false);
 	}
@@ -147,9 +147,16 @@ public:
 
 	void UpdateCamera(double ts)
 	{
-		ComponentDecorator<TransformCom, GameObjectType> position;
-		m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
-		m_CameraController.SetPosition(glm::vec3(position->m_x, position->m_y, position->m_z));
+		{
+			// Floating camera that centered around the player character
+			ComponentDecorator<TransformCom, GameObjectType> position;
+			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
+			auto cursor = vec2(InputManager::GetInstance()->GetMousePositionX(), InputManager::GetInstance()->GetMousePositionY());
+			auto center = vec2(InputManager::GetInstance()->GetMouseMaxPositionX() / 2, InputManager::GetInstance()->GetMouseMaxPositionY() / 2);
+			auto len = glm::length(cursor - center);
+			auto delta = glm::normalize(cursor - center) * ((len > 50) ? 50 : len) * 0.01f;
+			m_CameraController.SetPosition(position->GetPos() + glm::vec3(delta.x, -delta.y, 0));
+		}
 		m_CameraController.OnUpdate(ts);
 	}
 

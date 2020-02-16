@@ -108,4 +108,21 @@ namespace gswy {
 	const double& InputManager::GetMousePositionY() {
 		return m_cursorPosition.second;
 	}
+	void InputManager::SetMouseMaxPositions(double x, double y)
+	{
+		m_cursorMaxPosition.first = x;
+		m_cursorMaxPosition.second = y;
+	}
+	const std::pair<double, double>& InputManager::GetCursorMaxPosition()
+	{
+		return m_cursorMaxPosition;
+	}
+	const double& InputManager::GetMouseMaxPositionX()
+	{
+		return m_cursorMaxPosition.first;
+	}
+	const double& InputManager::GetMouseMaxPositionY()
+	{
+		return m_cursorMaxPosition.second;
+	}
 }

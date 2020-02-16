@@ -28,6 +28,7 @@ namespace gswy {
 
 		WindowProperties(unsigned int width = 1000, unsigned int height = 600, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title) {
 			m_input = InputManager::GetInstance();
+			m_input->SetMouseMaxPositions(width, height);
 		}
 	};
 

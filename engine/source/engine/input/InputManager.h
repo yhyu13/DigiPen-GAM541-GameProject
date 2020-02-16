@@ -12,7 +12,6 @@ Creation date	: 01/29/2020
 - End Header ----------------------------*/
 
 #pragma once
-
 #include "MouseButton.h"
 #include "KeyboardKeys.h"
 #include "engine/interface/IRunTimeModule.h"
@@ -54,6 +53,10 @@ namespace gswy {
 		const std::pair<double, double>& GetCursorPosition();
 		const double& GetMousePositionX();
 		const double& GetMousePositionY();
+		void SetMouseMaxPositions(double x, double y);
+		const std::pair<double, double>& GetCursorMaxPosition();
+		const double& GetMouseMaxPositionX();
+		const double& GetMouseMaxPositionY();
 
 	private:
 
@@ -66,6 +69,7 @@ namespace gswy {
 		bool m_currentMouseButtonState[MOUSE_BUTTON_LAST + 1];
 
 		std::pair<double, double> m_cursorPosition;
+		std::pair<double, double> m_cursorMaxPosition;
 	};
 
 }
