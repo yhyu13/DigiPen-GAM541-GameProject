@@ -108,7 +108,7 @@ void gswy::AudioManager::LoadEvent(const string& strEventName)
 	}
 }
 
-void gswy::AudioManager::LoadSound(const string& strSoundName, bool b3d, bool bLooping, bool bStream)
+void gswy::AudioManager::LoadSound(const string& strSoundName, bool bLooping, bool b3d, bool bStream)
 {
 	auto tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
 	if (tFoundIt != m_fmodInstance->mSounds.end())

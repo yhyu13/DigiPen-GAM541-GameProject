@@ -68,7 +68,7 @@ public:
 		{
 			playerAnim1->AddFrame("PlayerMovingUnarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
 		}
-		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true, true, false);
+		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true);
 	}
 
 	void InitGameWorld()
