@@ -19,7 +19,7 @@ using namespace gswy;
 
 Shape::Shape(SHAPE_TYPE Type) : mType(Type)
 {
-
+	
 }
 
 Circle::Circle() : Shape(SHAPE_TYPE::CIRCLE)
@@ -42,13 +42,14 @@ AABB::~AABB()
 
 }
 
-bool gswy::CircleCollisions(Circle* Circle1, float PosX1, float PosY1, 
-	Circle* Circle2, float PosX2, float PosY2) 
+bool gswy::CircleCollisions(Shape* Circle1, float PosX1, float PosY1,
+	Shape* Circle2, float PosX2, float PosY2)
 {
 	//Collision Math And Logic
 	float CCDistSq, Radius1, Radius2;
-	Radius1 = Circle1->GetRadius();
-	Radius2 = Circle2->GetRadius();
+
+	Radius1 = ((Circle*)Circle1)->GetRadius();
+	Radius2 = ((Circle*)Circle2)->GetRadius();
 
 	CCDistSq = pow((PosX2 - PosX1), 2) + pow((PosY2 - PosY1), 2);
 
@@ -60,8 +61,8 @@ bool gswy::CircleCollisions(Circle* Circle1, float PosX1, float PosY1,
 	return true;
 }
 
-bool gswy::AABBCollisions(AABB* AABB1, float PosX1, float PosY1,
-	AABB* AABB2, float PosX2, float PosY2)
+bool gswy::AABBCollisions(Shape* AABB1, float PosX1, float PosY1,
+	Shape* AABB2, float PosX2, float PosY2)
 {
 	//Collision Math And Logic
 	AABB* pAABB1 = (AABB*)AABB1;
@@ -90,14 +91,14 @@ bool gswy::AABBCollisions(AABB* AABB1, float PosX1, float PosY1,
 }
 
 
-bool gswy::CircleAABBCollisions(Circle* Circle1, float PosX1, float PosY1,
-	AABB* AABB2, float PosX2, float PosY2)
+bool gswy::CircleAABBCollisions(Shape* Circle1, float PosX1, float PosY1,
+	Shape* AABB2, float PosX2, float PosY2)
 {
 	//Collision Math And Logic
 	float Radius1;
-	Radius1 = Circle1->GetRadius();
+	Radius1 = ((Circle*)Circle1)->GetRadius();
 
-	Circle* pCircle1 = (Circle*)Circle1;
+	//Circle* pCircle1 = (Circle*)Circle1;
 	AABB* pAABB2 = (AABB*)AABB2;
 
 	//Half Extents for reaching the edge point from center
@@ -118,10 +119,10 @@ bool gswy::CircleAABBCollisions(Circle* Circle1, float PosX1, float PosY1,
 	return false;
 }
 
-bool gswy::AABBCircleCollisions(AABB* AABB1, float PosX1, float PosY1,
-	Circle* Circle2, float PosX2, float PosY2)
+bool gswy::AABBCircleCollisions(Shape* AABB1, float PosX1, float PosY1,
+	Shape* Circle2, float PosX2, float PosY2)
 {
-	return CircleAABBCollisions(Circle2, PosX2, PosY2, AABB1, PosX1, PosY1);
+	return gswy::CircleAABBCollisions(Circle2, PosX2, PosY2, AABB1, PosX1, PosY1);
 	////Collision Math And Logic
 	//float Radius2;
 	//Radius2 = Circle2->GetRadius();
@@ -147,9 +148,91 @@ bool gswy::AABBCircleCollisions(AABB* AABB1, float PosX1, float PosY1,
 	//return false;
 }
 
-bool CheckCollisionAndGenerateContact(Shape* pShape1, float PosX1, float PosY1,
+bool gswy::CircleReflection(Shape* Circle1, float PosX1, float PosY1,
+	Shape* Circle2, float PosX2, float PosY2)
+{
+
+	if (gswy::CircleCollisions(Circle1, PosX1, PosY1, Circle2, PosX2, PosY2))
+	{
+		glm::vec2 Circle1_Center(PosX1, PosY1);
+		glm::vec2 Circle2_Center(PosX2, PosY2);
+		glm::vec2 IntersectionPoint = (Circle1_Center * ((Circle*)Circle1)->GetRadius()
+			+ Circle2_Center * ((Circle*)Circle2)->GetRadius())
+			/ ( ((Circle*)Circle1)->GetRadius() + ((Circle*)Circle2)->GetRadius());
+
+        glm::vec2 Circle1_Center_To_IntersectionPoint = Circle1_Center - IntersectionPoint;
+        glm::normalize(Circle1_Center_To_IntersectionPoint);
+        
+        //Calculating the reflected velocity
+       // glm::vec2 ReflectedVel = CurrVel - 2(CurrVel * Circle1_Center_To_IntersectionPoint)*Circle1_Center_To_IntersectionPoint;
+	}
+	return false;
+}
+
+bool gswy::ResolveCollision(Shape* AABB1, float PosX1, float PosY1,
+	Shape* AABB2, float PosX2, float PosY2)
+{
+	if (gswy::AABBCollisions(AABB1, PosX1, PosY1, AABB2, PosX2, PosY2) == true)
+	{
+		//Calculate Relative Velocity
+		//glm::vec2 RelV = AABB2->mp_OwnerBody->GetVelocity() - AABB1->mp_OwnerBody->GetVelocity();
+
+		//Calculate relative velocity in terms of the normal direction
+		//float Vel_Along_Normal = glm::dot(RelV, normal);
+
+		//Do not resolve if velocities are separating
+		//if (Vel_Along_Normal > 0)
+		//	return false;
+
+		//Calculate Restitution
+		//float e = std::min(AABB1->mp_OwnerBody->GetRestitution(), AABB2->mp_OwnerBody->GetRestitution());
+
+		//Calculate impulse Scalar
+		//float j = -(1 + e) * Vel_Along_Normal;
+		//j /= 1 / AABB1->mp_OwnerBody->m_Mass + 1 / AABB2->mp_OwnerBody->m_Mass;
+
+		//Apply Impulse
+		//glm::vec2 Impulse = j * normal;
+		//AABB1->mp_OwnerBody->m_VelX -= 1 / AABB1->mp_OwnerBody->m_Mass * Impulse;
+		//AABB1->mp_OwnerBody->m_VelY -= 1 / AABB1->mp_OwnerBody->m_Mass * Impulse;
+		
+		//AABB2->mp_OwnerBody->m_VelX -= 1 / AABB2->mp_OwnerBody->m_Mass * Impulse;
+		//AABB2->mp_OwnerBody->m_VelY -= 1 / AABB2->mp_OwnerBody->m_Mass * Impulse;
+
+		//For calculating Raw Mass 
+		//float Mass_Sum = AABB1->mp_OwnerBody->m_Mass + AABB2->mp_OwnerBody->m_Mass;
+		
+		//float Ratio = AABB1->mp_OwnerBody->m_Mass / Mass_Sum;
+		
+		//AABB1->mp_OwnerBody->m_VelX -= Ratio * impulse;
+		//AABB1->mp_OwnerBody->m_VelY -= Ratio * impulse;
+		
+		//Ratio = AABB2->mp_OwnerBody->m_Mass / Mass_Sum;
+		
+		//AABB2->mp_OwnerBody->m_VelX += Ratio * impulse;
+		//AABB2->mp_OwnerBody->m_VelY += Ratio * impulse;
+
+
+		return true;
+	}
+
+	return false;
+}
+
+
+
+bool Collisions::CheckCollisionAndGenerateDetection(Shape* pShape1, float PosX1, float PosY1,
 	Shape* pShape2, float PosX2, float PosY2)
 {
-	//return CollisionFunctions[(unsigned int)pShape1->mType][(unsigned int)pShape2->mType](pShape1, PosX1, PosY1, pShape2, PosX2, PosY2);
-	return false;
+	//std::cout << CollisionFunctions[(unsigned int)(pShape1->mType)][(unsigned int)(pShape2->mType)];
+	return CollisionFunctions[(unsigned int)(pShape1->mType)][(unsigned int)(pShape2->mType)](pShape1, PosX1, PosY1, pShape2, PosX2, PosY2);
+	//return false;
+}
+
+Collisions::Collisions()
+{
+	CollisionFunctions[(unsigned int)Shape::SHAPE_TYPE::CIRCLE][(unsigned int)Shape::SHAPE_TYPE::CIRCLE] = CircleCollisions;
+	CollisionFunctions[(unsigned int)Shape::SHAPE_TYPE::CIRCLE][(unsigned int)Shape::SHAPE_TYPE::AABB] = CircleAABBCollisions;
+	CollisionFunctions[(unsigned int)Shape::SHAPE_TYPE::AABB][(unsigned int)Shape::SHAPE_TYPE::CIRCLE] = AABBCircleCollisions;
+	CollisionFunctions[(unsigned int)Shape::SHAPE_TYPE::AABB][(unsigned int)Shape::SHAPE_TYPE::AABB] = AABBCollisions;
 }

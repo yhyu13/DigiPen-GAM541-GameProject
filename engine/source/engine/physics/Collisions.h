@@ -25,7 +25,7 @@ namespace gswy
 			AABB,
 			NUM
 		};
-
+		//Shape() = default;
 		Shape(SHAPE_TYPE type);
 		~Shape() {}
 
@@ -50,6 +50,7 @@ namespace gswy
 
 	private:
 		float m_Radius;
+
 	};
 
 	class AABB : public Shape
@@ -82,17 +83,23 @@ namespace gswy
 		float m_Width, m_Height;
 	};
 
-	bool AABBCollisions(AABB* AABB1, float PosX1, float PosY1,
-		AABB* AABB2, float PosX2, float PosY2);
+	bool AABBCollisions(Shape* AABB1, float PosX1, float PosY1,
+		Shape* AABB2, float PosX2, float PosY2);
 
-	bool CircleCollisions(Circle* Circle1, float PosX1, float PosY1,
-		Circle* Circle2, float PosX2, float PosY2);
+	bool CircleCollisions(Shape* Circle1, float PosX1, float PosY1,
+		Shape* Circle2, float PosX2, float PosY2);
 
-	bool CircleAABBCollisions(Circle* Circle1, float PosX1, float PosY1,
-		AABB* AABB2, float PosX2, float PosY2);
+	bool CircleAABBCollisions(Shape* Circle1, float PosX1, float PosY1,
+		Shape* AABB2, float PosX2, float PosY2);
 
-	bool AABBCircleCollisions(AABB* AABB1, float PosX1, float PosY1,
-		Circle* Circle2, float PosX2, float PosY2);
+	bool AABBCircleCollisions(Shape* AABB1, float PosX1, float PosY1,
+		Shape* Circle2, float PosX2, float PosY2);
+
+	bool CircleReflection(Shape* Circle1, float PosX1, float PosY1,
+		Shape* Circle, float PosX2, float PosY2);
+
+	bool ResolveCollision(Shape* AABB1, float PosX1, float PosY1,
+		Shape* AABB2, float PosX2, float PosY2);
 
 	class Collisions
 	{
@@ -101,8 +108,9 @@ namespace gswy
 		~Collisions();
 
 
-		bool CheckCollisionAndGenerateContact(Shape* pShape1, float PosX1, float PosY1,
+		bool CheckCollisionAndGenerateDetection(Shape* pShape1, float PosX1, float PosY1,
 			Shape* pShape2, float PosX2, float PosY2);
+
 		bool (*CollisionFunctions[(unsigned int)Shape::SHAPE_TYPE::NUM][(unsigned int)Shape::SHAPE_TYPE::NUM])
 			(Shape* pShape1, float PosX1, float PosY1,
 				Shape* pShape2, float PosX2, float PosY2);
