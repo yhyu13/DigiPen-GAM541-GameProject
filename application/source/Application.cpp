@@ -16,21 +16,33 @@ Creation date	: 01/26/2020
 
 #include "EngineExport.h"
 #include "Import.h"
+#include "imgui/imgui.h"
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace gswy;
 
-class Application : public Engine {
+class GameLayer : public Layer {
 
 public:
 
-	Application() 
+	GameLayer()
 		: m_CameraController(1280.0f / 720.0f)
 	{
 		InitFramework();
 		InitGameWorld();
 	}
 
-	virtual ~Application() {
+	virtual ~GameLayer() 
+	{
+	}
+
+	virtual void OnAttach() 
+	{
+		BeforeRun();
+	}
+	virtual void OnDetach() 
+	{
+		AfterRun();
 	}
 
 	void InitFramework()
@@ -41,8 +53,6 @@ public:
 		ResourceAllocator<Texture2D>::GetInstance()->Init();
 		// Animation loader
 		ResourceAllocator<Animation>::GetInstance()->Init();
-		// Frame rate controller
-		m_rateController = FramerateController::GetInstance(60);
 
 		LoadResources();
 	}
@@ -118,29 +128,13 @@ public:
 
 	void BeforeFrame()
 	{
-		m_rateController->FrameStart();
 	}
 
 	void AfterFrame()
 	{
-		m_rateController->FrameEnd();
-	}
-
-	bool IsRunning()
-	{
-		return isRunning;
-	}
-
-	void UpdateRunning()
-	{
-		if (isRunning)
-			isRunning = !window->ShouldExit();
 	}
 
 	virtual void Update(double ts) {
-		{
-			Engine::Update(ts); // Do not delete this line!
-		}
 		{
 			// Manger update
 			InputManager::GetInstance()->Update(ts);
@@ -180,35 +174,50 @@ public:
 		Renderer2D::EndScene();
 	}
 
-	virtual void Run() override
+	virtual void OnUpdate(double ts) override
 	{
-		BeforeRun();
-		while (IsRunning()) {
-			BeforeFrame();
+		
+		BeforeFrame();
+		{
 			{
-				{
-					// Engine update
-					Update(m_rateController->GetFrameTime());
-				}
-				{
-					UpdateCamera(m_rateController->GetFrameTime());
-				}
-				{
-					Render();
-				}
-				UpdateRunning();
+				// Engine update
+				Update(ts);
 			}
-			AfterFrame();
+			{
+				UpdateCamera(ts);
+			}
+			{
+				Render();
+			}
 		}
-		AfterRun();
+		AfterFrame();
+	}
+
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
+		ImGui::End();
 	}
 
 protected:
 
 private:
 	OrthographicCameraController m_CameraController;
-	FramerateController* m_rateController;
 	std::shared_ptr<GameWorld<GameObjectType>> m_world;
+	glm::vec3 m_Color;
+};
+
+class Application : public Engine {
+public:
+	Application()
+	{
+		PushLayer(new GameLayer());
+	}
+
+	~Application()
+	{
+	}
 };
 
 namespace gswy

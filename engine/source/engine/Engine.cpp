@@ -25,7 +25,7 @@ namespace gswy {
 
 	double Engine::TOTAL_TIME = 0.0;
 	bool Engine::isRunning = true;
-	Window* Engine::window = nullptr;
+	Engine* Engine::s_instance = nullptr;
 
 	Engine::Engine() 
 	{
@@ -33,21 +33,24 @@ namespace gswy {
 		ENGINE_INFO("Initialized Engine Log!");
 		APP_INFO("Initialized Application Log!");
 
-		window = Window::InitializeWindow();
+		s_instance = this;
+		window = std::unique_ptr<Window>(Window::InitializeWindow());
 		MemoryManager::GetInstance()->Init();
 		AudioManager::GetInstance()->Init();
+
+		// initializing imgui layer
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 	
 	Engine::~Engine() {
 		AudioManager::GetInstance()->Shutdown();
 		MemoryManager::GetInstance()->Shutdown();
-		delete window;
 	}
 
 	void Engine::Run() {
-	/*	FramerateController* rateController = FramerateController::GetInstance(60);
-		InputManager* input = InputManager::GetInstance();
-		while (m_isRunning) {
+		FramerateController* rateController = FramerateController::GetInstance(60);
+		while (isRunning) {
 			rateController->FrameStart();
 
 #ifdef _DEBUG
@@ -57,43 +60,36 @@ namespace gswy {
 #endif
 			Update(rateController->GetFrameTime());
 
-			if (input->IsKeyPressed(GLFW_KEY_A)) {
-				PRINT("KEY A PRESSED!");
-			}
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate(rateController->GetFrameTime());
 
-			if (input->IsKeyTriggered(GLFW_KEY_SPACE)) {
-				PRINT("KEY SPACE TRIGGERED!");
-			}
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
+			m_ImGuiLayer->End();
 
-			if (input->IsKeyReleased(GLFW_KEY_A)) {
-				PRINT("KEY A RELEASED!");
-			}
-
-			if (input->IsMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
-				PRINT("Mouse button 1 PRESSED!");
-			}
-
-			if (input->IsMouseButtonReleased(GLFW_MOUSE_BUTTON_1)) {
-				PRINT("Mouse button 1 RELEASED!");
-			}
-
-			std::stringstream stream1;
-			stream1 << "cursor-x: " << input->GetMousePositionX() << "\t";
-			stream1 << "cursor-y: " << input->GetMousePositionY();
-			PRINT(stream1.str());
-
-			m_isRunning = !window->ShouldExit();
+			isRunning = !window->ShouldExit();
 			rateController->FrameEnd();
-		}*/
+		}
 	}
 
 	void Engine::Update(double ts)
 	{
 		TOTAL_TIME += ts;
-		// window update (need to be called in at the begining of each frame)
+		// window update (need to be called in at the beginning of each frame)
 		window->Update(ts);
 		MemoryManager::GetInstance()->Update(ts);
 		AudioManager::GetInstance()->Update(ts);
+	}
+
+	void Engine::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+
+	void Engine::PushOverlay(Layer* layer)
+	{
+		m_LayerStack.PushOverlay(layer);
 	}
 
 }
