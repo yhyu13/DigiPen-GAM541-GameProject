@@ -40,6 +40,10 @@ namespace gswy {
 
 	void InputManager::Update(double deltaTime)
 	{
+	}
+
+	void InputManager::LateUpdate(double deltaTime)
+	{
 		for (int i = 0; i < KEY_LAST + 1; ++i)
 		{
 			m_previousKeyBoardState[i] = m_currentKeyBoardState[i];
@@ -101,15 +105,18 @@ namespace gswy {
 		m_cursorPosition.y = positionY;
 	}
 
-	const glm::vec2& const InputManager::GetCursorPosition() {
+	const glm::vec2& const InputManager::GetCursorPosition() const 
+	{
 		return m_cursorPosition;
 	}
 
-	const double& InputManager::GetMousePositionX() {
+	const double& InputManager::GetMousePositionX() 
+	{
 		return m_cursorPosition.x;
 	}
 
-	const double& InputManager::GetMousePositionY() {
+	const double& InputManager::GetMousePositionY() 
+	{
 		return m_cursorPosition.y;
 	}
 	void InputManager::SetMouseMaxPositions(double x, double y)
@@ -117,7 +124,7 @@ namespace gswy {
 		m_cursorMaxPosition.x = x;
 		m_cursorMaxPosition.y = y;
 	}
-	const glm::vec2& const InputManager::GetCursorMaxPosition()
+	const glm::vec2& const InputManager::GetCursorMaxPosition() const
 	{
 		return m_cursorMaxPosition;
 	}

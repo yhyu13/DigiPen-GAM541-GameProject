@@ -63,10 +63,14 @@ namespace gswy {
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate(rateController->GetFrameTime());
 
+			LateUpdate(rateController->GetFrameTime());
+
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
+
+			
 
 			isRunning = !window->ShouldExit();
 			rateController->FrameEnd();
@@ -80,6 +84,11 @@ namespace gswy {
 		window->Update(ts);
 		MemoryManager::GetInstance()->Update(ts);
 		AudioManager::GetInstance()->Update(ts);
+	}
+
+	void Engine::LateUpdate(double ts)
+	{
+		InputManager::GetInstance()->LateUpdate(ts);
 	}
 
 	void Engine::PushLayer(Layer* layer)

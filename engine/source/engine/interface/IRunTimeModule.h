@@ -20,6 +20,7 @@ namespace gswy {
 		virtual ~IRunTimeModule() {};
 		virtual void Init() = 0;
 		virtual void Update(double deltaTime) = 0;
+		virtual void LateUpdate(double deltaTime) {};
 		virtual void Shutdown() = 0;
 	};
 

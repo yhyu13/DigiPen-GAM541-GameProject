@@ -10,8 +10,6 @@ Creation date: 02/04/2020
 - End Header ----------------------------*/
 
 #pragma once
-
-#include <GLFW/glfw3.h>
 #include "engine/ecs/BaseComponentSystem.h"
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
@@ -48,6 +46,11 @@ namespace gswy
 					auto center = vec2(input->GetMouseMaxPositionX() / 2, input->GetMouseMaxPositionY() / 2);
 					auto delta = cursor - center;
 					position->SetRotation((delta.y) < 0? atanf(delta.x / (delta.y+1e-4f)) : 3.1415926f + atanf(delta.x / (delta.y + 1e-4f)));
+
+					if (InputManager::GetInstance()->IsKeyTriggered(GLFW_KEY_F1))
+					{
+						PRINT("KEY F1 PRESSED!");
+					}
 
 					// 2. Movement with keys
 					bool isIdle = true;

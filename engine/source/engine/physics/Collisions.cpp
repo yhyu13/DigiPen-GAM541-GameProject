@@ -224,9 +224,7 @@ bool gswy::ResolveCollision(Shape* AABB1, float PosX1, float PosY1,
 bool Collisions::CheckCollisionAndGenerateDetection(Shape* pShape1, float PosX1, float PosY1,
 	Shape* pShape2, float PosX2, float PosY2)
 {
-	//std::cout << CollisionFunctions[(unsigned int)(pShape1->mType)][(unsigned int)(pShape2->mType)];
 	return CollisionFunctions[(unsigned int)(pShape1->mType)][(unsigned int)(pShape2->mType)](pShape1, PosX1, PosY1, pShape2, PosX2, PosY2);
-	//return false;
 }
 
 Collisions::Collisions()

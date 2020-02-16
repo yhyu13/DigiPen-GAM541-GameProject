@@ -12,16 +12,13 @@ Creation date	: 02/14/2020
 - End Header ----------------------------*/
 
 #pragma once
-//#include "engine/ecs/BaseComponentSystem.h"
-//#include "engine/ecs/BaseComponent.h"
+#include "engine/ecs/BaseComponentSystem.h"
+#include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
-//#include "engine/ecs/GameWorld.h"
+#include "engine/ecs/GameWorld.h"
 #include "ecs/components/BodyCom.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/EntityType.h"
-
-#include "EngineExport.h"
-Collisions* g_collisions = new Collisions();
 
 namespace gswy
 {
@@ -34,11 +31,22 @@ namespace gswy
 			m_systemSignature.AddComponent<TransformCom>();
 		}
 
-		virtual void Render() 
+		virtual void Render() override
 		{
-			ComponentDecorator<BodyCom, GameObjectType> body;
-			//Renderer2D::DrawDebugQuad(glm::vec3(0.0f), glm::vec2(0.2f), 0.0f, glm::vec4(1.0f));
-			//Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0.0f), glm::vec2(0.2,0.2), 0, glm::vec4(0.2f,0.2f,0.2f,0));
+			static bool debugDraw = false;
+			if (InputManager::GetInstance()->IsKeyTriggered(GLFW_KEY_F1))
+			{
+				debugDraw = !debugDraw;
+			}
+			if (debugDraw)
+			{
+				for (auto& entity : m_registeredEntities)
+				{
+					ComponentDecorator<BodyCom, GameObjectType> body;
+					m_parentWorld->Unpack(entity, body);
+					Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), glm::vec2(0.2f), 0, glm::vec4(1.0f));
+				}
+			}
 		}
 
 		virtual void Update(double dt) override
@@ -48,16 +56,14 @@ namespace gswy
 			{
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				ComponentDecorator<BodyCom, GameObjectType> body;
-				//ComponentDecorator<Collisions, GameObjectType> collisions;
 				m_parentWorld->Unpack(entity, transform);
 				m_parentWorld->Unpack(entity, body); 
-				  
-				body->m_PosX = transform->m_x;
-				body->m_PosY = transform->m_y;
-
+				body->m_PosX = transform->GetPos().x;
+				body->m_PosY = transform->GetPos().y;
 			}
 
 			//For Collisions
+			auto collision = Collisions::GetInstance();
 			if (m_registeredEntities.empty() == false)
 			{
 				auto first_Entity = m_registeredEntities.begin();
@@ -72,17 +78,12 @@ namespace gswy
 						ComponentDecorator<BodyCom, GameObjectType> body2;
 						m_parentWorld->Unpack(*second_Entity, body2);
 
-						bool collides = g_collisions->CheckCollisionAndGenerateDetection(body1->shape.get(), body1->m_PosX, body1->m_PosY, body2->shape.get(), body2->m_PosX, body2->m_PosY);
+						bool collides = collision->CheckCollisionAndGenerateDetection(body1->shape.get(), body1->m_PosX, body1->m_PosY, body2->shape.get(), body2->m_PosX, body2->m_PosY);
 						
 						if (collides)
 						{
-							PRINT("\n Collisions Detected");
+							PRINT("Collisions Detected");
 						}
-						else
-						{
-							PRINT("\n No Collisions Detected");
-						}
-
 					}
 
 				}

@@ -81,6 +81,7 @@ public:
 		m_world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<PhysicsComSys>());
 
 		// Initialize game
 		m_world->Init();
@@ -102,10 +103,13 @@ public:
 		auto sprite1 = SpriteCom();
 		sprite1.SetScale(vec2(0.25, 0.25 / 59 *32));
 		player.AddComponent(sprite1);
-		auto animCom = AnimationCom();
-		animCom.Add("PlayerAnimation1", "Move");
-		animCom.SetCurrentAnimationState("Move");
-		player.AddComponent(animCom);
+		auto animCom1 = AnimationCom();
+		animCom1.Add("PlayerAnimation1", "Move");
+		animCom1.SetCurrentAnimationState("Move");
+		player.AddComponent(animCom1);
+		auto aabb1 = BodyCom();
+		aabb1.ChooseShape("AABB", 0.25, 0.25 / 59 * 32);
+		player.AddComponent(aabb1);
 
 		auto enemy = m_world->GenerateEntity(GameObjectType::ENEMY);
 		enemy.AddComponent(TransformCom(1, 0, 1));
@@ -114,6 +118,9 @@ public:
 		animCom2.Add("PlayerAnimation1", "Move");
 		animCom2.SetCurrentAnimationState("Move");
 		enemy.AddComponent(animCom2);
+		auto aabb2 = BodyCom();
+		aabb2.ChooseShape("AABB", 1,1);
+		enemy.AddComponent(aabb2);
 	}
 
 	void BeforeRun()
@@ -135,10 +142,6 @@ public:
 	}
 
 	virtual void Update(double ts) {
-		{
-			// Manger update
-			InputManager::GetInstance()->Update(ts);
-		}
 		{
 			// m_world update
 			m_world->Update(ts);

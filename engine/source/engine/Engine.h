@@ -29,6 +29,7 @@ namespace gswy {
 		virtual ~Engine();
 		virtual void Run();
 		virtual void Update(double ts);
+		virtual void LateUpdate(double ts);
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);

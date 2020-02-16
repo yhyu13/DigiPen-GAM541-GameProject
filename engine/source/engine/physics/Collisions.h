@@ -104,16 +104,20 @@ namespace gswy
 	class Collisions
 	{
 	public:
-		Collisions();
-		~Collisions();
 
-
+		static Collisions* GetInstance()
+		{
+			static Collisions instance;
+			return &instance;
+		}
 		bool CheckCollisionAndGenerateDetection(Shape* pShape1, float PosX1, float PosY1,
 			Shape* pShape2, float PosX2, float PosY2);
 
 		bool (*CollisionFunctions[(unsigned int)Shape::SHAPE_TYPE::NUM][(unsigned int)Shape::SHAPE_TYPE::NUM])
 			(Shape* pShape1, float PosX1, float PosY1,
 				Shape* pShape2, float PosX2, float PosY2);
+	private:
+		Collisions();
 	};
 
 }

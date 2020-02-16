@@ -28,7 +28,9 @@ namespace gswy {
 		~InputManager();
 		virtual void Init() override {};
 		virtual void Update(double deltaTime) override;
+		virtual void LateUpdate(double deltaTime) override;
 		virtual void Shutdown() override {};
+
 
 		void UpdateKeyboardState(const int& key, const bool& state, const bool& repeat);
 		bool IsKeyPressed(const int& keyCode);
@@ -52,11 +54,11 @@ namespace gswy {
 		bool IsMouseButtonReleased(const int& mouseButton);
 
 		void UpdateCursorPosition(const double& positionX, const double& positionY);
-		const glm::vec2& const GetCursorPosition();
+		const glm::vec2& const GetCursorPosition() const;
 		const double& GetMousePositionX();
 		const double& GetMousePositionY();
 		void SetMouseMaxPositions(double x, double y);
-		const glm::vec2& const GetCursorMaxPosition();
+		const glm::vec2& const GetCursorMaxPosition() const;
 		const double& GetMouseMaxPositionX();
 		const double& GetMouseMaxPositionY();
 

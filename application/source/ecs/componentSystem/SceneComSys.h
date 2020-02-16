@@ -10,13 +10,10 @@ Creation date: 02/04/2020
 - End Header ----------------------------*/
 
 #pragma once
-
-#include <GLFW/glfw3.h>
 #include "engine/ecs/BaseComponentSystem.h"
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
-#include "ecs/components/TransformCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/EntityType.h"
 

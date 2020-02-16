@@ -12,11 +12,9 @@ Creation date	: 02/12/2020
 - End Header ----------------------------*/
 
 #pragma once
-//#include "engine/ecs/BaseComponent.h"
-//#include "TransformCom.h"
+#include "engine/ecs/BaseComponent.h"
+#include "TransformCom.h"
 #include "EngineExport.h"
-
-TransformCom* g_Transform;
 
 namespace gswy
 {
@@ -28,8 +26,6 @@ namespace gswy
 			 m_VelX(0), m_VelY(0), m_PrevPosX(0), m_PrevPosY(0), m_InvMass(0),
 			 m_TotalForceX(0), m_TotalForceY(0),m_Restitution(0)
 		{
-			m_PosX = g_Transform->m_x;
-			m_PosY = g_Transform->m_y;
 		};
 
 		BodyCom& CopyBodyCom(const BodyCom& bodycom)
@@ -67,33 +63,31 @@ namespace gswy
 		float m_TotalForceX;
 		float m_TotalForceY;
 		float m_Restitution;
-		
 		std::shared_ptr<Shape> shape;
-		//std::shared_ptr<AABB> aabb;
 
 		//Choose Shape, fill in width and height for the body
-		void ChooseShape(const char* shapetype, float width, float height) 
+		void ChooseShape(const std::string& name, float width, float height) 
 		{
-			if (0 == strcmp(shapetype, "AABB"))
+			if (0 == name.compare("AABB"))
 			{
 				shape = std::make_shared<AABB>();
 				static_pointer_cast<AABB>(shape)->SetWidth(width);
 				static_pointer_cast<AABB>(shape)->SetHeight(height);
 			}
 			else
-				PRINT("\n Incorrect Shape Type, Try Again!!");
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Incorrect Shape Type, should be: AABB, instead: " + str2wstr(name) + L", Try Again!");
 		}
 
 		//Choose Shape, leave with 1 less argument to activate below method
-		void ChooseShape(const char* shapetype, float radius)
+		void ChooseShape(const std::string& name, float radius)
 		{
-			if (0 == strcmp(shapetype, "Circle"))
+			if (0 == name.compare("Circle"))
 			{
 				shape = std::make_shared<Circle>();
 				static_pointer_cast<Circle>(shape)->SetRadius(radius);
 			}
 			else
-				PRINT("\n Incorrect Shape Type, Try Again!!");
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Incorrect Shape Type, should be: Circle, instead: " + str2wstr(name) + L", Try Again!");
 		}
 
 		void SetVelocity(float VelX, float VelY)

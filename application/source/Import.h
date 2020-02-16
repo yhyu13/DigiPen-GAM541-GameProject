@@ -13,3 +13,4 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/SceneComSys.h"
 #include "ecs/componentSystem/SpriteComSys.h"
 #include "ecs/componentSystem/AnimationComSys.h"
+#include "ecs/componentSystem/PhysicsComSys.h"
