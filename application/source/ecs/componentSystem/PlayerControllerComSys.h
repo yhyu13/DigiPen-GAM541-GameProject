@@ -48,7 +48,6 @@ namespace gswy
 					auto center = vec2(input->GetMouseMaxPositionX() / 2, input->GetMouseMaxPositionY() / 2);
 					auto delta = cursor - center;
 					position->SetRotation((delta.y) < 0? atanf(delta.x / (delta.y+1e-4f)) : 3.1415926f + atanf(delta.x / (delta.y + 1e-4f)));
-					DEBUG_PRINT(position->GetRotation());
 
 					// 2. Movement with keys
 					bool isIdle = true;
@@ -56,25 +55,25 @@ namespace gswy
 						PRINT("KEY W PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
-						position->AddXY(vec2(sinf(glm::radians(0.0f)) * 5 * dt, cosf(glm::radians(0.0f)) * 5 * dt));
+						position->AddXY(vec2(sinf(glm::radians(0.0f)) * 1 * dt, cosf(glm::radians(0.0f)) * 1 * dt));
 					}
 					if (input->IsKeyPressed(GLFW_KEY_S) && input->IsAllKeyNotPressed<int>(GLFW_KEY_W)) {
 						PRINT("KEY S PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
-						position->AddXY(vec2(sinf(glm::radians(0.0f)) * 5 * dt, -cosf(glm::radians(0.0f)) * 5 * dt));
+						position->AddXY(vec2(sinf(glm::radians(0.0f)) * 1 * dt, -cosf(glm::radians(0.0f)) * 1 * dt));
 					}
 					if (input->IsKeyPressed(GLFW_KEY_A) && input->IsAllKeyNotPressed<int>(GLFW_KEY_D)) {
 						PRINT("KEY A PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
-						position->AddXY(vec2(-cosf(glm::radians(0.0f)) * 5 * dt, sinf(glm::radians(0.0f)) * 5 * dt));
+						position->AddXY(vec2(-cosf(glm::radians(0.0f)) * 1 * dt, sinf(glm::radians(0.0f)) * 1 * dt));
 					}
 					if (input->IsKeyPressed(GLFW_KEY_D) && input->IsAllKeyNotPressed<int>(GLFW_KEY_A)) {
 						PRINT("KEY D PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
-						position->AddXY(vec2(cosf(glm::radians(0.0f)) * 5 * dt, sinf(glm::radians(0.0f)) * 5 * dt));
+						position->AddXY(vec2(cosf(glm::radians(0.0f)) * 1 * dt, sinf(glm::radians(0.0f)) * 1 * dt));
 					}
 					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);
 					return;

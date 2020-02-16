@@ -12,9 +12,10 @@ Creation date	: 01/29/2020
 - End Header ----------------------------*/
 
 #include "engine-precompiled-header.h"
-
 #include "engine/EngineCore.h"
-#include "InputManager.h"
+#include "engine/input/InputManager.h"
+
+using namespace glm;
 
 namespace gswy {
 
@@ -23,7 +24,10 @@ namespace gswy {
 		return &input;
 	}
 
-	InputManager::InputManager() : m_cursorPosition( {0.0f, 0.0f} ) {
+	InputManager::InputManager() 
+		: m_cursorPosition( glm::vec2(0.0f, 0.0f) ), 
+		m_cursorMaxPosition(glm::vec2(0.0f, 0.0f))
+	{
 		memset(m_previousKeyBoardState, false, sizeof(bool) * (KEY_LAST + 1));
 		memset(m_currentKeyBoardState, false, sizeof(bool) * (KEY_LAST + 1));
 
@@ -93,36 +97,36 @@ namespace gswy {
 	}
 
 	void InputManager::UpdateCursorPosition(const double& positionX, const double& positionY) {
-		m_cursorPosition.first = positionX;
-		m_cursorPosition.second = positionY;
+		m_cursorPosition.x = positionX;
+		m_cursorPosition.y = positionY;
 	}
 
-	const std::pair<double, double>& InputManager::GetCursorPosition() {
+	const glm::vec2& const InputManager::GetCursorPosition() {
 		return m_cursorPosition;
 	}
 
 	const double& InputManager::GetMousePositionX() {
-		return m_cursorPosition.first;
+		return m_cursorPosition.x;
 	}
 
 	const double& InputManager::GetMousePositionY() {
-		return m_cursorPosition.second;
+		return m_cursorPosition.y;
 	}
 	void InputManager::SetMouseMaxPositions(double x, double y)
 	{
-		m_cursorMaxPosition.first = x;
-		m_cursorMaxPosition.second = y;
+		m_cursorMaxPosition.x = x;
+		m_cursorMaxPosition.y = y;
 	}
-	const std::pair<double, double>& InputManager::GetCursorMaxPosition()
+	const glm::vec2& const InputManager::GetCursorMaxPosition()
 	{
 		return m_cursorMaxPosition;
 	}
 	const double& InputManager::GetMouseMaxPositionX()
 	{
-		return m_cursorMaxPosition.first;
+		return m_cursorMaxPosition.x;
 	}
 	const double& InputManager::GetMouseMaxPositionY()
 	{
-		return m_cursorMaxPosition.second;
+		return m_cursorMaxPosition.y;
 	}
 }

@@ -7,13 +7,15 @@ Platform		: Windows 10 (X64)
 Project			: GAM541
 Filename		: InputManager.h
 Purpose			: Contains declarations for input-system.
-Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
+Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
+				  Hang Yu (hang.yu@digipen.edu | 60001119)
 Creation date	: 01/29/2020
 - End Header ----------------------------*/
 
 #pragma once
-#include "MouseButton.h"
-#include "KeyboardKeys.h"
+#include <glm/glm.hpp>
+#include "engine/input/MouseButton.h"
+#include "engine/input/KeyboardKeys.h"
 #include "engine/interface/IRunTimeModule.h"
 
 namespace gswy {
@@ -50,11 +52,11 @@ namespace gswy {
 		bool IsMouseButtonReleased(const int& mouseButton);
 
 		void UpdateCursorPosition(const double& positionX, const double& positionY);
-		const std::pair<double, double>& GetCursorPosition();
+		const glm::vec2& const GetCursorPosition();
 		const double& GetMousePositionX();
 		const double& GetMousePositionY();
 		void SetMouseMaxPositions(double x, double y);
-		const std::pair<double, double>& GetCursorMaxPosition();
+		const glm::vec2& const GetCursorMaxPosition();
 		const double& GetMouseMaxPositionX();
 		const double& GetMouseMaxPositionY();
 
@@ -68,8 +70,8 @@ namespace gswy {
 		bool m_previousMouseButtonState[MOUSE_BUTTON_LAST + 1];
 		bool m_currentMouseButtonState[MOUSE_BUTTON_LAST + 1];
 
-		std::pair<double, double> m_cursorPosition;
-		std::pair<double, double> m_cursorMaxPosition;
+		glm::vec2 m_cursorPosition;
+		glm::vec2 m_cursorMaxPosition;
 	};
 
 }
