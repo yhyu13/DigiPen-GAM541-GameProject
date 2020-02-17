@@ -48,6 +48,7 @@ public:
 	{
 		// Renderer
 		Renderer2D::Init();
+		OpenGLDebugDraw::Init();
 		// Texture loader
 		ResourceAllocator<Texture2D>::GetInstance()->Init();
 		// Animation loader
@@ -146,7 +147,7 @@ public:
 
 	void AfterRun()
 	{
-
+		OpenGLDebugDraw::End();
 	}
 
 	void BeforeFrame()
