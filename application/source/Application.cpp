@@ -60,14 +60,28 @@ public:
 	void LoadResources()
 	{
 		// Texture loader
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/GAM541_Char1_Moving_Upper_Unarmed.png", "PlayerMovingUnarmed");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/PlayerMovingUnarmed.png", "PlayerMovingUnarmed");
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
+		std::string fireBallPath = "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball2/";
+		ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0001.png", "ffireball_0001");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0002.png", "ffireball_0002");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0003.png", "ffireball_0003");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0004.png", "ffireball_0004");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0005.png", "ffireball_0005");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0006.png", "ffireball_0006");
+
 		// Animation loader
 		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
 		for (int i = 0; i < 8; ++i)
 		{
 			playerAnim1->AddFrame("PlayerMovingUnarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
 		}
+		auto fireBallAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/fireBallAnim1.txt", "fireBallAnim1");
+		for (int i = 1; i <= 6; ++i)
+		{
+			fireBallAnim1->AddFrame("ffireball_000" + Str(i), 0, 0, 64, 64, 1.0 / 15.0);
+		}
+		// Audio loader
 		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true);
 	}
 

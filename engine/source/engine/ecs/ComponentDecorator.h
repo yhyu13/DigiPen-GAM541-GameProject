@@ -27,7 +27,11 @@ namespace gswy {
 	class ComponentDecorator {
 
 	public:
-		ComponentDecorator() {
+		ComponentDecorator()
+			:
+			m_component(nullptr),
+			m_manager(nullptr)
+		{
 		}
 
 		ComponentDecorator(Entity<EntityType> owner, ComponentType* component, ComponentManager<ComponentType, EntityType>* manager) {

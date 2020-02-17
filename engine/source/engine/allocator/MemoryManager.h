@@ -18,6 +18,7 @@ Creation date: 02/14/2020
 #define CUSTOM_ALLOCATOR 1
 
 namespace gswy {
+
     class MemoryManager : public IRunTimeModule
     {
     public:
@@ -32,7 +33,7 @@ namespace gswy {
         static T* New(Arguments... parameters) noexcept
         {
 			m_AllocatedSize += sizeof(T);
-			DEBUG_PRINT("New : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(m_AllocatedSize));
+			PRINT("New : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(m_AllocatedSize));
 #if CUSTOM_ALLOCATOR 
 			return new (Allocate(sizeof(T))) T(parameters...);
 #else
@@ -46,11 +47,11 @@ namespace gswy {
         {
 			m_AllocatedSize -= sizeof(T);
 #if CUSTOM_ALLOCATOR 
-			DEBUG_PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(*(reinterpret_cast<uint32_t*>(p) - 1)) + " " + Str(m_AllocatedSize));
+			PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(*(reinterpret_cast<uint32_t*>(p) - 1)) + " " + Str(m_AllocatedSize));
 			p->~T();
 			Free(p, sizeof(T));
 #else
-			DEBUG_PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)));
+			PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(m_AllocatedSize));
 			delete p;
 #endif // CUSTOM_ALLOCATOR 
            
@@ -63,7 +64,7 @@ namespace gswy {
 #if CUSTOM_ALLOCATOR 
 			return std::shared_ptr<T>(New<T>(parameters...), Delete<T>);
 #else
-			MemoryManager::Make_shared<T>(parameters...);
+			return std::make_shared<T>(parameters...);
 #endif // CUSTOM_ALLOCATOR 
 		}
 
@@ -102,6 +103,10 @@ namespace gswy {
         static size_t*        m_pBlockSizeLookup;
         static Allocator*     m_pAllocators;
 		static size_t		  m_AllocatedSize;
+
+		template<typename T>
+		friend struct Mallocator;
+
     private:
         static Allocator* LookUpAllocator(size_t size) noexcept;
     };
@@ -110,64 +115,42 @@ namespace gswy {
 namespace gswy {
 
     #ifndef MyVector
-    #define MyVector(T) std::vector<T, gswy::allocator<T>>
+    #define MyVector(T) std::vector<T, gswy::Mallocator<T>>
     #endif
 
-    template <typename T>
-    class allocator
-    {
-    public:
-        
-        typedef T value_type;
-        typedef T *pointer;
-        typedef T &reference;
-        typedef const T *const_pointer;
-        typedef const T &const_reference;
-        typedef unsigned size_type;
-        typedef unsigned difference_type;
-        
-        template <typename U> struct rebind { typedef std::allocator<U> other;};
-        
-        pointer allocate(unsigned n)
-        {
-        return
-            reinterpret_cast<T *>
-            (g_pMemoryManager->Allocate(sizeof(T) * n));
-        }
+	template <class T>
+	struct Mallocator
+	{
+		typedef T value_type;
 
-        void deallocate(pointer p, unsigned n)
-        {
-        g_pMemoryManager->Free(p, sizeof(T) * n);
-        }
+		Mallocator()
+		{
+			MemoryManager::GetInstance();
+		}
+		template <class U> constexpr Mallocator(const Mallocator <U>&) noexcept {}
 
-        void construct(pointer p, const_reference clone)
-        {
-        new (p) T(clone);
-        }
+		[[nodiscard]] T* allocate(std::size_t n) {
+			if (n > std::numeric_limits<std::size_t>::max() / sizeof(T))
+				throw std::bad_alloc();
 
-        void destroy(pointer p)
-        {
-        p->~T();
-        }
-
-        pointer address(reference x) const
-        {
-        return &x;
-        }
-
-        const_pointer address(const_reference x) const
-        {
-        return &x;
-        }
-
-        bool operator==(const allocator &rhs)
-        {
-            return true;
-        }
-
-        bool operator!=(const allocator &rhs)
-        {
-        return !operator==(rhs);
-        }
-    };
+			if (auto p = static_cast<T*>(MemoryManager::Allocate(n * sizeof(T))))
+			{
+				MemoryManager::m_AllocatedSize += n * sizeof(T);
+				PRINT("Allocate vector : " + Str(typeid(T).name()) + " " + Str(n) + " " + Str(sizeof(T)) + " " + Str(n * sizeof(T)) + " " + Str(MemoryManager::m_AllocatedSize));
+				return p;
+			}
+			throw std::bad_alloc();
+		}
+		void deallocate(T* p, std::size_t n) noexcept 
+		{ 
+			MemoryManager::Free(p, sizeof(T) * n); 
+			MemoryManager::m_AllocatedSize -= n * sizeof(T);
+			PRINT("Free vector : " + Str(typeid(T).name()) + " " + Str(n) + " " + Str(sizeof(T)) + " " + Str(n * sizeof(T)) + " " + Str(MemoryManager::m_AllocatedSize));
+		}
+	};
 }
+
+template <class T, class U>
+bool operator==(const gswy::Mallocator <T>&, const gswy::Mallocator <U>&) { return true; }
+template <class T, class U>
+bool operator!=(const gswy::Mallocator <T>&, const gswy::Mallocator <U>&) { return false; }

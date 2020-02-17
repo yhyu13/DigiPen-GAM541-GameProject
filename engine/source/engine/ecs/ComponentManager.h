@@ -20,7 +20,7 @@ namespace gswy {
 	template<typename ComponentType>
 	struct ComponentData {
 		unsigned int m_size = 0;
-		std::vector<ComponentType> m_data;
+		MyVector(ComponentType) m_data;
 
 		ComponentData() {
 			m_data.reserve(1024);
