@@ -11,6 +11,7 @@ Creation date: 01/28/2020
 
 #include "engine-precompiled-header.h"
 #include "AudioManager.h"
+#include "engine/exception/EngineException.h"
 
 gswy::FMODInstance::FMODInstance()
 	:
@@ -80,6 +81,18 @@ int gswy::AudioManager::ErrorCheck(FMOD_RESULT result)
 	return 0;
 }
 
+int gswy::AudioManager::GetSoundChannel(const string& strSoundName)
+{
+	if (m_fmodInstance->mSound2Channels.find(strSoundName) != m_fmodInstance->mSound2Channels.end())
+	{
+		m_fmodInstance->mSound2Channels[strSoundName];
+	}
+	else
+	{
+		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has failed to load!");
+	}
+}
+
 void gswy::AudioManager::LoadBank(const string& strBankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags)
 {
 	auto tFoundIt = m_fmodInstance->mBanks.find(strBankName);
@@ -140,7 +153,7 @@ void gswy::AudioManager::Set3dListenerAndOrientation(const AudioVector3& vPos, f
 {
 }
 
-int gswy::AudioManager::PlaySound(const string& strSoundName, const AudioVector3& vPos, float fVolumedB)
+int gswy::AudioManager::PlaySound(const string& strSoundName, const AudioVector3& vPos, float fVolumedB, float frequency)
 {
 	int nChannelId = m_fmodInstance->mnNextChannelId++;
 	auto tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
@@ -150,7 +163,7 @@ int gswy::AudioManager::PlaySound(const string& strSoundName, const AudioVector3
 		tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
 		if (tFoundIt == m_fmodInstance->mSounds.end())
 		{
-			return nChannelId;
+			throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has failed to load!");
 		}
 	}
 	FMOD::Channel* pChannel = nullptr;
@@ -165,9 +178,15 @@ int gswy::AudioManager::PlaySound(const string& strSoundName, const AudioVector3
 		}
 		AudioManager::ErrorCheck(pChannel->setVolume(dbToVolume(fVolumedB)));
 		AudioManager::ErrorCheck(pChannel->setPaused(false));
+		AudioManager::ErrorCheck(pChannel->setPitch(frequency));
 		m_fmodInstance->mChannels[nChannelId] = pChannel;
 	}
 	return nChannelId;
+}
+
+void gswy::AudioManager::SetSoundFreqency(const string& strSoundName, float frequency)
+{
+	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setPitch(frequency);
 }
 
 void gswy::AudioManager::PlayEvent(const string& strEventName)

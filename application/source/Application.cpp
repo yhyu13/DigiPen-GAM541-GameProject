@@ -141,7 +141,7 @@ public:
 
 	void BeforeRun()
 	{
-		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
+		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1, 1);
 	}
 
 	void AfterRun()

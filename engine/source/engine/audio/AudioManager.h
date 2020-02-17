@@ -45,6 +45,7 @@ namespace gswy {
 		int mnNextChannelId;
 
 		typedef map<string, FMOD::Sound*> SoundMap;
+		typedef map<string, int> Sound2ChannelMap;
 		typedef map<int, FMOD::Channel*> ChannelMap;
 		typedef map<string, FMOD::Studio::EventInstance*> EventMap;
 		typedef map<string, FMOD::Studio::Bank*> BankMap;
@@ -53,6 +54,7 @@ namespace gswy {
 		EventMap mEvents;
 		SoundMap mSounds;
 		ChannelMap mChannels;
+		Sound2ChannelMap mSound2Channels;
 	};
 
 	class ENGINE_API AudioManager : public IRunTimeModule{
@@ -63,12 +65,14 @@ namespace gswy {
 		virtual void Shutdown() override;
 		static int ErrorCheck(FMOD_RESULT result);
 
+		int GetSoundChannel(const string& strSoundName);
 		void LoadBank(const string& strBankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags);
 		void LoadEvent(const string& strEventName);
 		void LoadSound(const string& strSoundName, bool bLooping = false, bool b3d = true, bool bStream = true);
 		void UnLoadSound(const string& strSoundName);
 		void Set3dListenerAndOrientation(const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 0.0f);
-		int PlaySound(const string& strSoundName, const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 0.0f);
+		int PlaySound(const string& strSoundName, const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 1.0f, float frequency = 1.0f);
+		void SetSoundFreqency(const string& strSoundName, float frequency);
 		void PlayEvent(const string& strEventName);
 		void StopChannel(int nChannelId);
 		void StopEvent(const string& strEventName, bool bImmediate = false);
