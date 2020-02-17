@@ -110,12 +110,12 @@ namespace gswy {
 		return m_cursorPosition;
 	}
 
-	const double& InputManager::GetMousePositionX() 
+	const double InputManager::GetMousePositionX() 
 	{
 		return m_cursorPosition.x;
 	}
 
-	const double& InputManager::GetMousePositionY() 
+	const double InputManager::GetMousePositionY() 
 	{
 		return m_cursorPosition.y;
 	}
@@ -128,11 +128,11 @@ namespace gswy {
 	{
 		return m_cursorMaxPosition;
 	}
-	const double& InputManager::GetMouseMaxPositionX()
+	const double InputManager::GetMouseMaxPositionX()
 	{
 		return m_cursorMaxPosition.x;
 	}
-	const double& InputManager::GetMouseMaxPositionY()
+	const double InputManager::GetMouseMaxPositionY()
 	{
 		return m_cursorMaxPosition.y;
 	}

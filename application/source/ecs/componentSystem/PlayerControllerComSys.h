@@ -42,8 +42,8 @@ namespace gswy
 					m_parentWorld->Unpack(entity, animation);
 
 					// 1. Making player facing the cursor
-					auto cursor = vec2(input->GetMousePositionX(), input->GetMousePositionY());
-					auto center = vec2(input->GetMouseMaxPositionX() / 2, input->GetMouseMaxPositionY() / 2);
+					auto cursor = InputManager::GetInstance()->GetCursorPosition();
+					auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
 					auto delta = cursor - center;
 					position->SetRotation((delta.y) < 0? atanf(delta.x / (delta.y+1e-4f)) : 3.1415926f + atanf(delta.x / (delta.y + 1e-4f)));
 

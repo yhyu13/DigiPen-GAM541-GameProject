@@ -19,6 +19,10 @@ namespace gswy
 		PLAYER,
 		ENEMY,
 
+		GRENADE,
+		FIREBALL,
+		BULLET,
+
 		NUM
 	};
 }

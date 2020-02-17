@@ -50,7 +50,7 @@ namespace gswy
 			pos.x = x;
 			pos.y = y;
 		}
-		vec3& GetPos()
+		const vec3& GetPos() const
 		{
 			return pos;
 		}

@@ -13,7 +13,6 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
 				  Taksh Goyal (taksh.goyal@digipen.edu | 60001319)
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
-
 #include "EngineExport.h"
 #include "Import.h"
 #include "imgui/imgui.h"
@@ -171,16 +170,17 @@ public:
 			// Floating camera that centered around the player character
 			ComponentDecorator<TransformCom, GameObjectType> position;
 			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
-			auto cursor = vec2(InputManager::GetInstance()->GetMousePositionX(), InputManager::GetInstance()->GetMousePositionY());
-			auto center = vec2(InputManager::GetInstance()->GetMouseMaxPositionX() / 2, InputManager::GetInstance()->GetMouseMaxPositionY() / 2);
+			auto cursor = InputManager::GetInstance()->GetCursorPosition();
+			auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
 			auto len = glm::length(cursor - center);
-			auto delta = glm::normalize(cursor - center) * ((len > 30) ? 30 : len) * (float)ts;
-			auto cameraPos = m_CameraController.GetPosition();
-			auto targetPos = position->GetPos() + glm::vec3(delta.x, -delta.y, 0);
-			m_CameraController.SetPosition(cameraPos + (targetPos - cameraPos) * m_CameraController.GetCameraMoveSpeed() * (float)ts);
+			auto delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f: len);
+			auto targetPos = position->GetPos() + vec3(delta.x, -delta.y, 0.0f);
+			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
+			m_CameraController.SetPosition(newPos);
 		}
 		m_CameraController.OnUpdate(ts);
 	}
+
 
 	void Render(double ts)
 	{
@@ -236,4 +236,3 @@ namespace gswy
 		return new Application();
 	}
 }
-

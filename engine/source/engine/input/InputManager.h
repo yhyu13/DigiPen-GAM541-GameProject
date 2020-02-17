@@ -55,12 +55,12 @@ namespace gswy {
 
 		void UpdateCursorPosition(const double& positionX, const double& positionY);
 		const glm::vec2& const GetCursorPosition() const;
-		const double& GetMousePositionX();
-		const double& GetMousePositionY();
+		const double GetMousePositionX();
+		const double GetMousePositionY();
 		void SetMouseMaxPositions(double x, double y);
 		const glm::vec2& const GetCursorMaxPosition() const;
-		const double& GetMouseMaxPositionX();
-		const double& GetMouseMaxPositionY();
+		const double GetMouseMaxPositionX();
+		const double GetMouseMaxPositionY();
 
 	private:
 
