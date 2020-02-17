@@ -48,29 +48,34 @@ namespace gswy
 					delta.y = -delta.y;
 					position->SetRotation(LookAt(delta));
 
+					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+					{
+						PRINT(MOUSE_BUTTON_LEFT);
+					}
+
 					// 2. Movement with keys
 					bool isIdle = true;
 					vec2 velocity(0);
 					float speed = 1.0f;
-					if (input->IsKeyPressed(GLFW_KEY_W) && input->IsAllKeyNotPressed<int>(GLFW_KEY_S)) {
+					if (input->IsKeyPressed(KEY_W) && input->IsAllKeyNotPressed<int>(KEY_S)) {
 						PRINT("KEY W PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
 						velocity += vec2(sinf(glm::radians(0.0f)), cosf(glm::radians(0.0f)));
 					}
-					if (input->IsKeyPressed(GLFW_KEY_S) && input->IsAllKeyNotPressed<int>(GLFW_KEY_W)) {
+					if (input->IsKeyPressed(KEY_S) && input->IsAllKeyNotPressed<int>(KEY_W)) {
 						PRINT("KEY S PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
 						velocity += vec2(sinf(glm::radians(0.0f)), -cosf(glm::radians(0.0f)));
 					}
-					if (input->IsKeyPressed(GLFW_KEY_A) && input->IsAllKeyNotPressed<int>(GLFW_KEY_D)) {
+					if (input->IsKeyPressed(KEY_A) && input->IsAllKeyNotPressed<int>(KEY_D)) {
 						PRINT("KEY A PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
 						velocity += vec2(-cosf(glm::radians(0.0f)), sinf(glm::radians(0.0f)));
 					}
-					if (input->IsKeyPressed(GLFW_KEY_D) && input->IsAllKeyNotPressed<int>(GLFW_KEY_A)) {
+					if (input->IsKeyPressed(KEY_D) && input->IsAllKeyNotPressed<int>(KEY_A)) {
 						PRINT("KEY D PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
