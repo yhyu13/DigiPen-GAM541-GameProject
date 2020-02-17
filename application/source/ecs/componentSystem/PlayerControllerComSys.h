@@ -42,41 +42,43 @@ namespace gswy
 					m_parentWorld->Unpack(entity, animation);
 
 					// 1. Making player facing the cursor
-					auto cursor = InputManager::GetInstance()->GetCursorPosition();
-					auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
+					auto cursor = input->GetCursorPosition();
+					auto center = input->GetCursorMaxPosition() * 0.5f;
 					auto delta = cursor - center;
-					position->SetRotation((delta.y) < 0? atanf(delta.x / (delta.y+1e-4f)) : 3.1415926f + atanf(delta.x / (delta.y + 1e-4f)));
-
-					if (InputManager::GetInstance()->IsKeyTriggered(GLFW_KEY_F1))
-					{
-						PRINT("KEY F1 PRESSED!");
-					}
+					delta.y = -delta.y;
+					position->SetRotation(LookAt(delta));
 
 					// 2. Movement with keys
 					bool isIdle = true;
+					vec2 velocity(0);
+					float speed = 1.0f;
 					if (input->IsKeyPressed(GLFW_KEY_W) && input->IsAllKeyNotPressed<int>(GLFW_KEY_S)) {
 						PRINT("KEY W PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
-						position->AddXY(vec2(sinf(glm::radians(0.0f)) * 1 * dt, cosf(glm::radians(0.0f)) * 1 * dt));
+						velocity += vec2(sinf(glm::radians(0.0f)), cosf(glm::radians(0.0f)));
 					}
 					if (input->IsKeyPressed(GLFW_KEY_S) && input->IsAllKeyNotPressed<int>(GLFW_KEY_W)) {
 						PRINT("KEY S PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
-						position->AddXY(vec2(sinf(glm::radians(0.0f)) * 1 * dt, -cosf(glm::radians(0.0f)) * 1 * dt));
+						velocity += vec2(sinf(glm::radians(0.0f)), -cosf(glm::radians(0.0f)));
 					}
 					if (input->IsKeyPressed(GLFW_KEY_A) && input->IsAllKeyNotPressed<int>(GLFW_KEY_D)) {
 						PRINT("KEY A PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
-						position->AddXY(vec2(-cosf(glm::radians(0.0f)) * 1 * dt, sinf(glm::radians(0.0f)) * 1 * dt));
+						velocity += vec2(-cosf(glm::radians(0.0f)), sinf(glm::radians(0.0f)));
 					}
 					if (input->IsKeyPressed(GLFW_KEY_D) && input->IsAllKeyNotPressed<int>(GLFW_KEY_A)) {
 						PRINT("KEY D PRESSED!");
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
-						position->AddXY(vec2(cosf(glm::radians(0.0f)) * 1 * dt, sinf(glm::radians(0.0f)) * 1 * dt));
+						velocity += vec2(cosf(glm::radians(0.0f)), sinf(glm::radians(0.0f)));	
+					}
+					if (!isIdle)
+					{
+						position->AddXY(glm::normalize(velocity) * speed * (float)dt);
 					}
 					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);
 					return;

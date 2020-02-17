@@ -91,6 +91,7 @@ public:
 
 		// Add systems
 		m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());

@@ -10,7 +10,7 @@ Creation date: 02/14/2020
 - End Header ----------------------------*/
 
 #pragma once
-
+#include <iostream>
 namespace gswy
 {
 	enum GameObjectType {
@@ -27,12 +27,15 @@ namespace gswy
 	};
 }
 
-ostream& operator<<(ostream& o, GameObjectType n) {
+std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
 	switch (n) {
 	case EMPTY: return o << "EMPTY";
 	case BACKGROUND: return o << "BACKGROUND";
 	case PLAYER: return o << "PLAYER";
 	case ENEMY: return o << "ENEMY";
+	case GRENADE: return o << "GRENADE";
+	case FIREBALL: return o << "FIREBALL";
+	case BULLET: return o << "BULLET";
 	default: return o << "(invalid value)";
 	}
 }

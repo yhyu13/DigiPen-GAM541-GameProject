@@ -58,3 +58,6 @@ Creation date	: 01/26/2020
 
 ///// Physics /////
 #include "engine/physics/Collisions.h"
+
+///// Math /////
+#include "engine/math/MathHelper.h"
