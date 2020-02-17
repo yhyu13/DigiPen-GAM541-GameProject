@@ -55,7 +55,7 @@ namespace gswy {
 
 #ifdef _DEBUG
 			std::stringstream stream;
-			stream << "Frame Time: " << rateController->GetFrameTime() * 1000  << "ms";
+			stream << "Frame Time: " << rateController->GetFrameTime() * 1000 << "ms";
 			window->UpdateTitle(stream.str());
 #endif
 			Update(rateController->GetFrameTime());
@@ -69,8 +69,6 @@ namespace gswy {
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
-
-			
 
 			isRunning = !window->ShouldExit();
 			rateController->FrameEnd();

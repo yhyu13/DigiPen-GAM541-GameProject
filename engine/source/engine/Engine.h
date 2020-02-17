@@ -37,7 +37,9 @@ namespace gswy {
 		inline Window& GetWindow() { return *window; }
 		inline static Engine& Get() { return *s_instance; }
 		static double TOTAL_TIME;
-	protected:
+		static void SetQuit(bool b) { isRunning = !b; }
+
+	private:
 		//static Window* window;
 		static bool isRunning;
 
