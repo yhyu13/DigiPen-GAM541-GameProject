@@ -76,8 +76,11 @@ namespace gswy
 						animation->SetCurrentAnimationState("Move");
 						velocity += vec2(cosf(glm::radians(0.0f)), sinf(glm::radians(0.0f)));	
 					}
+					
 					if (!isIdle)
 					{
+						if (!AudioManager::GetInstance()->IsPlaying("footstep02"))
+							AudioManager::GetInstance()->PlaySound("footstep02", AudioVector3{ 0, 0, 0 }, 1, 1.0);
 						position->AddXY(glm::normalize(velocity) * speed * (float)dt);
 					}
 					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);
