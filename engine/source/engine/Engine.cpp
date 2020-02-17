@@ -18,6 +18,7 @@ Creation date	: 01/26/2020
 #include "engine/input/InputManager.h"
 #include "engine/audio/AudioManager.h"
 #include "engine/allocator/MemoryManager.h"
+#include "engine/profiling/InstrumentorCore.h"
 
 #include <GLFW/glfw3.h>
 
@@ -29,6 +30,7 @@ namespace gswy {
 
 	Engine::Engine() 
 	{
+		m_startTime = glfwGetTime();
 		Logger::Init();
 		ENGINE_INFO("Initialized Engine Log!");
 		APP_INFO("Initialized Application Log!");
@@ -54,10 +56,9 @@ namespace gswy {
 			rateController->FrameStart();
 
 #ifdef _DEBUG
-			std::stringstream stream;
-			stream << "Frame Time: " << rateController->GetFrameTime() * 1000  << "ms";
-			window->UpdateTitle(stream.str());
+			Instrumentor::GetInstance()->AddInstrumentorResult({ "Up Time", (glfwGetTime() - m_startTime), "s " });
 #endif
+
 			Update(rateController->GetFrameTime());
 
 			for (Layer* layer : m_LayerStack)

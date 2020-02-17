@@ -61,3 +61,6 @@ Creation date	: 01/26/2020
 
 ///// Math /////
 #include "engine/math/MathHelper.h"
+
+///// Instrumenting Profiling ////
+#include "engine/profiling/InstrumentorCore.h"

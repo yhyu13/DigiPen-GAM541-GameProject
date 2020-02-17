@@ -45,8 +45,10 @@ namespace gswy {
 		std::unique_ptr<Window> window;
 		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
+		double m_startTime;
 
 		static Engine* s_instance;
+
 	};
 
 	Engine* CreateEngineApplication();

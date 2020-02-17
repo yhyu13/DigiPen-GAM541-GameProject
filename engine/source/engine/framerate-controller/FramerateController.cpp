@@ -13,6 +13,7 @@ Creation date	: 01/28/2020
 
 #include "engine-precompiled-header.h"
 #include "FramerateController.h"
+#include "engine/profiling/InstrumentorCore.h"
 
 #include <GLFW/glfw3.h>
 
@@ -48,9 +49,14 @@ namespace gswy {
 		} while ((m_tickEnd - m_tickStart) < m_ticksPerFrame);
 
 		m_frameTime = (m_tickEnd - m_tickStart);
-		if (m_frameTime > 16) { // for handling game pauses or break points
-			m_frameTime = 16;
+		if (m_frameTime > 16.999) { // for handling game pauses or break points
+			m_frameTime = 16.667;
 		}
+
+#ifdef _DEBUG
+		Instrumentor::GetInstance()->AddInstrumentorResult({ "Frame Time", m_frameTime, "s " });
+		Instrumentor::GetInstance()->AddInstrumentorResult({ "FPS", 1000.0f / m_frameTime, "  " });
+#endif
 
 		m_frameTime /= 1000; // converting milliseconds to seconds
 	}

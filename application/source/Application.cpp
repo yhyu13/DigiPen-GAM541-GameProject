@@ -58,6 +58,8 @@ public:
 
 	void LoadResources()
 	{
+		TIME("Loading Resources");
+
 		// Texture loader
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/PlayerMovingUnarmed.png", "PlayerMovingUnarmed");
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
@@ -86,6 +88,8 @@ public:
 
 	void InitGameWorld()
 	{
+		TIME("Initializing Game World");
+
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
 		m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
 
@@ -198,17 +202,34 @@ public:
 	virtual void OnUpdate(double ts) override
 	{
 		BeforeFrame();
-		Update(ts);
-		UpdateCamera(ts);
-		Render(ts);
+		{
+			TIME("System Update");
+			Update(ts);
+		}
+		{
+			TIME("Camera Update");
+			UpdateCamera(ts);
+		}
+		{
+			TIME("Render Update");
+			Render(ts);
+		}
 		AfterFrame();
 	}
 
 	virtual void OnImGuiRender() override
 	{
-		ImGui::Begin("Settings");
-		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
+#ifdef _DEBUG
+		Instrumentor* instrumentor = Instrumentor::GetInstance();
+		ImGui::Begin("Instrumenting Profiling");
+		for (auto& result : instrumentor->GetResults()) {
+			char entry[100];
+			strcpy(entry, "%10.3f %s\t");
+			strcat(entry, result.first);
+			ImGui::Text(entry, result.second.m_time, result.second.m_timeUnit);
+		}
 		ImGui::End();
+#endif
 	}
 
 protected:
