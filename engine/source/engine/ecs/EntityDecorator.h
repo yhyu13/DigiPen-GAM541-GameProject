@@ -64,7 +64,7 @@ namespace gswy {
 			return m_entity.m_type;
 		}
 
-		Entity<EntityType>& GetEntity() {
+		const Entity<EntityType>& GetEntity() {
 			return m_entity;
 		}
 

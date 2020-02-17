@@ -105,7 +105,7 @@ public:
 
 	void LoadGameWorld()
 	{
-		auto background = m_world->GenerateEntity(GameObjectType::ENEMY);
+		auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 		background.AddComponent(TransformCom(0, 0, 0));
 		auto sprite0 = SpriteCom();
 		sprite0.SetTexture("Background3");
@@ -113,6 +113,7 @@ public:
 		background.AddComponent(sprite0);
 
 		auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
+		player.AddComponent(OwnershiptCom<GameObjectType>());
 		player.AddComponent(TransformCom(0, 0, 1));
 		auto sprite1 = SpriteCom();
 		sprite1.SetScale(vec2(0.25, 0.25 / 59 *32));
@@ -126,6 +127,7 @@ public:
 		player.AddComponent(aabb1);
 
 		auto enemy = m_world->GenerateEntity(GameObjectType::ENEMY);
+		enemy.AddComponent(OwnershiptCom<GameObjectType>());
 		enemy.AddComponent(TransformCom(1, 0, 1));
 		enemy.AddComponent(SpriteCom());
 		auto animCom2 = AnimationCom();
@@ -155,7 +157,8 @@ public:
 	{
 	}
 
-	virtual void Update(double ts) {
+	virtual void Update(double ts) 
+	{
 		{
 			// m_world update
 			m_world->Update(ts);
@@ -179,7 +182,7 @@ public:
 		m_CameraController.OnUpdate(ts);
 	}
 
-	void Render()
+	void Render(double ts)
 	{
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
@@ -193,20 +196,10 @@ public:
 
 	virtual void OnUpdate(double ts) override
 	{
-		
 		BeforeFrame();
-		{
-			{
-				// Engine update
-				Update(ts);
-			}
-			{
-				UpdateCamera(ts);
-			}
-			{
-				Render();
-			}
-		}
+		Update(ts);
+		UpdateCamera(ts);
+		Render(ts);
 		AfterFrame();
 	}
 

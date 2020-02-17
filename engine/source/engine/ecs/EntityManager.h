@@ -35,8 +35,8 @@ namespace gswy {
 		}
 
 		const Entity<EntityType> Create(EntityType type) {
-			m_typeToEntity[type].push_back(m_entityCount);
-			return Entity<EntityType>(m_entityCount++, type);
+			m_typeToEntity[type].push_back(++m_entityCount);
+			return Entity<EntityType>(m_entityCount, type);
 		}
 
 		void Destroy(Entity<EntityType>& entity) {

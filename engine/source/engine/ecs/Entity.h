@@ -12,6 +12,7 @@ Creation date	: 02/02/2020
 - End Header ----------------------------*/
 
 #pragma once
+#include <iostream>
 
 namespace gswy {
 
@@ -44,4 +45,11 @@ namespace gswy {
 		}
 	};
 
+}
+
+template<typename EntityType>
+std::ostream& operator<<(std::ostream& os, const gswy::Entity<EntityType>& dt)
+{
+	os << '(' << dt.m_id << '/' << dt.m_type << ") ";
+	return os;
 }

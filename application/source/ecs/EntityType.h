@@ -14,6 +14,7 @@ Creation date: 02/14/2020
 namespace gswy
 {
 	enum GameObjectType {
+		EMPTY = 0,
 		BACKGROUND,
 		PLAYER,
 		ENEMY,
@@ -24,6 +25,7 @@ namespace gswy
 
 ostream& operator<<(ostream& o, GameObjectType n) {
 	switch (n) {
+	case EMPTY: return o << "EMPTY";
 	case BACKGROUND: return o << "BACKGROUND";
 	case PLAYER: return o << "PLAYER";
 	case ENEMY: return o << "ENEMY";

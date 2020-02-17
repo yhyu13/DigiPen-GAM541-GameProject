@@ -14,6 +14,7 @@ Creation date	: 02/03/2020
 #pragma once
 
 #include "Entity.h"
+#include "engine/allocator/MemoryManager.h"
 
 namespace gswy {
 

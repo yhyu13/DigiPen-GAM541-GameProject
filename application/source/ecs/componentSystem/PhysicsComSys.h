@@ -18,6 +18,7 @@ Creation date	: 02/14/2020
 #include "engine/ecs/GameWorld.h"
 #include "ecs/components/BodyCom.h"
 #include "ecs/components/TransformCom.h"
+#include "ecs/components/OwnershiptCom.h"
 #include "ecs/EntityType.h"
 
 namespace gswy
@@ -29,6 +30,7 @@ namespace gswy
 		{
 			m_systemSignature.AddComponent<BodyCom>();
 			m_systemSignature.AddComponent<TransformCom>();
+			m_systemSignature.AddComponent<OwnershiptCom<GameObjectType>>();
 		}
 
 		virtual void Render() override
@@ -82,7 +84,11 @@ namespace gswy
 						
 						if (collides)
 						{
-							PRINT("Collisions Detected");
+							ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner1;
+							m_parentWorld->Unpack(*first_Entity, owner1);
+							ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner2;
+							m_parentWorld->Unpack(*second_Entity, owner2);
+							PRINT("Collisions Detected " + Str(owner1->GetEntity()) + Str(owner2->GetEntity()));
 						}
 					}
 
