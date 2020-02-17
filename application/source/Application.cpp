@@ -84,6 +84,7 @@ public:
 		}
 		// Audio loader
 		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true);
+		AudioManager::GetInstance()->LoadSound("./asset/TopDownGunPack/TopDownGunPack/Audio/FootSteps/footstep02.ogg", false);
 	}
 
 	void InitGameWorld()
@@ -145,7 +146,7 @@ public:
 
 	void BeforeRun()
 	{
-		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1);
+		AudioManager::GetInstance()->PlaySound("breakout", AudioVector3{ 0, 0, 0 }, 1, 1);
 	}
 
 	void AfterRun()
