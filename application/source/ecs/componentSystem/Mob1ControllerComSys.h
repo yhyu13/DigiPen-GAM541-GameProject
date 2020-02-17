@@ -34,7 +34,7 @@ namespace gswy
 
 			for (auto& entity : m_registeredEntities) {
 
-				if (entity.m_type != ENEMY)
+				if (entity.m_type != GameObjectType::ENEMY)
 					continue;
 
 				{

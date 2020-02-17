@@ -31,7 +31,7 @@ namespace gswy
 		virtual void Update(double dt) override {
 			for (auto& entity : m_registeredEntities) {
 
-				if (entity.m_type != PLAYER)
+				if (entity.m_type != GameObjectType::PLAYER)
 					continue;
 
 				{

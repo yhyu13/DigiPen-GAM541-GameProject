@@ -111,7 +111,7 @@ public:
 	void LoadGameWorld()
 	{
 		auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-		background.AddComponent(TransformCom(0, 0, 0));
+		background.AddComponent(TransformCom(0, 0, Z_ORDER(0)));
 		auto sprite0 = SpriteCom();
 		sprite0.SetTexture("Background3");
 		sprite0.SetScale(vec2(5));
@@ -119,7 +119,7 @@ public:
 
 		auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
 		player.AddComponent(OwnershiptCom<GameObjectType>());
-		player.AddComponent(TransformCom(0, 0, 1));
+		player.AddComponent(TransformCom(0, 0, Z_ORDER(1)));
 		auto sprite1 = SpriteCom();
 		sprite1.SetScale(vec2(0.25, 0.25 / 59 *32));
 		player.AddComponent(sprite1);
@@ -133,7 +133,7 @@ public:
 
 		auto enemy = m_world->GenerateEntity(GameObjectType::ENEMY);
 		enemy.AddComponent(OwnershiptCom<GameObjectType>());
-		enemy.AddComponent(TransformCom(1, 0, 1));
+		enemy.AddComponent(TransformCom(1, 0, Z_ORDER(2)));
 		enemy.AddComponent(SpriteCom());
 		auto animCom2 = AnimationCom();
 		animCom2.Add("PlayerAnimation1", "Move");
