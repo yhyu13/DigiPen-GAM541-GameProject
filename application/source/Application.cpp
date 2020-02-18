@@ -221,15 +221,23 @@ public:
 	virtual void OnImGuiRender() override
 	{
 #ifdef _DEBUG
+
 		Instrumentor* instrumentor = Instrumentor::GetInstance();
+		ImGui::SetNextWindowBgAlpha(0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
+		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, 0);
+		ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, 0);
 		ImGui::Begin("Instrumenting Profiling");
 		for (auto& result : instrumentor->GetResults()) {
 			char entry[100];
 			strcpy(entry, "%10.3f %s\t");
 			strcat(entry, result.first);
-			ImGui::Text(entry, result.second.m_time, result.second.m_timeUnit);
+			ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), entry, result.second.m_time, result.second.m_timeUnit);
 		}
 		ImGui::End();
+		ImGui::PopStyleVar(1);
+		ImGui::PopStyleColor(3);
 #endif
 	}
 
