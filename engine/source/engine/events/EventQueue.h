@@ -22,8 +22,12 @@ namespace gswy {
 	
 	public:
 
-		EventQueue() = default;
-
+		static EventQueue* GetInstance()
+		{
+			static EventQueue instance;
+			return &instance;
+		}
+		EventQueue() {}
 		~EventQueue() {
 		}
 
@@ -47,7 +51,7 @@ namespace gswy {
 			if (eventHandlers == nullptr) {
 				return;
 			}
-
+			DEBUG_PRINT("Publish " + Str(*event));
 			for (auto& handler : *eventHandlers) {
 				if (handler != nullptr) {
 					handler->Execute(event);
@@ -56,7 +60,6 @@ namespace gswy {
 		}
 
 	private:
-
 		std::map<EventType, EventHandlerList*> m_subscribers;
 	};
 

@@ -34,9 +34,13 @@ namespace gswy {
 		}
 
 		EventType m_type;
-
-		Entity<EntityType> m_entityA;
-		Entity<EntityType> m_entityB;
 	};
 
+}
+
+template <typename EntityType, typename EventType>
+std::ostream& operator<<(std::ostream& os, const gswy::Event<EntityType, EventType>& dt)
+{
+	os << '(' << dt.m_type << ") ";
+	return os;
 }

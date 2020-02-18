@@ -85,11 +85,11 @@ int gswy::AudioManager::GetSoundChannel(const string& strSoundName)
 {
 	if (m_fmodInstance->mSound2Channels.find(strSoundName) != m_fmodInstance->mSound2Channels.end())
 	{
-		m_fmodInstance->mSound2Channels[strSoundName];
+		return m_fmodInstance->mSound2Channels[strSoundName];
 	}
 	else
 	{
-		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has failed to load!");
+		return -1;
 	}
 }
 
@@ -121,6 +121,9 @@ void gswy::AudioManager::LoadEvent(const string& strEventName)
 	}
 }
 
+/*
+	Load sound from path
+*/
 void gswy::AudioManager::LoadSound(const string& strSoundName, bool bLooping, bool b3d, bool bStream)
 {
 	auto tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
@@ -135,7 +138,14 @@ void gswy::AudioManager::LoadSound(const string& strSoundName, bool bLooping, bo
 	FMOD::Sound* pSound = nullptr;
 	AudioManager::ErrorCheck(m_fmodInstance->mpSystem->createSound(strSoundName.c_str(), eMode, nullptr, &pSound));
 	if (pSound) {
-		m_fmodInstance->mSounds[strSoundName] = pSound;
+		// Find the name of the sound file from the input path
+		std::string name = strSoundName.substr(strSoundName.find_last_of('/')+1, strSoundName.find_last_of('.') - strSoundName.find_last_of('/') -1);
+		UnLoadSound(name);
+		m_fmodInstance->mSounds[name] = pSound;
+	}
+	else
+	{
+		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has failed to create!");
 	}
 }
 
@@ -155,21 +165,16 @@ void gswy::AudioManager::Set3dListenerAndOrientation(const AudioVector3& vPos, f
 
 int gswy::AudioManager::PlaySound(const string& strSoundName, const AudioVector3& vPos, float fVolumedB, float frequency)
 {
-	int nChannelId = m_fmodInstance->mnNextChannelId++;
 	auto tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
 	if (tFoundIt == m_fmodInstance->mSounds.end())
 	{
-		LoadSound(strSoundName);
-		tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
-		if (tFoundIt == m_fmodInstance->mSounds.end())
-		{
-			throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has failed to load!");
-		}
+		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has not been loaded!");
 	}
 	FMOD::Channel* pChannel = nullptr;
 	AudioManager::ErrorCheck(m_fmodInstance->mpSystem->playSound(tFoundIt->second, nullptr, true, &pChannel));
 	if (pChannel)
 	{
+		int nChannelId = m_fmodInstance->mnNextChannelId++;
 		FMOD_MODE currMode;
 		tFoundIt->second->getMode(&currMode);
 		if (currMode & FMOD_3D) {
@@ -179,9 +184,11 @@ int gswy::AudioManager::PlaySound(const string& strSoundName, const AudioVector3
 		AudioManager::ErrorCheck(pChannel->setVolume(dbToVolume(fVolumedB)));
 		AudioManager::ErrorCheck(pChannel->setPaused(false));
 		AudioManager::ErrorCheck(pChannel->setPitch(frequency));
+		m_fmodInstance->mSound2Channels[strSoundName] = nChannelId;
 		m_fmodInstance->mChannels[nChannelId] = pChannel;
+		return nChannelId;
 	}
-	return nChannelId;
+	return -1;
 }
 
 void gswy::AudioManager::SetSoundFreqency(const string& strSoundName, float frequency)
@@ -248,7 +255,12 @@ void gswy::AudioManager::SetChannelvolume(int nChannelId, float fVolumedB)
 	AudioManager::ErrorCheck(tFoundIt->second->setVolume(dbToVolume(fVolumedB)));
 }
 
-bool gswy::AudioManager::IsPlaying(int nChannelId) const
+bool gswy::AudioManager::IsPlaying(const string& strSoundName)
+{
+	return IsPlaying(GetSoundChannel(strSoundName));
+}
+
+bool gswy::AudioManager::IsPlaying(int nChannelId)
 {
 	auto tFoundIt = m_fmodInstance->mChannels.find(nChannelId);
 	if (tFoundIt == m_fmodInstance->mChannels.end())

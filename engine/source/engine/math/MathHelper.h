@@ -37,6 +37,18 @@ using namespace glm;
 #define RAD2DEG 57.2957795131
 #endif // !PI
 
+#define RAND_I(LO, HI) LO + static_cast <int> (rand()) / (static_cast <int> (RAND_MAX / (HI - LO)))
+#define RAND_F(LO, HI) LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)))
+#define IN_RANGE(a, x, y) (a >= x && a <= y)
+
+#define MAX(x, y) (x>y)?x:y
+#define MIN(x, y) (x<y)?x:y
+
+/*
+	Z_ORDER(0) = 0.00,Z_ORDER(1) = 0.001,Z_ORDER(3) = 0.003,
+*/
+#define Z_ORDER(x) static_cast <float>(x)*0.001f
+
 namespace gswy
 {
 	/*

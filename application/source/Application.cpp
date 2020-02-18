@@ -59,6 +59,8 @@ public:
 
 	void LoadResources()
 	{
+		TIME("Loading Resources");
+
 		// Texture loader
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/PlayerMovingUnarmed.png", "PlayerMovingUnarmed");
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
@@ -83,10 +85,13 @@ public:
 		}
 		// Audio loader
 		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true);
+		AudioManager::GetInstance()->LoadSound("./asset/TopDownGunPack/TopDownGunPack/Audio/FootSteps/footstep02.ogg", false);
 	}
 
 	void InitGameWorld()
 	{
+		TIME("Initializing Game World");
+
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
 		m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
 
@@ -97,6 +102,7 @@ public:
 		m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<PhysicsComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<WeaponComSys>());
 
 		// Initialize game
 		m_world->Init();
@@ -107,7 +113,7 @@ public:
 	void LoadGameWorld()
 	{
 		auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-		background.AddComponent(TransformCom(0, 0, 0));
+		background.AddComponent(TransformCom(0, 0, Z_ORDER(0)));
 		auto sprite0 = SpriteCom();
 		sprite0.SetTexture("Background3");
 		sprite0.SetScale(vec2(5));
@@ -115,7 +121,7 @@ public:
 
 		auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
 		player.AddComponent(OwnershiptCom<GameObjectType>());
-		player.AddComponent(TransformCom(0, 0, 1));
+		player.AddComponent(TransformCom(0, 0, Z_ORDER(1)));
 		auto sprite1 = SpriteCom();
 		sprite1.SetScale(vec2(0.25, 0.25 / 59 *32));
 		player.AddComponent(sprite1);
@@ -129,7 +135,7 @@ public:
 
 		auto enemy = m_world->GenerateEntity(GameObjectType::ENEMY);
 		enemy.AddComponent(OwnershiptCom<GameObjectType>());
-		enemy.AddComponent(TransformCom(1, 0, 1));
+		enemy.AddComponent(TransformCom(1, 0, Z_ORDER(2)));
 		enemy.AddComponent(SpriteCom());
 		auto animCom2 = AnimationCom();
 		animCom2.Add("PlayerAnimation1", "Move");
@@ -142,7 +148,7 @@ public:
 
 	void BeforeRun()
 	{
-		AudioManager::GetInstance()->PlaySound("./asset/breakout.mp3", AudioVector3{ 0, 0, 0 }, 1, 1);
+		AudioManager::GetInstance()->PlaySound("breakout", AudioVector3{ 0, 0, 0 }, 1, 1);
 	}
 
 	void AfterRun()
@@ -199,17 +205,34 @@ public:
 	virtual void OnUpdate(double ts) override
 	{
 		BeforeFrame();
-		Update(ts);
-		UpdateCamera(ts);
-		Render(ts);
+		{
+			TIME("System Update");
+			Update(ts);
+		}
+		{
+			TIME("Camera Update");
+			UpdateCamera(ts);
+		}
+		{
+			TIME("Render Update");
+			Render(ts);
+		}
 		AfterFrame();
 	}
 
 	virtual void OnImGuiRender() override
 	{
-		ImGui::Begin("Settings");
-		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_Color));
+#ifdef _DEBUG
+		Instrumentor* instrumentor = Instrumentor::GetInstance();
+		ImGui::Begin("Instrumenting Profiling");
+		for (auto& result : instrumentor->GetResults()) {
+			char entry[100];
+			strcpy(entry, "%10.3f %s\t");
+			strcat(entry, result.first);
+			ImGui::Text(entry, result.second.m_time, result.second.m_timeUnit);
+		}
 		ImGui::End();
+#endif
 	}
 
 protected:

@@ -68,6 +68,9 @@ namespace gswy {
 		int GetSoundChannel(const string& strSoundName);
 		void LoadBank(const string& strBankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags);
 		void LoadEvent(const string& strEventName);
+		/*
+			Load sound from path
+		*/
 		void LoadSound(const string& strSoundName, bool bLooping = false, bool b3d = true, bool bStream = true);
 		void UnLoadSound(const string& strSoundName);
 		void Set3dListenerAndOrientation(const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 0.0f);
@@ -79,7 +82,8 @@ namespace gswy {
 		void StopAllChannels();
 		void SetChannel3dPosition(int nChannelId, const AudioVector3& vPosition);
 		void SetChannelvolume(int nChannelId, float fVolumedB);
-		bool IsPlaying(int nChannelId) const;
+		bool IsPlaying(const string& strSoundName);
+		bool IsPlaying(int nChannelId);
 		bool IsEventPlaying(const string& strEventName) const;
 		float dbToVolume(float db);
 		float VolumeTodb(float volume);

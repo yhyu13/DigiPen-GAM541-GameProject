@@ -50,6 +50,7 @@ namespace gswy {
 		}
 
 		void UpdateMouseButtonState(const int& button, const bool& state);
+		bool IsMouseButtonTriggered(const int& mouseButton);
 		bool IsMouseButtonPressed(const int& mouseButton);
 		bool IsMouseButtonReleased(const int& mouseButton);
 

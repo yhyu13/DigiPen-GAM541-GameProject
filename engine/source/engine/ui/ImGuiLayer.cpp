@@ -57,6 +57,7 @@ namespace gswy {
 		// Setup Platform/Renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
+		ImGui::StyleColorsLight();
 	}
 
 	void ImGuiLayer::OnDetach()

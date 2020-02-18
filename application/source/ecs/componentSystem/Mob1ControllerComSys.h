@@ -34,7 +34,7 @@ namespace gswy
 
 			for (auto& entity : m_registeredEntities) {
 
-				if (entity.m_type != ENEMY)
+				if (entity.m_type != GameObjectType::ENEMY)
 					continue;
 
 				{
@@ -50,10 +50,10 @@ namespace gswy
 					auto delta = playerPosition->GetPos() - position->GetPos();
 					position->SetRotation(LookAt(delta));
 					
+					// 2. Move towards player
 					float speed = .5f;
 					position->AddXY(delta * speed *(float)dt);
-					
-					// 2. Movement with keys
+
 					animation->SetCurrentAnimationState("Move");
 					animation->GetCurrentAnimation()->SetAnimIdle(false);
 				}
