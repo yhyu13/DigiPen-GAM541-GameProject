@@ -10,6 +10,9 @@ Creation date: 02/16/2020
 - End Header ----------------------------*/
 
 #pragma once
+//#define GLM_FORCE_SSE2
+#define GLM_FORCE_AVX2
+#define GLM_FORCE_INLINE
 #include <glm/glm.hpp>
 using namespace glm;
 

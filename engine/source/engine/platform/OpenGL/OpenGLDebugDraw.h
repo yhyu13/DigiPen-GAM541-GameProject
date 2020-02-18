@@ -11,7 +11,7 @@ Creation date: 02/17/2020
 - End Header ----------------------------*/
 
 #pragma once
-#include <glm/glm.hpp>
+#include "engine/math/MathHelper.h"
 
 namespace gswy {
 

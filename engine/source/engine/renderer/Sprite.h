@@ -14,7 +14,7 @@ Creation date: 02/01/2020
 #include "Texture.h"
 #include "Buffer.h"
 #include "VertexArray.h"
-#include <glm/glm.hpp>
+#include "engine/math/MathHelper.h"
 
 namespace gswy {
 

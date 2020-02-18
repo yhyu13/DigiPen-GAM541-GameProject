@@ -12,7 +12,7 @@ Creation date: 01/26/2020
 
 #pragma once
 
-#include <glm/glm.hpp>
+#include "engine/math/MathHelper.h"
 
 namespace gswy{
     

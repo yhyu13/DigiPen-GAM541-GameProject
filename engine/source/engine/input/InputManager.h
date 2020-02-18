@@ -13,7 +13,7 @@ Creation date	: 01/29/2020
 - End Header ----------------------------*/
 
 #pragma once
-#include <glm/glm.hpp>
+#include "engine/math/MathHelper.h"
 #include "engine/input/MouseButton.h"
 #include "engine/input/KeyboardKeys.h"
 #include "engine/interface/IRunTimeModule.h"
