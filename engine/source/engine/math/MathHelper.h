@@ -50,7 +50,7 @@ using namespace glm;
 /*
 	Z_ORDER(0) = 0.00,Z_ORDER(1) = 0.001,Z_ORDER(3) = 0.003,
 */
-#define Z_ORDER(x) static_cast <float>(x)*0.0001f
+#define Z_ORDER(x) static_cast<float>(x)*0.0001f
 
 namespace gswy
 {

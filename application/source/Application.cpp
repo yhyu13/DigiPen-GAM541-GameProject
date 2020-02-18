@@ -25,7 +25,6 @@ class GameLayer : public Layer {
 public:
 
 	GameLayer()
-		: m_CameraController(1280.0f / 720.0f)
 	{
 		InitFramework();
 		InitGameWorld();
@@ -105,6 +104,7 @@ public:
 		m_world->RegisterSystem(MemoryManager::Make_shared<WeaponComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<LifeTimeComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<SpawningComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<SoundComSys>());
 
 		// Initialize game
 		m_world->Init();
@@ -245,13 +245,19 @@ public:
 #endif
 	}
 
+	static const vec3& GetCameraPosition()
+	{
+		return m_CameraController.GetPosition();
+	}
+
 protected:
 
 private:
-	OrthographicCameraController m_CameraController;
+	static OrthographicCameraController m_CameraController;
 	std::shared_ptr<GameWorld<GameObjectType>> m_world;
-	glm::vec3 m_Color;
 };
+
+OrthographicCameraController GameLayer::m_CameraController(1280.0f / 720.0f);
 
 class Application : public Engine {
 public:

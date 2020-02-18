@@ -41,4 +41,16 @@ namespace gswy
 		Entity<GameObjectType> m_entity;
 	};
 
+	struct SoundEvent : Event<GameObjectType, EventType> {
+
+		SoundEvent(const std::string& name)
+			:
+			Event(EventType::SOUND)
+		{
+			soudName = name;
+		}
+
+		std::string soudName;
+	};
+
 }

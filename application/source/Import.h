@@ -18,3 +18,4 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/WeaponComSys.h"
 #include "ecs/componentSystem/LifeTimeComSys.h"
 #include "ecs/componentSystem/SpawningComSys.h"
+#include "ecs/componentSystem/SoundComSys.h"
