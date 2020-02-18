@@ -17,7 +17,7 @@ Creation date: 02/04/2020
 #include "engine/input/InputManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/AnimationCom.h"
-#include "ecs/EntityType.h"
+#include "ecs/CustomEvents.h"
 
 namespace gswy
 {
@@ -29,13 +29,17 @@ namespace gswy
 		}
 
 		virtual void Update(double dt) override {
+
+			auto input = InputManager::GetInstance();
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto audio = AudioManager::GetInstance();
+
 			for (auto& entity : m_registeredEntities) {
 
-				if (entity.m_type != PLAYER)
+				if (entity.m_type != GameObjectType::PLAYER)
 					continue;
 
 				{
-					auto input = InputManager::GetInstance();
 					ComponentDecorator<TransformCom, GameObjectType> position;
 					ComponentDecorator<AnimationCom, GameObjectType> animation;
 					m_parentWorld->Unpack(entity, position);
@@ -48,39 +52,43 @@ namespace gswy
 					delta.y = -delta.y;
 					position->SetRotation(LookAt(delta));
 
-					// 2. Movement with keys
+					// 2. Fire
+					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+					{
+						DEBUG_PRINT(MOUSE_BUTTON_LEFT);
+						Event<GameObjectType, EventType> e;
+						e.m_type = EventType::PLAYERWEAPON1;
+						queue->Publish(&e);
+					}
+
+					// 3. Movement with keys
 					bool isIdle = true;
 					vec2 velocity(0);
 					float speed = 1.0f;
-					if (input->IsKeyPressed(GLFW_KEY_W) && input->IsAllKeyNotPressed<int>(GLFW_KEY_S)) {
-						PRINT("KEY W PRESSED!");
+					if (input->IsKeyPressed(KEY_W) && input->IsAllKeyNotPressed<int>(KEY_S)) {
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
 						velocity += vec2(sinf(glm::radians(0.0f)), cosf(glm::radians(0.0f)));
 					}
-					if (input->IsKeyPressed(GLFW_KEY_S) && input->IsAllKeyNotPressed<int>(GLFW_KEY_W)) {
-						PRINT("KEY S PRESSED!");
+					if (input->IsKeyPressed(KEY_S) && input->IsAllKeyNotPressed<int>(KEY_W)) {
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
 						velocity += vec2(sinf(glm::radians(0.0f)), -cosf(glm::radians(0.0f)));
 					}
-					if (input->IsKeyPressed(GLFW_KEY_A) && input->IsAllKeyNotPressed<int>(GLFW_KEY_D)) {
-						PRINT("KEY A PRESSED!");
+					if (input->IsKeyPressed(KEY_A) && input->IsAllKeyNotPressed<int>(KEY_D)) {
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
 						velocity += vec2(-cosf(glm::radians(0.0f)), sinf(glm::radians(0.0f)));
 					}
-					if (input->IsKeyPressed(GLFW_KEY_D) && input->IsAllKeyNotPressed<int>(GLFW_KEY_A)) {
-						PRINT("KEY D PRESSED!");
+					if (input->IsKeyPressed(KEY_D) && input->IsAllKeyNotPressed<int>(KEY_A)) {
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
 						velocity += vec2(cosf(glm::radians(0.0f)), sinf(glm::radians(0.0f)));	
 					}
-					
 					if (!isIdle)
 					{
-						if (!AudioManager::GetInstance()->IsPlaying("footstep02"))
-							AudioManager::GetInstance()->PlaySound("footstep02", AudioVector3{ 0, 0, 0 }, 1, 1.0);
+						if (!audio->IsPlaying("footstep02"))
+							audio->PlaySound("footstep02", AudioVector3{ 0, 0, 0 }, 1, 1.0);
 						position->AddXY(glm::normalize(velocity) * speed * (float)dt);
 					}
 					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);

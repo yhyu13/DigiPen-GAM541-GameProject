@@ -52,7 +52,7 @@ namespace gswy {
 			}
 			else
 			{
-				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Entity type " + str2wstr(std::to_string(type)) + L" has not been managed!");
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Entity type " + str2wstr(Str(type)) + L" has not been managed!");
 			}
 		}
 	protected:
