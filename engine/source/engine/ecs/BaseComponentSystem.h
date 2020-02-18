@@ -85,9 +85,12 @@ namespace gswy {
 		}
 
 		void RemoveEntity(const Entity<EntityType>& entity) {
-			m_registeredEntities.erase(
-				std::remove(m_registeredEntities.begin(), m_registeredEntities.end(), entity)
-			);
+			if (!m_registeredEntities.empty())
+			{
+				m_registeredEntities.erase(
+					std::remove(m_registeredEntities.begin(), m_registeredEntities.end(), entity)
+				);
+			}
 		}
 
 		BitMaskSignature& GetSystemSignature() {

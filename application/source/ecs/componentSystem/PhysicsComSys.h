@@ -53,8 +53,8 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
-			//For Collisions
 			std::vector<Entity<GameObjectType>> remove_Entity_List;
+			//For Collisions
 			auto collision = Collisions::GetInstance();
 			auto first_Entity = m_registeredEntities.begin();
 			auto last_Entity = m_registeredEntities.end();

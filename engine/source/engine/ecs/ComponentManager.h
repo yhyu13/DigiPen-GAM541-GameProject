@@ -82,7 +82,7 @@ namespace gswy {
 			unsigned int lastIndex = --m_components.m_size;
 
 			// move the component data from last index to the index of the component data just removed
-			m_components.m_data[index] = m_components.m_data[index];
+			m_components.m_data[index] = m_components.m_data[lastIndex];
 			m_entitiesAndComponentIndexes.erase(entity);
 
 			// updating the mapping for the moved entity

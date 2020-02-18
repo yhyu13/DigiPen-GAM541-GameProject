@@ -16,3 +16,4 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/AnimationComSys.h"
 #include "ecs/componentSystem/PhysicsComSys.h"
 #include "ecs/componentSystem/WeaponComSys.h"
+#include "ecs/componentSystem/LifeTimeComSys.h"

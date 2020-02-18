@@ -15,6 +15,7 @@ Creation date: 02/17/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "ecs/CustomEvents.h"
+#include "ecs/components/LifeTimeCom.h"
 
 namespace gswy
 {
@@ -30,7 +31,7 @@ namespace gswy
 
 		void OnFIREWEAPON(Event<GameObjectType, EventType>* e) 
 		{
-			if (auto event = dynamic_cast<FireWeaponEvent*>(e))
+			if (auto event = static_cast<FireWeaponEvent*>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
 				ComponentDecorator<TransformCom, GameObjectType> position;
@@ -62,6 +63,7 @@ namespace gswy
 					auto aabb = BodyCom();
 					aabb.ChooseShape("AABB", 0.25, 0.25);
 					weapon.AddComponent(aabb);
+					weapon.AddComponent(LifeTimeCom(1.0));
 				}
 					break;
 				default:
