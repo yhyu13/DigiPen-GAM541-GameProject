@@ -53,47 +53,51 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
+			//For Collisions
+			std::vector<Entity<GameObjectType>> remove_Entity_List;
+			auto collision = Collisions::GetInstance();
+			auto first_Entity = m_registeredEntities.begin();
+			auto last_Entity = m_registeredEntities.end();
+			for (; first_Entity != last_Entity; ++first_Entity)
+			{
+				ComponentDecorator<BodyCom, GameObjectType> body1;
+				m_parentWorld->Unpack(*first_Entity, body1);
+
+				for (auto second_Entity = first_Entity + 1; second_Entity != last_Entity; ++second_Entity)
+				{
+					ComponentDecorator<BodyCom, GameObjectType> body2;
+					m_parentWorld->Unpack(*second_Entity, body2);
+
+					bool collides = collision->CheckCollisionAndGenerateDetection(body1->shape.get(), body1->m_PosX, body1->m_PosY, body2->shape.get(), body2->m_PosX, body2->m_PosY);
+						
+					if (collides)
+					{
+						ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner1;
+						m_parentWorld->Unpack(*first_Entity, owner1);
+						ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner2;
+						m_parentWorld->Unpack(*second_Entity, owner2);
+						PRINT("Collisions Detected " + Str(owner1->GetEntity()) + Str(owner2->GetEntity()));
+						// remove_Entity_List.push_back(*first_Entity);
+					}
+				}
+			}
+			//Remove entities
+			for (auto& entity : remove_Entity_List)
+			{
+				m_parentWorld->RemoveEntity(entity);
+			}
 			//Body And Transform Updates
 			for (auto& entity : m_registeredEntities)
 			{
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				ComponentDecorator<BodyCom, GameObjectType> body;
 				m_parentWorld->Unpack(entity, transform);
-				m_parentWorld->Unpack(entity, body); 
+				m_parentWorld->Unpack(entity, body);
+
+				transform->AddPos(transform->GetVelocity() * (float)dt);
+
 				body->m_PosX = transform->GetPos().x;
 				body->m_PosY = transform->GetPos().y;
-			}
-
-			//For Collisions
-			auto collision = Collisions::GetInstance();
-			if (m_registeredEntities.empty() == false)
-			{
-				auto first_Entity = m_registeredEntities.begin();
-				auto last_Entity = m_registeredEntities.end();
-				for (; first_Entity != last_Entity; ++first_Entity)
-				{
-					ComponentDecorator<BodyCom, GameObjectType> body1;
-					m_parentWorld->Unpack(*first_Entity, body1);
-
-					for (auto second_Entity = first_Entity + 1; second_Entity != last_Entity; ++second_Entity)
-					{
-						ComponentDecorator<BodyCom, GameObjectType> body2;
-						m_parentWorld->Unpack(*second_Entity, body2);
-
-						bool collides = collision->CheckCollisionAndGenerateDetection(body1->shape.get(), body1->m_PosX, body1->m_PosY, body2->shape.get(), body2->m_PosX, body2->m_PosY);
-						
-						if (collides)
-						{
-							ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner1;
-							m_parentWorld->Unpack(*first_Entity, owner1);
-							ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner2;
-							m_parentWorld->Unpack(*second_Entity, owner2);
-							PRINT("Collisions Detected " + Str(owner1->GetEntity()) + Str(owner2->GetEntity()));
-						}
-					}
-
-				}
-
 			}
 		}
 	};

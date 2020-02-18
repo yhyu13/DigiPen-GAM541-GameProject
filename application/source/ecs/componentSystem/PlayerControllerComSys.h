@@ -88,7 +88,7 @@ namespace gswy
 					{
 						if (!audio->IsPlaying("footstep02"))
 							audio->PlaySound("footstep02", AudioVector3{ 0, 0, 0 }, 1, 1.0);
-						position->AddXY(glm::normalize(velocity) * speed * (float)dt);
+						position->SetVelocity(glm::normalize(velocity) * speed);
 					}
 					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);
 					return;

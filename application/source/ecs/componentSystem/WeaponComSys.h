@@ -25,10 +25,10 @@ namespace gswy
 
 		virtual void Init() {
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			queue->Subscribe<WeaponComSys>(this, EventType::FIREWEAPON, &WeaponComSys::OnPLAYERWEAPON);
+			queue->Subscribe<WeaponComSys>(this, EventType::FIREWEAPON, &WeaponComSys::OnFIREWEAPON);
 		}
 
-		void OnPLAYERWEAPON(Event<GameObjectType, EventType>* e) 
+		void OnFIREWEAPON(Event<GameObjectType, EventType>* e) 
 		{
 			if (auto event = dynamic_cast<FireWeaponEvent*>(e))
 			{
@@ -41,6 +41,18 @@ namespace gswy
 
 				PRINT(pos);
 				PRINT(rot);
+
+				switch (event->m_entity.m_type)
+				{
+				case GameObjectType::PLAYER:
+
+
+
+
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	};

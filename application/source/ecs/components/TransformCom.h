@@ -24,35 +24,43 @@ namespace gswy
 		{
 			pos = vec3(x,y,z);
 			rotation = 0;
+			velocity = vec3(0);
+			rotational_velocity = 0;
 		}
 		explicit TransformCom(const vec3& v)
 		{
 			pos = v;
 			rotation = 0;
+			velocity = vec3(0);
+			rotational_velocity = 0;
 		}
-		void AddXY(const vec2& v)
+		void AddPos(const vec2& v)
 		{
 			pos.x += v.x;
 			pos.y += v.y;
 		}
-		void AddXY(float x, float y)
-		{
-			pos.x += x;
-			pos.y += y;
-		}
-		void SetXY(const vec2& v)
+		void SetPos(const vec2& v)
 		{
 			pos.x = v.x;
 			pos.y = v.y;
 		}
-		void SetXY(float x, float y)
+		void AddVelocity(const vec2& v)
 		{
-			pos.x = x;
-			pos.y = y;
+			velocity.x += v.x;
+			velocity.y += v.y;
+		}
+		void SetVelocity(const vec2& v)
+		{
+			velocity.x = v.x;
+			velocity.y = v.y;
 		}
 		const vec3& GetPos() const
 		{
 			return pos;
+		}
+		const vec3& GetVelocity() const
+		{
+			return velocity;
 		}
 		void SetRotation(float r)
 		{
@@ -64,6 +72,8 @@ namespace gswy
 		}
 	private:
 		vec3 pos;
+		vec3 velocity;
 		float rotation;
+		float rotational_velocity;
 	};
 }

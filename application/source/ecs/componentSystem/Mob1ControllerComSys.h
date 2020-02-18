@@ -52,7 +52,7 @@ namespace gswy
 					
 					// 2. Move towards player
 					float speed = .5f;
-					position->AddXY(delta * speed *(float)dt);
+					position->SetVelocity(delta * speed );
 
 					animation->SetCurrentAnimationState("Move");
 					animation->GetCurrentAnimation()->SetAnimIdle(false);
