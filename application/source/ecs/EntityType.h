@@ -11,6 +11,7 @@ Creation date: 02/14/2020
 
 #pragma once
 #include <iostream>
+#include "engine/ecs/Entity.h"
 namespace gswy
 {
 	enum class GameObjectType {
