@@ -233,7 +233,7 @@ public:
 			char entry[100];
 			strcpy(entry, "%10.3f %s\t");
 			strcat(entry, result.first);
-			ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), entry, result.second.m_time, result.second.m_timeUnit);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), entry, result.second.m_time, result.second.m_timeUnit);
 		}
 		ImGui::End();
 		ImGui::PopStyleVar(1);
