@@ -55,6 +55,11 @@ namespace gswy
 		Return the lookat angle in radian
 	*/
 	float LookAt(const vec2& delta);
+
+	/*
+	Return the vec2 form of a angle
+	*/
+	vec2 ToVec(float rotation);
 }
 
 std::ostream& operator<<(std::ostream& o, const glm::vec3& n);

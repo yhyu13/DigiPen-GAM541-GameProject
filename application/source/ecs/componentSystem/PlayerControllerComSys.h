@@ -64,6 +64,7 @@ namespace gswy
 					bool isIdle = true;
 					vec2 velocity(0);
 					float speed = 1.0f;
+					position->SetVelocity(velocity * speed);
 					if (input->IsKeyPressed(KEY_W) && input->IsAllKeyNotPressed<int>(KEY_S)) {
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");

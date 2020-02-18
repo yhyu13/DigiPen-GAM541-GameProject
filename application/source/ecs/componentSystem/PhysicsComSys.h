@@ -76,7 +76,7 @@ namespace gswy
 						m_parentWorld->Unpack(*first_Entity, owner1);
 						ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner2;
 						m_parentWorld->Unpack(*second_Entity, owner2);
-						PRINT("Collisions Detected " + Str(owner1->GetEntity()) + Str(owner2->GetEntity()));
+						DEBUG_PRINT("Collisions Detected " + Str(owner1->GetEntity()) + Str(owner2->GetEntity()));
 						// remove_Entity_List.push_back(*first_Entity);
 					}
 				}

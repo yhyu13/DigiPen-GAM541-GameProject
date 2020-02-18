@@ -45,10 +45,24 @@ namespace gswy
 				switch (event->m_entity.m_type)
 				{
 				case GameObjectType::PLAYER:
-
-
-
-
+				{
+					auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
+					weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
+					auto transform = TransformCom(vec3(pos.x,pos.y, Z_ORDER(99)), rot);
+					transform.AddVelocity(ToVec(rot)*2.0f);
+					weapon.AddComponent(transform);
+					auto sprite = SpriteCom();
+					sprite.SetScale(vec2(0.25, 0.25));
+					weapon.AddComponent(sprite);
+					auto animCom = AnimationCom();
+					animCom.Add("fireBallAnim1", "Move");
+					animCom.SetCurrentAnimationState("Move");
+					animCom.GetCurrentAnimation()->SetAnimIdle(false);
+					weapon.AddComponent(animCom);
+					auto aabb = BodyCom();
+					aabb.ChooseShape("AABB", 0.25, 0.25);
+					weapon.AddComponent(aabb);
+				}
 					break;
 				default:
 					break;

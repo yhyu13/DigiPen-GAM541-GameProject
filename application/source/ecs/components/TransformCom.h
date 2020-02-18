@@ -27,10 +27,10 @@ namespace gswy
 			velocity = vec3(0);
 			rotational_velocity = 0;
 		}
-		explicit TransformCom(const vec3& v)
+		explicit TransformCom(const vec3& v, float r)
 		{
 			pos = v;
-			rotation = 0;
+			rotation = r;
 			velocity = vec3(0);
 			rotational_velocity = 0;
 		}
