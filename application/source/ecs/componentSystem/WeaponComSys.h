@@ -25,14 +25,23 @@ namespace gswy
 
 		virtual void Init() {
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			queue->Subscribe<WeaponComSys>(this, EventType::PLAYERWEAPON1, &WeaponComSys::OnPLAYERWEAPON);
-			queue->Subscribe<WeaponComSys>(this, EventType::PLAYERWEAPON2, &WeaponComSys::OnPLAYERWEAPON);
-			queue->Subscribe<WeaponComSys>(this, EventType::PLAYERWEAPON3, &WeaponComSys::OnPLAYERWEAPON);
+			queue->Subscribe<WeaponComSys>(this, EventType::FIREWEAPON, &WeaponComSys::OnPLAYERWEAPON);
 		}
 
 		void OnPLAYERWEAPON(Event<GameObjectType, EventType>* e) 
 		{
-			DEBUG_PRINT("Receive " + Str(*e));
+			if (auto event = dynamic_cast<FireWeaponEvent*>(e))
+			{
+				DEBUG_PRINT("Receive " + Str(*e));
+				ComponentDecorator<TransformCom, GameObjectType> position;
+				m_parentWorld->Unpack(event->m_entity, position);
+
+				auto pos = position->GetPos();
+				auto rot = position->GetRotation();
+
+				PRINT(pos);
+				PRINT(rot);
+			}
 		}
 	};
 }

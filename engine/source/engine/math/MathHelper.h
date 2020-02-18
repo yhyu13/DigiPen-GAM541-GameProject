@@ -56,3 +56,6 @@ namespace gswy
 	*/
 	float LookAt(const vec2& delta);
 }
+
+std::ostream& operator<<(std::ostream& o, const glm::vec3& n);
+std::ostream& operator<<(std::ostream& o, const glm::vec2& n);

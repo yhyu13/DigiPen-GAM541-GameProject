@@ -29,7 +29,9 @@ namespace gswy {
 	struct Event: BaseEvent {
 	
 		Event() = default;
-
+		explicit Event(EventType type)
+			:m_type(type)
+		{}
 		virtual ~Event() {
 		}
 

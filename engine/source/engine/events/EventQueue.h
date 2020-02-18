@@ -45,20 +45,19 @@ namespace gswy {
 			eventHandlers->push_back(new EventHandler<T, EntityType, EventType>(instance, Function));
 		}
 
-		void Publish(Event<EntityType, EventType>* event) {
-			EventHandlerList* eventHandlers = m_subscribers[event->m_type];
+		void Publish(Event<EntityType, EventType>* e) {
+			EventHandlerList* eventHandlers = m_subscribers[e->m_type];
 
 			if (eventHandlers == nullptr) {
 				return;
 			}
-			DEBUG_PRINT("Publish " + Str(*event));
+			DEBUG_PRINT("Publish " + Str(*e));
 			for (auto& handler : *eventHandlers) {
 				if (handler != nullptr) {
-					handler->Execute(event);
+					handler->Execute(e);
 				}
 			}
 		}
-
 	private:
 		std::map<EventType, EventHandlerList*> m_subscribers;
 	};

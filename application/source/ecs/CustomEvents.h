@@ -18,8 +18,27 @@ namespace gswy
 {
 	struct CollisionEvent : Event<GameObjectType, EventType> {
 
+		CollisionEvent(const Entity<GameObjectType>& entity1, const Entity<GameObjectType>& entity2)
+			:
+			Event(EventType::COLLISION)
+		{
+			m_entityA = entity1;
+			m_entityB = entity2;
+		}
 		Entity<GameObjectType> m_entityA;
 		Entity<GameObjectType> m_entityB;
+	};
+
+	struct FireWeaponEvent : Event<GameObjectType, EventType> {
+
+		FireWeaponEvent(const Entity<GameObjectType>& entity)
+			:
+			Event(EventType::FIREWEAPON)
+		{
+			m_entity = entity;
+		}
+
+		Entity<GameObjectType> m_entity;
 	};
 
 }

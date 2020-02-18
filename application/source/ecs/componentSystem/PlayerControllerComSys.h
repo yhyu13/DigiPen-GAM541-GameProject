@@ -56,8 +56,7 @@ namespace gswy
 					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 					{
 						DEBUG_PRINT(MOUSE_BUTTON_LEFT);
-						Event<GameObjectType, EventType> e;
-						e.m_type = EventType::PLAYERWEAPON1;
+						FireWeaponEvent e(entity);
 						queue->Publish(&e);
 					}
 
