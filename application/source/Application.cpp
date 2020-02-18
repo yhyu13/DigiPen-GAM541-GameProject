@@ -104,6 +104,7 @@ public:
 		m_world->RegisterSystem(MemoryManager::Make_shared<PhysicsComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<WeaponComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<LifeTimeComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<SpawningComSys>());
 
 		// Initialize game
 		m_world->Init();

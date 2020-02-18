@@ -17,3 +17,4 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/PhysicsComSys.h"
 #include "ecs/componentSystem/WeaponComSys.h"
 #include "ecs/componentSystem/LifeTimeComSys.h"
+#include "ecs/componentSystem/SpawningComSys.h"
