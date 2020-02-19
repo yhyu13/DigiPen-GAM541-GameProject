@@ -138,19 +138,6 @@ public:
 		aabb1.ChooseShape("AABB", 0.25, 0.25 / 59 * 32);
 		player.AddComponent(aabb1);
 		player.AddComponent(HitPointCom());
-
-		auto enemy = m_world->GenerateEntity(GameObjectType::ENEMY);
-		enemy.AddComponent(OwnershiptCom<GameObjectType>());
-		enemy.AddComponent(TransformCom(1, 0, Z_ORDER(2)));
-		enemy.AddComponent(SpriteCom());
-		auto animCom2 = AnimationCom();
-		animCom2.Add("PlayerAnimation1", "Move");
-		animCom2.SetCurrentAnimationState("Move");
-		enemy.AddComponent(animCom2);
-		auto aabb2 = BodyCom();
-		aabb2.ChooseShape("AABB", 1,1);
-		enemy.AddComponent(aabb2);
-		enemy.AddComponent(HitPointCom());
 	}
 
 	void BeforeRun()

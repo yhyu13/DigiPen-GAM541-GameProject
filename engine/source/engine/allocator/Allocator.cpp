@@ -62,15 +62,15 @@ void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment
 
     m_szBlockSize = ALIGN(minimal_size, alignment);
 	
-	// Storing m_szDataSize as uint32_t right before each block
-	assert(m_szBlockSize == (size_t)uint32_t(m_szBlockSize));
+	// Storing m_szDataSize as header_t right before each block
+	assert(m_szBlockSize == (size_t)header_t(m_szBlockSize));
 
     m_szAlignmentSize = m_szBlockSize - minimal_size;
 
     m_nBlocksPerPage = (m_szPageSize - sizeof(PageHeader)) / m_szBlockSize;
 	
-	// Storing m_szDataSize as uint32_t right before each block
-	m_szPageSize += sizeof(uint32_t) * m_nBlocksPerPage;
+	// Storing m_szDataSize as header_t right before each block
+	m_szPageSize += sizeof(header_t) * m_nBlocksPerPage;
 }
 
 void* gswy::Allocator::Allocate() noexcept
@@ -103,13 +103,13 @@ void* gswy::Allocator::Allocate() noexcept
         // link each block in the page
         for (uint32_t i = 1; i < m_nBlocksPerPage; i++) {
 
-			// Storing m_szDataSize as uint32_t right before each block
-			*(reinterpret_cast<uint32_t*>(pBlock) - 1) = static_cast<uint32_t>(m_szDataSize);
+			// Storing m_szDataSize as header_t right before each block
+			*(reinterpret_cast<header_t*>(pBlock) - 1) = static_cast<header_t>(m_szDataSize);
 
             pBlock->pNext = NextBlock(pBlock);
             pBlock = NextBlock(pBlock);
         }
-		*(reinterpret_cast<uint32_t*>(pBlock) - 1) = static_cast<uint32_t>(m_szDataSize);
+		*(reinterpret_cast<header_t*>(pBlock) - 1) = static_cast<header_t>(m_szDataSize);
         pBlock->pNext = nullptr;
 
         m_pFreeList = pNewPage->Blocks();
@@ -211,6 +211,6 @@ gswy::BlockHeader* gswy::Allocator::NextBlock(BlockHeader *pBlock) noexcept
 	// Original:
     //return reinterpret_cast<BlockHeader *>(reinterpret_cast<uint8_t*>(pBlock) + m_szBlockSize);
 
-	// Storing m_szBlockSize as uint32_t right before each block 
-	return reinterpret_cast<BlockHeader *>(reinterpret_cast<uint8_t*>(pBlock) + m_szBlockSize + sizeof(uint32_t));
+	// Storing m_szBlockSize as header_t right before each block 
+	return reinterpret_cast<BlockHeader *>(reinterpret_cast<uint8_t*>(pBlock) + m_szBlockSize + sizeof(header_t));
 }

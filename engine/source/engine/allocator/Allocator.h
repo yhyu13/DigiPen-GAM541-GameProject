@@ -17,6 +17,8 @@ Creation date: 02/14/2020
 
 namespace gswy {
 
+	typedef uint16_t header_t;
+
     struct BlockHeader {
         // union-ed with data
         BlockHeader* pNext;
@@ -28,8 +30,8 @@ namespace gswy {
 			// Original:
 			//return reinterpret_cast<BlockHeader*>(this + 1);
 
-			// Storing m_szBlockSize as uint32_t right before each block
-            return reinterpret_cast<BlockHeader*>(reinterpret_cast<uint8_t*>(this + 1) + sizeof(uint32_t));
+			// Storing m_szBlockSize as header_t right before each block
+            return reinterpret_cast<BlockHeader*>(reinterpret_cast<uint8_t*>(this + 1) + sizeof(header_t));
         }
     };
 
