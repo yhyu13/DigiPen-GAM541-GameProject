@@ -26,11 +26,11 @@ Creation date	: 01/26/2020
 
 #ifdef _DEBUG 
 #define DEBUG_PRINT(x) ENGINE_DEBUG(Str(x))
+#define PRINT(x) ENGINE_INFO(Str(x));
 #else
 #define DEBUG_PRINT(x)
+#define PRINT(x) 
 #endif // DEBUG
-
-#define PRINT(x) ENGINE_INFO(Str(x));
 
 template <typename T>
 std::string Str(const T& t)

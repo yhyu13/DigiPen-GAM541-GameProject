@@ -84,16 +84,15 @@ namespace gswy {
 
 			unsigned int index = m_entitiesAndComponentIndexes[entity];
 			unsigned int lastIndex = --m_components.m_size;
+			m_entitiesAndComponentIndexes.erase(entity);
 
 			// move the component data from last index to the index of the component data just removed
 			std::swap(m_components.m_data[index], m_components.m_data[lastIndex]);
 			m_components.m_data.pop_back();
-			m_entitiesAndComponentIndexes.erase(entity);
-
+			
 			// updating the mapping for the moved entity
-			Entity<EntityType> movedEntity = m_entities[lastIndex];
-			m_entitiesAndComponentIndexes[movedEntity] = index;
-			m_entities[index] = movedEntity;
+			m_entitiesAndComponentIndexes[m_entities[lastIndex]] = index;
+			std::swap(m_entities[index], m_entities[lastIndex]);
 			m_entities.pop_back(); // reduce the m_entities as entities are being destroyed
 		}
 

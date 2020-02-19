@@ -34,7 +34,6 @@ namespace gswy
 			auto audio = AudioManager::GetInstance();
 			if (auto event = static_cast<SoundEvent*>(e))
 			{
-				//DEBUG_PRINT("Receive " + Str(*e));
 				if (!audio->IsPlaying(event->soudName))
 				{
 					audio->PlaySound(event->soudName, AudioVector3{ 0, 0, 0 }, 1, 1.0);

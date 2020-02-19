@@ -229,7 +229,6 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
-#ifdef _DEBUG
 
 		Instrumentor* instrumentor = Instrumentor::GetInstance();
 		ImGui::SetNextWindowBgAlpha(0.0f);
@@ -247,7 +246,6 @@ public:
 		ImGui::End();
 		ImGui::PopStyleVar(1);
 		ImGui::PopStyleColor(3);
-#endif
 	}
 
 	static const vec3& GetCameraPosition()

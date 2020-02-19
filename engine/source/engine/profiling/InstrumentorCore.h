@@ -20,5 +20,5 @@ Creation date	: 16/02/2020
 #ifdef _DEBUG
 	#define TIME(name) InstrumentingTimer timer##__LINE__(name, gswy::Instrumentor::GetInstance())
 #else
-	#define TIME(name)
+	#define TIME(name) InstrumentingTimer timer##__LINE__(name, gswy::Instrumentor::GetInstance())
 #endif
