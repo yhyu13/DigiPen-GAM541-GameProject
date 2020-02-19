@@ -94,6 +94,7 @@ namespace gswy {
 			Entity<EntityType> movedEntity = m_entities[lastIndex];
 			m_entitiesAndComponentIndexes[movedEntity] = index;
 			m_entities[index] = movedEntity;
+			m_entities.pop_back(); // reduce the m_entities as entities are being destroyed
 		}
 
 	private:
