@@ -75,7 +75,7 @@ namespace gswy
 							animCom.GetCurrentAnimation()->SetAnimIdle(false);
 							weapon.AddComponent(animCom);
 							auto aabb = BodyCom();
-							aabb.ChooseShape("AABB", 0.25, 0.25);
+							aabb.ChooseShape("Circle", 0.1);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(2.0));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());

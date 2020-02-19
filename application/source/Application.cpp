@@ -73,6 +73,7 @@ public:
 
 		// Texture loader
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/PlayerMovingUnarmed.png", "PlayerMovingUnarmed");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/MobMovingUnarmed.png", "MobMovingUnarmed");
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
 		std::string fireBallPath = "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball\ 2/";
 		ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0001.png", "ffireball_0001");
@@ -110,6 +111,11 @@ public:
 		for (int i = 0; i < 8; ++i)
 		{
 			playerAnim1->AddFrame("PlayerMovingUnarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
+		}
+		auto mobAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "MobAnimation1");
+		for (int i = 0; i < 8; ++i)
+		{
+			mobAnim1->AddFrame("MobMovingUnarmed", 0, 50 * i, 70, 50, 1.0 / 15.0);
 		}
 		auto fireBallAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/fireBallAnim1.txt", "fireBallAnim1");
 		for (int i = 1; i <= 6; ++i)
