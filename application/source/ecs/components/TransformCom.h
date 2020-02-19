@@ -54,13 +54,17 @@ namespace gswy
 			velocity.x = v.x;
 			velocity.y = v.y;
 		}
-		const vec3& GetPos() const
+		const vec3& GetPos3D() const
 		{
 			return pos;
 		}
-		const vec3& GetVelocity() const
+		const vec2& GetPos() const
 		{
-			return velocity;
+			return vec2(pos.x, pos.y);
+		}
+		const vec2& GetVelocity() const
+		{
+			return vec2(velocity.x, velocity.y);
 		}
 		void SetRotation(float r)
 		{
