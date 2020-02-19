@@ -11,6 +11,7 @@ Creation date: 01/26/2020
 - End Header ----------------------------*/
 
 #pragma once
+#include "../EngineCore.h"
 
 namespace gswy {
 
@@ -36,7 +37,7 @@ namespace gswy {
 			case ShaderDataType::Bool:   return 1;
 		}
 
-		//gswy_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	}
 
@@ -72,7 +73,7 @@ namespace gswy {
 			case ShaderDataType::Bool:   return 1;
 			}
 			
-			//gswy_CORE_ASSERT(false, "Unknown ShaderDataType!");
+			ASSERT(false, "Unknown ShaderDataType!");
 			return 0;
 		}
 	};

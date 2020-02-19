@@ -40,8 +40,8 @@ namespace gswy {
 
 			glDeleteShader(vertexShader);
 
-			//gswy_CORE_ERROR("{0}", infoLog.data());
-			//gswy_CORE_ASSERT(false, "Vertex shader compilation failure");
+			ERROR("{0}", infoLog.data());
+			ASSERT(false, "Vertex shader compilation failure");
 
 			return;
 		}
@@ -66,8 +66,8 @@ namespace gswy {
 
 			glDeleteShader(fragmentShader);
 
-			//gswy_CORE_ERROR("{0}", infoLog.data());
-			//gswy_CORE_ASSERT(false, "Fragment shader compilation failure");
+			ERROR("{0}", infoLog.data());
+			ASSERT(false, "Fragment shader compilation failure");
 
 			return;
 		}
@@ -94,8 +94,8 @@ namespace gswy {
 			glDeleteShader(vertexShader);
 			glDeleteShader(fragmentShader);
 
-			//gswy_CORE_ERROR("{0}", infoLog.data());
-			//gswy_CORE_ASSERT(false, "Shader link failure");
+			ERROR("{0}", infoLog.data());
+			ASSERT(false, "Shader link failure");
 
 			return;
 		}

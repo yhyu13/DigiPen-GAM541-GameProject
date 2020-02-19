@@ -41,7 +41,7 @@ namespace gswy {
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-		//gswy_CORE_ASSERT(data, "Failed to load image!");
+		ASSERT(!data, "Failed to load image!");
 		m_Width = width;
 		m_Height = height;
 		
@@ -83,7 +83,6 @@ namespace gswy {
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
-		//gswy_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 }

@@ -12,6 +12,7 @@ Creation date: 01/26/2020
 
 #include "engine-precompiled-header.h"
 #include "OpenGLVertexArray.h"
+#include "../../EngineCore.h"
 
 #include <glad/glad.h>
 
@@ -34,7 +35,7 @@ namespace gswy {
 		case gswy::ShaderDataType::Bool:     return GL_BOOL;
 		}
 
-		//gswy_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	}
 
@@ -60,7 +61,7 @@ namespace gswy {
 
 	void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
 	{
-		//gswy_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!")
+		ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!")
 
 		glBindVertexArray(m_RendererID);
 		vertexBuffer->Bind();
