@@ -65,3 +65,6 @@ Creation date	: 01/26/2020
 
 ///// Instrumenting Profiling ////
 #include "engine/profiling/InstrumentorCore.h"
+
+//// Object Factory ////
+#include "engine/object-factory/ObjectFactory.h"

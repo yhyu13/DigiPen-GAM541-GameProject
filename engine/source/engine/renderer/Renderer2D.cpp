@@ -151,7 +151,7 @@ namespace gswy {
 		s_Data->QuadShader->SetFloat4("u_Color", color);
 		s_Data->QuadTexture->Bind();
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
 		s_Data->QuadShader->SetMat4("u_Transform", transform);
 		s_Data->QuadVertexArray->Bind();
 		glDisable(GL_DEPTH_TEST);

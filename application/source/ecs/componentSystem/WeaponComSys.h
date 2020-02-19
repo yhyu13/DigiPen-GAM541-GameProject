@@ -49,9 +49,6 @@ namespace gswy
 				auto pos = position->GetPos();
 				auto rot = position->GetRotation();
 
-				PRINT(pos);
-				PRINT(rot);
-
 				switch (event->m_entity.m_type)
 				{
 				case GameObjectType::PLAYER:
@@ -59,25 +56,48 @@ namespace gswy
 					static int num_spawn = 1;
 					for (int i = 0; i < num_spawn; ++i)
 					{
-						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
-						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
-						auto weapon_rot = rot + RAND_F(-90, 90) * DEG2RAD;
-						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-						transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
-						weapon.AddComponent(transform);
-						auto sprite = SpriteCom();
-						sprite.SetScale(vec2(0.25, 0.25));
-						weapon.AddComponent(sprite);
-						auto animCom = AnimationCom();
-						animCom.Add("fireBallAnim1", "Move");
-						animCom.SetCurrentAnimationState("Move");
-						animCom.GetCurrentAnimation()->SetAnimIdle(false);
-						weapon.AddComponent(animCom);
-						auto aabb = BodyCom();
-						aabb.ChooseShape("AABB", 0.25, 0.25);
-						weapon.AddComponent(aabb);
-						weapon.AddComponent(LifeTimeCom(1.0));
-						weapon.AddComponent(HitPreventionCom<GameObjectType>());
+						{
+							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
+							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
+							auto weapon_rot = rot + RAND_F(-90, 90) * DEG2RAD;
+							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+							transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
+							weapon.AddComponent(transform);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.25, 0.25));
+							weapon.AddComponent(sprite);
+							auto animCom = AnimationCom();
+							animCom.Add("fireBallAnim1", "Move");
+							animCom.SetCurrentAnimationState("Move");
+							animCom.GetCurrentAnimation()->SetAnimIdle(false);
+							weapon.AddComponent(animCom);
+							auto aabb = BodyCom();
+							aabb.ChooseShape("Circle", 0.1);
+							weapon.AddComponent(aabb);
+							weapon.AddComponent(LifeTimeCom(2.0));
+							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+						}
+						{
+							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
+							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
+							auto weapon_rot = rot + RAND_F(-90, 90) * DEG2RAD;
+							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+							transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
+							weapon.AddComponent(transform);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.25, 0.25));
+							weapon.AddComponent(sprite);
+							auto animCom = AnimationCom();
+							animCom.Add("iceBallAnim1", "Move");
+							animCom.SetCurrentAnimationState("Move");
+							animCom.GetCurrentAnimation()->SetAnimIdle(false);
+							weapon.AddComponent(animCom);
+							auto aabb = BodyCom();
+							aabb.ChooseShape("AABB", 0.25, 0.25);
+							weapon.AddComponent(aabb);
+							weapon.AddComponent(LifeTimeCom(1.0));
+							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+						}
 					}
 					num_spawn+=1;
 					{
