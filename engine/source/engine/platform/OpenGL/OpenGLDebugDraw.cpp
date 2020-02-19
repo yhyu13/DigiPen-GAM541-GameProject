@@ -74,7 +74,7 @@ namespace gswy {
 		glLineWidth(1.0f);
 	}
 	
-	void OpenGLDebugDraw::DrawCircle(const glm::vec3& centerPosition, const glm::vec3& planeNormal, float radius, glm::vec3 color)
+	void OpenGLDebugDraw::DrawCircle(const glm::vec3& centerPosition, float radius, glm::vec3 color)
 	{
 		const int numVertices = 37;
 
