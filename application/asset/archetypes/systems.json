@@ -1,0 +1,18 @@
+{
+   "systems":[
+      "player-controller",
+      "mob-1-controller",
+      "scene",
+      "sprite",
+      "animation",
+      "physics",
+      "weapon",
+      "lifetime",
+      "spawn",
+      "sound",
+      "hitpoint",
+      "death",
+      "gcc",
+	    "attached-movement"
+   ]
+}

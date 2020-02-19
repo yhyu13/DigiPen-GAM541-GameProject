@@ -1,0 +1,195 @@
+{
+   "resources":[
+      {
+         "type":"textures",
+         "textures":[
+            {
+               "name":"PlayerMovingUnarmed",
+               "path":"./asset/PlayerMovingUnarmed.png"
+            },
+            {
+               "name":"Background3",
+               "path":"./asset/background3.png"
+            },
+			{
+               "name":"MobMovingUnarmed",
+               "path":"./asset/MobMovingUnarmed.png"
+            },
+            {
+               "name":"ffireball_0001",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0001.png"
+            },
+            {
+               "name":"ffireball_0002",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0002.png"
+            },
+            {
+               "name":"ffireball_0003",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0003.png"
+            },
+            {
+               "name":"ffireball_0004",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0004.png"
+            },
+            {
+               "name":"ffireball_0005",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0005.png"
+            },
+            {
+               "name":"ffireball_0006",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0006.png"
+            },
+			{
+               "name":"bolt_tesla_0001",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0001.png"
+            },
+			{
+               "name":"bolt_tesla_0002",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0002.png"
+            },
+			{
+               "name":"bolt_tesla_0003",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0003.png"
+            },
+			{
+               "name":"bolt_tesla_0004",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0004.png"
+            },
+			{
+               "name":"bolt_tesla_0005",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0005.png"
+            },
+			{
+               "name":"bolt_tesla_0006",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0006.png"
+            },
+			{
+               "name":"bolt_tesla_0007",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0007.png"
+            },
+			{
+               "name":"bolt_tesla_0008",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0008.png"
+            },
+			{
+               "name":"bolt_tesla_0009",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0009.png"
+            },
+			{
+               "name":"iceball_0001",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0001.png"
+            },
+			{
+               "name":"iceball_0002",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0002.png"
+            },
+			{
+               "name":"iceball_0003",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0003.png"
+            },
+			{
+               "name":"iceball_0004",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0004.png"
+            },
+			{
+               "name":"iceball_0005",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0005.png"
+            },
+			{
+               "name":"iceball_0006",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0006.png"
+            },
+			{
+               "name":"iceball_0007",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0007.png"
+            },
+			{
+               "name":"iceball_0008",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0008.png"
+            },
+			{
+               "name":"iceball_0009",
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0009.png"
+            }
+         ]
+      },
+      {
+         "type":"animation",
+         "animations":[
+            {
+               "name":"PlayerAnimation1",
+               "properties":{
+                  "texture-name":"PlayerMovingUnarmed",
+                  "x": 59,
+                  "y": 0,
+                  "width": 59,
+                  "height": 32,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+			{
+               "name":"MobAnimation1",
+               "properties":{
+                  "texture-name":"MobMovingUnarmed",
+                  "x": 0,
+                  "y": 50,
+                  "width": 70,
+                  "height": 50,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+            {
+               "name":"fireBallAnim1",
+               "properties":{
+                  "texture-name":"ffireball_000",
+                  "x": 0,
+                  "y": 0,
+                  "width": 64,
+                  "height": 64,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+			{
+               "name":"boltAnim1",
+               "properties":{
+                  "texture-name":"bolt_tesla_000",
+                  "x": 0,
+                  "y": 0,
+                  "width": 512,
+                  "height": 512,
+                  "delay": 1.0,
+                  "frame-count": 30.0
+               }
+            },
+			{
+               "name":"iceBallAnim1",
+               "properties":{
+                  "texture-name":"iceball_000",
+                  "x": 0,
+                  "y": 0,
+                  "width": 64,
+                  "height": 64,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            }
+         ]
+      },
+      {
+         "type":"audio",
+         "sounds":[
+            {
+               "path":"./asset/breakout.mp3",
+               "stream":true
+            },
+            {
+               "path":"./asset/TopDownGunPack/TopDownGunPack/Audio/FootSteps/footstep02.ogg",
+               "stream":false
+            }
+         ]
+      }
+   ]
+}
