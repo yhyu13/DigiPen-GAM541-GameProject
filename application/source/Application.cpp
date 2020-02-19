@@ -105,6 +105,9 @@ public:
 		m_world->RegisterSystem(MemoryManager::Make_shared<LifeTimeComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<SpawningComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<SoundComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<HitPointComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<DeathComSys>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<GCComSysy>());
 
 		// Initialize game
 		m_world->Init();
@@ -134,6 +137,7 @@ public:
 		auto aabb1 = BodyCom();
 		aabb1.ChooseShape("AABB", 0.25, 0.25 / 59 * 32);
 		player.AddComponent(aabb1);
+		player.AddComponent(HitPointCom());
 
 		auto enemy = m_world->GenerateEntity(GameObjectType::ENEMY);
 		enemy.AddComponent(OwnershiptCom<GameObjectType>());
@@ -146,6 +150,7 @@ public:
 		auto aabb2 = BodyCom();
 		aabb2.ChooseShape("AABB", 1,1);
 		enemy.AddComponent(aabb2);
+		enemy.AddComponent(HitPointCom());
 	}
 
 	void BeforeRun()

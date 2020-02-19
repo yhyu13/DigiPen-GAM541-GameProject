@@ -14,8 +14,10 @@ Creation date: 02/17/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
-#include "ecs/CustomEvents.h"
 #include "ecs/components/LifeTimeCom.h"
+#include "ecs/components/HitPointCom.h"
+#include "ecs/components/HitPreventionCom.h"
+#include "ecs/CustomEvents.h"
 
 namespace gswy
 {
@@ -59,7 +61,7 @@ namespace gswy
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
 						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 						auto weapon_rot = rot + RAND_F(-90, 90) * DEG2RAD;
-						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder)), weapon_rot);
+						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
 						transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 						weapon.AddComponent(transform);
 						auto sprite = SpriteCom();
@@ -74,6 +76,7 @@ namespace gswy
 						aabb.ChooseShape("AABB", 0.25, 0.25);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
+						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 					++num_spawn;
 				}

@@ -10,6 +10,7 @@ Creation date: 02/16/2020
 - End Header ----------------------------*/
 
 #pragma once
+
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/EntityDecorator.h"
 
@@ -19,25 +20,28 @@ namespace gswy
 	Data class that stores references to owner entity type
 	*/
 	template<typename EntityType>
-	struct OwnershiptCom : BaseComponent<OwnershiptCom<EntityType>> {
-		
-		OwnershiptCom()
+	struct HitPreventionCom : BaseComponent<HitPreventionCom<EntityType>> {
+
+		HitPreventionCom()
 		{
-			m_entity = Entity<EntityType>(0, EntityType(0));
 		}
 
-		explicit OwnershiptCom(const Entity<EntityType>& entity)
+		void Add(const Entity<EntityType>& e)
 		{
-			m_entity = entity;
+			vec.push_back(e);
 		}
-		explicit OwnershiptCom(const EntityDecorator<EntityType>& entityDec)
-		{
-			m_entity = entityDec.GetEntity();
-		}
-		const Entity<EntityType>& GetEntity() {
-			return m_entity;
+
+		bool IsIncluded(const Entity<EntityType>& e) {
+			if (vec.empty())
+			{
+				return true;
+			}	
+			else
+			{
+				return std::find(vec.begin(), vec.end(), e) != vec.end();
+			}
 		}
 	private:
-		Entity<EntityType> m_entity;
+		std::vector<Entity<EntityType>> vec;
 	};
 }

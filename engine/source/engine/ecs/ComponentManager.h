@@ -78,11 +78,16 @@ namespace gswy {
 			component instance.
 		*/
 		void RemoveComponentFromEntity(Entity<EntityType> entity) {
+
+			if (m_entitiesAndComponentIndexes.find(entity) == m_entitiesAndComponentIndexes.end())
+				return;
+
 			unsigned int index = m_entitiesAndComponentIndexes[entity];
 			unsigned int lastIndex = --m_components.m_size;
 
 			// move the component data from last index to the index of the component data just removed
-			m_components.m_data[index] = m_components.m_data[lastIndex];
+			std::swap(m_components.m_data[index], m_components.m_data[lastIndex]);
+			m_components.m_data.pop_back();
 			m_entitiesAndComponentIndexes.erase(entity);
 
 			// updating the mapping for the moved entity

@@ -85,11 +85,11 @@ namespace gswy {
 		}
 
 		void RemoveEntity(const Entity<EntityType>& entity) {
-			if (!m_registeredEntities.empty())
+			if (!m_registeredEntities.empty() )
 			{
-				m_registeredEntities.erase(
-					std::remove(m_registeredEntities.begin(), m_registeredEntities.end(), entity)
-				);
+				auto it = std::find(m_registeredEntities.begin(), m_registeredEntities.end(), entity);
+				if (it != m_registeredEntities.end())
+					m_registeredEntities.erase(it);
 			}
 		}
 

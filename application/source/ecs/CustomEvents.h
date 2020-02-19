@@ -53,4 +53,28 @@ namespace gswy
 		std::string soudName;
 	};
 
+	struct DeathEvent : Event<GameObjectType, EventType> {
+
+		DeathEvent(const Entity<GameObjectType>& entity)
+			:
+			Event(EventType::DEATH)
+		{
+			m_entity = entity;
+		}
+
+		Entity<GameObjectType> m_entity;
+	};
+
+	struct GCEvent : Event<GameObjectType, EventType> {
+
+		GCEvent(const Entity<GameObjectType>& entity)
+			:
+			Event(EventType::GC)
+		{
+			m_entity = entity;
+		}
+
+		Entity<GameObjectType> m_entity;
+	};
+
 }

@@ -19,3 +19,6 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/LifeTimeComSys.h"
 #include "ecs/componentSystem/SpawningComSys.h"
 #include "ecs/componentSystem/SoundComSys.h"
+#include "ecs/componentSystem/HitPointComSys.h"
+#include "ecs/componentSystem/DeathComSys.h"
+#include "ecs/componentSystem/GCComSysy.h"

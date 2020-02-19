@@ -12,33 +12,48 @@ Creation date: 02/18/2020
 #pragma once
 
 #include "engine/ecs/BaseComponent.h"
+#include "engine/allocator/ResouceAllocator.h"
+#include "engine/renderer/Animation.h"
+#include "engine/exception/EngineException.h"
+#include "engine/ecs/EntityDecorator.h"
+
 
 namespace gswy
 {
 	/* Data class of LIfe Time */
-	struct LifeTimeCom : BaseComponent<LifeTimeCom> {
+	struct HitPointCom : BaseComponent<HitPointCom> {
 
-		LifeTimeCom()
+		HitPointCom()
 		{
-			m_lifeTime = 60.0;
+			m_HP = 100.0;
+			m_HPLock = false;
 		}
 
-		explicit LifeTimeCom(double lifeTime)
+		explicit HitPointCom(double HitPoint)
 		{
-			m_lifeTime = lifeTime;
+			m_HP = HitPoint;
+			m_HPLock = false;
 		}
 
-		void AddLifeTime(double lifeTime)
+		void AddHitPoint(double HitPoint)
 		{
-			m_lifeTime += lifeTime;
+			if (!m_HPLock) m_HP += HitPoint;
 		}
 
 		bool IsDepleted()
 		{
-			return m_lifeTime <= 0.0;
+			return m_HP <= 0.0;
+		}
+
+		void SetHitPointLock(bool b)
+		{
+			m_HPLock = b;
 		}
 
 	private:
-		double m_lifeTime;
+		double m_HP;
+		bool m_HPLock;
 	};
 }
+
+

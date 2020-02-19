@@ -20,6 +20,7 @@ namespace gswy
 		SOUND,
 		DEATH,
 		SPAWNENMEY,
+		GC,
 
 		FIREWEAPON,
 		PLAYERWEAPON1,
@@ -36,6 +37,8 @@ std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 	switch (n) {
 	case gswy::EventType::EMPTY: return o << "EMPTY";
 	case gswy::EventType::COLLISION: return o << "COLLISION";
+	case gswy::EventType::SOUND: return o << "SOUND";
+	case gswy::EventType::GC: return o << "GC";
 	case gswy::EventType::SPAWNENMEY: return o << "SPAWNENMEY";
 	case gswy::EventType::FIREWEAPON: return o << "FIREWEAPON";
 	case gswy::EventType::PLAYERWEAPON1: return o << "PLAYERWEAPON1";

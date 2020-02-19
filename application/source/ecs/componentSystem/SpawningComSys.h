@@ -45,7 +45,7 @@ namespace gswy
 			DEBUG_PRINT("Receive " + Str(*e));
 			auto enemy = m_parentWorld->GenerateEntity(GameObjectType::ENEMY);
 			enemy.AddComponent(OwnershiptCom<GameObjectType>());
-			enemy.AddComponent(TransformCom(RAND_F(0,1), RAND_F(0, 1), Z_ORDER(m_spawnZOrder)));
+			enemy.AddComponent(TransformCom(RAND_F(0,1), RAND_F(0, 1), Z_ORDER(m_spawnZOrder++)));
 			enemy.AddComponent(SpriteCom());
 			auto animCom2 = AnimationCom();
 			animCom2.Add("PlayerAnimation1", "Move");

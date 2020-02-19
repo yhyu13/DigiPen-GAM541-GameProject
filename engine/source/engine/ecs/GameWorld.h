@@ -87,9 +87,10 @@ namespace gswy {
 		}
 
 		void RemoveEntity(Entity<EntityType> entity) {
-			for (auto&& system : m_systems) {
-				system->RemoveEntity(entity);
-			}
+			// TODO : comment this out before we solve the deallocation problem
+			//for (auto&& system : m_systems) {
+			//	system->RemoveEntity(entity);
+			//}
 			m_entityManager->Destroy(entity);
 		}
 

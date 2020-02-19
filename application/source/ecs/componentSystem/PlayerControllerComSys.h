@@ -55,7 +55,6 @@ namespace gswy
 					// 2. Fire
 					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 					{
-						DEBUG_PRINT(MOUSE_BUTTON_LEFT);
 						FireWeaponEvent e(entity);
 						queue->Publish(&e);
 					}
@@ -87,8 +86,11 @@ namespace gswy
 					}
 					if (!isIdle)
 					{
+						// Play foot step sound
 						SoundEvent e("footstep02");
 						queue->Publish(&e);
+
+						// Set moving velocity
 						position->SetVelocity(glm::normalize(velocity) * speed);
 					}
 					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);

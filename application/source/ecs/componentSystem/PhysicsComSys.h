@@ -53,7 +53,7 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
-			std::vector<Entity<GameObjectType>> remove_Entity_List;
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			//For Collisions
 			auto collision = Collisions::GetInstance();
 			auto first_Entity = m_registeredEntities.begin();
@@ -76,16 +76,13 @@ namespace gswy
 						m_parentWorld->Unpack(*first_Entity, owner1);
 						ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner2;
 						m_parentWorld->Unpack(*second_Entity, owner2);
-						DEBUG_PRINT("Collisions Detected " + Str(owner1->GetEntity()) + Str(owner2->GetEntity()));
-						// remove_Entity_List.push_back(*first_Entity);
+						//DEBUG_PRINT("Collisions Detected " + Str(*first_Entity) + Str(*second_Entity));
+						CollisionEvent e(*first_Entity, *second_Entity);
+						queue->Publish(&e);
 					}
 				}
 			}
-			//Remove entities
-			for (auto& entity : remove_Entity_List)
-			{
-				m_parentWorld->RemoveEntity(entity);
-			}
+
 			//Body And Transform Updates
 			for (auto& entity : m_registeredEntities)
 			{

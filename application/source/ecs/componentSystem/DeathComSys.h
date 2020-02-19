@@ -14,31 +14,43 @@ Creation date: 02/17/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
-#include "engine/audio/AudioManager.h"
 #include "ecs/CustomEvents.h"
 
 namespace gswy
 {
-	class SoundComSys : public BaseComponentSystem<GameObjectType> {
+	class DeathComSys : public BaseComponentSystem<GameObjectType> {
 	public:
-		SoundComSys() {
+		DeathComSys() {
 		}
 
 		virtual void Init() override {
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			queue->Subscribe<SoundComSys>(this, EventType::SOUND, &SoundComSys::OnPLAYSOUND);
+			queue->Subscribe<DeathComSys>(this, EventType::DEATH, &DeathComSys::OnDEATH);
 		}
 
-		void OnPLAYSOUND(Event<GameObjectType, EventType>* e)
+		void OnDEATH(Event<GameObjectType, EventType>* e)
 		{
-			auto audio = AudioManager::GetInstance();
-			if (auto event = static_cast<SoundEvent*>(e))
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			if (auto event = static_cast<DeathEvent*>(e))
 			{
-				//DEBUG_PRINT("Receive " + Str(*e));
-				if (!audio->IsPlaying(event->soudName))
+				DEBUG_PRINT("Receive " + Str(*e));
+				switch (event->m_entity.m_type)
 				{
-					audio->PlaySound(event->soudName, AudioVector3{ 0, 0, 0 }, 1, 1.0);
-				}	
+				case GameObjectType::PLAYER:
+					// TODO : Need proper handle of player death
+					throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Player has died");
+					break;
+				case GameObjectType::ENEMY:
+				{
+					// TODO : Need proper handle of enemy death
+					PRINT("ENEMY has died!");
+					GCEvent _e(event->m_entity);
+					queue->Publish(&_e);
+				}
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	};
