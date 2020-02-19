@@ -82,6 +82,17 @@ public:
 		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0008.png", "bolt_tesla_0008");
 		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0009.png", "bolt_tesla_0009");
 
+		std::string iceBallPath = "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice\ Ball/";
+		ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0001.png", "iceball_0001");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0002.png", "iceball_0002");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0003.png", "iceball_0003");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0004.png", "iceball_0004");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0005.png", "iceball_0005");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0006.png", "iceball_0006");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0007.png", "iceball_0007");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0008.png", "iceball_0008");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0009.png", "iceball_0009");
+
 
 		// Animation loader
 		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
@@ -98,6 +109,11 @@ public:
 		for (int i = 1; i <= 9; ++i)
 		{
 			boltAnim1->AddFrame("bolt_tesla_000" + Str(i), 0, 0, 512, 512, 1.0 / 30.0);
+		}
+		auto iceBallAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/fireBallAnim1.txt", "iceBallAnim1");
+		for (int i = 1; i <= 9; ++i)
+		{
+			iceBallAnim1->AddFrame("iceball_000" + Str(i), 0, 0, 64, 64, 1.0 / 15.0);
 		}
 		// Audio loader
 		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true);
