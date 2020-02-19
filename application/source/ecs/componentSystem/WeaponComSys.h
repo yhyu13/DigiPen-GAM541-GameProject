@@ -49,9 +49,6 @@ namespace gswy
 				auto pos = position->GetPos();
 				auto rot = position->GetRotation();
 
-				PRINT(pos);
-				PRINT(rot);
-
 				switch (event->m_entity.m_type)
 				{
 				case GameObjectType::PLAYER:

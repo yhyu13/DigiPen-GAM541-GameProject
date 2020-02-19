@@ -17,11 +17,22 @@ namespace gswy
 {
 	/* Data class of sprite */
 	struct AttachedMovementCom : BaseComponent<AttachedMovementCom> {
-		bool followPos = false;
-		bool followRot = false;
-		bool followVelocity = false;
-		vec2 rPos = vec2(0);
-		vec2 rVelocity = vec2(0);
-		float rRot = 0;
+
+		AttachedMovementCom()
+		{
+			followPos = false;
+			followRot = false;
+			followVelocity = false;
+			rPos = vec2(0);
+			rVelocity = vec2(0);
+			rRot = 0;
+		}
+
+		bool followPos;
+		bool followRot;
+		bool followVelocity;
+		vec2 rPos;
+		vec2 rVelocity;
+		float rRot;
 	};
 }

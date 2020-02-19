@@ -19,7 +19,13 @@ using namespace glm;
 namespace gswy
 {
 	struct TransformCom : BaseComponent<TransformCom> {
-		TransformCom() = default;
+		TransformCom()
+		{
+			pos = vec3(0);
+			rotation = 0;
+			velocity = vec3(0);
+			rotational_velocity = 0;
+		}
 		explicit TransformCom(float x, float y, float z)
 		{
 			pos = vec3(x,y,z);
@@ -58,11 +64,11 @@ namespace gswy
 		{
 			return pos;
 		}
-		const vec2& GetPos() const
+		const vec2 GetPos() const
 		{
 			return vec2(pos.x, pos.y);
 		}
-		const vec2& GetVelocity() const
+		const vec2 GetVelocity() const
 		{
 			return vec2(velocity.x, velocity.y);
 		}

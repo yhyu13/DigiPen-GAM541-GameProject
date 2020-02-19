@@ -169,7 +169,7 @@ public:
 	void LoadGameWorld()
 	{
 		auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-		background.AddComponent(TransformCom(0, 0, Z_ORDER(-2)));
+		background.AddComponent(TransformCom(0, 0, -0.5));
 		auto sprite0 = SpriteCom();
 		sprite0.SetTexture("Background3");
 		sprite0.SetScale(vec2(5));
@@ -177,7 +177,7 @@ public:
 
 		auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
 		player.AddComponent(OwnershiptCom<GameObjectType>());
-		player.AddComponent(TransformCom(0, 0, Z_ORDER(-1)));
+		player.AddComponent(TransformCom(0, 0, Z_ORDER(1)));
 		auto sprite1 = SpriteCom();
 		sprite1.SetScale(vec2(0.25, 0.25 / 59 *32));
 		player.AddComponent(sprite1);
@@ -229,7 +229,7 @@ public:
 			auto delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f: len);
 			auto targetPos = position->GetPos3D() + vec3(delta.x, -delta.y, 0.0f);
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
-			m_CameraController.SetPosition(newPos);
+			//m_CameraController.SetPosition(newPos);
 		}
 		m_CameraController.OnUpdate(ts);
 	}
