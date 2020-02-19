@@ -66,7 +66,7 @@ namespace gswy
 	};
 
 	struct GCEvent : Event<GameObjectType, EventType> {
-
+		
 		GCEvent(const Entity<GameObjectType>& entity)
 			:
 			Event(EventType::GC)
@@ -75,6 +75,20 @@ namespace gswy
 		}
 
 		Entity<GameObjectType> m_entity;
+	};
+
+	struct SpawnEvent : Event<GameObjectType, EventType> {
+
+		explicit SpawnEvent(GameObjectType type, const vec3& pos)
+			:
+			Event(EventType::SPAWN),
+			m_type(type),
+			m_pos(pos)
+		{
+		}
+
+		vec3 m_pos;
+		GameObjectType m_type;
 	};
 
 }

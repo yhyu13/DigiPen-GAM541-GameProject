@@ -59,7 +59,14 @@ namespace gswy
 						queue->Publish(&e);
 					}
 
-					// 3. Movement with keys
+					// 3. (Demo) Spawn enemies by triggering buttons
+					if (input->IsKeyTriggered(KEY_SPACE))
+					{
+						SpawnEvent e(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
+						queue->Publish(&e);
+					}
+
+					// 4. Movement with keys
 					bool isIdle = true;
 					vec2 velocity(0);
 					float speed = 1.0f;

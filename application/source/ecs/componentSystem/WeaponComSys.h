@@ -78,7 +78,7 @@ namespace gswy
 						weapon.AddComponent(LifeTimeCom(1.0));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
-					++num_spawn;
+					num_spawn+=1;
 				}
 					break;
 				default:

@@ -34,7 +34,7 @@ namespace gswy
 		bool IsIncluded(const Entity<EntityType>& e) {
 			if (vec.empty())
 			{
-				return true;
+				return false;
 			}	
 			else
 			{

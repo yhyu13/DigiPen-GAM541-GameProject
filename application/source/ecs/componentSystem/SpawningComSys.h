@@ -32,7 +32,7 @@ namespace gswy
 		virtual void Init() override {
 			m_spawnZOrder = 1000;
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			queue->Subscribe<SpawningComSys>(this, EventType::SPAWNENMEY, &SpawningComSys::OnSPAWNENMEY);
+			queue->Subscribe<SpawningComSys>(this, EventType::SPAWN, &SpawningComSys::OnSPAWN);
 		}
 
 		virtual void Update(double dt) override
@@ -40,20 +40,40 @@ namespace gswy
 			if (m_spawnZOrder > 5000) m_spawnZOrder = 1000;
 		}
 
-		void OnSPAWNENMEY(Event<GameObjectType, EventType>* e)
+		void OnSPAWN(Event<GameObjectType, EventType>* e)
 		{
-			DEBUG_PRINT("Receive " + Str(*e));
-			auto enemy = m_parentWorld->GenerateEntity(GameObjectType::ENEMY);
-			enemy.AddComponent(OwnershiptCom<GameObjectType>());
-			enemy.AddComponent(TransformCom(RAND_F(0,1), RAND_F(0, 1), Z_ORDER(m_spawnZOrder++)));
-			enemy.AddComponent(SpriteCom());
+			if (auto event = static_cast<SpawnEvent*>(e))
+			{
+				DEBUG_PRINT("Receive " + Str(*e));
+				switch (event->m_type)
+				{
+				case GameObjectType::ENEMY:
+					SpawnEnemey();
+					break;
+				default:
+					break;
+				}
+				
+			}
+		}
+
+		/*
+			Demo
+		*/
+		void SpawnEnemey()
+		{
+			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY);
+			obj.AddComponent(OwnershiptCom<GameObjectType>());
+			obj.AddComponent(TransformCom(RAND_F(-1, 1), RAND_F(-1, 1), Z_ORDER(m_spawnZOrder++)));
+			obj.AddComponent(SpriteCom());
 			auto animCom2 = AnimationCom();
 			animCom2.Add("PlayerAnimation1", "Move");
 			animCom2.SetCurrentAnimationState("Move");
-			enemy.AddComponent(animCom2);
+			obj.AddComponent(animCom2);
 			auto aabb2 = BodyCom();
 			aabb2.ChooseShape("AABB", 1, 1);
-			enemy.AddComponent(aabb2);
+			obj.AddComponent(aabb2);
+			obj.AddComponent(HitPointCom());
 		}
 
 	private:

@@ -23,10 +23,14 @@ namespace gswy
 	*/
 	struct AnimationCom : BaseComponent<AnimationCom> {
 
-		void Add(std::string name, std::string stateName)
+		AnimationCom()
+			:m_animationState("")
 		{
-			auto animation = ResourceAllocator<Animation>::GetInstance()->Get(name);
-			m_animationStateMap[stateName] = MemoryManager::Make_shared<Animation>(*animation);
+		}
+
+		void Add(const std::string& name, const std::string& stateName)
+		{
+			m_animationStateMap[stateName] = MemoryManager::Make_shared<Animation>(*ResourceAllocator<Animation>::GetInstance()->Get(name));
 		}
 		std::shared_ptr<Animation> GetCurrentAnimation()
 		{
@@ -44,9 +48,9 @@ namespace gswy
 		{
 			return m_animationState;
 		}
-		void SetCurrentAnimationState(const std::string state)
+		void SetCurrentAnimationState(const std::string& state)
 		{
-			if (m_animationState.compare(state) == 0)
+			if (m_animationState == state)
 			{
 				return;
 			}

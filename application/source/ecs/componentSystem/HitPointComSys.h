@@ -100,7 +100,7 @@ namespace gswy
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
 				ComponentDecorator<HitPreventionCom<GameObjectType>, GameObjectType> HitPrevention;
 				m_parentWorld->Unpack(entityA, HitPoint);
-				m_parentWorld->Unpack(entityA, HitPrevention);
+				m_parentWorld->Unpack(entityB, HitPrevention);
 
 				// Note: Fireball has hit prevention that only applies one hit to enemy
 				if (!HitPrevention->IsIncluded(entityA))

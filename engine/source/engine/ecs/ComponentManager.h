@@ -67,8 +67,14 @@ namespace gswy {
 		}
 
 		ComponentType* GetComponentByEntity(Entity<EntityType> entity) {
-			unsigned int index = m_entitiesAndComponentIndexes[entity];
-			return &m_components.m_data.at(index);
+			if (m_entitiesAndComponentIndexes.find(entity) != m_entitiesAndComponentIndexes.end())
+			{
+				return &m_components.m_data.at(m_entitiesAndComponentIndexes[entity]);
+			}
+			else
+			{
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Entity " + str2wstr(Str(entity)) + L" does not have " + str2wstr(Str(typeid(ComponentType).name())) + L" component!");
+			}
 		}
 
 		/*
