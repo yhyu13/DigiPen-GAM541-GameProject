@@ -49,15 +49,15 @@ namespace gswy {
 		} while ((m_tickEnd - m_tickStart) < m_ticksPerFrame);
 
 		m_frameTime = (m_tickEnd - m_tickStart);
+
+		//#ifdef _DEBUG
+		Instrumentor::GetInstance()->AddInstrumentorResult({ "Frame Time", m_frameTime, "s " });
+		Instrumentor::GetInstance()->AddInstrumentorResult({ "FPS", 1000.0f / m_frameTime, "  " });
+		//#endif
+
 		if (m_frameTime > 16.999) { // for handling game pauses or break points
 			m_frameTime = 16.667;
 		}
-
-#ifdef _DEBUG
-		Instrumentor::GetInstance()->AddInstrumentorResult({ "Frame Time", m_frameTime, "s " });
-		Instrumentor::GetInstance()->AddInstrumentorResult({ "FPS", 1000.0f / m_frameTime, "  " });
-#endif
-
 		m_frameTime /= 1000; // converting milliseconds to seconds
 	}
 

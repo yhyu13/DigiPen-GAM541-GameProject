@@ -82,6 +82,18 @@ public:
 		ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0005.png", "ffireball_0005");
 		ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0006.png", "ffireball_0006");
 
+		std::string boltPath = "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/";
+		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0001.png", "bolt_tesla_0001");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0002.png", "bolt_tesla_0002");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0003.png", "bolt_tesla_0003");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0004.png", "bolt_tesla_0004");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0005.png", "bolt_tesla_0005");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0006.png", "bolt_tesla_0006");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0007.png", "bolt_tesla_0007");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0008.png", "bolt_tesla_0008");
+		ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0009.png", "bolt_tesla_0009");
+
+
 		// Animation loader
 		auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
 		for (int i = 0; i < 8; ++i)
@@ -92,6 +104,11 @@ public:
 		for (int i = 1; i <= 6; ++i)
 		{
 			fireBallAnim1->AddFrame("ffireball_000" + Str(i), 0, 0, 64, 64, 1.0 / 15.0);
+		}
+		auto boltAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/fireBallAnim1.txt", "boltAnim1");
+		for (int i = 1; i <= 9; ++i)
+		{
+			boltAnim1->AddFrame("bolt_tesla_000" + Str(i), 0, 0, 512, 512, 1.0 / 30.0);
 		}
 		// Audio loader
 		AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true);
@@ -119,6 +136,7 @@ public:
 		m_world->RegisterSystem(MemoryManager::Make_shared<HitPointComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<DeathComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<GCComSysy>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<AttachedMovementComSys>());
 
 		// Initialize game
 		m_world->Init();
@@ -187,7 +205,7 @@ public:
 			auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
 			auto len = glm::length(cursor - center);
 			auto delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f: len);
-			auto targetPos = position->GetPos() + vec3(delta.x, -delta.y, 0.0f);
+			auto targetPos = position->GetPos3D() + vec3(delta.x, -delta.y, 0.0f);
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
 		}

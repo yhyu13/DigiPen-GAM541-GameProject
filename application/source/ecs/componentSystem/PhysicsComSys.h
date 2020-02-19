@@ -46,7 +46,16 @@ namespace gswy
 				{
 					ComponentDecorator<BodyCom, GameObjectType> body;
 					m_parentWorld->Unpack(entity, body);
-					Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), glm::vec2(0.2f), 0, glm::vec4(1.0f));
+
+					auto s = body->shape;
+					if (auto aabb = dynamic_pointer_cast<AABB>(s))
+					{
+						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), glm::vec2(aabb->GetWidth(), aabb->GetHeight()), 0, glm::vec4(1.0f));
+					}
+					else if (auto circle = dynamic_pointer_cast<Circle>(s))
+					{
+						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), glm::vec2(circle->GetRadius(), circle->GetRadius()), 0, glm::vec4(1.0f));
+					}
 				}
 			}
 		}

@@ -17,6 +17,7 @@ Creation date: 02/17/2020
 #include "ecs/CustomEvents.h"
 
 #include "ecs/components/AnimationCom.h"
+#include "ecs/components/AttachedMovementCom.h"
 #include "ecs/components/BodyCom.h"
 #include "ecs/components/HitPointCom.h"
 #include "ecs/components/HitPreventionCom.h"
@@ -45,6 +46,7 @@ namespace gswy
 
 				// TODO : comment this out after we solve the deallocation problem
 				m_parentWorld->RemoveComponent<AnimationCom>(e);
+				m_parentWorld->RemoveComponent<AttachedMovementCom>(e);		
 				m_parentWorld->RemoveComponent<BodyCom>(e);
 				m_parentWorld->RemoveComponent<HitPointCom>(e);
 				m_parentWorld->RemoveComponent<HitPreventionCom<GameObjectType>>(e);

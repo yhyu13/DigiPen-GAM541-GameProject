@@ -14,6 +14,7 @@ Creation date: 02/17/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
+#include "ecs/components/AttachedMovementCom.h"
 #include "ecs/components/LifeTimeCom.h"
 #include "ecs/components/HitPointCom.h"
 #include "ecs/components/HitPreventionCom.h"
@@ -79,6 +80,30 @@ namespace gswy
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 					num_spawn+=1;
+					{
+						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT);
+						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
+						auto weapon_rot = rot;
+						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+						auto attach = AttachedMovementCom();
+						attach.followPos = true;
+						attach.rPos = ToVec(weapon_rot) * 0.5f;
+						weapon.AddComponent(attach);
+						weapon.AddComponent(transform);
+						auto sprite = SpriteCom();
+						sprite.SetScale(vec2(0.25, 1.0));
+						weapon.AddComponent(sprite);
+						auto animCom = AnimationCom();
+						animCom.Add("boltAnim1", "Move");
+						animCom.SetCurrentAnimationState("Move");
+						animCom.GetCurrentAnimation()->SetAnimIdle(false);
+						weapon.AddComponent(animCom);
+						auto aabb = BodyCom();
+						aabb.ChooseShape("AABB", 0.25, 1.0);
+						weapon.AddComponent(aabb);
+						weapon.AddComponent(LifeTimeCom(0.5));
+						weapon.AddComponent(HitPreventionCom<GameObjectType>());
+					}
 				}
 					break;
 				default:

@@ -27,7 +27,7 @@ namespace gswy
 		};
 		//Shape() = default;
 		Shape(SHAPE_TYPE type);
-		~Shape() {}
+		virtual ~Shape() {}
 
 		SHAPE_TYPE mType;
 	};
