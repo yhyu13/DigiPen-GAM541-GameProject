@@ -55,9 +55,9 @@ namespace gswy {
 		while (isRunning) {
 			rateController->FrameStart();
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 			Instrumentor::GetInstance()->AddInstrumentorResult({ "Up Time", (glfwGetTime() - m_startTime), "s " });
-#endif
+//#endif
 
 			Update(rateController->GetFrameTime());
 
