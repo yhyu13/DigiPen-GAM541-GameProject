@@ -35,7 +35,7 @@ namespace gswy
 				m_parentWorld->Unpack(entity, sprite);
 				auto m_ControlSprite = sprite->Get();
 				/* Update sprite location */
-				m_ControlSprite->SetSpritePosition(position->GetPos());
+				m_ControlSprite->SetSpritePosition(position->GetPos3D());
 				m_ControlSprite->SetSpriteRotation(position->GetRotation());
 			}
 		}

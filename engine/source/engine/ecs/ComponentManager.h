@@ -24,7 +24,7 @@ namespace gswy {
 		MyVector(ComponentType) m_data;
 
 		ComponentData() {
-			m_data.reserve(1024);
+			m_data.reserve(2048);
 		}
 	};
 
@@ -90,8 +90,7 @@ namespace gswy {
 
 			unsigned int index = m_entitiesAndComponentIndexes[entity];
 			unsigned int lastIndex = --m_components.m_size;
-			m_entitiesAndComponentIndexes.erase(entity);
-
+			
 			// move the component data from last index to the index of the component data just removed
 			std::swap(m_components.m_data[index], m_components.m_data[lastIndex]);
 			m_components.m_data.pop_back();
@@ -100,6 +99,8 @@ namespace gswy {
 			m_entitiesAndComponentIndexes[m_entities[lastIndex]] = index;
 			std::swap(m_entities[index], m_entities[lastIndex]);
 			m_entities.pop_back(); // reduce the m_entities as entities are being destroyed
+
+			m_entitiesAndComponentIndexes.erase(entity);
 		}
 
 	private:

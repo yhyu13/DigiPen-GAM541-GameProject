@@ -22,6 +22,8 @@ namespace gswy
 
 		GRENADE,
 		FIREBALL,
+		BOLT,
+		ICEBALL,
 		BULLET,
 
 		NUM
@@ -36,6 +38,8 @@ std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
 	case gswy::GameObjectType::ENEMY: return o << "ENEMY";
 	case gswy::GameObjectType::GRENADE: return o << "GRENADE";
 	case gswy::GameObjectType::FIREBALL: return o << "FIREBALL";
+	case gswy::GameObjectType::BOLT: return o << "BOLT";
+	case gswy::GameObjectType::ICEBALL: return o << "ICEBALL";
 	case gswy::GameObjectType::BULLET: return o << "BULLET";
 	default: return o << "(invalid value)";
 	}
