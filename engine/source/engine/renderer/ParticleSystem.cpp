@@ -20,8 +20,27 @@ namespace gswy {
 	
 	ParticleSystem::ParticleSystem()
 	{
-		m_ParticlePool.resize(1000);
+		m_ParticlePool.resize(m_ParticlePoolSize);
 		m_BufferData.ParticleVertexArray = VertexArray::Create();
+		
+		float vertices[] =
+		{
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f,	1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f,	1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f,	0.0f, 1.0f
+		};
+
+		m_BufferData.ParticleVertexBuffer = VertexBuffer::Create(vertices, sizeof(vertices));
+		m_BufferData.ParticleVertexBuffer->SetLayout({
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float2, "a_TexCoord" }
+			});
+		m_BufferData.ParticleVertexArray->AddVertexBuffer(m_BufferData.ParticleVertexBuffer);
+		
+		uint32_t quadIndices[6] = { 0, 1, 2, 2, 3, 0 };
+		m_BufferData.ParticleIndexBuffer = IndexBuffer::Create(quadIndices, sizeof(quadIndices) / sizeof(uint32_t));
+		m_BufferData.ParticleVertexArray->SetIndexBuffer(m_BufferData.ParticleIndexBuffer);
 	}
 
 	ParticleSystem::~ParticleSystem()
@@ -52,25 +71,6 @@ namespace gswy {
 		if (!m_BufferData.ParticleVertexArray)
 			return;
 
-		float vertices[] =
-		{
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f,	1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f,	1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f,	0.0f, 1.0f
-		};
-
-		m_BufferData.ParticleVertexBuffer = VertexBuffer::Create(vertices, sizeof(vertices));
-		m_BufferData.ParticleVertexBuffer->SetLayout({
-			{ ShaderDataType::Float3, "a_Position" },
-			{ ShaderDataType::Float2, "a_TexCoord" }
-			});
-		m_BufferData.ParticleVertexArray->AddVertexBuffer(m_BufferData.ParticleVertexBuffer);
-
-		uint32_t quadIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		m_BufferData.ParticleIndexBuffer = IndexBuffer::Create(quadIndices, sizeof(quadIndices) / sizeof(uint32_t));
-		m_BufferData.ParticleVertexArray->SetIndexBuffer(m_BufferData.ParticleIndexBuffer);
-
 		for (auto& particle : m_ParticlePool)
 		{
 			if (!particle.Active)
@@ -96,6 +96,8 @@ namespace gswy {
 		particle.Velocity = particleProps.Velocity;
 		particle.Velocity += particleProps.VelocityVariation.x * (Random::Float() - 0.5f);
 		particle.Velocity += particleProps.VelocityVariation.y * (Random::Float() - 0.5f);
+
+		particle.Speed = particleProps.Speed;
 
 		particle.ColorBegin = particleProps.ColorBegin;
 		particle.ColorEnd = particleProps.ColorEnd;

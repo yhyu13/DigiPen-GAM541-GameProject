@@ -17,6 +17,7 @@ Creation date	: 01/26/2020
 #include "Import.h"
 #include "imgui/imgui.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "ExplosionParticle.h"
 
 using namespace gswy;
 
@@ -54,6 +55,16 @@ public:
 		ResourceAllocator<Animation>::GetInstance()->Init();
 
 		LoadResources();
+
+		//TODO: Move to Component Init
+		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 0.0f };
+		m_Particle.SizeBegin = 0.01f, m_Particle.SizeVariation = 0.0f, m_Particle.SizeEnd = 0.0f;
+		m_Particle.LifeTime = 0.1f;
+		m_Particle.Velocity = { 0.0f, 0.0f, 0.0f };
+		m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
+		m_Particle.Position = { 0.0f, 0.0f, 0.0f };
+		m_Particle.Speed = { 1.0f, 1.0f, 0.0f };
 	}
 
 	void LoadResources()
@@ -118,7 +129,7 @@ public:
 	void LoadGameWorld()
 	{
 		auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-		background.AddComponent(TransformCom(0, 0, Z_ORDER(0)));
+		background.AddComponent(TransformCom(0, 0, Z_ORDER(-2)));
 		auto sprite0 = SpriteCom();
 		sprite0.SetTexture("Background3");
 		sprite0.SetScale(vec2(5));
@@ -126,7 +137,7 @@ public:
 
 		auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
 		player.AddComponent(OwnershiptCom<GameObjectType>());
-		player.AddComponent(TransformCom(0, 0, Z_ORDER(1)));
+		player.AddComponent(TransformCom(0, 0, Z_ORDER(-1)));
 		auto sprite1 = SpriteCom();
 		sprite1.SetScale(vec2(0.25, 0.25 / 59 *32));
 		player.AddComponent(sprite1);
@@ -193,6 +204,16 @@ public:
 		// m_world render
 		m_world->Render();
 
+		//TODO: Move to Component Update
+		if (m_ParticleActive)
+		{
+			for (int i = 0; i < 5; i++)
+				m_ParticleSystem.Emit(m_Particle);
+		}
+
+		m_ParticleSystem.Update(ts);
+		m_ParticleSystem.Render();
+
 		Renderer2D::EndScene();
 	}
 
@@ -233,6 +254,19 @@ public:
 		ImGui::End();
 		ImGui::PopStyleVar(1);
 		ImGui::PopStyleColor(3);
+
+		ImGui::Begin("Settings");
+		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
+		ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
+		ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
+		ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
+		ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
+		ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
+		ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
+		ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
+		ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
+		ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
+		ImGui::End();
 	}
 
 	static const vec3& GetCameraPosition()
@@ -245,6 +279,11 @@ protected:
 private:
 	static OrthographicCameraController m_CameraController;
 	std::shared_ptr<GameWorld<GameObjectType>> m_world;
+
+	//TODO Move to component
+	gswy::ExplosionParticle m_ParticleSystem;
+	gswy::Particle m_Particle;
+	bool m_ParticleActive = true;
 };
 
 OrthographicCameraController GameLayer::m_CameraController(1280.0f / 720.0f);

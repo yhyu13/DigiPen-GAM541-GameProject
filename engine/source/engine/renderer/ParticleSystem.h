@@ -20,6 +20,7 @@ namespace gswy {
 	struct Particle
 	{
 		glm::vec3 Position;
+		glm::vec3 Speed;
 		glm::vec3 Velocity, VelocityVariation;
 		glm::vec4 ColorBegin, ColorEnd;
 		float Rotation = 0.0f;
@@ -33,15 +34,17 @@ namespace gswy {
 	{
 	public:
 		ParticleSystem();
-		~ParticleSystem();
+		virtual ~ParticleSystem();
 		
-		void Update(float ts);
-		void Render();
-		void Emit(const Particle& particle);
-		
-	private:
+		virtual void Update(float ts);
+		virtual void Render();
+		virtual void Emit(const Particle& particle);
+		void SetPoolSize(uint32_t size) { m_ParticlePoolSize = size; m_ParticlePool.resize(m_ParticlePoolSize); }
+
+	protected:
 		std::vector<Particle> m_ParticlePool;
 		uint32_t m_PoolIndex = 999;
+		uint32_t m_ParticlePoolSize = 1000;
 		
 		struct BufferData
 		{
