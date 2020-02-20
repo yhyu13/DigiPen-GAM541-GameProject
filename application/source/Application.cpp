@@ -13,11 +13,11 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
 				  Taksh Goyal (taksh.goyal@digipen.edu | 60001319)
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
+
+#include <glm/gtc/type_ptr.hpp>
 #include "EngineExport.h"
 #include "Import.h"
 #include "imgui/imgui.h"
-#include <glm/gtc/type_ptr.hpp>
-#include "ExplosionParticle.h"
 #include "object-factory/GameObjectFactory.h"
 
 using namespace gswy;
@@ -56,7 +56,7 @@ public:
 		ResourceAllocator<Animation>::GetInstance()->Init();
 
 		LoadResources();
-
+#ifdef _DEBUG
 		//TODO: Move to Component Init
 		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 0.0f };
@@ -66,6 +66,7 @@ public:
 		m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
 		m_Particle.Position = { 0.0f, 0.0f, 0.0f };
 		m_Particle.Speed = { 1.0f, 1.0f, 0.0f };
+#endif // _DEBUG
 	}
 
 	void LoadResources()
@@ -145,6 +146,10 @@ public:
 				m_world->RegisterSystem(MemoryManager::Make_shared<AttachedMovementComSys>());
 				continue;
 			}
+			if (system._Equal("particle")) {
+				m_world->RegisterSystem(MemoryManager::Make_shared<ParticleComSys>());
+				continue;
+			}
 		}
 
 		// Initialize game
@@ -212,6 +217,7 @@ public:
 		Renderer2D::BeginScene(m_CameraController.GetCamera());
 		// m_world render
 		m_world->Render();
+#ifdef _DEBUG
 
 		//TODO: Move to Component Update
 		if (m_ParticleActive)
@@ -222,6 +228,8 @@ public:
 
 		m_ParticleSystem.Update(ts);
 		m_ParticleSystem.Render();
+
+#endif // _DEBUG
 
 		Renderer2D::EndScene();
 	}
@@ -246,7 +254,6 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
-
 		Instrumentor* instrumentor = Instrumentor::GetInstance();
 		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -263,6 +270,7 @@ public:
 		ImGui::End();
 		ImGui::PopStyleVar(1);
 		ImGui::PopStyleColor(3);
+#ifdef _DEBUG
 
 		ImGui::Begin("Settings");
 		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
@@ -276,6 +284,8 @@ public:
 		ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
 		ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
 		ImGui::End();
+#endif // _DEBUG
+
 	}
 
 	static const vec3& GetCameraPosition()
@@ -288,11 +298,14 @@ protected:
 private:
 	static OrthographicCameraController m_CameraController;
 	std::shared_ptr<GameWorld<GameObjectType>> m_world;
+#ifdef _DEBUG
 
 	//TODO Move to component
 	gswy::ExplosionParticle m_ParticleSystem;
 	gswy::Particle m_Particle;
 	bool m_ParticleActive = true;
+#endif // _DEBUG
+
 };
 
 OrthographicCameraController GameLayer::m_CameraController(1280.0f / 720.0f);

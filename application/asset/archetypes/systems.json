@@ -13,6 +13,7 @@
       "hitpoint",
       "death",
       "gc",
-	  "attached-movement"
+	  "attached-movement",
+	  "particle"
    ]
 }
