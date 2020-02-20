@@ -46,12 +46,10 @@ namespace gswy {
 							continue;
 						}
 						if (name._Equal("sprite")) {
-							//std::string texture = component["texture"].asString();
 							float scale = component["scale"].asFloat();
 							int width = component["width"].asInt();
 							int height = component["height"].asInt();
 							auto sprite0 = SpriteCom();
-							//sprite0.SetTexture(texture);
 							sprite0.SetScale(vec2(scale, scale / width * height));
 							player.AddComponent(sprite0);
 							continue;

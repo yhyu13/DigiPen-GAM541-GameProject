@@ -75,71 +75,6 @@ public:
 		//ObjectFactory* factory = ObjectFactory::GetInstance();
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadResources("./asset/archetypes/resources.json");
-
-		// Texture loader
-		//ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/PlayerMovingUnarmed.png", "PlayerMovingUnarmed");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/MobMovingUnarmed.png", "MobMovingUnarmed");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/background3.png", "Background3");
-		//std::string fireBallPath = "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball\ 2/";
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0001.png", "ffireball_0001");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0002.png", "ffireball_0002");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0003.png", "ffireball_0003");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0004.png", "ffireball_0004");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0005.png", "ffireball_0005");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(fireBallPath + "ffireball_0006.png", "ffireball_0006");
-
-		//std::string boltPath = "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/";
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0001.png", "bolt_tesla_0001");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0002.png", "bolt_tesla_0002");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0003.png", "bolt_tesla_0003");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0004.png", "bolt_tesla_0004");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0005.png", "bolt_tesla_0005");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0006.png", "bolt_tesla_0006");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0007.png", "bolt_tesla_0007");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0008.png", "bolt_tesla_0008");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(boltPath + "bolt_tesla_0009.png", "bolt_tesla_0009");
-
-		//std::string iceBallPath = "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice\ Ball/";
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0001.png", "iceball_0001");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0002.png", "iceball_0002");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0003.png", "iceball_0003");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0004.png", "iceball_0004");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0005.png", "iceball_0005");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0006.png", "iceball_0006");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0007.png", "iceball_0007");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0008.png", "iceball_0008");
-		//ResourceAllocator<Texture2D>::GetInstance()->Create(iceBallPath + "iceball_0009.png", "iceball_0009");
-
-
-		//// Animation loader
-		//auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "PlayerAnimation1");
-		//for (int i = 0; i < 8; ++i)
-		//{
-		//	playerAnim1->AddFrame("PlayerMovingUnarmed", 59 * i, 32 * 0, 59, 32, 1.0 / 15.0);
-		//}
-		//auto mobAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/PlayerAnimation1.txt", "MobAnimation1");
-		//for (int i = 0; i < 8; ++i)
-		//{
-		//	mobAnim1->AddFrame("MobMovingUnarmed", 0, 50 * i, 70, 50, 1.0 / 15.0);
-		//}
-		//auto fireBallAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/fireBallAnim1.txt", "fireBallAnim1");
-		//for (int i = 1; i <= 6; ++i)
-		//{
-		//	fireBallAnim1->AddFrame("ffireball_000" + Str(i), 0, 0, 64, 64, 1.0 / 15.0);
-		//}
-		//auto boltAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/fireBallAnim1.txt", "boltAnim1");
-		//for (int i = 1; i <= 9; ++i)
-		//{
-		//	boltAnim1->AddFrame("bolt_tesla_000" + Str(i), 0, 0, 512, 512, 1.0 / 30.0);
-		//}
-		//auto iceBallAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("./asset/fireBallAnim1.txt", "iceBallAnim1");
-		//for (int i = 1; i <= 9; ++i)
-		//{
-		//	iceBallAnim1->AddFrame("iceball_000" + Str(i), 0, 0, 64, 64, 1.0 / 15.0);
-		//}
-		//// Audio loader
-		//AudioManager::GetInstance()->LoadSound("./asset/breakout.mp3", true);
-		//AudioManager::GetInstance()->LoadSound("./asset/TopDownGunPack/TopDownGunPack/Audio/FootSteps/footstep02.ogg", false);
 	}
 
 	void InitGameWorld()
@@ -149,7 +84,6 @@ public:
 		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
 		m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
 
-		//ObjectFactory* factory = ObjectFactory::GetInstance();
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		std::vector<std::string> systems = factory->GetSystems("./asset/archetypes/systems.json");
 
@@ -213,22 +147,6 @@ public:
 			}
 		}
 
-		// Add systems
-		/*m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<PhysicsComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<WeaponComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<LifeTimeComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<SpawningComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<SoundComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<HitPointComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<DeathComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<GCComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<AttachedMovementComSys>());*/
-
 		// Initialize game
 		m_world->Init();
 
@@ -241,30 +159,6 @@ public:
 		// object factory must be an abstract class in the engine and must be implemented in application
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
-
-		/*auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
-		player.AddComponent(OwnershiptCom<GameObjectType>());
-		player.AddComponent(TransformCom(0, 0, Z_ORDER(1)));
-		auto sprite1 = SpriteCom();
-		sprite1.SetScale(vec2(0.25, 0.25 / 59 * 32));
-		player.AddComponent(sprite1);
-		auto animCom1 = AnimationCom();
-		animCom1.Add("PlayerAnimation1", "Move");
-		animCom1.SetCurrentAnimationState("Move");
-		player.AddComponent(animCom1);
-		auto aabb1 = BodyCom();
-		aabb1.ChooseShape("AABB", 0.25, 0.25 / 59 * 32);
-		player.AddComponent(aabb1);
-		player.AddComponent(HitPointCom());
-
-		auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-		background.AddComponent(TransformCom(0, 0, -0.5));
-		auto sprite0 = SpriteCom();
-		sprite0.SetTexture("Background3");
-		sprite0.SetScale(vec2(5));
-		background.AddComponent(sprite0);*/
-
-		
 	}
 
 	void BeforeRun()
@@ -309,7 +203,6 @@ public:
 		}
 		m_CameraController.OnUpdate(ts);
 	}
-
 
 	void Render(double ts)
 	{

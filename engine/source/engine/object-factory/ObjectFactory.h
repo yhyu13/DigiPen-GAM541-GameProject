@@ -11,10 +11,9 @@ namespace gswy {
 		static ObjectFactory* GetInstance();
 		virtual ~ObjectFactory();
 
-		void LoadLevel(const std::string& filepath);
-
-		void LoadResources(const std::string& filepath);
-		std::vector<std::string> GetSystems(const std::string& filepath);
+		virtual void LoadLevel(const std::string& filepath);
+		virtual void LoadResources(const std::string& filepath);
+		virtual std::vector<std::string> GetSystems(const std::string& filepath);
 
 	protected:
 
