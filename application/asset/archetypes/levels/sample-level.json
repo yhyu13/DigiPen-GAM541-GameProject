@@ -1,0 +1,16 @@
+{
+  "entities": [
+    {
+      "archetype": "background",
+      "file": "./asset/archetypes/entities/backgound.json",
+      "components": [
+      ]
+    },
+    {
+      "archetype": "player",
+      "file": "./asset/archetypes/entities/player.json",
+      "components": [
+      ]
+    }
+  ]
+}
