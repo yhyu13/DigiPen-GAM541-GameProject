@@ -22,8 +22,7 @@ namespace gswy {
 			for (int i = 0; i < root["entities"].size(); ++i) {
 				std::string jsonPath = root["entities"][i]["file"].asString();
 				Json::Value archetypeRoot;
-				std::ifstream archetypeFile(jsonPath, std::ifstream::binary);
-				archetypeFile >> archetypeRoot;
+				GetIfstream(jsonPath) >> archetypeRoot;
 
 				std::string type = archetypeRoot["archetype"].asString();
 
