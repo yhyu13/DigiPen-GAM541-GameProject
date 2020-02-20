@@ -21,5 +21,5 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/SoundComSys.h"
 #include "ecs/componentSystem/HitPointComSys.h"
 #include "ecs/componentSystem/DeathComSys.h"
-#include "ecs/componentSystem/GCComSysy.h"
+#include "ecs/componentSystem/GCComSys.h"
 #include "ecs/componentSystem/AttachedMovementComSys.h"

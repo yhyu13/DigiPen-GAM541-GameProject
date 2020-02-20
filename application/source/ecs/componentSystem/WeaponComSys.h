@@ -100,6 +100,7 @@ namespace gswy
 						}
 					}
 					num_spawn+=1;
+					//std::cerr << 2*num_spawn << '\n';
 					{
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT);
 						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));

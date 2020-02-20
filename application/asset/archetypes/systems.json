@@ -12,7 +12,7 @@
       "sound",
       "hitpoint",
       "death",
-      "gcc",
-	    "attached-movement"
+      "gc",
+	  "attached-movement"
    ]
 }

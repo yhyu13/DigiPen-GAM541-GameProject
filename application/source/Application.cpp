@@ -203,8 +203,8 @@ public:
 				m_world->RegisterSystem(MemoryManager::Make_shared<DeathComSys>());
 				continue;
 			}
-			if (system._Equal("gcc")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<GCComSysy>());
+			if (system._Equal("gc")) {
+				m_world->RegisterSystem(MemoryManager::Make_shared<GCComSys>());
 				continue;
 			}
 			if (system._Equal("attached-movement")) {
@@ -226,7 +226,7 @@ public:
 		m_world->RegisterSystem(MemoryManager::Make_shared<SoundComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<HitPointComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<DeathComSys>());
-		m_world->RegisterSystem(MemoryManager::Make_shared<GCComSysy>());
+		m_world->RegisterSystem(MemoryManager::Make_shared<GCComSys>());
 		m_world->RegisterSystem(MemoryManager::Make_shared<AttachedMovementComSys>());*/
 
 		// Initialize game
