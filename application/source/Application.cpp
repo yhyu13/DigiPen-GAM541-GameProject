@@ -239,19 +239,14 @@ public:
 	{
 		// call load level here
 		// object factory must be an abstract class in the engine and must be implemented in application
+		GameObjectFactory* factory = GameObjectFactory::GetInstance();
+		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
 
-		auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-		background.AddComponent(TransformCom(0, 0, -0.5));
-		auto sprite0 = SpriteCom();
-		sprite0.SetTexture("Background3");
-		sprite0.SetScale(vec2(5));
-		background.AddComponent(sprite0);
-
-		auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
+		/*auto player = m_world->GenerateEntity(GameObjectType::PLAYER);
 		player.AddComponent(OwnershiptCom<GameObjectType>());
 		player.AddComponent(TransformCom(0, 0, Z_ORDER(1)));
 		auto sprite1 = SpriteCom();
-		sprite1.SetScale(vec2(0.25, 0.25 / 59 *32));
+		sprite1.SetScale(vec2(0.25, 0.25 / 59 * 32));
 		player.AddComponent(sprite1);
 		auto animCom1 = AnimationCom();
 		animCom1.Add("PlayerAnimation1", "Move");
@@ -261,6 +256,15 @@ public:
 		aabb1.ChooseShape("AABB", 0.25, 0.25 / 59 * 32);
 		player.AddComponent(aabb1);
 		player.AddComponent(HitPointCom());
+
+		auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+		background.AddComponent(TransformCom(0, 0, -0.5));
+		auto sprite0 = SpriteCom();
+		sprite0.SetTexture("Background3");
+		sprite0.SetScale(vec2(5));
+		background.AddComponent(sprite0);*/
+
+		
 	}
 
 	void BeforeRun()

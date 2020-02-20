@@ -1,0 +1,43 @@
+{
+  "archetype": "player",
+  "components": [
+    {
+      "component": "ownership"
+    },
+    {
+      "component": "transform",
+      "x": 0,
+      "y": 0,
+      "z": 1
+    },
+    {
+      "component": "sprite",
+      "texture": "",
+      "scale": 0.25,
+      "width": 59,
+      "height": 32
+    },
+    {
+      "component": "animation",
+      "animation": {
+        "name": "PlayerAnimation1",
+        "states": [
+          "Move"
+        ],
+        "current-state": "Move"
+      }
+    },
+    {
+      "component": "body",
+      "shape": {
+        "type": "AABB",
+        "scale": 0.25,
+        "width": 59,
+        "height": 32
+      }
+    },
+    {
+      "component": "hit-point"
+    }
+  ]
+}
