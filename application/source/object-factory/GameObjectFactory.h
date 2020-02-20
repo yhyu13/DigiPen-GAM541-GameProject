@@ -17,8 +17,7 @@ namespace gswy {
 		template <typename EntityType>
 		void LoadLevel(const std::string& filepath, std::shared_ptr<GameWorld<EntityType>> world) {
 			Json::Value root;
-			std::ifstream file(filepath, std::ifstream::binary);
-			file >> root;
+			GetIfstream(filepath) >> root;
 
 			for (int i = 0; i < root["entities"].size(); ++i) {
 				std::string jsonPath = root["entities"][i]["file"].asString();

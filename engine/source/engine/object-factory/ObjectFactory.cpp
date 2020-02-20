@@ -10,9 +10,26 @@
 
 namespace gswy {
 
+	std::map<std::string, std::ifstream> ObjectFactory::m_FileStreamMap;
+
 	ObjectFactory* ObjectFactory::GetInstance() {
 		static ObjectFactory objectFactory;
 		return &objectFactory;
+	}
+
+	std::ifstream& ObjectFactory::GetIfstream(const std::string& file)
+	{
+		if (m_FileStreamMap.find(file) != m_FileStreamMap.end())
+		{
+			m_FileStreamMap[file].clear();
+			m_FileStreamMap[file].seekg(0);
+			return m_FileStreamMap[file];
+		}
+		else
+		{
+			m_FileStreamMap[file] = std::ifstream(file, std::ifstream::binary);
+			return m_FileStreamMap[file];
+		}
 	}
 	
 	ObjectFactory::ObjectFactory() {
@@ -23,8 +40,7 @@ namespace gswy {
 
 	void ObjectFactory::LoadLevel(const std::string& filepath) {
 		//Json::Value root;
-		//std::ifstream file(filepath, std::ifstream::binary);
-		//file >> root;
+		//GetIfstream(filepath) >> root;
 		////std::cout << std::endl << "level json loaded:\n" << root << std::endl;
 		//for (int i = 0; i < root["entities"].size(); ++i) {
 		//	//GameObject* newGameObject = LoadObject(root["entities"][i]["file"].asString());
@@ -38,8 +54,7 @@ namespace gswy {
 
 	void ObjectFactory::LoadResources(const std::string& filepath) {
 		Json::Value root;
-		std::ifstream file(filepath, std::ifstream::binary);
-		file >> root;
+		GetIfstream(filepath) >> root;
 
 		Json::Value resourceList = root["resources"];
 		for (int i = 0; i < resourceList.size(); ++i) {
@@ -127,8 +142,7 @@ namespace gswy {
 		std::vector<std::string> systemList;
 
 		Json::Value root;
-		std::ifstream file(filepath, std::ifstream::binary);
-		file >> root;
+		GetIfstream(filepath) >> root;
 
 		Json::Value systems = root["systems"];
 		for (int i = 0; i < systems.size(); ++i) {

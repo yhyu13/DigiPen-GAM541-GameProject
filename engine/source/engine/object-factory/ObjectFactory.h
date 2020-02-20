@@ -9,6 +9,8 @@ namespace gswy {
 	public:
 
 		static ObjectFactory* GetInstance();
+		static std::ifstream& GetIfstream(const std::string& file);
+		
 		virtual ~ObjectFactory();
 
 		virtual void LoadLevel(const std::string& filepath);
@@ -16,7 +18,7 @@ namespace gswy {
 		virtual std::vector<std::string> GetSystems(const std::string& filepath);
 
 	protected:
-
+		static std::map<std::string, std::ifstream> m_FileStreamMap;
 		ObjectFactory();
 	};
 }
