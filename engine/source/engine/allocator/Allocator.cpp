@@ -203,9 +203,6 @@ void gswy::Allocator::FillAllocatedBlock(BlockHeader *pBlock) noexcept
 
 gswy::BlockHeader* gswy::Allocator::NextBlock(BlockHeader *pBlock) noexcept
 {
-	// Original:
-    //return reinterpret_cast<BlockHeader *>(reinterpret_cast<uint8_t*>(pBlock) + m_szBlockSize);
-
 	// Storing m_szBlockSize as header_t right before each block 
 	return reinterpret_cast<BlockHeader *>(reinterpret_cast<uint8_t*>(pBlock) + m_szBlockSize + sizeof(header_t));
 }

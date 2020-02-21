@@ -27,9 +27,6 @@ namespace gswy {
     struct PageHeader {
         PageHeader* pNext;
         BlockHeader* Blocks() {
-			// Original:
-			//return reinterpret_cast<BlockHeader*>(this + 1);
-
 			// Storing m_szBlockSize as header_t right before each block
             return reinterpret_cast<BlockHeader*>(reinterpret_cast<uint8_t*>(this + 1) + sizeof(header_t));
         }

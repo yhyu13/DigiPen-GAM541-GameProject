@@ -135,9 +135,6 @@ void* gswy::MemoryManager::Allocate(size_t size) noexcept
 
 void gswy::MemoryManager::Free(void* p, size_t size) noexcept
 {
-	// Original
-	//   (size <= kMaxBlockSize) ? (m_pAllocators + m_pBlockSizeLookup[size])->Free(p) 
-	//       : free(p);
 #if CUSTOM_ALLOCATOR 
 	// Storing m_szDataSize as header_t right before each block
 	if (size <= kMaxBlockSize)
