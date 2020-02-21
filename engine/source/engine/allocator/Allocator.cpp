@@ -66,7 +66,7 @@ void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment
 	assert(m_szBlockSize == (size_t)header_t(m_szBlockSize));
 
     m_szAlignmentSize = m_szBlockSize - minimal_size;
-    m_nBlocksPerPage = (m_szPageSize - sizeof(PageHeader)) / (m_szBlockSize + sizeof(header_t));
+	m_nBlocksPerPage = (m_szPageSize - sizeof(PageHeader)) / (m_szBlockSize + sizeof(BlockHeader));
 }
 
 void* gswy::Allocator::Allocate() noexcept
@@ -100,12 +100,12 @@ void* gswy::Allocator::Allocate() noexcept
         // link each block in the page
         for (uint32_t i = 1; i < m_nBlocksPerPage; i++) {
 			// Storing m_szDataSize as header_t right before each block
-			*(reinterpret_cast<header_t*>(pBlock) - 1) = size;
+			pBlock->size = size;
             pBlock->pNext = NextBlock(pBlock);
             pBlock = NextBlock(pBlock);
         }
-		// link the last block
-		*(reinterpret_cast<header_t*>(pBlock) - 1) = size;
+		//link the last block
+		pBlock->size = size;
         pBlock->pNext = nullptr;
 
         m_pFreeList = pNewPage->Blocks();
@@ -118,7 +118,12 @@ void* gswy::Allocator::Allocate() noexcept
     FillAllocatedBlock(freeBlock);
 #endif
 
-    return freeBlock;
+	/*
+		return blockheader + 1 as the diagram below:
+			 BlockHeader*  void*
+			[Header block][User content]
+	*/
+    return reinterpret_cast<void*>(freeBlock+1);
 }
 
 void gswy::Allocator::Free(void* p) noexcept
@@ -129,7 +134,7 @@ void gswy::Allocator::Free(void* p) noexcept
 	std::lock_guard<std::mutex>lock(mtx);
 #endif
 
-    BlockHeader* block = reinterpret_cast<BlockHeader*>(p);
+    BlockHeader* block = reinterpret_cast<BlockHeader*>(p)-1;
 
 #if defined(_DEBUG)
     FillFreeBlock(block);
@@ -182,20 +187,20 @@ void gswy::Allocator::FillFreePage(PageHeader *pPage) noexcept
 void gswy::Allocator::FillFreeBlock(BlockHeader *pBlock) noexcept
 {
     // block header + data
-    memset(pBlock, PATTERN_FREE, m_szBlockSize - m_szAlignmentSize);
+    memset(pBlock+1, PATTERN_FREE, m_szBlockSize - m_szAlignmentSize);
  
     // alignment
-    memset(reinterpret_cast<uint8_t*>(pBlock) + m_szBlockSize - m_szAlignmentSize, 
+    memset(reinterpret_cast<uint8_t*>(pBlock+1) + m_szBlockSize - m_szAlignmentSize, 
                 PATTERN_ALIGN, m_szAlignmentSize);
 }
  
 void gswy::Allocator::FillAllocatedBlock(BlockHeader *pBlock) noexcept
 {
     // block header + data
-    memset(pBlock, PATTERN_ALLOC, m_szBlockSize - m_szAlignmentSize);
+    memset(pBlock+1, PATTERN_ALLOC, m_szBlockSize - m_szAlignmentSize);
  
     // alignment
-    memset(reinterpret_cast<uint8_t*>(pBlock) + m_szBlockSize - m_szAlignmentSize, 
+    memset(reinterpret_cast<uint8_t*>(pBlock+1) + m_szBlockSize - m_szAlignmentSize, 
                 PATTERN_ALIGN, m_szAlignmentSize);
 }
  
@@ -204,8 +209,5 @@ void gswy::Allocator::FillAllocatedBlock(BlockHeader *pBlock) noexcept
 gswy::BlockHeader* gswy::Allocator::NextBlock(BlockHeader *pBlock) noexcept
 {
 	// Original:
-    //return reinterpret_cast<BlockHeader *>(reinterpret_cast<uint8_t*>(pBlock) + m_szBlockSize);
-
-	// Storing m_szBlockSize as header_t right before each block 
-	return reinterpret_cast<BlockHeader *>(reinterpret_cast<uint8_t*>(pBlock) + m_szBlockSize + sizeof(header_t));
+    return reinterpret_cast<BlockHeader *>(reinterpret_cast<uint8_t*>(pBlock+1) + m_szBlockSize);
 }
