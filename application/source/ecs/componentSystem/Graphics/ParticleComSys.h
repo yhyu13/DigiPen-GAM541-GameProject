@@ -6,7 +6,7 @@ Language: c++ 11
 Platform: Windows 10 (X64)
 Project: GAM541
 Author: Hang Yu (hang.yu@digipen.edu | 60001119)
-Creation date: 02/19/2020
+Creation date: 02/20/2020
 - End Header ----------------------------*/
 
 #pragma once
