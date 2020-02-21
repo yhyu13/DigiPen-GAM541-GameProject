@@ -52,7 +52,7 @@ void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment
 #endif
 
     m_szDataSize = data_size;
-    m_szPageSize = page_size + sizeof(PageHeader);
+	m_szPageSize = page_size;
 
     size_t minimal_size = (sizeof(BlockHeader) > m_szDataSize) ? sizeof(BlockHeader) : m_szDataSize;
     // this magic only works when alignment is 2^n, which should general be the case
@@ -66,11 +66,7 @@ void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment
 	assert(m_szBlockSize == (size_t)header_t(m_szBlockSize));
 
     m_szAlignmentSize = m_szBlockSize - minimal_size;
-
-    m_nBlocksPerPage = (m_szPageSize - sizeof(PageHeader)) / m_szBlockSize;
-	
-	// Storing m_szDataSize as header_t right before each block
-	m_szPageSize += sizeof(header_t) * m_nBlocksPerPage;
+    m_nBlocksPerPage = (m_szPageSize - sizeof(PageHeader)) / (m_szBlockSize + sizeof(header_t));
 }
 
 void* gswy::Allocator::Allocate() noexcept

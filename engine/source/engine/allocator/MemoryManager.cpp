@@ -29,13 +29,10 @@ namespace gswy {
         416, 448, 480, 512, 544, 576, 608, 640, 
 
         // 64-increments
-        704, 768, 832, 896, 960, 1024, 
-		
-		// Large
-		2048, 3072, 4096, 5120, 6144, 7168, 8192
+        704, 768, 832, 896, 960, 1024
     };
 
-    const uint32_t MemoryManager::kPageSize  = 1024*1024;
+    const uint32_t MemoryManager::kPageSize  = 4096;
     const uint32_t MemoryManager::kAlignment = 4;
 
     // number of elements in the block size array
