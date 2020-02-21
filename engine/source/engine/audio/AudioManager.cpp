@@ -33,7 +33,7 @@ gswy::FMODInstance::~FMODInstance()
 
 void gswy::FMODInstance::Update()
 {
-	vector<ChannelMap::iterator> pStoppedChannels;
+	std::vector<ChannelMap::iterator> pStoppedChannels;
 	for (auto it = mChannels.begin(), itEnd = mChannels.end(); it != itEnd; ++it)
 	{
 		bool bIsPlaying = false;
