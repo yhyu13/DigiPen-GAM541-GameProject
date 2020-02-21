@@ -96,21 +96,20 @@ void* gswy::Allocator::Allocate() noexcept
         m_pPageList = pNewPage;
 
         BlockHeader* pBlock = pNewPage->Blocks();
+		auto size = static_cast<header_t>(m_szDataSize);
         // link each block in the page
         for (uint32_t i = 1; i < m_nBlocksPerPage; i++) {
-
 			// Storing m_szDataSize as header_t right before each block
-			*(reinterpret_cast<header_t*>(pBlock) - 1) = static_cast<header_t>(m_szDataSize);
-
+			*(reinterpret_cast<header_t*>(pBlock) - 1) = size;
             pBlock->pNext = NextBlock(pBlock);
             pBlock = NextBlock(pBlock);
         }
-		*(reinterpret_cast<header_t*>(pBlock) - 1) = static_cast<header_t>(m_szDataSize);
+		// link the last block
+		*(reinterpret_cast<header_t*>(pBlock) - 1) = size;
         pBlock->pNext = nullptr;
 
         m_pFreeList = pNewPage->Blocks();
     }
-
     BlockHeader* freeBlock = m_pFreeList;
     m_pFreeList = m_pFreeList->pNext;
     --m_nFreeBlocks;
@@ -119,7 +118,7 @@ void* gswy::Allocator::Allocate() noexcept
     FillAllocatedBlock(freeBlock);
 #endif
 
-    return reinterpret_cast<void*>(freeBlock);
+    return freeBlock;
 }
 
 void gswy::Allocator::Free(void* p) noexcept
