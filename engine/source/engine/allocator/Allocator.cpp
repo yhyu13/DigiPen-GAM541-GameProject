@@ -21,7 +21,7 @@ Creation date: 02/14/2020
 using namespace gswy;
 
 gswy::Allocator::Allocator() noexcept
-        : m_pPageList(nullptr), m_pFreeList(nullptr), 
+        : m_pPageList(nullptr), m_pFreeList(nullptr), m_IsAllocating(false),
         m_szDataSize(0), m_szPageSize(0), 
         m_szAlignmentSize(0), m_szBlockSize(0), m_nBlocksPerPage(0),
 		m_nPages(0), m_nBlocks(0),m_nFreeBlocks(0)
@@ -29,7 +29,7 @@ gswy::Allocator::Allocator() noexcept
 }
 
 gswy::Allocator::Allocator(size_t data_size, size_t page_size, size_t alignment) noexcept
-        : m_pPageList(nullptr), m_pFreeList(nullptr),
+        : m_pPageList(nullptr), m_pFreeList(nullptr), m_IsAllocating(false),
 		m_szDataSize(0), m_szPageSize(0),
 		m_szAlignmentSize(0), m_szBlockSize(0), m_nBlocksPerPage(0),
 		m_nPages(0), m_nBlocks(0), m_nFreeBlocks(0)
@@ -46,7 +46,7 @@ void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment
 {
     FreeAll();
 
-#if THREAD_SAFE
+#if THREAD_MUTEX
     // Lock
 	std::lock_guard<std::mutex>lock(mtx);
 #endif
@@ -71,47 +71,53 @@ void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment
 
 void* gswy::Allocator::Allocate() noexcept
 {
-
-#if THREAD_SAFE
-	// Lock
+#if THREAD_MUTEX
 	std::lock_guard<std::mutex>lock(mtx);
-#endif
+#endif // THREAD_MUTEX
 
     if (!m_pFreeList) {
-        // allocate a new page
-        PageHeader* pNewPage = reinterpret_cast<PageHeader*>(new uint8_t[m_szPageSize]);
-		pNewPage->pNext = nullptr;
-        ++m_nPages;
-        m_nBlocks += m_nBlocksPerPage;
-        m_nFreeBlocks += m_nBlocksPerPage;
+		while (m_IsAllocating.exchange(true)) { }
+		if (!m_pFreeList)
+		{
+			// allocate a new page
+			PageHeader* pNewPage = reinterpret_cast<PageHeader*>(new uint8_t[m_szPageSize]);
+			pNewPage->pNext = nullptr;
+			++m_nPages;
+			m_nBlocks += m_nBlocksPerPage;
+			m_nFreeBlocks += m_nBlocksPerPage;
 
 #if defined(_DEBUG)
-        FillFreePage(pNewPage);
+			FillFreePage(pNewPage);
 #endif
 
-        if (m_pPageList) {
-            pNewPage->pNext = m_pPageList;
-        }
+			if (m_pPageList) {
+				pNewPage->pNext = m_pPageList;
+			}
 
-        m_pPageList = pNewPage;
+			m_pPageList = pNewPage;
 
-        BlockHeader* pBlock = pNewPage->Blocks();
-		auto size = static_cast<header_t>(m_szDataSize);
-        // link each block in the page
-        for (uint32_t i = 1; i < m_nBlocksPerPage; i++) {
-			// Storing m_szDataSize as header_t right before each block
+			BlockHeader* pBlock = pNewPage->Blocks();
+			auto size = static_cast<header_t>(m_szDataSize);
+			// link each block in the page
+			for (uint32_t i = 1; i < m_nBlocksPerPage; i++) {
+				// Storing m_szDataSize as header_t right before each block
+				pBlock->size = size;
+				pBlock->free = true;
+				pBlock->pNext = NextBlock(pBlock);
+				pBlock = NextBlock(pBlock);
+			}
+			//link the last block
 			pBlock->size = size;
-            pBlock->pNext = NextBlock(pBlock);
-            pBlock = NextBlock(pBlock);
-        }
-		//link the last block
-		pBlock->size = size;
-        pBlock->pNext = nullptr;
+			pBlock->free = true;
+			pBlock->pNext = nullptr;
 
-        m_pFreeList = pNewPage->Blocks();
+			m_pFreeList = pNewPage->Blocks();
+		}
+		m_IsAllocating = false;
     }
     BlockHeader* freeBlock = m_pFreeList;
-    m_pFreeList = m_pFreeList->pNext;
+	freeBlock->free = false;
+    m_pFreeList.store(freeBlock->pNext);
     --m_nFreeBlocks;
 
 #if defined(_DEBUG)
@@ -128,30 +134,36 @@ void* gswy::Allocator::Allocate() noexcept
 
 void gswy::Allocator::Free(void* p) noexcept
 {
-
-#if THREAD_SAFE
-	// Lock
+#if THREAD_MUTEX
 	std::lock_guard<std::mutex>lock(mtx);
-#endif
+#endif // THREAD_MUTEX
 
     BlockHeader* block = reinterpret_cast<BlockHeader*>(p)-1;
+
+	if (block->free)
+	{
+		throw std::runtime_error(std::string("Double free!"));
+	}
+	if (block->size != static_cast<header_t>(m_szBlockSize))
+	{
+		throw std::runtime_error(std::string("Segementation fault!"));
+	}
+	block->free = true;
+	block->pNext.store(m_pFreeList);
+	m_pFreeList = block;
+	++m_nFreeBlocks;
 
 #if defined(_DEBUG)
     FillFreeBlock(block);
 #endif
 
-    block->pNext = m_pFreeList;
-    m_pFreeList = block;
-    ++m_nFreeBlocks;
 }
 
 void gswy::Allocator::FreeAll() noexcept
 {
-
-#if THREAD_SAFE
-	// Lock
+#if THREAD_MUTEX
 	std::lock_guard<std::mutex>lock(mtx);
-#endif
+#endif // THREAD_MUTEX
 
     PageHeader* pPage = m_pPageList;
 	uint8_t* _p = reinterpret_cast<uint8_t*>(pPage);
@@ -208,6 +220,5 @@ void gswy::Allocator::FillAllocatedBlock(BlockHeader *pBlock) noexcept
 
 gswy::BlockHeader* gswy::Allocator::NextBlock(BlockHeader *pBlock) noexcept
 {
-	// Original:
     return reinterpret_cast<BlockHeader *>(reinterpret_cast<uint8_t*>(pBlock+1) + m_szBlockSize);
 }

@@ -13,16 +13,17 @@ Creation date: 02/14/2020
 #include <stdint.h>
 #include <mutex>
 
-#define THREAD_SAFE 0
+#define THREAD_MUTEX 0
 
 namespace gswy {
 
-	typedef uint32_t header_t;
+	typedef uint16_t header_t;
 
     struct BlockHeader {
         // union-ed with data
 		header_t size;
-        BlockHeader* pNext;
+		std::atomic<bool> free;
+		std::atomic<BlockHeader*> pNext;
     };
 
     struct PageHeader {
@@ -73,7 +74,7 @@ namespace gswy {
                 PageHeader* m_pPageList;
 
                 // the free block list
-                BlockHeader* m_pFreeList;
+				std::atomic<BlockHeader*> m_pFreeList;
 
                 size_t      m_szDataSize;
                 size_t      m_szPageSize;
@@ -84,9 +85,10 @@ namespace gswy {
                 // statistics
                 size_t    m_nPages;
                 size_t    m_nBlocks;
-                size_t    m_nFreeBlocks;
+				std::atomic<size_t>    m_nFreeBlocks;
+				std::atomic<bool>	   m_IsAllocating;
 
-#if THREAD_SAFE
+#if THREAD_MUTEX
                 std::mutex  mtx;
 #endif
     };
