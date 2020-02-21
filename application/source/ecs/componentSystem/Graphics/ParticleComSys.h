@@ -24,6 +24,7 @@ namespace gswy
 	public:
 		ParticleComSys() {
 			m_systemSignature.AddComponent<ParticleCom>();
+			m_systemSignature.AddComponent<TransformCom>();
 		}
 
 		virtual void Init() override
@@ -56,8 +57,9 @@ namespace gswy
 		{
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<ParticleCom, GameObjectType> particle;
+				ComponentDecorator<TransformCom, GameObjectType> transform;
 				m_parentWorld->Unpack(entity, particle);
-				/* Update particle */
+				m_parentWorld->Unpack(entity, transform);
 				/*
 					Emit particles with different type of particle system
 				*/
@@ -66,6 +68,7 @@ namespace gswy
 					if (particle->IsActive())
 					{
 						auto m_Particle = m_particleMap["ExplosionParticle"];
+						m_Particle.Position += transform->GetPos3D();
 						for (int i = 0; i < 5; i++)
 						{
 							particle->Get()->Emit(m_Particle);

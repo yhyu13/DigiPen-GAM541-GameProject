@@ -22,15 +22,13 @@ namespace gswy
 
 		ParticleCom()
 			:
-			m_ParticleActive(true)
+			m_ParticleActive(true),
+			m_ParticleSystem(nullptr)
 		{
-			m_ParticleSystem = MemoryManager::Make_shared<ParticleSystem>();
 		}
 
 		template<typename ParticleType>
-		ParticleCom()
-			:
-			m_ParticleActive(true)
+		void Init()
 		{
 			m_ParticleSystem = MemoryManager::Make_shared<ParticleType>();
 		}

@@ -40,9 +40,9 @@ namespace gswy
 					continue;
 
 				{
-					ComponentDecorator<TransformCom, GameObjectType> position;
+					ComponentDecorator<TransformCom, GameObjectType> transform;
 					ComponentDecorator<AnimationCom, GameObjectType> animation;
-					m_parentWorld->Unpack(entity, position);
+					m_parentWorld->Unpack(entity, transform);
 					m_parentWorld->Unpack(entity, animation);
 
 					// 1. Making player facing the cursor
@@ -50,7 +50,7 @@ namespace gswy
 					auto center = input->GetCursorMaxPosition() * 0.5f;
 					auto delta = cursor - center;
 					delta.y = -delta.y;
-					position->SetRotation(LookAt(delta));
+					transform->SetRotation(LookAt(delta));
 
 					// 2. Fire
 					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
@@ -70,7 +70,7 @@ namespace gswy
 					bool isIdle = true;
 					vec2 velocity(0);
 					float speed = 1.0f;
-					position->SetVelocity(velocity * speed);
+					transform->SetVelocity(velocity * speed);
 					if (input->IsKeyPressed(KEY_W) && input->IsAllKeyNotPressed<int>(KEY_S)) {
 						isIdle = false;
 						animation->SetCurrentAnimationState("Move");
@@ -98,7 +98,7 @@ namespace gswy
 						queue->Publish(&e);
 
 						// Set moving velocity
-						position->SetVelocity(glm::normalize(velocity) * speed);
+						transform->SetVelocity(glm::normalize(velocity) * speed);
 					}
 					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);
 					return;
