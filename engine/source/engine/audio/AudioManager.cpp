@@ -161,6 +161,7 @@ void gswy::AudioManager::UnLoadSound(const string& strSoundName)
 
 void gswy::AudioManager::Set3dListenerAndOrientation(const AudioVector3& vPos, float fVolumedB)
 {
+	m_fmodInstance->mpSystem->set3DListenerAttributes(0, &VectorToFmod(vPos), &VectorToFmod(AudioVector3(0)), &VectorToFmod(AudioVector3(0,-1,0)), &VectorToFmod(AudioVector3(0,0,1)));
 }
 
 int gswy::AudioManager::PlaySound(const string& strSoundName, const AudioVector3& vPos, float fVolumedB, float frequency)

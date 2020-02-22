@@ -206,6 +206,7 @@ public:
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
 		}
+		AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 		m_CameraController.OnUpdate(ts);
 	}
 
