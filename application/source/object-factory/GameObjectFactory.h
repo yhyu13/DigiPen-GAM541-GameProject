@@ -1,3 +1,14 @@
+/* Start Header -------------------------------------------------------
+Copyright (C) 2020 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+Language: c++ 11
+Platform: Windows 10 (X64)
+Project: GAM541
+Author: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519)
+Creation date: 02/19/2020
+- End Header ----------------------------*/
+
 #pragma once
 
 #include "engine/object-factory/ObjectFactory.h"
@@ -17,14 +28,12 @@ namespace gswy {
 		template <typename EntityType>
 		void LoadLevel(const std::string& filepath, std::shared_ptr<GameWorld<EntityType>> world) {
 			Json::Value root;
-			std::ifstream file(filepath, std::ifstream::binary);
-			file >> root;
+			GetIfstream(filepath) >> root;
 
 			for (int i = 0; i < root["entities"].size(); ++i) {
 				std::string jsonPath = root["entities"][i]["file"].asString();
 				Json::Value archetypeRoot;
-				std::ifstream archetypeFile(jsonPath, std::ifstream::binary);
-				archetypeFile >> archetypeRoot;
+				GetIfstream(jsonPath) >> archetypeRoot;
 
 				std::string type = archetypeRoot["archetype"].asString();
 
@@ -46,12 +55,10 @@ namespace gswy {
 							continue;
 						}
 						if (name._Equal("sprite")) {
-							//std::string texture = component["texture"].asString();
 							float scale = component["scale"].asFloat();
 							int width = component["width"].asInt();
 							int height = component["height"].asInt();
 							auto sprite0 = SpriteCom();
-							//sprite0.SetTexture(texture);
 							sprite0.SetScale(vec2(scale, scale / width * height));
 							player.AddComponent(sprite0);
 							continue;

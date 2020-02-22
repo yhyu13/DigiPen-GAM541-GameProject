@@ -1,18 +1,17 @@
+/* Start Header -------------------------------------------------------
+Copyright (C) 2020 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+Language: c++ 11
+Platform: Windows 10 (X64)
+Project: GAM541
+Author: Kyle Wang (kyle.wang@digipen.edu | 60000719)
+Creation date: 02/15/2020
+- End Header ----------------------------*/
+
 #include "engine-precompiled-header.h"
 #include "ExplosionParticle.h"
 #include "engine/utility/Random.h"
-
-
-/* Explosion Particle Parameter Suggestion
-		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
-		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
-		m_Particle.SizeBegin = 0.35f, m_Particle.SizeVariation = 0.0f, m_Particle.SizeEnd = 0.0f;
-		m_Particle.LifeTime = 0.1f;
-		m_Particle.Velocity = { 0.0f, 0.0f, 0.0f };
-		m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
-		m_Particle.Position = { 0.0f, 0.0f, 0.0f };
-		m_Particle.Speed = { 1.0f, 1.0f, 0.0f };
-		*/
 
 namespace gswy {
 

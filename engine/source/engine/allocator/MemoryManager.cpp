@@ -29,13 +29,10 @@ namespace gswy {
         416, 448, 480, 512, 544, 576, 608, 640, 
 
         // 64-increments
-        704, 768, 832, 896, 960, 1024, 
-		
-		// Large
-		2048, 3072, 4096, 5120, 6144, 7168, 8192
+        704, 768, 832, 896, 960, 1024
     };
 
-    const uint32_t MemoryManager::kPageSize  = 1024*1024;
+    const uint32_t MemoryManager::kPageSize  = 4096;
     const uint32_t MemoryManager::kAlignment = 4;
 
     // number of elements in the block size array
@@ -64,8 +61,7 @@ void gswy::MemoryManager::Init()
             m_pBlockSizeLookup[i] = j;
         }
 
-        // Throwing exception in noexcept would terminate the program, 
-        // But since it's an exception in the memory allocator, it's find to kill the program anyway.
+        // Sanity check!
 		if (j != kNumBlockSizes - 1)
 		{
 			std::string msg("Memory manger pool initialization has failed.");
@@ -116,7 +112,6 @@ void* gswy::MemoryManager::Allocate(size_t size, size_t alignment) noexcept
 }
 
 // Replacement for malloc()
-
 void* gswy::MemoryManager::Allocate(size_t size) noexcept
 {
 	/*return malloc(size);*/
@@ -135,17 +130,15 @@ void* gswy::MemoryManager::Allocate(size_t size) noexcept
 }
 
 // Replacement for free()
-
 void gswy::MemoryManager::Free(void* p, size_t size) noexcept
 {
-	// Original
-	//   (size <= kMaxBlockSize) ? (m_pAllocators + m_pBlockSizeLookup[size])->Free(p) 
-	//       : free(p);
 #if CUSTOM_ALLOCATOR 
-	// Storing m_szDataSize as header_t right before each block
 	if (size <= kMaxBlockSize)
 	{
-		(m_pAllocators + m_pBlockSizeLookup[*(reinterpret_cast<header_t*>(p) - 1)])->Free(p);
+		/*
+			Find the block size that was used to allocate pointer p by querying the block header.
+		*/
+		(m_pAllocators + m_pBlockSizeLookup[(reinterpret_cast<BlockHeader*>(p) - 1)->size])->Free(p);
 	}
 	else
 	{

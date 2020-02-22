@@ -38,21 +38,21 @@ namespace gswy
 					continue;
 
 				{
-					ComponentDecorator<TransformCom, GameObjectType> position;
+					ComponentDecorator<TransformCom, GameObjectType> transform;
 					ComponentDecorator<AnimationCom, GameObjectType> animation;
-					m_parentWorld->Unpack(entity, position);
+					m_parentWorld->Unpack(entity, transform);
 					m_parentWorld->Unpack(entity, animation);
 
 					ComponentDecorator<TransformCom, GameObjectType> playerPosition;
 					m_parentWorld->Unpack(playerEntity, playerPosition);
 
 					// 1. TODO : TileMap with A* algorithm
-					auto delta = playerPosition->GetPos() - position->GetPos();
-					position->SetRotation(LookAt(delta));
+					auto delta = playerPosition->GetPos() - transform->GetPos();
+					transform->SetRotation(LookAt(delta));
 					
 					// 2. Move towards player
 					float speed = .5f;
-					position->SetVelocity(delta * speed );
+					transform->SetVelocity(delta * speed );
 
 					animation->SetCurrentAnimationState("Move");
 					animation->GetCurrentAnimation()->SetAnimIdle(false);

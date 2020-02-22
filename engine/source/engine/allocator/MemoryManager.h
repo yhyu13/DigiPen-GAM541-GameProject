@@ -47,7 +47,7 @@ namespace gswy {
         {
 			m_AllocatedSize -= sizeof(T);
 #if CUSTOM_ALLOCATOR 
-			PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(*(reinterpret_cast<header_t*>(p) - 1)) + " " + Str(m_AllocatedSize));
+			PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str((reinterpret_cast<BlockHeader*>(p) - 1)->size) + " " + Str(m_AllocatedSize));
 			p->~T();
 			Free(p, sizeof(T));
 #else
@@ -118,6 +118,9 @@ namespace gswy {
     #define MyVector(T) std::vector<T, gswy::Mallocator<T>>
     #endif
 
+	/*
+		Reference https://en.cppreference.com/w/cpp/named_req/Allocator
+	*/
 	template <class T>
 	struct Mallocator
 	{

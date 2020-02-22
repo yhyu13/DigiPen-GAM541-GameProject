@@ -29,14 +29,14 @@ namespace gswy
 
 		virtual void Update(double dt) override {
 			for (auto& entity : m_registeredEntities) {
-				ComponentDecorator<TransformCom, GameObjectType> position;
+				ComponentDecorator<TransformCom, GameObjectType> transform;
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
-				m_parentWorld->Unpack(entity, position);
+				m_parentWorld->Unpack(entity, transform);
 				m_parentWorld->Unpack(entity, sprite);
 				auto m_ControlSprite = sprite->Get();
 				/* Update sprite location */
-				m_ControlSprite->SetSpritePosition(position->GetPos3D());
-				m_ControlSprite->SetSpriteRotation(position->GetRotation());
+				m_ControlSprite->SetSpritePosition(transform->GetPos3D());
+				m_ControlSprite->SetSpriteRotation(transform->GetRotation());
 			}
 		}
 	};

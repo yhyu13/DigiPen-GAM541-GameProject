@@ -23,20 +23,21 @@ Creation date: 02/17/2020
 #include "ecs/components/HitPreventionCom.h"
 #include "ecs/components/LifeTimeCom.h"
 #include "ecs/components/OwnershiptCom.h"
+#include "ecs/components/ParticleCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/components/TransformCom.h"
 
 namespace gswy
 {
-	class GCComSysy : public BaseComponentSystem<GameObjectType> {
+	class GCComSys : public BaseComponentSystem<GameObjectType> {
 	public:
-		GCComSysy() {
+		GCComSys() {
 		}
 
 		virtual void Init() override {
 			m_GCList.reserve(1024);
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			queue->Subscribe<GCComSysy>(this, EventType::GC, &GCComSysy::OnGC);
+			queue->Subscribe<GCComSys>(this, EventType::GC, &GCComSys::OnGC);
 		}
 
 		virtual void Update(double dt) override {
@@ -52,6 +53,7 @@ namespace gswy
 				m_parentWorld->RemoveComponent<HitPreventionCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<LifeTimeCom>(e);
 				m_parentWorld->RemoveComponent<OwnershiptCom<GameObjectType>>(e);
+				m_parentWorld->RemoveComponent<ParticleCom>(e);
 				m_parentWorld->RemoveComponent<SpriteCom>(e);
 				m_parentWorld->RemoveComponent<TransformCom>(e);
 

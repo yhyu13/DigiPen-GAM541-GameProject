@@ -33,24 +33,24 @@ namespace gswy
 			
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> onwer;
-				ComponentDecorator<TransformCom, GameObjectType> position;
+				ComponentDecorator<TransformCom, GameObjectType> transform;
 				ComponentDecorator<AttachedMovementCom, GameObjectType> attach;
-				ComponentDecorator<TransformCom, GameObjectType> owner_position;
+				ComponentDecorator<TransformCom, GameObjectType> owner_transform;
 				m_parentWorld->Unpack(entity, onwer);
-				m_parentWorld->Unpack(onwer->GetEntity(), owner_position);
-				m_parentWorld->Unpack(entity, position);
+				m_parentWorld->Unpack(onwer->GetEntity(), owner_transform);
+				m_parentWorld->Unpack(entity, transform);
 				m_parentWorld->Unpack(entity, attach);
 				if (attach->followPos)
 				{
-					position->SetPos(owner_position->GetPos() + attach->rPos);
+					transform->SetPos(owner_transform->GetPos() + attach->rPos);
 				}
 				if (attach->followRot)
 				{
-					position->SetRotation(owner_position->GetRotation() + attach->rRot);
+					transform->SetRotation(owner_transform->GetRotation() + attach->rRot);
 				}
 				if (attach->followVelocity)
 				{
-					position->SetVelocity(owner_position->GetVelocity() + attach->rVelocity);
+					transform->SetVelocity(owner_transform->GetVelocity() + attach->rVelocity);
 				}
 			}
 		}

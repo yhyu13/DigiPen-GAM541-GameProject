@@ -21,17 +21,13 @@ Creation date: 01/28/2020
 
 #include "engine/EngineCore.h"
 #include "engine/interface/IRunTimeModule.h"
+#include "engine/math/MathHelper.h"
 
 using namespace std;
 
 namespace gswy {
 
-
-	struct ENGINE_API AudioVector3 {
-		float x;
-		float y;
-		float z;
-	};
+	typedef glm::vec3 AudioVector3;
 
 	struct ENGINE_API FMODInstance {
 		FMODInstance();
@@ -68,12 +64,10 @@ namespace gswy {
 		int GetSoundChannel(const string& strSoundName);
 		void LoadBank(const string& strBankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags);
 		void LoadEvent(const string& strEventName);
-		/*
-			Load sound from path
-		*/
+		
 		void LoadSound(const string& strSoundName, bool bLooping = false, bool b3d = true, bool bStream = true);
 		void UnLoadSound(const string& strSoundName);
-		void Set3dListenerAndOrientation(const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 0.0f);
+		void Set3dListenerAndOrientation(const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 1.0f);
 		int PlaySound(const string& strSoundName, const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 1.0f, float frequency = 1.0f);
 		void SetSoundFreqency(const string& strSoundName, float frequency);
 		void PlayEvent(const string& strEventName);

@@ -15,6 +15,7 @@ Creation date: 02/17/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "ecs/components/AttachedMovementCom.h"
+#include "ecs/components/ParticleCom.h"
 #include "ecs/components/LifeTimeCom.h"
 #include "ecs/components/HitPointCom.h"
 #include "ecs/components/HitPreventionCom.h"
@@ -43,11 +44,11 @@ namespace gswy
 			if (auto event = static_cast<FireWeaponEvent*>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
-				ComponentDecorator<TransformCom, GameObjectType> position;
-				m_parentWorld->Unpack(event->m_entity, position);
+				ComponentDecorator<TransformCom, GameObjectType> transform;
+				m_parentWorld->Unpack(event->m_entity, transform);
 
-				auto pos = position->GetPos();
-				auto rot = position->GetRotation();
+				auto pos = transform->GetPos();
+				auto rot = transform->GetRotation();
 
 				switch (event->m_entity.m_type)
 				{
@@ -76,6 +77,9 @@ namespace gswy
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(2.0));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+							auto particle = ParticleCom();
+							particle.Init<ExplosionParticle>();
+							weapon.AddComponent(particle);							
 						}
 						{
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
@@ -100,6 +104,7 @@ namespace gswy
 						}
 					}
 					num_spawn+=1;
+					//std::cerr << 2*num_spawn << '\n';
 					{
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT);
 						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));

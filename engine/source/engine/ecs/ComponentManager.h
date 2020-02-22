@@ -16,6 +16,8 @@ Creation date	: 02/03/2020
 #include "Entity.h"
 #include "engine/allocator/MemoryManager.h"
 
+#define RESERVED_SIZE 2048
+
 namespace gswy {
 
 	template<typename ComponentType>
@@ -24,7 +26,7 @@ namespace gswy {
 		MyVector(ComponentType) m_data;
 
 		ComponentData() {
-			m_data.reserve(2048);
+			m_data.reserve(RESERVED_SIZE);
 		}
 	};
 
@@ -52,7 +54,7 @@ namespace gswy {
 	public:
 
 		ComponentManager() {
-			m_entities.reserve(1024);
+			m_entities.reserve(RESERVED_SIZE);
 		}
 
 		~ComponentManager() {
@@ -118,7 +120,7 @@ namespace gswy {
 		/*
 			Stores all entities indexed by the index of the component instance in m_components
 		*/
-		std::vector<Entity<EntityType>> m_entities;
+		MyVector(Entity<EntityType>) m_entities;
 	};
 
 }
