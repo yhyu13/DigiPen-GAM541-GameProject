@@ -19,6 +19,7 @@ Creation date	: 01/26/2020
 #include "Import.h"
 #include "imgui/imgui.h"
 #include "object-factory/GameObjectFactory.h"
+#include "engine/platform/OpenGL/OpenGLPostProcessing.h"
 
 using namespace gswy;
 
@@ -50,6 +51,8 @@ public:
 		// Renderer
 		Renderer2D::Init();
 		OpenGLDebugDraw::Init();
+		m_PostProcessing.SetScreenSize(1280, 720);
+		m_PostProcessing.Init();
 		// Texture loader
 		ResourceAllocator<Texture2D>::GetInstance()->Init();
 		// Animation loader
@@ -212,6 +215,7 @@ public:
 
 	void Render(double ts)
 	{
+		if(m_PP) m_PostProcessing.Bind();
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 
@@ -231,13 +235,18 @@ public:
 		m_ParticleSystem.Render();
 
 #endif // _DEBUG
-
+		if (m_PP)
+		{
+			m_PostProcessing.Unbind();
+			m_PostProcessing.Render(ts);
+		}
 		Renderer2D::EndScene();
 	}
 
 	virtual void OnUpdate(double ts) override
 	{
 		BeforeFrame();
+		if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2)) m_PP = !m_PP;
 		{
 			TIME("System Update");
 			Update(ts);
@@ -299,6 +308,8 @@ protected:
 private:
 	static OrthographicCameraController m_CameraController;
 	std::shared_ptr<GameWorld<GameObjectType>> m_world;
+	gswy::OpenGLPostProcessing m_PostProcessing;
+	bool m_PP = false;
 #ifdef _DEBUG
 
 	//TODO Move to component
