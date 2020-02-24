@@ -45,7 +45,7 @@ namespace gswy {
 
     size_t*        MemoryManager::m_pBlockSizeLookup;
     Allocator*     MemoryManager::m_pAllocators;
-	size_t		   MemoryManager::m_AllocatedSize = 0;
+	std::atomic<size_t>		   MemoryManager::m_AllocatedSize = 0;
 }
 
 void gswy::MemoryManager::Init()
