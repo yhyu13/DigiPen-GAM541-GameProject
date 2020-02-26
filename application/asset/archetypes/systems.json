@@ -2,18 +2,22 @@
    "systems":[
       "player-controller",
       "mob-1-controller",
-      "scene",
-      "sprite",
-      "animation",
-      "physics",
       "weapon",
-      "lifetime",
+      
+	  "attached-movement",
+      "physics",
+      
       "spawn",
       "sound",
       "hitpoint",
       "death",
-      "gc",
-	  "attached-movement",
-	  "particle"
+	  "lifetime",
+	  
+	  "animation",
+	  "particle",
+	  "sprite",
+	  "scene",
+	  
+	  "gc"
    ]
 }

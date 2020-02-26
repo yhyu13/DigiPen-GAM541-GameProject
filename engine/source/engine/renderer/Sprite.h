@@ -25,6 +25,7 @@ namespace gswy {
 		Sprite(Texture2D* texture2D);
 		~Sprite();
 		
+		void OpenGLInit();
 		void Update(double ts);
 		void Draw();
 		void DrawInternal(const glm::vec2& rect, const glm::vec2& texCoord, const glm::vec2& texCoordOffset);
@@ -58,5 +59,6 @@ namespace gswy {
 		uint32_t m_SpriteX, m_SpriteY;
 		glm::vec2 m_Scale;
 		float_t m_Rotation;
+		bool m_init;
 	};
 }

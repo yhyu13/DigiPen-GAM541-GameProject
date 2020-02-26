@@ -25,14 +25,16 @@ namespace gswy
 			m_systemSignature.AddComponent<SpriteCom>();
 		}
 
-		virtual void Render() override
+		virtual void Render(double dt) override
 		{
+			lock();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
 				m_parentWorld->Unpack(entity, sprite);
 				/* Drawing sprites */
 				sprite->Get()->Draw();
 			}
+			unlock();
 		}
 	};
 }

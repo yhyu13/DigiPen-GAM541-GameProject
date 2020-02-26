@@ -14,6 +14,7 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
+#include <future>
 #include <glm/gtc/type_ptr.hpp>
 #include "EngineExport.h"
 #include "Import.h"
@@ -195,6 +196,21 @@ public:
 		}
 	}
 
+
+	virtual void PreRenderUpdate(double ts)
+	{
+		{
+			m_world->PreRenderUpdate(ts);
+		}
+	}
+
+	virtual void PostRenderUpdate(double ts)
+	{
+		{
+			m_world->PostRenderUpdate(ts);
+		}
+	}
+
 	void UpdateCamera(double ts)
 	{
 		{
@@ -221,7 +237,7 @@ public:
 
 		Renderer2D::BeginScene(m_CameraController.GetCamera());
 		// m_world render
-		m_world->Render();
+		m_world->Render(ts);
 #ifdef _DEBUG
 
 		//TODO: Move to Component Update
@@ -248,16 +264,29 @@ public:
 		BeforeFrame();
 		if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2)) m_PP = !m_PP;
 		{
-			TIME("System Update");
-			Update(ts);
-		}
-		{
 			TIME("Camera Update");
 			UpdateCamera(ts);
+		}
+		std::future<void> update = std::async(std::launch::async, [this, ts]()
+		{
+			{
+				TIME("System Update");
+				Update(ts);
+			}
+		});
+		
+		{
+			TIME("PreRender Update");
+			PreRenderUpdate(ts);
 		}
 		{
 			TIME("Render Update");
 			Render(ts);
+		}
+		update.wait();
+		{
+			TIME("PostRender Update");
+			PostRenderUpdate(ts);
 		}
 		AfterFrame();
 	}

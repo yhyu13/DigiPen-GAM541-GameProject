@@ -36,6 +36,7 @@ namespace gswy {
 		ParticleSystem();
 		virtual ~ParticleSystem();
 		
+		virtual void OpenGLInit();
 		virtual void Update(float ts);
 		virtual void Render();
 		virtual void Emit(const Particle& particle);
@@ -54,5 +55,6 @@ namespace gswy {
 			std::shared_ptr<Shader> ParticleShader;
 		};
 		BufferData m_BufferData;
+		bool m_init;
 	};
 }
