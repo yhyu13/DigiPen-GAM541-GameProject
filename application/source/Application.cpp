@@ -203,8 +203,12 @@ public:
 			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
 			auto cursor = InputManager::GetInstance()->GetCursorPosition();
 			auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
+			auto delta = vec2(0);
 			auto len = glm::length(cursor - center);
-			auto delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f: len);
+			if (len > 1e-2)
+			{
+				delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f : len);
+			}
 			auto targetPos = position->GetPos3D() + vec3(delta.x, -delta.y, 0.0f);
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
