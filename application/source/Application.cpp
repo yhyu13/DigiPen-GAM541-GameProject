@@ -97,6 +97,10 @@ public:
 				m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
 				continue;
 			}
+			if (system._Equal("PlayerAnimationController")) {
+				m_world->RegisterSystem(MemoryManager::Make_shared<PlayerAnimationControllerComSys>());
+				continue;
+			}
 			if (system._Equal("mob-1-controller")) {
 				m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
 				continue;
