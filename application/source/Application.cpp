@@ -57,6 +57,8 @@ public:
 		ResourceAllocator<Texture2D>::GetInstance()->Init();
 		// Animation loader
 		ResourceAllocator<Animation>::GetInstance()->Init();
+		// TileMap loader
+		ResourceAllocator<TileMap>::GetInstance()->Init();
 
 		LoadResources();
 #ifdef _DEBUG

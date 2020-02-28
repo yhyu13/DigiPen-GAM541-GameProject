@@ -17,6 +17,7 @@ Creation date	: 01/26/2020
 #include "engine/framerate-controller/FramerateController.h"
 #include "engine/input/InputManager.h"
 #include "engine/audio/AudioManager.h"
+#include "engine/tilemap/TileMapManager.h"
 #include "engine/allocator/MemoryManager.h"
 #include "engine/profiling/InstrumentorCore.h"
 
@@ -39,6 +40,7 @@ namespace gswy {
 		window = std::unique_ptr<Window>(Window::InitializeWindow());
 		MemoryManager::GetInstance()->Init();
 		AudioManager::GetInstance()->Init();
+		TileMapManager::GetInstance()->Init();
 
 		// initializing imgui layer
 		m_ImGuiLayer = new ImGuiLayer();
@@ -46,6 +48,7 @@ namespace gswy {
 	}
 	
 	Engine::~Engine() {
+		TileMapManager::GetInstance()->Shutdown();
 		AudioManager::GetInstance()->Shutdown();
 		MemoryManager::GetInstance()->Shutdown();
 	}
