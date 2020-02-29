@@ -33,7 +33,7 @@ namespace gswy
 			m_systemSignature.AddComponent<OwnershiptCom<GameObjectType>>();
 		}
 
-		virtual void Render() override
+		virtual void Render(double dt) override
 		{
 			static bool debugDraw = false;
 			if (InputManager::GetInstance()->IsKeyTriggered(GLFW_KEY_F1))

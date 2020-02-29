@@ -65,13 +65,13 @@ namespace gswy
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY);
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
 			obj.AddComponent(TransformCom(RAND_F(-1, 1), RAND_F(-1, 1), Z_ORDER(m_spawnZOrder++)));
-			auto sprite = SpriteCom();
-			sprite.SetScale(vec2(0.25, 0.25 / 70 * 50));
-			obj.AddComponent(sprite);
 			auto animCom2 = AnimationCom();
 			animCom2.Add("MobAnimation1", "Move");
 			animCom2.SetCurrentAnimationState("Move");
 			obj.AddComponent(animCom2);
+			auto sprite = SpriteCom();
+			sprite.SetScale(vec2(0.25, 0.25 / 70 * 50));
+			obj.AddComponent(sprite);
 			auto aabb1 = BodyCom();
 			aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
 			obj.AddComponent(aabb1);

@@ -27,7 +27,8 @@ namespace gswy
 			m_systemSignature.AddComponent<SpriteCom>();
 		}
 
-		virtual void Update(double dt) override {
+		virtual void PreRenderUpdate(double dt) override {
+			lock();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
@@ -38,6 +39,7 @@ namespace gswy
 				m_ControlSprite->SetSpritePosition(transform->GetPos3D());
 				m_ControlSprite->SetSpriteRotation(transform->GetRotation());
 			}
+			unlock();
 		}
 	};
 }

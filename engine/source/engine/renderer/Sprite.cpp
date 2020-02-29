@@ -18,7 +18,7 @@ namespace gswy {
 
 	Sprite::Sprite()
 	{
-		m_SpriteVertexArray = VertexArray::Create();
+		
 		m_Position = glm::vec3(0.0f);
 		m_SpriteWidth = 0;
 		m_SpriteHeight = 0;
@@ -33,14 +33,12 @@ namespace gswy {
 			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
-
-		m_SpriteVertexBuffer = VertexBuffer::Create(&m_Vertices[0], m_Vertices.size() * sizeof(float));
+		m_init = false;
 	}
 
 	Sprite::Sprite(Texture2D* texture2D)
 		: m_Texture2D(texture2D)
 	{
-		m_SpriteVertexArray = VertexArray::Create();
 		m_Position = glm::vec3(0.0f);
 		m_SpriteWidth = GetTextureWidth();
 		m_SpriteHeight = GetTextureHeight();
@@ -48,10 +46,21 @@ namespace gswy {
 		m_SpriteY = 0;
 		m_Scale = glm::vec2(1);
 		m_Rotation = 0.0f;
+		m_init = false;
 	}
 
 	Sprite::~Sprite()
 	{
+	}
+
+	void Sprite::OpenGLInit()
+	{
+		if (!m_init)
+		{
+			m_init = true;
+			m_SpriteVertexArray = VertexArray::Create();
+			m_SpriteVertexBuffer = VertexBuffer::Create(&m_Vertices[0], m_Vertices.size() * sizeof(float));
+		}
 	}
 
 	void Sprite::Update(double ts)
@@ -60,6 +69,11 @@ namespace gswy {
 
 	void Sprite::Draw()
 	{
+		OpenGLInit();
+		if (!m_Texture2D)
+		{
+			return;
+		}
 		float texWidth = GetTextureWidth();
 		float texHeight = GetTextureHeight();
 		float perTexCoordOffsetX = (float)(m_SpriteWidth / texWidth);

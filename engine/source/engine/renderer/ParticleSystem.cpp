@@ -21,30 +21,39 @@ namespace gswy {
 	ParticleSystem::ParticleSystem()
 	{
 		m_ParticlePool.resize(m_ParticlePoolSize);
-		m_BufferData.ParticleVertexArray = VertexArray::Create();
-		
-		float vertices[] =
-		{
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f,	1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f,	1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f,	0.0f, 1.0f
-		};
-
-		m_BufferData.ParticleVertexBuffer = VertexBuffer::Create(vertices, sizeof(vertices));
-		m_BufferData.ParticleVertexBuffer->SetLayout({
-			{ ShaderDataType::Float3, "a_Position" },
-			{ ShaderDataType::Float2, "a_TexCoord" }
-			});
-		m_BufferData.ParticleVertexArray->AddVertexBuffer(m_BufferData.ParticleVertexBuffer);
-		
-		uint32_t quadIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		m_BufferData.ParticleIndexBuffer = IndexBuffer::Create(quadIndices, sizeof(quadIndices) / sizeof(uint32_t));
-		m_BufferData.ParticleVertexArray->SetIndexBuffer(m_BufferData.ParticleIndexBuffer);
+		m_init = false;
 	}
 
 	ParticleSystem::~ParticleSystem()
 	{
+	}
+
+	void ParticleSystem::OpenGLInit()
+	{
+		if (!m_init)
+		{
+			m_init = true;
+			m_BufferData.ParticleVertexArray = VertexArray::Create();
+
+			float vertices[] =
+			{
+				-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+				 0.5f, -0.5f, 0.0f,	1.0f, 0.0f,
+				 0.5f,  0.5f, 0.0f,	1.0f, 1.0f,
+				-0.5f,  0.5f, 0.0f,	0.0f, 1.0f
+			};
+
+			m_BufferData.ParticleVertexBuffer = VertexBuffer::Create(vertices, sizeof(vertices));
+			m_BufferData.ParticleVertexBuffer->SetLayout({
+				{ ShaderDataType::Float3, "a_Position" },
+				{ ShaderDataType::Float2, "a_TexCoord" }
+				});
+			m_BufferData.ParticleVertexArray->AddVertexBuffer(m_BufferData.ParticleVertexBuffer);
+
+			uint32_t quadIndices[6] = { 0, 1, 2, 2, 3, 0 };
+			m_BufferData.ParticleIndexBuffer = IndexBuffer::Create(quadIndices, sizeof(quadIndices) / sizeof(uint32_t));
+			m_BufferData.ParticleVertexArray->SetIndexBuffer(m_BufferData.ParticleIndexBuffer);
+		}
 	}
 
 	void ParticleSystem::Update(float ts)
@@ -68,6 +77,8 @@ namespace gswy {
 
 	void ParticleSystem::Render()
 	{
+		OpenGLInit();
+
 		if (!m_BufferData.ParticleVertexArray)
 			return;
 
