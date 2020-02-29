@@ -87,7 +87,6 @@ namespace gswy {
 
 	void Renderer2D::EndScene()
 	{
-		//s_Data->QuadShader->Unbind();
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& scale, float rotation, const glm::vec4& color)

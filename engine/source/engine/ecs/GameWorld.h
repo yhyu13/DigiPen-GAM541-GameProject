@@ -58,9 +58,21 @@ namespace gswy {
 			}
 		}
 
-		void Render() {
+		void PreRenderUpdate(double frameTime) {
 			for (auto&& system : m_systems) {
-				system->Render();
+				system->PreRenderUpdate(frameTime);
+			}
+		}
+
+		void Render(double frameTime) {
+			for (auto&& system : m_systems) {
+				system->Render(frameTime);
+			}
+		}
+
+		void PostRenderUpdate(double frameTime) {
+			for (auto&& system : m_systems) {
+				system->PostRenderUpdate(frameTime);
 			}
 		}
 
@@ -87,10 +99,9 @@ namespace gswy {
 		}
 
 		void RemoveEntity(Entity<EntityType> entity) {
-			// TODO : comment this out before we solve the deallocation problem
-			//for (auto&& system : m_systems) {
-			//	system->RemoveEntity(entity);
-			//}
+			for (auto&& system : m_systems) {
+				system->RemoveEntity(entity);
+			}
 			m_entityManager->Destroy(entity);
 		}
 

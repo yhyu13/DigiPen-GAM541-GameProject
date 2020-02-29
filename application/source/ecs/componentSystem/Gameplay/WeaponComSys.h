@@ -64,22 +64,23 @@ namespace gswy
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
 							transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 							weapon.AddComponent(transform);
-							auto sprite = SpriteCom();
-							sprite.SetScale(vec2(0.25, 0.25));
-							weapon.AddComponent(sprite);
+							auto particle = ParticleCom();
+							particle.Init<ExplosionParticle>();
+							weapon.AddComponent(particle);
 							auto animCom = AnimationCom();
 							animCom.Add("fireBallAnim1", "Move");
 							animCom.SetCurrentAnimationState("Move");
 							animCom.GetCurrentAnimation()->SetAnimIdle(false);
 							weapon.AddComponent(animCom);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.25, 0.25));
+							weapon.AddComponent(sprite);
 							auto aabb = BodyCom();
 							aabb.ChooseShape("Circle", 0.1);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(2.0));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
-							auto particle = ParticleCom();
-							particle.Init<ExplosionParticle>();
-							weapon.AddComponent(particle);							
+													
 						}
 						{
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
@@ -88,14 +89,15 @@ namespace gswy
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
 							transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 							weapon.AddComponent(transform);
-							auto sprite = SpriteCom();
-							sprite.SetScale(vec2(0.25, 0.25));
-							weapon.AddComponent(sprite);
 							auto animCom = AnimationCom();
 							animCom.Add("iceBallAnim1", "Move");
 							animCom.SetCurrentAnimationState("Move");
 							animCom.GetCurrentAnimation()->SetAnimIdle(false);
 							weapon.AddComponent(animCom);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.25, 0.25));
+							weapon.AddComponent(sprite);
+							
 							auto aabb = BodyCom();
 							aabb.ChooseShape("AABB", 0.25, 0.25);
 							weapon.AddComponent(aabb);
@@ -115,14 +117,14 @@ namespace gswy
 						attach.rPos = ToVec(weapon_rot) * 0.5f;
 						weapon.AddComponent(attach);
 						weapon.AddComponent(transform);
-						auto sprite = SpriteCom();
-						sprite.SetScale(vec2(0.25, 1.0));
-						weapon.AddComponent(sprite);
 						auto animCom = AnimationCom();
 						animCom.Add("boltAnim1", "Move");
 						animCom.SetCurrentAnimationState("Move");
 						animCom.GetCurrentAnimation()->SetAnimIdle(false);
 						weapon.AddComponent(animCom);
+						auto sprite = SpriteCom();
+						sprite.SetScale(vec2(0.25, 1.0));
+						weapon.AddComponent(sprite);
 						auto aabb = BodyCom();
 						aabb.ChooseShape("AABB", 0.25, 1.0);
 						weapon.AddComponent(aabb);

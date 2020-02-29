@@ -44,6 +44,9 @@ Creation date	: 01/26/2020
 ///// Resource Allocator /////
 #include "engine/allocator/ResouceAllocator.h"
 
+///// TileMapManager /////
+#include "engine/tilemap/TileMapManager.h"
+
 ///// Entity Component System /////
 #include "engine/ecs/BaseComponentSystem.h"
 #include "engine/ecs/BaseComponent.h"
