@@ -24,8 +24,6 @@ namespace gswy
 	class PlayerControllerComSys : public BaseComponentSystem<GameObjectType> {
 	public:
 		PlayerControllerComSys() {
-			m_systemSignature.AddComponent<TransformCom>();
-			m_systemSignature.AddComponent<AnimationCom>();
 		}
 
 		virtual void Update(double dt) override {
@@ -34,11 +32,7 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto audio = AudioManager::GetInstance();
 
-			for (auto& entity : m_registeredEntities) {
-
-				if (entity.m_type != GameObjectType::PLAYER)
-					continue;
-
+			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 				{
 					ComponentDecorator<TransformCom, GameObjectType> transform;
 					ComponentDecorator<AnimationCom, GameObjectType> animation;
@@ -103,7 +97,6 @@ namespace gswy
 					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);
 					return;
 				}
-			}
 		}
 	};
 }

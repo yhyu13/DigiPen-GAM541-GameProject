@@ -1,6 +1,7 @@
 {
    "systems":[
       "player-controller",
+	  "PlayerAnimationController",
       "mob-1-controller",
       "weapon",
       
