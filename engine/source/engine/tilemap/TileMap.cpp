@@ -12,12 +12,33 @@ Creation date: 02/26/2020
 #include "engine-precompiled-header.h"
 #include "TileMap.h"
 
-inline void gswy::TileMap::AddLayer(const std::string& name, const layer_t& layer)
+namespace fs = std::filesystem;
+
+std::shared_ptr<TileMap> gswy::TileMap::Create(const std::string& path)
+{
+	// TODO : Implement json serialization
+	tson::Tileson parser;
+	tson::Map map = parser.parse(fs::path(path));
+
+	if (map.getStatus() == tson::Map::ParseStatus::OK)
+	{
+
+	}
+	else if (map.getStatus() == tson::Map::ParseStatus::FileNotFound)
+	{
+		// TODO : Engine exception
+		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Tileson fails to read json tilemap at " + str2wstr(path) + L"!");
+	}
+
+	return MemoryManager::Make_shared<TileMap>(path);
+}
+
+void gswy::TileMap::AddLayer(const std::string& name, const layer_t& layer)
 {
 	tileLayerMap[name] = layer;
 }
 
-inline const gswy::TileMap::layer_t& gswy::TileMap::GetLayer(const std::string& name)
+const gswy::TileMap::layer_t& gswy::TileMap::GetLayer(const std::string& name)
 {
 	auto& it = tileLayerMap.find(name);
 	if (it != tileLayerMap.end())

@@ -20,17 +20,20 @@ IncludeDir["fmod_bank"]  = "engine/vendors/fmod/api/fsbank/inc"
 IncludeDir["fmod_studio"]  = "engine/vendors/fmod/api/studio/inc"
 IncludeDir["spdlog"] 		= "engine/vendors/spdlog/include"
 IncludeDir["ImGui"]      =   "engine/vendors/imgui"
+IncludeDir["tileson"]      ="engine/vendors/tileson/include"
 
 LibDir = {}
 LibDir["glfw"] = "engine/vendors/glfw"
 LibDir["fmod_core"] = "engine/vendors/fmod/api/core/lib/x64"
 LibDir["fmod_bank"] = "engine/vendors/fmod/api/fsbank/lib/x64"
 LibDir["fmod_studio"] = "engine/vendors/fmod/api/studio/lib/x64"
+LibDir["tileson"]      ="engine/vendors/tileson/lib/x64"
 
 LibName = {}
 LibName["fmod_core"] = "fmod_vc.lib"
 LibName["fmod_bank"] = "fsbank_vc.lib"
 LibName["fmod_studio"] = "fmodstudio_vc.lib"
+LibName["tileson"] = "tileson.lib"
 
 DllName = {}
 DllName["fmod_core"] = "fmod.dll"
@@ -68,7 +71,10 @@ project "engine"
 		"%{prj.name}/vendors/jsoncpp/include/json/**.h",
 		"%{prj.name}/vendors/jsoncpp/src/lib_json/**.h",
 		"%{prj.name}/vendors/jsoncpp/src/lib_json/**.cpp",
-		"%{prj.name}/vendors/jsoncpp/src/lib_json/**.inl"
+		"%{prj.name}/vendors/jsoncpp/src/lib_json/**.inl",
+		"%{prj.name}/vendors/tileson/include/**.h",
+		"%{prj.name}/vendors/tileson/include/**.hpp",
+		"%{prj.name}/vendors/tileson/include/**.cpp",
 	}
 
 	includedirs
@@ -83,7 +89,8 @@ project "engine"
 		"%{IncludeDir.fmod_bank}",
 		"%{IncludeDir.fmod_studio}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.tileson}"
 	}
 
 	libdirs
@@ -162,7 +169,8 @@ project "application"
 		"%{IncludeDir.fmod_bank}",
 		"%{IncludeDir.fmod_studio}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.tileson}"
 	}
 
 	links

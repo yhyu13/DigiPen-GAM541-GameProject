@@ -79,6 +79,9 @@ public:
 	{
 		TIME("Loading Resources");
 
+		// TODO : remove loading map test
+		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/Tiled/map/untitled.json", "untitled");
+
 		//ObjectFactory* factory = ObjectFactory::GetInstance();
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadResources("./asset/archetypes/resources.json");
@@ -320,7 +323,7 @@ public:
 		ImGui::PopStyleVar(1);
 		ImGui::PopStyleColor(3);
 #ifdef _DEBUG
-
+		//TODO: Debug only
 		ImGui::Begin("Settings");
 		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
 		ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);

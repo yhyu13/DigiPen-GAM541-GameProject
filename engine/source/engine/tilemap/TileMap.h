@@ -10,7 +10,7 @@ Creation date: 02/26/2020
 - End Header ----------------------------*/
 
 #pragma once
-#include <json/json.h>
+#include <Tileson.h>
 #include "engine/allocator/MemoryManager.h"
 
 namespace gswy {
@@ -24,11 +24,8 @@ namespace gswy {
 			m_name(name)
 		{
 		}
-		static std::shared_ptr<TileMap> Create(const std::string& path)
-		{
-			// TODO : Implement json serialization
-			return MemoryManager::Make_shared<TileMap>(path);
-		}
+		static std::shared_ptr<TileMap> Create(const std::string& path);
+
 		void AddLayer(const std::string& name, const layer_t& layer);
 		const layer_t& GetLayer(const std::string& name);
 
