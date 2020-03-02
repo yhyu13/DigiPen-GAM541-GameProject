@@ -79,8 +79,6 @@ public:
 	{
 		TIME("Loading Resources");
 
-		
-
 		//ObjectFactory* factory = ObjectFactory::GetInstance();
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadResources("./asset/archetypes/resources.json");

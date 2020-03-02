@@ -36,8 +36,7 @@ namespace gswy
 				m_parentWorld->Unpack(entity, sprite);
 				auto m_sprite = sprite->Get();
 				auto m_animation = animation->GetCurrentAnimation();
-				bool shouldUpdate = m_animation->UpdateFrame(dt);
-				if (shouldUpdate)
+				if (m_animation->UpdateFrame(dt))
 				{
 					/* Loading current animation into sprite component*/
 					auto currentFrame = m_animation->GetCurrentFrame();

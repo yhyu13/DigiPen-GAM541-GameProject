@@ -50,7 +50,6 @@ namespace gswy
 					transform->SetVelocity(delta * speed );
 
 					animation->SetCurrentAnimationState("Move");
-					animation->GetCurrentAnimation()->SetAnimIdle(false);
 				}
 			}
 		}

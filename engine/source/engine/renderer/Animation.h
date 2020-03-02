@@ -39,7 +39,6 @@ namespace gswy {
 		void Reset();
 
 		void SetAnimLooping(bool b) { m_IsLooping = b; };
-		void SetAnimIdle(bool b) { m_IsIdle = b; };
 		void SetAnimPaused(bool b) { m_IsPaused = b; };
 
 	private:
@@ -49,7 +48,6 @@ namespace gswy {
 		int currentFrameIndex;
 		double currentFrameTime;
 
-		bool m_IsIdle;
 		bool m_IsPaused;
 		bool m_IsLooping;
 	};

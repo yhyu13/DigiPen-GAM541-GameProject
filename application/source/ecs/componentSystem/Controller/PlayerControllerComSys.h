@@ -93,8 +93,13 @@ namespace gswy
 
 						// Set moving velocity
 						transform->SetVelocity(glm::normalize(velocity) * speed);
+						animation->SetCurrentAnimationState("Move");
 					}
-					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);
+					else
+					{
+						animation->SetCurrentAnimationState("Idle");
+					}
+					
 					return;
 				}
 		}

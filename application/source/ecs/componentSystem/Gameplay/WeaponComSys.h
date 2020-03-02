@@ -70,7 +70,6 @@ namespace gswy
 							auto animCom = AnimationCom();
 							animCom.Add("fireBallAnim1", "Move");
 							animCom.SetCurrentAnimationState("Move");
-							animCom.GetCurrentAnimation()->SetAnimIdle(false);
 							weapon.AddComponent(animCom);
 							auto sprite = SpriteCom();
 							sprite.SetScale(vec2(0.25, 0.25));
@@ -92,7 +91,6 @@ namespace gswy
 							auto animCom = AnimationCom();
 							animCom.Add("iceBallAnim1", "Move");
 							animCom.SetCurrentAnimationState("Move");
-							animCom.GetCurrentAnimation()->SetAnimIdle(false);
 							weapon.AddComponent(animCom);
 							auto sprite = SpriteCom();
 							sprite.SetScale(vec2(0.25, 0.25));
@@ -120,7 +118,6 @@ namespace gswy
 						auto animCom = AnimationCom();
 						animCom.Add("boltAnim1", "Move");
 						animCom.SetCurrentAnimationState("Move");
-						animCom.GetCurrentAnimation()->SetAnimIdle(false);
 						weapon.AddComponent(animCom);
 						auto sprite = SpriteCom();
 						sprite.SetScale(vec2(0.25, 1.0));

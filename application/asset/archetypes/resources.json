@@ -116,6 +116,18 @@
       {
          "type":"animation",
          "animations":[
+			{
+               "name":"PlayerAnimation0",
+               "properties":{
+                  "texture-name":"PlayerMovingUnarmed",
+                  "x": 59,
+                  "y": 0,
+                  "width": 59,
+                  "height": 32,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
             {
                "name":"PlayerAnimation1",
                "properties":{
