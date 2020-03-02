@@ -79,12 +79,16 @@ public:
 	{
 		TIME("Loading Resources");
 
-		// TODO : remove loading map test
-		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/Tiled/map/untitled.json", "untitled");
+		
 
 		//ObjectFactory* factory = ObjectFactory::GetInstance();
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadResources("./asset/archetypes/resources.json");
+
+		ResourceAllocator<Texture2D>::GetInstance();
+
+		// TODO : remove loading map test
+		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/Tiled/map/untitled.json", "untitled");
 	}
 
 	void InitGameWorld()

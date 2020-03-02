@@ -62,9 +62,10 @@ const FrameData* Animation::GetCurrentFrame() const
 
 bool Animation::UpdateFrame(double deltaTime)
 {
+	// TODO : Idle state should enable frame update with "Idle" animation
 	if (m_IsPaused || m_IsIdle)
 	{
-		return true;
+		return false;
 	}
 
 	if (frames.size() > 0)
