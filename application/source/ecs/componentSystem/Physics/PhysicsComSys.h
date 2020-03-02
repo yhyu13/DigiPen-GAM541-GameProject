@@ -55,7 +55,7 @@ namespace gswy
 			}
 		}
 
-		virtual void Render(double dt) override
+		virtual void PostRenderUpdate(double dt) override
 		{
 			static bool debugDraw = false;
 			if (InputManager::GetInstance()->IsKeyTriggered(GLFW_KEY_F1))
