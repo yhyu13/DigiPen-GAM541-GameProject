@@ -14,13 +14,8 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
-#include <future>
-#include <glm/gtc/type_ptr.hpp>
 #include "EngineExport.h"
 #include "Import.h"
-#include "imgui/imgui.h"
-#include "object-factory/GameObjectFactory.h"
-#include "engine/platform/OpenGL/OpenGLPostProcessing.h"
 
 using namespace gswy;
 
@@ -36,6 +31,7 @@ public:
 
 	virtual ~GameLayer() 
 	{
+		GameTileMapManager::GetInstance()->Shutdown();
 	}
 
 	virtual void OnAttach() 
@@ -54,6 +50,9 @@ public:
 		OpenGLDebugDraw::Init();
 		m_PostProcessing.SetScreenSize(1280, 720);
 		m_PostProcessing.Init();
+
+		GameTileMapManager::GetInstance()->Init();
+
 		// Texture loader
 		ResourceAllocator<Texture2D>::GetInstance()->Init();
 		// Animation loader
@@ -81,9 +80,6 @@ public:
 
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadResources("./asset/archetypes/resources.json");
-
-		ResourceAllocator<Texture2D>::GetInstance();
-
 		// TODO : remove loading map test
 		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/untitled.json", "untitled");
 	}
@@ -178,6 +174,10 @@ public:
 		// object factory must be an abstract class in the engine and must be implemented in application
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
+
+		GameTileMapManager::GetInstance()->AddTileMap("untitled");
+		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");
+		GameTileMapManager::GetInstance()->LoadCurrentTileMap(m_world);
 	}
 
 	void BeforeRun()

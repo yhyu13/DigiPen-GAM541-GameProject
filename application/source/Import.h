@@ -9,6 +9,13 @@ Author: Hang Yu (hang.yu@digipen.edu | 60001119)
 Creation date: 02/15/2020
 - End Header ----------------------------*/
 #pragma once
+
+///// Client application lib /////
+#include <future>
+#include <glm/gtc/type_ptr.hpp>
+#include "imgui/imgui.h"
+
+///// Client application gameplay /////
 #include "ecs/componentSystem/Audio/SoundComSys.h"
 #include "ecs/componentSystem/Controller/PlayerControllerComSys.h"
 #include "ecs/componentSystem/Controller/PlayerAnimationControllerComSys.h"
@@ -25,3 +32,7 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/Gameplay/HitPointComSys.h"
 #include "ecs/componentSystem/Gameplay/DeathComSys.h"
 #include "ecs/componentSystem/GC/GCComSys.h"
+
+///// Client application framework /////
+#include "object-factory/GameObjectFactory.h"
+#include "tilemap/GameTileMapManager.h"

@@ -15,6 +15,7 @@ Creation date: 02/26/2020
 #include "engine/allocator/MemoryManager.h"
 #include "TileMap.h"
 
+
 namespace gswy {
 	class TileMapManager : public IRunTimeModule
 	{
@@ -35,7 +36,7 @@ namespace gswy {
 		std::shared_ptr<TileMap> GetCurrentMap();
 		void AddTileMap(const std::string& name);
 
-	private:
+	protected:
 		TileMapManager()
 		{}
 		std::string m_currentMapName;

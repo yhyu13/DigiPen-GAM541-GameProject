@@ -17,22 +17,17 @@ namespace gswy {
 	class TileMap
 	{
 	public:
-		typedef MyVector(int32_t) layer_t;
-
 		explicit TileMap(const std::string& name)
 			:
 			m_name(name)
 		{
 		}
 		static std::shared_ptr<TileMap> Create(const std::string& path);
-
-		void AddLayer(const std::string& name, const layer_t& layer);
-		const layer_t& GetLayer(const std::string& name);
+		tson::Map GetMap();
 
 	private:
 		std::string m_name;
-		tson::Map m_Map;
-		std::map<std::string, layer_t> m_tileLayerMap;
+		std::shared_ptr<tson::Map> m_Map;
 	};
 }
 
