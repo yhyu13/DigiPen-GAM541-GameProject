@@ -79,14 +79,13 @@ public:
 	{
 		TIME("Loading Resources");
 
-		//ObjectFactory* factory = ObjectFactory::GetInstance();
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadResources("./asset/archetypes/resources.json");
 
 		ResourceAllocator<Texture2D>::GetInstance();
 
 		// TODO : remove loading map test
-		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/Tiled/map/untitled.json", "untitled");
+		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/untitled.json", "untitled");
 	}
 
 	void InitGameWorld()
@@ -288,8 +287,7 @@ public:
 				TIME("System Update");
 				Update(ts);
 			}
-		});
-		
+		});	
 		{
 			TIME("PreRender Update");
 			PreRenderUpdate(ts);
@@ -347,11 +345,16 @@ public:
 		return m_CameraController.GetPosition();
 	}
 
+	static std::shared_ptr<GameWorld<GameObjectType>> GetGameWorld()
+	{
+		return m_world;
+	}
+
 protected:
 
 private:
 	static OrthographicCameraController m_CameraController;
-	std::shared_ptr<GameWorld<GameObjectType>> m_world;
+	static std::shared_ptr<GameWorld<GameObjectType>> m_world;
 	gswy::OpenGLPostProcessing m_PostProcessing;
 	bool m_PP = false;
 #ifdef _DEBUG
@@ -365,6 +368,13 @@ private:
 };
 
 OrthographicCameraController GameLayer::m_CameraController(1280.0f / 720.0f);
+std::shared_ptr<GameWorld<GameObjectType>> GameLayer::m_world(nullptr);
+
+std::shared_ptr<GameWorld<GameObjectType>> GetGameWorld()
+{
+	return GameLayer::GetGameWorld();
+}
+
 
 class Application : public Engine {
 public:

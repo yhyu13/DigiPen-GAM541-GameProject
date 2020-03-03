@@ -6,17 +6,49 @@
 
 tson::Tileset::Tileset(const nlohmann::json &json)
 {
-    parse(json);
+	new_parse(json);
+}
+
+bool tson::Tileset::new_parse(const nlohmann::json& json)
+{
+	bool allFound = true;
+	if (json.count("firstgid") > 0) m_firstgid = json["firstgid"].get<int>(); else allFound = false;
+
+	fs::path source_path;
+
+	if (json.count("source") > 0) source_path = fs::path("./asset/" + json["source"].get<std::string>()); else allFound = false;
+
+	if (fs::exists(source_path) && fs::is_regular_file(source_path))
+	{
+		std::ifstream i(source_path.u8string());
+		nlohmann::json json;
+		try
+		{
+			i >> json;
+			return parse(json);
+		}
+		catch (const nlohmann::json::parse_error & error)
+		{
+			throw std::runtime_error("Tileset parsing error!");
+		}
+	}
+	else
+	{
+		throw std::runtime_error("Tileset json file is not valid!");
+	}
 }
 
 bool tson::Tileset::parse(const nlohmann::json &json)
 {
-    bool allFound = true;
+   
+	bool allFound = true;
 
-    if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
-    if(json.count("firstgid") > 0) m_firstgid = json["firstgid"].get<int>(); else allFound = false;
+	//if (json.count("firstgid") > 0) m_firstgid = json["firstgid"].get<int>(); else allFound = false;
+
+	if (json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
+
     #if USE_CPP17_FILESYSTEM
-    if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); else allFound = false;
+    if(json.count("image") > 0) m_image = fs::path("./asset/" + json["image"].get<std::string>()); else allFound = false;
     #else
     if(json.count("image") > 0) m_image = json["image"].get<std::string>(); else allFound = false;
     #endif

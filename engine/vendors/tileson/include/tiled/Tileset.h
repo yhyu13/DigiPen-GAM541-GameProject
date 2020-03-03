@@ -25,6 +25,9 @@ namespace tson
             explicit Tileset(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
 
+			// GAME 541 Hang Yu added for Tiled version 1.3.2
+			bool new_parse(const nlohmann::json& json);
+
             [[nodiscard]] int getColumns() const;
             [[nodiscard]] int getFirstgid() const;
 

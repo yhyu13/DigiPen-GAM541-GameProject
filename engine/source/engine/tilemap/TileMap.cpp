@@ -11,6 +11,8 @@ Creation date: 02/26/2020
 
 #include "engine-precompiled-header.h"
 #include "TileMap.h"
+#include "engine/allocator/ResouceAllocator.h"
+#include "engine/renderer/Texture.h"
 
 namespace fs = std::filesystem;
 
@@ -23,81 +25,89 @@ std::shared_ptr<TileMap> gswy::TileMap::Create(const std::string& path)
 	tson::Tileson parser;
 	tson::Map map = parser.parse(fs::path(path));
 	
-
 	if (map.getStatus() == tson::Map::ParseStatus::OK)
 	{
 		auto result = MemoryManager::Make_shared<TileMap>(path);
+		result->m_Map = map;
 
-		//You can loop through every container of objects
-		for (auto& layer : map.getLayers())
+		for (auto& tileset : map.getTilesets())
 		{
-			if (layer.getType() == tson::Layer::Type::ObjectGroup)
-			{
-				// Case object layer
-				for (auto& obj : layer.getObjects())
-				{
-					//TODO : Call an object's serializer
-					auto objName = obj.getName();
-					PRINT(objName);
-				}
-			}
-			else if(layer.getType() == tson::Layer::Type::TileLayer)
-			{
-				// Case tile layer: scene layer, path layer
-				auto layerName = layer.getName();
-				PRINT(layerName);
-				//When the map is of a fixed size, you can get the tiles like this
-				if (!map.isInfinite())
-				{
-					//You can of course also loop through every tile!
-					for (const auto& [pos, tile] : layer.getTileData())
-					{
-						//Must check for nullptr, due to how we got the first invalid tile (pos: 0, 4)
-						//Would be unnecessary otherwise.
-						if (tile != nullptr)
-						{
-#if USE_CPP17_FILESYSTEM
-							fs::path imagePath;
-							std::string pathStr;
-#else
-							std::string imagePath;
-#endif
-							for (auto& tileset : map.getTilesets())
-							{
-								if (auto temp = tileset.getTile(tile->getId()))
-								{
-#if USE_CPP17_FILESYSTEM
-									imagePath = tileset.getImagePath();
-									pathStr = imagePath.u8string();
-#else
-									imagePath = tileset->getImagePath();
-#endif
-									int firstId = tileset.getFirstgid(); //First tile id of the tileset
-									int columns = tileset.getColumns(); //For the demo map it is 8.
-									int rows = tileset.getTileCount() / columns;
-									int lastId = (tileset.getFirstgid() + tileset.getTileCount()) - 1;
-
-									//Get position in pixel units
-									tson::Vector2i position = { std::get<0>(pos) * map.getTileSize().x,std::get<1>(pos) * map.getTileSize().y };
-
-									int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
-
-									//The baseTilePosition can be used to calculate offset on its related tileset image.
-									int tileModX = (baseTilePosition % columns);
-									int currentRow = (baseTilePosition / columns);
-									int offsetX = (tileModX != 0) ? ((tileModX)*map.getTileSize().x) : (0 * map.getTileSize().x);
-									int offsetY = (currentRow < rows - 1) ? (currentRow * map.getTileSize().y) :
-										((rows - 1) * map.getTileSize().y);
-
-									int width = map.getTileSize().x;
-									int height = map.getTileSize().y;
-								}
-							}
-						}	
-					}
-				}
-			}
+			auto path = tileset.getImagePath().u8string();
+			DEBUG_PRINT("Loading tileset at " + path);
+			ResourceAllocator<Texture2D>::GetInstance()->Create(path, tileset.getName());
 		}
+
+//		//You can loop through every container of objects
+//		for (auto& layer : map.getLayers())
+//		{
+//			if (layer.getType() == tson::Layer::Type::ObjectGroup)
+//			{
+//				// Case object layer
+//				for (auto& obj : layer.getObjects())
+//				{
+//					//TODO : Call an object's serializer
+//					auto objName = obj.getName();
+//					PRINT(objName);
+//				}
+//			}
+//			else if(layer.getType() == tson::Layer::Type::TileLayer)
+//			{
+//				// Case tile layer: scene layer, path layer
+//				auto layerName = layer.getName();
+//				PRINT(layerName);
+//				//When the map is of a fixed size, you can get the tiles like this
+//				if (!map.isInfinite())
+//				{
+//					//You can of course also loop through every tile!
+//					for (const auto& [pos, tile] : layer.getTileData())
+//					{
+//						//Must check for nullptr, due to how we got the first invalid tile (pos: 0, 4)
+//						//Would be unnecessary otherwise.
+//						if (tile != nullptr)
+//						{
+//#if USE_CPP17_FILESYSTEM
+//							fs::path imagePath;
+//							std::string pathStr;
+//#else
+//							std::string imagePath;
+//#endif
+//							for (auto& tileset : map.getTilesets())
+//							{
+//								if (auto temp = tileset.getTile(tile->getId()))
+//								{
+//#if USE_CPP17_FILESYSTEM
+//									imagePath = tileset.getImagePath();
+//									pathStr = imagePath.u8string();
+//#else
+//									imagePath = tileset->getImagePath();
+//#endif
+//
+//									int firstId = tileset.getFirstgid(); //First tile id of the tileset
+//									int columns = tileset.getColumns(); //For the demo map it is 8.
+//									int rows = tileset.getTileCount() / columns;
+//									int lastId = (tileset.getFirstgid() + tileset.getTileCount()) - 1;
+//
+//									//Get position in pixel units
+//									tson::Vector2i position = { std::get<0>(pos) * map.getTileSize().x,std::get<1>(pos) * map.getTileSize().y };
+//
+//									int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
+//
+//									//The baseTilePosition can be used to calculate offset on its related tileset image.
+//									int tileModX = (baseTilePosition % columns);
+//									int currentRow = (baseTilePosition / columns);
+//									int offsetX = (tileModX != 0) ? ((tileModX)*map.getTileSize().x) : (0 * map.getTileSize().x);
+//									int offsetY = (currentRow < rows - 1) ? (currentRow * map.getTileSize().y) :
+//										((rows - 1) * map.getTileSize().y);
+//
+//									int width = map.getTileSize().x;
+//									int height = map.getTileSize().y;
+//								}
+//							}
+//						}	
+//					}
+//				}
+//			}
+//		}
 
 		return result;
 	}
@@ -122,13 +132,13 @@ std::shared_ptr<TileMap> gswy::TileMap::Create(const std::string& path)
 
 void gswy::TileMap::AddLayer(const std::string& name, const layer_t& layer)
 {
-	tileLayerMap[name] = layer;
+	m_tileLayerMap[name] = layer;
 }
 
 const gswy::TileMap::layer_t& gswy::TileMap::GetLayer(const std::string& name)
 {
-	auto& it = tileLayerMap.find(name);
-	if (it != tileLayerMap.end())
+	auto& it = m_tileLayerMap.find(name);
+	if (it != m_tileLayerMap.end())
 	{
 		return it->second;
 	}

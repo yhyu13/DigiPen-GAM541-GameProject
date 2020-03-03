@@ -31,7 +31,8 @@ namespace gswy {
 
 	private:
 		std::string m_name;
-		std::map<std::string, layer_t> tileLayerMap;
+		tson::Map m_Map;
+		std::map<std::string, layer_t> m_tileLayerMap;
 	};
 }
 
