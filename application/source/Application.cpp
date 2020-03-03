@@ -345,16 +345,11 @@ public:
 		return m_CameraController.GetPosition();
 	}
 
-	static std::shared_ptr<GameWorld<GameObjectType>> GetGameWorld()
-	{
-		return m_world;
-	}
-
 protected:
 
 private:
 	static OrthographicCameraController m_CameraController;
-	static std::shared_ptr<GameWorld<GameObjectType>> m_world;
+	std::shared_ptr<GameWorld<GameObjectType>> m_world;
 	gswy::OpenGLPostProcessing m_PostProcessing;
 	bool m_PP = false;
 #ifdef _DEBUG
@@ -368,13 +363,6 @@ private:
 };
 
 OrthographicCameraController GameLayer::m_CameraController(1280.0f / 720.0f);
-std::shared_ptr<GameWorld<GameObjectType>> GameLayer::m_world(nullptr);
-
-std::shared_ptr<GameWorld<GameObjectType>> GetGameWorld()
-{
-	return GameLayer::GetGameWorld();
-}
-
 
 class Application : public Engine {
 public:
