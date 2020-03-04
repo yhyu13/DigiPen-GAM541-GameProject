@@ -26,7 +26,7 @@ namespace gswy {
 		m_SpriteY = 0;
 		m_Scale = glm::vec2(1);
 		m_Rotation = 0.0f;
-		
+		m_ShaderName = "Default";
 		m_Vertices = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
@@ -46,6 +46,7 @@ namespace gswy {
 		m_SpriteY = 0;
 		m_Scale = glm::vec2(1);
 		m_Rotation = 0.0f;
+		m_ShaderName = "Default";
 		m_init = false;
 	}
 
@@ -98,7 +99,16 @@ namespace gswy {
 			{ ShaderDataType::Float2, "a_TexCoord" }
 			});
 		m_SpriteVertexArray->AddVertexBuffer(m_SpriteVertexBuffer);
-		Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, m_Scale, m_Rotation, m_Texture2D);
+		Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, m_Scale, m_Rotation, m_Texture2D, m_ShaderName);
+		//if (m_ShaderName.compare("Default") == 0)
+		//{
+		//	Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, m_Scale, m_Rotation, m_Texture2D);
+		//}
+		//else
+		//{
+		//	Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, m_Scale, m_Rotation, m_Texture2D, m_ShaderName);
+		//}
+		//
 	}
 	void Sprite::SetSpritePosition(const glm::vec3& pos) { m_Position = pos; }
 	void Sprite::SetSpriteTexture(std::shared_ptr<Texture2D>& texture2D) {
@@ -121,5 +131,13 @@ namespace gswy {
 	void Sprite::SetSpriteRotation(float rotation)
 	{
 		m_Rotation = rotation;
+	}
+	void Sprite::SetSpriteShader(const std::string& name)
+	{
+		m_ShaderName = name;
+	}
+	void Sprite::ResetSpriteShader()
+	{
+		m_ShaderName = "Default";
 	}
 }
