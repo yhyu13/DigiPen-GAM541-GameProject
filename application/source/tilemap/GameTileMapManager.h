@@ -37,6 +37,7 @@ namespace gswy {
 				// TODO : Engine exception
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
 			}
+
 			tson::Map& map = m_tileMaps[m_currentMapName]->GetMap();
 			//You can loop through every container of objects
 			for (auto& layer : map.getLayers())
@@ -98,20 +99,21 @@ namespace gswy {
 								// Create background sprite for each tile
 								if (layerName.compare("Background") == 0)
 								{
-									auto obj = world->GenerateEntity(GameObjectType::BACKGROUND);
-									auto sprite = SpriteCom();
-									auto m_sprite = sprite.Get();
-									// Hang Yu comment : scale the tile sprite with screen height into our normalize coordinate
-									m_sprite->SetSpriteScale(vec2((float)width / 360.f, (float)height / 360.f));
-									m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get(tileset.getName()));
-									m_sprite->SetSpriteX(offsetX);
-									m_sprite->SetSpritey(offsetY);
-									m_sprite->SetSpriteWidth(width);
-									m_sprite->SetSpriteHeight(height);
-									// Hang Yu comment : transform the tile sprite position with screen height into our normalize coordinate
-									m_sprite->SetSpritePosition(vec3(position.x / 360.f, -position.y / 360.f, Z_ORDER(-1)));
-									m_sprite->SetSpriteRotation(0);
-									obj.AddComponent(sprite);
+									//auto obj = world->GenerateEntity(GameObjectType::BACKGROUND);
+									//auto sprite = SpriteCom();
+									//auto m_sprite = sprite.Get();
+									//// Hang Yu comment : scale the tile sprite with screen height into our normalize coordinate
+									//m_sprite->SetSpriteScale(vec2((float)width / 360.f, (float)height / 360.f));
+									//m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get(tileset.getName()));
+									//m_sprite->SetSpriteX(offsetX);
+									//m_sprite->SetSpritey(offsetY);
+									//m_sprite->SetSpriteWidth(width);
+									//m_sprite->SetSpriteHeight(height);
+									//// Hang Yu comment : transform the tile sprite position with screen height into our normalize coordinate
+									//m_sprite->SetSpritePosition(vec3(position.x / 360.f, -position.y / 360.f, Z_ORDER(-1)));
+									//m_sprite->SetSpriteRotation(0);
+									//obj.AddComponent(sprite);
+									//
 								}
 							}
 						}

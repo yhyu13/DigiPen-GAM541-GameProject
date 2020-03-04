@@ -175,6 +175,17 @@ public:
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
 
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/untitled.png","untitled");
+
+		auto obj = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+		auto sprite = SpriteCom();
+		auto m_sprite = sprite.Get();
+		m_sprite->SetSpriteScale(vec2(100.f * 32.f / 360.f, 100.f * 32.f / 360.f));
+		m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("untitled"));
+		m_sprite->SetSpritePosition(vec3(49.5f * 32.f / 360.f, -49.5f * 32.f / 360.f, -0.5));
+		m_sprite->SetSpriteRotation(0);
+		obj.AddComponent(sprite);
+
 		GameTileMapManager::GetInstance()->AddTileMap("untitled");
 		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");
 		GameTileMapManager::GetInstance()->LoadCurrentTileMap(m_world);
@@ -238,6 +249,7 @@ public:
 			auto targetPos = position->GetPos3D() + vec3(delta.x, -delta.y, 0.0f);
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
+			m_CameraController.SetZoomLevel(2);
 		}
 		AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 		m_CameraController.OnUpdate(ts);
