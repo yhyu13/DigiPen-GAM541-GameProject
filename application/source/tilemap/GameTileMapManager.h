@@ -38,27 +38,56 @@ namespace gswy {
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
 			}
 
-			tson::Map& map = m_tileMaps[m_currentMapName]->GetMap();
+			auto tileMapObj = m_tileMaps[m_currentMapName];
+			auto map = tileMapObj->GetMap();
 			//You can loop through every container of objects
-			for (auto& layer : map.getLayers())
+			for (auto& layer : map->getLayers())
 			{
 				// Case object layer
 				if (layer.getType() == tson::Layer::Type::ObjectGroup)
 				{
-					for (auto& obj : layer.getObjects())
+					for (auto& object : layer.getObjects())
 					{
-						//TODO : Call an object's serializer
-						auto objName = obj.getName();
-						PRINT(objName);
+						auto objName = layer.getName();
+						PRINT("Processing " + objName);
+
+						// TODO : need proper handle of player creation (c++ RTTR)
+						if (objName.compare("Player") == 0)
+						{
+							ComponentDecorator<TransformCom, GameObjectType> transform;
+							world->Unpack(world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
+							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
+							transform->SetPos(tileMapObj->Pixel2World(pixelPos));
+						}
+						else if (objName.compare("Mob") == 0)
+						{
+							auto obj = world->GenerateEntity(GameObjectType::ENEMY);
+							obj.AddComponent(OwnershiptCom<GameObjectType>());
+							auto transform = TransformCom();
+							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
+							transform.SetPos(tileMapObj->Pixel2World(pixelPos));
+							obj.AddComponent(transform);
+							auto animCom2 = AnimationCom();
+							animCom2.Add("MobAnimation1", "Move");
+							animCom2.SetCurrentAnimationState("Move");
+							obj.AddComponent(animCom2);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.25, 0.25 / 70 * 50));
+							obj.AddComponent(sprite);
+							auto aabb1 = BodyCom();
+							aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
+							obj.AddComponent(aabb1);
+							obj.AddComponent(HitPointCom());
+						}
 					}
 				}
 				// Case tile layer: scene layer, path layer
 				else if (layer.getType() == tson::Layer::Type::TileLayer)
 				{
 					auto layerName = layer.getName();
-					PRINT(layerName);
+					PRINT("Processing " + layerName);
 					//When the map is of a fixed size, you can get the tiles like this
-					if (map.isInfinite())
+					if (map->isInfinite())
 					{
 						continue;
 					}
@@ -66,13 +95,12 @@ namespace gswy {
 					//You can of course also loop through every tile!
 					for (const auto& [pos, tile] : layer.getTileData())
 					{
-						//Must check for nullptr, due to how we got the first invalid tile (pos: 0, 4)
-						//Would be unnecessary otherwise.
+						//Must check for nullptr
 						if (tile == nullptr)
 						{
 							continue;
 						}
-						for (auto& tileset : map.getTilesets())
+						for (auto& tileset : map->getTilesets())
 						{
 							int firstId = tileset.getFirstgid(); //First tile id of the tileset
 							int lastId = (tileset.getFirstgid() + tileset.getTileCount()) - 1;
@@ -83,19 +111,20 @@ namespace gswy {
 								int rows = tileset.getTileCount() / columns;
 
 								//Get position in pixel units
-								vec2 position(std::get<0>(pos) * map.getTileSize().x, std::get<1>(pos) * map.getTileSize().y);
+								vec2 gridPos(std::get<0>(pos), std::get<1>(pos));
 
 								int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
 
 								//The baseTilePosition can be used to calculate offset on its related tileset image.
 								int tileModX = (baseTilePosition % columns);
 								int currentRow = (baseTilePosition / columns);
-								int offsetX = (tileModX != 0) ? ((tileModX)*map.getTileSize().x) : (0 * map.getTileSize().x);
-								int offsetY = (currentRow < rows - 1) ? (currentRow * map.getTileSize().y) :
-									((rows - 1) * map.getTileSize().y);
+								int offsetX = (tileModX != 0) ? ((tileModX)*map->getTileSize().x) : (0 * map->getTileSize().x);
+								int offsetY = (currentRow < rows - 1) ? (currentRow * map->getTileSize().y) :
+									((rows - 1) * map->getTileSize().y);
 
-								int width = map.getTileSize().x;
-								int height = map.getTileSize().y;
+								int width = map->getTileSize().x;
+								int height = map->getTileSize().y;
+
 								// Create background sprite for each tile
 								if (layerName.compare("Path") == 0)
 								{
@@ -103,17 +132,22 @@ namespace gswy {
 									auto sprite = SpriteCom();
 									auto m_sprite = sprite.Get();
 									// Hang Yu comment : scale the tile sprite with screen height into our normalize coordinate
-									m_sprite->SetSpriteScale(vec2((float)width / 360.f, (float)height / 360.f));
+									m_sprite->SetSpriteScale(vec2((float)width / GSWY_GetPixel2WorldNumerator(), (float)height / GSWY_GetPixel2WorldNumerator()));
 									m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get(tileset.getName()));
 									m_sprite->SetSpriteX(offsetX);
 									m_sprite->SetSpritey(offsetY);
 									m_sprite->SetSpriteWidth(width);
 									m_sprite->SetSpriteHeight(height);
 									// Hang Yu comment : transform the tile sprite position with screen height into our normalize coordinate
-									m_sprite->SetSpritePosition(vec3(position.x / 360.f, -position.y / 360.f, Z_ORDER(-1)));
+									auto world_pos = vec3(tileMapObj->Grid2World(gridPos), Z_ORDER(-1));
+									m_sprite->SetSpritePosition(world_pos);
 									m_sprite->SetSpriteRotation(0);
 									obj.AddComponent(sprite);
-									
+
+									// Fill the grid for path finding.
+									auto pathGrid = tileMapObj->GetTileGrid("Path");
+									pathGrid[gridPos.x][gridPos.y] = 1.0f;
+									PRINT(Str(gridPos.x) + " " + Str(gridPos.y));
 								}
 							}
 						}

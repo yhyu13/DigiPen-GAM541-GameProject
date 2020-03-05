@@ -30,11 +30,11 @@ std::shared_ptr<TileMap> gswy::TileMap::Create(const std::string& path)
 	// Using std::make_shared solves this problem.
 	// The strange part is that it happens in release mode where MemoryManager:Make_shared simply wraps std::make_shared
 	result->m_Map = std::make_shared<tson::Map>(parser.parse(fs::path(path)));
-	tson::Map& map = *(result->m_Map);
+	auto map = result->m_Map;
 
-	if (map.getStatus() == tson::Map::ParseStatus::OK)
+	if (map->getStatus() == tson::Map::ParseStatus::OK)
 	{
-		for (auto& tileset : map.getTilesets())
+		for (auto& tileset : map->getTilesets())
 		{
 			auto path = tileset.getImagePath().u8string();
 			PRINT("Loading tileset at " + path);
@@ -42,17 +42,17 @@ std::shared_ptr<TileMap> gswy::TileMap::Create(const std::string& path)
 		}
 		return result;
 	}
-	else if (map.getStatus() == tson::Map::ParseStatus::FileNotFound)
+	else if (map->getStatus() == tson::Map::ParseStatus::FileNotFound)
 	{
 		// TODO : Engine exception
 		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TJson tilemap at " + str2wstr(path) + L" does not exist!");
 	}
-	else if (map.getStatus() == tson::Map::ParseStatus::MissingData)
+	else if (map->getStatus() == tson::Map::ParseStatus::MissingData)
 	{
 		// TODO : Engine exception
 		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Json tilemap at " + str2wstr(path) + L" has missing data!");
 	}
-	else if (map.getStatus() == tson::Map::ParseStatus::ParseError)
+	else if (map->getStatus() == tson::Map::ParseStatus::ParseError)
 	{
 		// TODO : Engine exception
 		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Tileson fails to parse json tilemap at " + str2wstr(path) + L"!");
@@ -61,7 +61,40 @@ std::shared_ptr<TileMap> gswy::TileMap::Create(const std::string& path)
 	return nullptr;
 }
 
-tson::Map gswy::TileMap::GetMap()
+std::shared_ptr<tson::Map> gswy::TileMap::GetMap()
 {
-	return *m_Map;
+	return m_Map;
+}
+
+TileGrid& gswy::TileMap::GetTileGrid(const std::string& name)
+{
+	if (m_Grids.find(name) == m_Grids.end())
+	{
+		m_Grids[name] = TileGrid(m_Map->getSize().x, m_Map->getSize().y);
+	}
+	return m_Grids[name];
+}
+
+ivec2 gswy::TileMap::World2Grid(const vec2& v)
+{
+	return ivec2(int(v.x * GSWY_GetPixel2WorldNumerator() / m_Map->getTileSize().x),
+		int(-v.y * GSWY_GetPixel2WorldNumerator() / m_Map->getTileSize().y));
+}
+
+vec2 gswy::TileMap::World2Pixel(const vec2& v)
+{
+	return vec2(v.x * GSWY_GetPixel2WorldNumerator(),
+		-v.y * GSWY_GetPixel2WorldNumerator());
+}
+
+vec2 gswy::TileMap::Pixel2World(const vec2& v)
+{
+	return vec2((float)v.x / GSWY_GetPixel2WorldNumerator(),
+		(float)-v.y / GSWY_GetPixel2WorldNumerator());
+}
+
+vec2 gswy::TileMap::Grid2World(const vec2& v)
+{
+	return vec2((float)v.x * (float)m_Map->getTileSize().x / GSWY_GetPixel2WorldNumerator(),
+		(float)-v.y * (float)m_Map->getTileSize().y / GSWY_GetPixel2WorldNumerator());
 }

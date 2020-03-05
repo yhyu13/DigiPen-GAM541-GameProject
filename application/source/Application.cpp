@@ -19,6 +19,14 @@ Creation date	: 01/26/2020
 
 using namespace gswy;
 
+namespace gswy
+{
+	float GSWY_GetPixel2WorldNumerator()
+	{
+		return GSWY_GetWindowHeight() * 0.5f;
+	}
+}
+
 class GameLayer : public Layer {
 
 public:
@@ -180,9 +188,9 @@ public:
 		auto obj = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 		auto sprite = SpriteCom();
 		auto m_sprite = sprite.Get();
-		m_sprite->SetSpriteScale(vec2(100.f * 32.f / 360.f, 100.f * 32.f / 360.f));
+		m_sprite->SetSpriteScale(vec2(100.f * 32.f / GSWY_GetPixel2WorldNumerator(), 100.f * 32.f / GSWY_GetPixel2WorldNumerator()));
 		m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("untitled"));
-		m_sprite->SetSpritePosition(vec3(49.5f * 32.f / 360.f, -49.5f * 32.f / 360.f, -0.5));
+		m_sprite->SetSpritePosition(vec3(49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
 		m_sprite->SetSpriteRotation(0);
 		obj.AddComponent(sprite);
 
@@ -236,8 +244,8 @@ public:
 	{
 		{
 			// Floating camera that centered around the player character
-			ComponentDecorator<TransformCom, GameObjectType> position;
-			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
+			ComponentDecorator<TransformCom, GameObjectType> transform;
+			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
 			auto cursor = InputManager::GetInstance()->GetCursorPosition();
 			auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
 			auto delta = vec2(0);
@@ -246,7 +254,7 @@ public:
 			{
 				delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f : len);
 			}
-			auto targetPos = position->GetPos3D() + vec3(delta.x, -delta.y, 0.0f);
+			auto targetPos = transform->GetPos3D() + vec3(delta.x, -delta.y, 0.0f);
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
 			m_CameraController.SetZoomLevel(2);

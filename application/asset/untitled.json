@@ -35,6 +35,83 @@
         }, 
         {
          "draworder":"topdown",
+         "id":5,
+         "name":"Mob",
+         "objects":[
+                {
+                 "height":133.333333333333,
+                 "id":2,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":136.363636363636,
+                 "x":948.484848484848,
+                 "y":415.151515151515
+                }, 
+                {
+                 "height":115.151515151515,
+                 "id":3,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":166.666666666667,
+                 "x":2054.54545454545,
+                 "y":436.363636363636
+                }, 
+                {
+                 "height":130.30303030303,
+                 "id":4,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":175.757575757576,
+                 "x":2203.0303030303,
+                 "y":1042.42424242424
+                }, 
+                {
+                 "height":130.30303030303,
+                 "id":5,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":145.454545454545,
+                 "x":124.242424242424,
+                 "y":524.242424242424
+                }, 
+                {
+                 "height":163.636363636364,
+                 "id":6,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230.30303030303,
+                 "x":1660.60606060606,
+                 "y":1612.12121212121
+                }, 
+                {
+                 "height":151.515151515152,
+                 "id":7,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":181.818181818182,
+                 "x":130.30303030303,
+                 "y":1681.81818181818
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":3,
          "name":"Player",
          "objects":[
@@ -55,8 +132,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":5,
- "nextobjectid":2,
+ "nextlayerid":6,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.3.2",
