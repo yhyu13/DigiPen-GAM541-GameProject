@@ -66,13 +66,13 @@ std::shared_ptr<tson::Map> gswy::TileMap::GetMap()
 	return m_Map;
 }
 
-TileGrid& gswy::TileMap::GetTileGrid(const std::string& name)
+gswy::TileMap::TileGrid* gswy::TileMap::GetTileGrid(const std::string& name)
 {
 	if (m_Grids.find(name) == m_Grids.end())
 	{
 		m_Grids[name] = TileGrid(m_Map->getSize().x, m_Map->getSize().y);
 	}
-	return m_Grids[name];
+	return &m_Grids[name];
 }
 
 ivec2 gswy::TileMap::World2Grid(const vec2& v)
@@ -93,7 +93,7 @@ vec2 gswy::TileMap::Pixel2World(const vec2& v)
 		(float)-v.y / GSWY_GetPixel2WorldNumerator());
 }
 
-vec2 gswy::TileMap::Grid2World(const vec2& v)
+vec2 gswy::TileMap::Grid2World(const ivec2& v)
 {
 	return vec2((float)v.x * (float)m_Map->getTileSize().x / GSWY_GetPixel2WorldNumerator(),
 		(float)-v.y * (float)m_Map->getTileSize().y / GSWY_GetPixel2WorldNumerator());

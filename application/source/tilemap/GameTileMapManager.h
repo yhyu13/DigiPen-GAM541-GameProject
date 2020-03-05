@@ -111,7 +111,7 @@ namespace gswy {
 								int rows = tileset.getTileCount() / columns;
 
 								//Get position in pixel units
-								vec2 gridPos(std::get<0>(pos), std::get<1>(pos));
+								ivec2 gridPos(std::get<0>(pos), std::get<1>(pos));
 
 								int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
 
@@ -128,6 +128,7 @@ namespace gswy {
 								// Create background sprite for each tile
 								if (layerName.compare("Path") == 0)
 								{
+									// TODO: remove draw path sprites
 									auto obj = world->GenerateEntity(GameObjectType::BACKGROUND);
 									auto sprite = SpriteCom();
 									auto m_sprite = sprite.Get();
@@ -146,7 +147,7 @@ namespace gswy {
 
 									// Fill the grid for path finding.
 									auto pathGrid = tileMapObj->GetTileGrid("Path");
-									pathGrid[gridPos.x][gridPos.y] = 1.0f;
+									(*pathGrid)[gridPos.x][gridPos.y] = 1.0f;
 									PRINT(Str(gridPos.x) + " " + Str(gridPos.y));
 								}
 							}

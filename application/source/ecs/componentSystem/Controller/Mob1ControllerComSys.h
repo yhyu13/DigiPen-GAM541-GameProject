@@ -15,6 +15,8 @@ Creation date: 02/16/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "engine/input/InputManager.h"
+#include "engine/ai/PathFinding.h"
+#include "tilemap/GameTileMapManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/AnimationCom.h"
 #include "ecs/EntityType.h"
@@ -22,12 +24,21 @@ Creation date: 02/16/2020
 namespace gswy
 {
 	class Mob1ControllerComSys : public BaseComponentSystem<GameObjectType> {
+	private:
+		double m_updateTimer = {1.0/10.0};
 	public:
 		Mob1ControllerComSys() {
 		}
 
 		virtual void Update(double dt) override {
 
+			static double timer = m_updateTimer;
+			timer += dt;
+			if (timer < m_updateTimer)
+			{
+				return;
+			}
+			timer = 0.0;
 			static auto playerEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY);
 			for (auto& entity : m_registeredEntities) {
@@ -41,15 +52,45 @@ namespace gswy
 					ComponentDecorator<TransformCom, GameObjectType> playerPosition;
 					m_parentWorld->Unpack(playerEntity, playerPosition);
 
-					// 1. TODO : TileMap with A* algorithm
-					auto delta = playerPosition->GetPos() - transform->GetPos();
-					transform->SetRotation(LookAt(delta));
-					
-					// 2. Move towards player
-					float speed = .5f;
-					transform->SetVelocity(delta * speed );
+					auto dest = playerPosition->GetPos();
+					auto src = transform->GetPos();
 
-					animation->SetCurrentAnimationState("Move");
+					auto delta = dest - src;
+					PRINT(glm::length(delta));
+					// Stop when delta distance is small
+					if (glm::length(delta) < .2)
+					{
+						transform->SetVelocity(vec2(0));
+						continue;
+					}
+
+					auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
+
+					auto _dest = tileMapObj->World2Grid(dest);
+					auto _src = tileMapObj->World2Grid(src);
+
+					auto pathGrid = tileMapObj->GetTileGrid("Path");
+					auto Astar = PathFinding(pathGrid->X(), pathGrid->Y());
+					
+					if (Astar.Search(*pathGrid, _src, _dest))
+					{
+						auto result = Astar.GetResult();
+						// 1. Rotate
+						auto nextPos = tileMapObj->Grid2World((result.size() > 5)? result[5]: result.back());
+						auto delta = nextPos - src;
+						transform->SetRotation(LookAt(delta));
+
+						// 2. Move
+						float speed = 1.0f;
+						transform->SetVelocity(glm::normalize(delta) * speed);
+						animation->SetCurrentAnimationState("Move");
+					}
+					else
+					{
+						//PRINT(Str(entity) + " not found");
+						// TODO : Engine exception
+						throw EngineException(_CRT_WIDE(__FILE__), __LINE__, str2wstr(Str(entity) + " has not found the player!"));
+					}
 				}
 			}
 		}

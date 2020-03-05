@@ -3,6 +3,7 @@
 //
 #include "engine-precompiled-header.h"
 #include "Grid.h"
+#include "..\..\..\..\source\engine\ai\Grid.h"
 
 /*!
  * Parses Tiled grid data from json
@@ -47,3 +48,4 @@ const tson::Vector2i &tson::Grid::getSize() const
 {
     return m_size;
 }
+
