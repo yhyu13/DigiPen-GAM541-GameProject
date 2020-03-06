@@ -14,27 +14,28 @@ Creation date: 02/04/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
-#include "ecs/components/SpriteCom.h"
-#include "ecs/EntityType.h"
+#include "engine/audio/AudioManager.h"
+#include "engine/input/InputManager.h"
+#include "ecs/components/AnimationCom.h"
+#include "ecs/CustomEvents.h"
 
 namespace gswy
 {
-	class SceneComSys : public BaseComponentSystem<GameObjectType> {
+	class PlayerAnimationControllerComSys : public BaseComponentSystem<GameObjectType> {
 	public:
-		SceneComSys() {
-			m_systemSignature.AddComponent<SpriteCom>();
+		PlayerAnimationControllerComSys() {
 		}
 
-		virtual void Render(double dt) override
-		{
-			lock();
-			for (auto& entity : m_registeredEntities) {
-				ComponentDecorator<SpriteCom, GameObjectType> sprite;
-				m_parentWorld->Unpack(entity, sprite);
-				/* Drawing sprites */
-				sprite->Get()->Draw();
-			}
-			unlock();
+		virtual void Update(double dt) override {
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto audio = AudioManager::GetInstance();
+
+			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+				{
+					ComponentDecorator<AnimationCom, GameObjectType> animation;
+					m_parentWorld->Unpack(entity, animation);
+					return;
+				}
 		}
 	};
 }

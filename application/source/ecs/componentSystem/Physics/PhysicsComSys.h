@@ -25,6 +25,10 @@ namespace gswy
 {
 	class PhysicsComSys : public BaseComponentSystem<GameObjectType>
 	{
+
+	private:
+		size_t m_CollisionDisableMap[(size_t)GameObjectType::NUM][(size_t)GameObjectType::NUM];
+
 	public:
 		PhysicsComSys()
 		{
@@ -33,7 +37,25 @@ namespace gswy
 			m_systemSignature.AddComponent<OwnershiptCom<GameObjectType>>();
 		}
 
-		virtual void Render() override
+		virtual void Init() override
+		{
+			// Init collision diable map
+			for (size_t i = 0; i < (size_t)GameObjectType::NUM; ++i)
+				for (size_t j = 0; j < (size_t)GameObjectType::NUM; ++j)
+					m_CollisionDisableMap[i][j] = 0;
+
+			// Collision diable list (self-self, mutal)
+			GameObjectType diableCollisionList[] = { GameObjectType::PLAYER ,GameObjectType::FIREBALL ,GameObjectType::ICEBALL ,GameObjectType::BOLT };
+			for (auto& item1 : diableCollisionList)
+			{
+				for (auto& item2 : diableCollisionList)
+				{
+					m_CollisionDisableMap[(size_t)item1][(size_t)item2] = 1;
+				}
+			}
+		}
+
+		virtual void PostRenderUpdate(double dt) override
 		{
 			static bool debugDraw = false;
 			if (InputManager::GetInstance()->IsKeyTriggered(GLFW_KEY_F1))
@@ -42,6 +64,7 @@ namespace gswy
 			}
 			if (debugDraw)
 			{
+				lock();
 				for (auto& entity : m_registeredEntities)
 				{
 					ComponentDecorator<BodyCom, GameObjectType> body;
@@ -59,6 +82,7 @@ namespace gswy
 						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), glm::vec2(circle->GetRadius(), circle->GetRadius()), transform->GetRotation(), glm::vec4(1.0f));
 					}
 				}
+				unlock();
 			}
 		}
 
@@ -76,11 +100,14 @@ namespace gswy
 
 				for (auto second_Entity = first_Entity + 1; second_Entity != last_Entity; ++second_Entity)
 				{
+					// Enable collision diable map
+					if (m_CollisionDisableMap[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
+						continue;
+
 					ComponentDecorator<BodyCom, GameObjectType> body2;
 					m_parentWorld->Unpack(*second_Entity, body2);
 
-					bool collides = collision->CheckCollisionAndGenerateDetection(body1->shape.get(), body1->m_PosX, body1->m_PosY, body2->shape.get(), body2->m_PosX, body2->m_PosY);
-						
+					bool collides = collision->CheckCollisionAndGenerateDetection(body1->shape.get(), body1->m_PosX, body1->m_PosY, body2->shape.get(), body2->m_PosX, body2->m_PosY);						
 					if (collides)
 					{
 						ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner1;

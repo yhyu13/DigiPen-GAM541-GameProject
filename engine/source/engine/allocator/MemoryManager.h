@@ -15,7 +15,11 @@ Creation date: 02/14/2020
 #include "engine/interface/IRunTimeModule.h"
 #include "engine/exception/EngineException.h"
 
+#ifdef _DEBUG
 #define CUSTOM_ALLOCATOR 1
+#else
+#define CUSTOM_ALLOCATOR 0
+#endif // _DEBUG
 
 namespace gswy {
 
@@ -102,7 +106,7 @@ namespace gswy {
 
         static size_t*        m_pBlockSizeLookup;
         static Allocator*     m_pAllocators;
-		static size_t		  m_AllocatedSize;
+		static std::atomic<size_t>		  m_AllocatedSize;
 
 		template<typename T>
 		friend struct Mallocator;

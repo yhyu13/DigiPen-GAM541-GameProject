@@ -43,18 +43,21 @@ namespace gswy
 			}
 		}
 
-		virtual void Render() override
+		virtual void Render(double dt) override
 		{
+			lock();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<ParticleCom, GameObjectType> particle;
 				m_parentWorld->Unpack(entity, particle);
 				/* Drawing particle */
 				particle->Get()->Render();
 			}
+			unlock();
 		}
 
-		virtual void Update(double ts) override
+		virtual void PreRenderUpdate(double ts) override
 		{
+			lock();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<ParticleCom, GameObjectType> particle;
 				ComponentDecorator<TransformCom, GameObjectType> transform;
@@ -77,6 +80,7 @@ namespace gswy
 				}
 				particle->Get()->Update(ts);
 			}
+			unlock();
 		}
 	private:
 		std::map<std::string, Particle> m_particleMap;

@@ -87,7 +87,6 @@ namespace gswy {
 
 	void Renderer2D::EndScene()
 	{
-		//s_Data->QuadShader->Unbind();
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& scale, float rotation, const glm::vec4& color)
@@ -97,7 +96,7 @@ namespace gswy {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, float rotation, const glm::vec4& color)
 	{
-		s_Data->QuadShader->Bind();
+		//s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetFloat4("u_Color", color);
 		s_Data->QuadTexture->Bind();
 
@@ -115,7 +114,7 @@ namespace gswy {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, float rotation, const std::shared_ptr<Texture2D>& texture)
 	{
-		s_Data->QuadShader->Bind();
+		//s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetFloat4("u_Color", glm::vec4(1.0f));
 		if (texture)
 			texture->Bind();
@@ -132,7 +131,7 @@ namespace gswy {
 	
 	void Renderer2D::DrawQuad(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<IndexBuffer>& indexBuffer, const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color, const std::shared_ptr<Texture2D>& texture)
 	{
-		s_Data->QuadShader->Bind();
+		//s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetFloat4("u_Color", color);
 
 		texture ? texture->Bind() : s_Data->QuadTexture->Bind();
@@ -163,7 +162,7 @@ namespace gswy {
 
 	void Renderer2D::DrawSprite(const std::shared_ptr<VertexArray>& vertexArray, const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture)
 	{
-		s_Data->QuadShader->Bind();
+		//s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetFloat4("u_Color", glm::vec4(1.0f));
 		texture->Bind();
 	

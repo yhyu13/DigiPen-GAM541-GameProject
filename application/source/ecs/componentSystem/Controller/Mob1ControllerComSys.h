@@ -24,18 +24,13 @@ namespace gswy
 	class Mob1ControllerComSys : public BaseComponentSystem<GameObjectType> {
 	public:
 		Mob1ControllerComSys() {
-			m_systemSignature.AddComponent<TransformCom>();
-			m_systemSignature.AddComponent<AnimationCom>();
 		}
 
 		virtual void Update(double dt) override {
 
 			static auto playerEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
-
+			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY);
 			for (auto& entity : m_registeredEntities) {
-
-				if (entity.m_type != GameObjectType::ENEMY)
-					continue;
 
 				{
 					ComponentDecorator<TransformCom, GameObjectType> transform;

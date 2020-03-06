@@ -40,7 +40,7 @@ namespace gswy
 			queue->Subscribe<GCComSys>(this, EventType::GC, &GCComSys::OnGC);
 		}
 
-		virtual void Update(double dt) override {
+		virtual void PostRenderUpdate(double dt) override {
 			for (auto& e : m_GCList)
 			{
 				PRINT(e);

@@ -12,7 +12,7 @@ Creation date	: 02/03/2020
 - End Header ----------------------------*/
 
 #pragma once
-
+#include <atomic>
 #include "Entity.h"
 #include "BitMaskSignature.h"
 
@@ -61,6 +61,7 @@ namespace gswy {
 	public:
 
 		BaseComponentSystem::BaseComponentSystem() : m_parentWorld(nullptr) {
+			m_flag.clear();
 		}
 
 		virtual ~BaseComponentSystem() = default;
@@ -73,7 +74,13 @@ namespace gswy {
 		virtual void Update(double frameTime) {
 		}
 
-		virtual void Render() {
+		virtual void PreRenderUpdate(double frameTime) {
+		}
+
+		virtual void Render(double frameTime) {
+		}
+
+		virtual void PostRenderUpdate(double frameTime) {
 		}
 
 		void SetWorld(GameWorld<EntityType>* world) {
@@ -81,20 +88,32 @@ namespace gswy {
 		}
 
 		void AddEntity(const Entity<EntityType>& entity) {
+			lock();
 			m_registeredEntities.push_back(entity);
+			unlock();
 		}
 
 		void RemoveEntity(const Entity<EntityType>& entity) {
-			if (!m_registeredEntities.empty() )
+			lock();
+			if (!m_registeredEntities.empty())
 			{
-				auto it = std::find(m_registeredEntities.begin(), m_registeredEntities.end(), entity);
-				if (it != m_registeredEntities.end())
-					m_registeredEntities.erase(it);
+				m_registeredEntities.erase(std::remove(m_registeredEntities.begin(), m_registeredEntities.end(), entity), m_registeredEntities.end());
 			}
+			unlock();
 		}
 
 		BitMaskSignature& GetSystemSignature() {
 			return m_systemSignature;
+		}
+		
+		inline void lock()
+		{
+			while (m_flag.test_and_set(std::memory_order_acquire)) {}
+		}
+
+		inline void unlock()
+		{
+			m_flag.clear(std::memory_order_release);
 		}
 
 	protected:
@@ -104,6 +123,6 @@ namespace gswy {
 		GameWorld<EntityType>* m_parentWorld;
 
 	private:
-
+		std::atomic_flag m_flag;
 	};
 }

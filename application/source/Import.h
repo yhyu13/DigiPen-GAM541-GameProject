@@ -11,6 +11,7 @@ Creation date: 02/15/2020
 #pragma once
 #include "ecs/componentSystem/Audio/SoundComSys.h"
 #include "ecs/componentSystem/Controller/PlayerControllerComSys.h"
+#include "ecs/componentSystem/Controller/PlayerAnimationControllerComSys.h"
 #include "ecs/componentSystem/Controller/Mob1ControllerComSys.h"
 #include "ecs/componentSystem/Graphics/SceneComSys.h"
 #include "ecs/componentSystem/Graphics/SpriteComSys.h"

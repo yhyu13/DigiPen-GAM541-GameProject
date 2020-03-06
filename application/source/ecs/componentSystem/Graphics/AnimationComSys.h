@@ -27,15 +27,14 @@ namespace gswy
 			m_systemSignature.AddComponent<SpriteCom>();
 		}
 
-		virtual void Update(double dt) override {
+		virtual void PreRenderUpdate(double dt) override {
+			lock();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<AnimationCom, GameObjectType> animation;
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
 				m_parentWorld->Unpack(entity, animation);
 				m_parentWorld->Unpack(entity, sprite);
 				auto m_sprite = sprite->Get();
-
-				/* Advancing current animation */
 				auto m_animation = animation->GetCurrentAnimation();
 				m_animation->UpdateFrame(dt);
 				/* Loading current animation into sprite component*/
@@ -46,6 +45,8 @@ namespace gswy
 				m_sprite->SetSpriteWidth(currentFrame->width);
 				m_sprite->SetSpriteHeight(currentFrame->height);
 			}
+			unlock();
 		}
+
 	};
 }
