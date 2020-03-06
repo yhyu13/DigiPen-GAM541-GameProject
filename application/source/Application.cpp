@@ -21,6 +21,7 @@ Creation date	: 01/26/2020
 #include "imgui/imgui.h"
 #include "object-factory/GameObjectFactory.h"
 #include "engine/platform/OpenGL/OpenGLPostProcessing.h"
+#include "engine/ui/Widget.h""
 
 using namespace gswy;
 
@@ -319,20 +320,27 @@ public:
 		ImGui::End();
 		ImGui::PopStyleVar(1);
 		ImGui::PopStyleColor(3);
-#ifdef _DEBUG
 
-		ImGui::Begin("Settings");
-		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
-		ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
-		ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
-		ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
-		ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
-		ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
-		ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
-		ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
-		ImGui::End();
+		//Game Widgets
+		m_MainMenu.Render();
+		//m_PauseMenu.Render();
+		m_HUD.Render();
+		m_ShopMenu.Render();
+		m_Inventory.Render();
+
+#ifdef _DEBUG
+		//ImGui::Begin("Settings");
+		//ImGui::Checkbox("ParticleActive", &m_ParticleActive);
+		//ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
+		//ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
+		//ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
+		//ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
+		//ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
+		//ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
+		//ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
+		//ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
+		//ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
+		//ImGui::End();
 #endif // _DEBUG
 
 	}
@@ -355,6 +363,11 @@ private:
 	gswy::ExplosionParticle m_ParticleSystem;
 	gswy::Particle m_Particle;
 	bool m_ParticleActive = true;
+	gswy::MainMenu m_MainMenu;
+	gswy::PauseMenu m_PauseMenu;
+	gswy::HUD m_HUD;
+	gswy::ShopMenu m_ShopMenu;
+	gswy::InventoryMenu m_Inventory;
 #endif // _DEBUG
 
 };

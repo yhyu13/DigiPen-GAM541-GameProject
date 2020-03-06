@@ -61,7 +61,21 @@ namespace gswy {
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		m_window = glfwCreateWindow(properties.m_width, properties.m_height, properties.m_title.c_str(), nullptr, nullptr);
+		if (properties.IsFullScreen)
+		{
+			//Full Screen Settings
+			auto monitor = glfwGetPrimaryMonitor();
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+			m_window = glfwCreateWindow(mode->width, mode->height, properties.m_title.c_str(), monitor, NULL);
+		}
+		else
+		{
+			m_window = glfwCreateWindow(properties.m_width, properties.m_height, properties.m_title.c_str(), nullptr, nullptr);
+		}
 		ASSERT(m_window == nullptr, "Failed to create window!");
 
 		glfwMakeContextCurrent(m_window);
