@@ -27,7 +27,7 @@ namespace gswy {
 	
 	template <typename EntityType, typename EventType>
 	struct Event: BaseEvent {
-	
+
 		Event() = default;
 		explicit Event(EventType type)
 			:m_type(type)
@@ -38,6 +38,18 @@ namespace gswy {
 		EventType m_type;
 	};
 
+	template <typename EntityType, typename EventType>
+	struct TimedEvent : Event<EntityType, EventType> {
+
+		TimedEvent() = default;
+		explicit TimedEvent(EventType type, float time): Event(type), m_time(time) {
+		}
+
+		virtual ~TimedEvent() {
+		}
+
+		float m_time;
+	};
 }
 
 template <typename EntityType, typename EventType>

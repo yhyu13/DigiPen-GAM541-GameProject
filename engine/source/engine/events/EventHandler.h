@@ -53,4 +53,24 @@ namespace gswy {
 
 	};
 
+	template<typename T, typename EntityType, typename EventType>
+	class TimedEventHandler : public BaseEventHandler {
+
+	public:
+
+		typedef void (T::* HandlerFunction) (TimedEvent<EntityType, EventType>*);
+
+		TimedEventHandler(T* instance, HandlerFunction function) : m_handlerOwner(instance), m_handler(function) {
+		}
+
+		virtual void HandleEvent(BaseEvent* event) {
+			(m_handlerOwner->*m_handler)(static_cast<TimedEvent<EntityType, EventType>*>(event));
+		}
+
+	private:
+
+		T* m_handlerOwner;
+		HandlerFunction m_handler;
+
+	};
 }

@@ -20,17 +20,21 @@ IncludeDir["fmod_bank"]  = "engine/vendors/fmod/api/fsbank/inc"
 IncludeDir["fmod_studio"]  = "engine/vendors/fmod/api/studio/inc"
 IncludeDir["spdlog"] 		= "engine/vendors/spdlog/include"
 IncludeDir["ImGui"]      =   "engine/vendors/imgui"
+IncludeDir["rttr"]      =   "engine/vendors/rttr/include"
 
 LibDir = {}
 LibDir["glfw"] = "engine/vendors/glfw"
 LibDir["fmod_core"] = "engine/vendors/fmod/api/core/lib/x64"
 LibDir["fmod_bank"] = "engine/vendors/fmod/api/fsbank/lib/x64"
 LibDir["fmod_studio"] = "engine/vendors/fmod/api/studio/lib/x64"
+LibDir["rttr"] = "engine/vendors/rttr/lib/x64"
 
 LibName = {}
 LibName["fmod_core"] = "fmod_vc.lib"
 LibName["fmod_bank"] = "fsbank_vc.lib"
 LibName["fmod_studio"] = "fmodstudio_vc.lib"
+LibName["rttr_debug"] = "librttr_core_d.lib"
+LibName["rttr_release"] = "librttr_core.lib"
 
 DllName = {}
 DllName["fmod_core"] = "fmod.dll"
@@ -83,14 +87,16 @@ project "engine"
 		"%{IncludeDir.fmod_bank}",
 		"%{IncludeDir.fmod_studio}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.rttr}"
 	}
 
 	libdirs
 	{
 		"%{LibDir.fmod_core}",
 		"%{LibDir.fmod_bank}",
-		"%{LibDir.fmod_studio}"
+		"%{LibDir.fmod_studio}",
+		"%{LibDir.rttr}"
 	}
 
 	links
@@ -127,12 +133,20 @@ project "engine"
 		}
 
 	filter "configurations:Debug"
-		buildoptions "/MTd"
+		buildoptions "/MDd"
 		symbols "On"
+		links
+		{
+			"%{LibName.rttr_debug}"
+		}
 
 	filter "configurations:Release"
-		buildoptions "/MT"
+		buildoptions "/MD"
 		optimize "On"
+		links
+		{
+			"%{LibName.rttr_release}"
+		}
 
 project "application"
 	location "application"
@@ -162,7 +176,8 @@ project "application"
 		"%{IncludeDir.fmod_bank}",
 		"%{IncludeDir.fmod_studio}",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.rttr}"
 	}
 
 	links
@@ -187,9 +202,9 @@ project "application"
 		}
 
 	filter "configurations:Debug"
-		buildoptions "/MTd"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
-		buildoptions "/MT"
+		buildoptions "/MD"
 		optimize "On"

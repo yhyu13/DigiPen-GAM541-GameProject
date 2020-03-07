@@ -58,9 +58,32 @@ namespace gswy {
 				}
 			}
 		}
+
+		template <typename T>
+		void AddTimedEvent(TimedEvent<EntityType, EventType>* event, T* instance, void (T::* Function)(TimedEvent<EntityType, EventType>*)) {			
+			m_timedEvents.emplace(event, new TimedEventHandler<T, EntityType, EventType>(instance, Function));
+		}
+
+		void Update(float frameTime) {
+			std::map<TimedEvent<EntityType, EventType>*, BaseEventHandler*>::iterator it = m_timedEvents.begin();
+			while (it != m_timedEvents.end()) {
+				TimedEvent<EntityType, EventType>* event = it->first;
+				event->m_time -= frameTime;
+				APP_CRITICAL("Update event type: {0}", event->m_type);
+				if (event->m_time < 0.0f) {
+					BaseEventHandler* handler = it->second;
+					handler->Execute(event);
+					it = m_timedEvents.erase(it);
+				}
+				else {
+					++it;
+				}
+			}
+		}
+
 	private:
 		std::map<EventType, EventHandlerList*> m_subscribers;
+
+		std::map<TimedEvent<EntityType, EventType>*, BaseEventHandler*> m_timedEvents;
 	};
-
-
 }

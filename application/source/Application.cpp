@@ -166,6 +166,18 @@ public:
 		m_world->Init();
 
 		LoadGameWorld();
+
+		TimedEvent<GameObjectType, EventType>* event = new TimedEvent<GameObjectType, EventType>(EventType::COLLISION, 1.0f);
+		TimedEvent<GameObjectType, EventType>* event2 = new TimedEvent<GameObjectType, EventType>(EventType::DEATH, 2.0f);
+		TimedEvent<GameObjectType, EventType>* event3 = new TimedEvent<GameObjectType, EventType>(EventType::FIREWEAPON, 3.0f);
+		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+		queue->AddTimedEvent<GameLayer>(event, this, &GameLayer::OnEvent);
+		queue->AddTimedEvent<GameLayer>(event2, this, &GameLayer::OnEvent);
+		queue->AddTimedEvent<GameLayer>(event3, this, &GameLayer::OnEvent);
+	}
+
+	void OnEvent(TimedEvent<GameObjectType, EventType>* e) {
+		APP_ERROR("Event fired: {0}", e->m_type);
 	}
 
 	void LoadGameWorld()
@@ -298,6 +310,7 @@ public:
 			TIME("PostRender Update");
 			PostRenderUpdate(ts);
 		}
+		EventQueue<GameObjectType, EventType>::GetInstance()->Update(ts);
 		AfterFrame();
 	}
 
