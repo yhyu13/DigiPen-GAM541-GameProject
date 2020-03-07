@@ -13,7 +13,7 @@ Creation date: 02/26/2020
 #include <Tileson.h>
 #include "engine/allocator/MemoryManager.h"
 #include "engine/math/MathHelper.h"
-#include "engine/ai/Grid.h"
+#include "engine/ai/Grid_float.h"
 
 namespace gswy {
 
@@ -22,7 +22,7 @@ namespace gswy {
 	class TileMap
 	{
 	public:
-		typedef Grid TileGrid;
+		typedef Grid_float TileGrid;
 
 		explicit TileMap(const std::string& name)
 			:
@@ -33,9 +33,21 @@ namespace gswy {
 		std::shared_ptr<tson::Map> GetMap();
 		TileGrid* GetTileGrid(const std::string& name);
 
+		/*
+			World position to tile grid position
+		*/
 		ivec2 World2Grid(const vec2& v);
+		/*
+			World position to tile pixel position
+		*/
 		vec2 World2Pixel(const vec2& v);
+		/*
+			Tile pixel position to world position
+		*/
 		vec2 Pixel2World(const vec2& v);
+		/*
+			Tile grid position to world position
+		*/
 		vec2 Grid2World(const ivec2& v);
 
 	private:

@@ -39,7 +39,11 @@ namespace gswy
 				return;
 			}
 			timer = 0.0;
-			static auto playerEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+
+			auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
+			auto pathGrid = tileMapObj->GetTileGrid("Path");
+			auto Astar = PathFinding(pathGrid->X(), pathGrid->Y());
+			auto playerEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY);
 			for (auto& entity : m_registeredEntities) {
 
@@ -64,13 +68,8 @@ namespace gswy
 						continue;
 					}
 
-					auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
-
 					auto _dest = tileMapObj->World2Grid(dest);
 					auto _src = tileMapObj->World2Grid(src);
-
-					auto pathGrid = tileMapObj->GetTileGrid("Path");
-					auto Astar = PathFinding(pathGrid->X(), pathGrid->Y());
 					
 					if (Astar.Search(*pathGrid, _src, _dest))
 					{

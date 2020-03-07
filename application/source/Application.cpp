@@ -185,6 +185,7 @@ public:
 
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/untitled.png","untitled");
 
+		// TODO : use proper reflection to handle map loading and background creation
 		auto obj = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 		auto sprite = SpriteCom();
 		auto m_sprite = sprite.Get();
