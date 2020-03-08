@@ -32,23 +32,14 @@ namespace gswy {
 		explicit Event(EventType type)
 			:m_type(type)
 		{}
+
+		explicit Event(const Event& other): m_type(other.m_type) {		
+		}
+
 		virtual ~Event() {
 		}
 
 		EventType m_type;
-	};
-
-	template <typename EntityType, typename EventType>
-	struct TimedEvent : Event<EntityType, EventType> {
-
-		TimedEvent() = default;
-		explicit TimedEvent(EventType type, float time): Event(type), m_time(time) {
-		}
-
-		virtual ~TimedEvent() {
-		}
-
-		float m_time;
 	};
 }
 

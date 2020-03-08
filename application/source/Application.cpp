@@ -167,17 +167,18 @@ public:
 
 		LoadGameWorld();
 
-		TimedEvent<GameObjectType, EventType>* event = new TimedEvent<GameObjectType, EventType>(EventType::COLLISION, 1.0f);
-		TimedEvent<GameObjectType, EventType>* event2 = new TimedEvent<GameObjectType, EventType>(EventType::DEATH, 2.0f);
-		TimedEvent<GameObjectType, EventType>* event3 = new TimedEvent<GameObjectType, EventType>(EventType::FIREWEAPON, 3.0f);
+		/*
+			For the purpose of testing the delayed events
+		*/
 		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-		queue->AddTimedEvent<GameLayer>(event, this, &GameLayer::OnEvent);
-		queue->AddTimedEvent<GameLayer>(event2, this, &GameLayer::OnEvent);
-		queue->AddTimedEvent<GameLayer>(event3, this, &GameLayer::OnEvent);
-	}
-
-	void OnEvent(TimedEvent<GameObjectType, EventType>* e) {
-		APP_ERROR("Event fired: {0}", e->m_type);
+		SpawnEvent* e = new SpawnEvent(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+		queue->Publish(e, 1);
+		SpawnEvent* e1 = new SpawnEvent(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+		queue->Publish(e1, 5);
+		SpawnEvent* e2 = new SpawnEvent(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+		queue->Publish(e2, 2);
+		SpawnEvent* e3 = new SpawnEvent(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+		queue->Publish(e3, 4);
 	}
 
 	void LoadGameWorld()

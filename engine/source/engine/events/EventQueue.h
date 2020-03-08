@@ -13,12 +13,30 @@ Creation date	: 02/09/2020
 
 #pragma once
 
+#include "engine-precompiled-header.h"
 #include "EventHandler.h"
+
+#include <GLFW/glfw3.h>
 
 namespace gswy {
 
 	template <typename EntityType, typename EventType>
 	class EventQueue {
+
+	private:
+		template <typename EntityType, typename EventType>
+		struct DelayedEvent : Event<EntityType, EventType> {
+
+			DelayedEvent() = default;
+			explicit DelayedEvent(Event<EntityType, EventType>* event, float delayTime) : m_event(event), m_triggerTime(delayTime + glfwGetTime()) {
+			}
+
+			virtual ~DelayedEvent() {
+			}
+
+			Event<EntityType, EventType>* m_event;
+			float m_triggerTime;
+		};
 	
 	public:
 
@@ -34,7 +52,7 @@ namespace gswy {
 		typedef std::list<BaseEventHandler*> EventHandlerList;
 
 		template <typename T>
-		void Subscribe(T* instance, EventType eventType, void (T::*Function)(Event<EntityType, EventType>*)) {
+		void Subscribe(T* instance, EventType eventType, void (T::* Function)(Event<EntityType, EventType>*)) {
 			EventHandlerList* eventHandlers = m_subscribers[eventType];
 
 			if (eventHandlers == nullptr) {
@@ -59,24 +77,26 @@ namespace gswy {
 			}
 		}
 
-		template <typename T>
-		void AddTimedEvent(TimedEvent<EntityType, EventType>* event, T* instance, void (T::* Function)(TimedEvent<EntityType, EventType>*)) {			
-			m_timedEvents.emplace(event, new TimedEventHandler<T, EntityType, EventType>(instance, Function));
+		void Publish(Event<EntityType, EventType>* event, const float& delay) {
+			DelayedEvent<EntityType, EventType>* delayedEvent = new DelayedEvent<EntityType, EventType>(event, delay);
+			m_events.emplace(delayedEvent);
 		}
 
 		void Update(float frameTime) {
-			std::map<TimedEvent<EntityType, EventType>*, BaseEventHandler*>::iterator it = m_timedEvents.begin();
-			while (it != m_timedEvents.end()) {
-				TimedEvent<EntityType, EventType>* event = it->first;
-				event->m_time -= frameTime;
-				APP_CRITICAL("Update event type: {0}", event->m_type);
-				if (event->m_time < 0.0f) {
-					BaseEventHandler* handler = it->second;
-					handler->Execute(event);
-					it = m_timedEvents.erase(it);
+			double now = glfwGetTime();
+			while (!m_events.empty()) {
+				DelayedEvent<EntityType, EventType>* delayedEvent = m_events.top();
+				/*
+					Since the priority queue mimic min-heap, event at the top has the lowest trigger-time.
+					If the current system-time is not greater than the element at the top, program counter
+					will come out of the loop. Otherwise, the system will keep publishing events.
+				*/
+				if (now > delayedEvent->m_triggerTime) {
+					Publish(delayedEvent->m_event);
+					m_events.pop();
 				}
 				else {
-					++it;
+					break;
 				}
 			}
 		}
@@ -84,6 +104,16 @@ namespace gswy {
 	private:
 		std::map<EventType, EventHandlerList*> m_subscribers;
 
-		std::map<TimedEvent<EntityType, EventType>*, BaseEventHandler*> m_timedEvents;
+		struct DelayedTimeComparator {
+			bool operator() (const DelayedEvent<EntityType, EventType>* event1, const DelayedEvent<EntityType, EventType>* event2) {
+				return event1->m_triggerTime > event2->m_triggerTime;
+			}
+		};
+
+		/*
+			This queue simulates a priority-queue.
+		*/
+		std::priority_queue<DelayedEvent<EntityType, EventType>*, std::vector<DelayedEvent<EntityType, EventType>*>, DelayedTimeComparator> m_events;
+
 	};
 }
