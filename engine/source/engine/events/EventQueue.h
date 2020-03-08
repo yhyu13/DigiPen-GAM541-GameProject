@@ -111,7 +111,7 @@ namespace gswy {
 		};
 
 		/*
-			This queue simulates a priority-queue.
+			This queue simulates a min-heap.
 		*/
 		std::priority_queue<DelayedEvent<EntityType, EventType>*, std::vector<DelayedEvent<EntityType, EventType>*>, DelayedTimeComparator> m_events;
 
