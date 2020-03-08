@@ -88,8 +88,9 @@ namespace gswy {
 				DelayedEvent<EntityType, EventType>* delayedEvent = m_events.top();
 				/*
 					Since the priority queue mimic min-heap, event at the top has the lowest trigger-time.
-					If the current system-time is not greater than the element at the top, program counter
-					will come out of the loop. Otherwise, the system will keep publishing events.
+					If the current system-time is not greater than the trigger-time of element at the top,
+					program counter will come out of the loop. Otherwise, the system will keep publishing
+					events.
 				*/
 				if (now > delayedEvent->m_triggerTime) {
 					Publish(delayedEvent->m_event);
