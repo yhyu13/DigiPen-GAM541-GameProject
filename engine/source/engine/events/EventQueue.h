@@ -104,7 +104,7 @@ namespace gswy {
 	private:
 		std::map<EventType, EventHandlerList*> m_subscribers;
 
-		struct DelayedTimeComparator {
+		struct DelayedEventComparator {
 			bool operator() (const DelayedEvent<EntityType, EventType>* event1, const DelayedEvent<EntityType, EventType>* event2) {
 				return event1->m_triggerTime > event2->m_triggerTime;
 			}
@@ -113,7 +113,7 @@ namespace gswy {
 		/*
 			This queue simulates a min-heap.
 		*/
-		std::priority_queue<DelayedEvent<EntityType, EventType>*, std::vector<DelayedEvent<EntityType, EventType>*>, DelayedTimeComparator> m_events;
+		std::priority_queue<DelayedEvent<EntityType, EventType>*, std::vector<DelayedEvent<EntityType, EventType>*>, DelayedEventComparator> m_events;
 
 	};
 }
