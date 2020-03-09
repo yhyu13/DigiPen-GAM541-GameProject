@@ -29,7 +29,7 @@ namespace gswy
 			queue->Subscribe<SoundComSys>(this, EventType::SOUND, &SoundComSys::OnPLAYSOUND);
 		}
 
-		void OnPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtrType e)
+		void OnPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			auto audio = AudioManager::GetInstance();
 			if (auto event = static_pointer_cast<SoundEvent>(e))

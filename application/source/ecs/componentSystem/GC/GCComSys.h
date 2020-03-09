@@ -63,7 +63,7 @@ namespace gswy
 			m_GCList.clear();
 		}
 
-		void OnGC(EventQueue<GameObjectType, EventType>::EventPtrType e)
+		void OnGC(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			if (auto event = static_pointer_cast<GCEvent>(e))
 			{

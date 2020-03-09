@@ -44,7 +44,7 @@ namespace gswy
 			}
 		}
 
-		void OnCOLLISION(EventQueue<GameObjectType, EventType>::EventPtrType e)
+		void OnCOLLISION(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			if (auto event = static_pointer_cast<CollisionEvent>(e))
 			{

@@ -28,7 +28,7 @@ namespace gswy
 			queue->Subscribe<DeathComSys>(this, EventType::DEATH, &DeathComSys::OnDEATH);
 		}
 
-		void OnDEATH(EventQueue<GameObjectType, EventType>::EventPtrType e)
+		void OnDEATH(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			if (auto event = static_pointer_cast<DeathEvent>(e))

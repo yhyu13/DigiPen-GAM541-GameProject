@@ -40,7 +40,7 @@ namespace gswy
 			if (m_spawnZOrder > 5000) m_spawnZOrder = 1000;
 		}
 
-		void OnSPAWN(EventQueue<GameObjectType, EventType>::EventPtrType e)
+		void OnSPAWN(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			if (auto event = static_pointer_cast<SpawnEvent>(e))
 			{
