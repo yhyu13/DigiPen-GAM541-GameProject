@@ -21,13 +21,14 @@ Creation date: 03/02/2020
 
 namespace gswy {
 	/*
-	Use example
-	TileMapManager::GetInstance()->Init;
-	TileMapManager::GetInstance()->Add("Level1");
-	TileMapManager::GetInstance()->SetCurrentMapName("Level1");
-	TileMapManager::GetInstance()->LoadCurrentTileMap(world);
-	TileMapManager::GetInstance()->UnloadCurrentTileMap(world);
-	TileMapManager::GetInstance()->ShutDown();
+	Use case
+		TileMapManager::GetInstance()->Init;
+		TileMapManager::GetInstance()->Add("Level1");
+		TileMapManager::GetInstance()->SetCurrentMapName("Level1");
+		TileMapManager::GetInstance()->LoadCurrentTileMap(world);
+		TileMapManager::GetInstance()->UnloadCurrentTileMap(world);
+		...
+		TileMapManager::GetInstance()->ShutDown();
 	*/
 	class GameTileMapManager : public TileMapManager
 	{
@@ -124,7 +125,8 @@ namespace gswy {
 						}
 
 						/*
-							Create background tiles as individual sprites (warning performance critical!)
+							1, Create background tiles as individual sprites (warning performance critical!)
+							2, Or cheat to use a single atlas map as background but has all tiles holding a collision box.
 						*/
 						//for (auto& tileset : map->getTilesets())
 						//{

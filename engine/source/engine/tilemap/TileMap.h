@@ -14,25 +14,43 @@ Creation date: 02/26/2020
 #include "engine/allocator/MemoryManager.h"
 #include "engine/math/MathHelper.h"
 #include "engine/ai/Grid_float.h"
+#include "engine/ai/PathFinding.h"
 
 namespace gswy {
 
 	extern float GSWY_GetPixel2WorldNumerator();
 
+	/*
+	Use case:
+		auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
+		auto pathGrid = tileMapObj->GetTileGrid("Path");
+		auto Astar = tileMapObj->GetPathFinder("Path");
+		if (Astar->Search(*pathGrid, _src, _dest))
+		{
+			auto result = Astar->GetResult();
+		}
+		else
+		{
+			...
+		}
+	*/
 	class TileMap
 	{
 	public:
 		typedef Grid_float TileGrid;
+		typedef PathFinding PathFinder;
 
 		explicit TileMap(const std::string& name)
 			:
-			m_name(name)
+			m_name(name),
+			m_Map(nullptr),
+			m_PathFinder(nullptr)
 		{
 		}
 		static std::shared_ptr<TileMap> Create(const std::string& path);
 		std::shared_ptr<tson::Map> GetMap();
 		TileGrid* GetTileGrid(const std::string& name);
-
+		std::shared_ptr<PathFinder> GetPathFinder(const std::string& name);
 		/*
 			World position to tile grid position
 		*/
@@ -53,6 +71,7 @@ namespace gswy {
 	private:
 		std::string m_name;
 		std::shared_ptr<tson::Map> m_Map;
+		std::shared_ptr<PathFinder> m_PathFinder;
 		std::map<std::string, TileGrid> m_Grids;
 	};
 }

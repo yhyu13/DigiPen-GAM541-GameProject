@@ -27,10 +27,6 @@ gswy::PathFinding::PathFinding(int x, int y)
 	for (int i = 0; i < ROW; ++i)
 	{
 		closedList[i] = (bool*)MemoryManager::Allocate(COL * sizeof(bool));
-		for (int j = 0; j < COL; ++j)
-		{
-			closedList[i][j] = false;
-		}
 	}
 
 	// Declare a 2D array of structure to hold the details 
@@ -39,10 +35,6 @@ gswy::PathFinding::PathFinding(int x, int y)
 	for (int i = 0; i < ROW; ++i)
 	{
 		cellDetails[i] = (cell*)MemoryManager::Allocate(COL * sizeof(cell));
-		for (int j = 0; j < COL; ++j)
-		{
-			cellDetails[i][j] = cell();
-		}
 	}
 }
 

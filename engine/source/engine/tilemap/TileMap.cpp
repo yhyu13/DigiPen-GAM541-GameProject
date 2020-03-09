@@ -75,6 +75,16 @@ gswy::TileMap::TileGrid* gswy::TileMap::GetTileGrid(const std::string& name)
 	return &m_Grids[name];
 }
 
+std::shared_ptr<gswy::TileMap::PathFinder> gswy::TileMap::GetPathFinder(const std::string& name)
+{
+	if (m_PathFinder == nullptr)
+	{
+		auto pathGrid = GetTileGrid(name);
+		m_PathFinder = std::make_shared<PathFinder>(pathGrid->X(), pathGrid->Y());
+	}
+	return m_PathFinder;
+}
+
 ivec2 gswy::TileMap::World2Grid(const vec2& v)
 {
 	return ivec2(int(v.x * GSWY_GetPixel2WorldNumerator() / m_Map->getTileSize().x),

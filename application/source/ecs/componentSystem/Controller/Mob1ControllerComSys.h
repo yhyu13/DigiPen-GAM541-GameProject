@@ -42,7 +42,7 @@ namespace gswy
 
 			auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
 			auto pathGrid = tileMapObj->GetTileGrid("Path");
-			auto Astar = PathFinding(pathGrid->X(), pathGrid->Y());
+			auto Astar = tileMapObj->GetPathFinder("Path");
 			auto playerEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY);
 			for (auto& entity : m_registeredEntities) {
@@ -71,9 +71,9 @@ namespace gswy
 					auto _dest = tileMapObj->World2Grid(dest);
 					auto _src = tileMapObj->World2Grid(src);
 					
-					if (Astar.Search(*pathGrid, _src, _dest))
+					if (Astar->Search(*pathGrid, _src, _dest))
 					{
-						auto result = Astar.GetResult();
+						auto result = Astar->GetResult();
 						// 1. Rotate
 						auto nextPos = tileMapObj->Grid2World((result.size() > 5)? result[5]: result.back());
 						auto delta = nextPos - src;
