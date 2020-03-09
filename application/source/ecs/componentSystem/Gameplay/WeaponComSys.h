@@ -39,9 +39,9 @@ namespace gswy
 			if (m_spawnZOrder > 9000) m_spawnZOrder = 5000;
 		}
 
-		void OnFIREWEAPON(Event<GameObjectType, EventType>* e) 
+		void OnFIREWEAPON(EventQueue<GameObjectType, EventType>::EventPtrType e)
 		{
-			if (auto event = static_cast<FireWeaponEvent*>(e))
+			if (auto event = static_pointer_cast<FireWeaponEvent>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
 				ComponentDecorator<TransformCom, GameObjectType> transform;

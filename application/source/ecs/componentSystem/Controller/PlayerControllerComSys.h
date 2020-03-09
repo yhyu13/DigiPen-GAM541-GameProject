@@ -49,15 +49,15 @@ namespace gswy
 					// 2. Fire
 					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 					{
-						FireWeaponEvent e(entity);
-						queue->Publish(&e);
+						auto e = MemoryManager::Make_shared<FireWeaponEvent>(entity);
+						queue->Publish(e);
 					}
 
 					// 3. (Demo) Spawn enemies by triggering buttons
 					if (input->IsKeyTriggered(KEY_SPACE))
 					{
-						SpawnEvent e(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
-						queue->Publish(&e);
+						auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
+						queue->Publish(e);
 					}
 
 					// 4. Movement with keys
@@ -88,8 +88,8 @@ namespace gswy
 					if (!isIdle)
 					{
 						// Play foot step sound
-						SoundEvent e("footstep02");
-						queue->Publish(&e);
+						auto e = MemoryManager::Make_shared<SoundEvent>("footstep02");
+						queue->Publish(e);
 
 						// Set moving velocity
 						transform->SetVelocity(glm::normalize(velocity) * speed);

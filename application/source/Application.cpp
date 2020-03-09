@@ -171,13 +171,13 @@ public:
 			For the purpose of testing the delayed events
 		*/
 		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-		SpawnEvent* e = new SpawnEvent(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+		auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
 		queue->Publish(e, 1);
-		SpawnEvent* e1 = new SpawnEvent(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+		auto e1 = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
 		queue->Publish(e1, 5);
-		SpawnEvent* e2 = new SpawnEvent(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+		auto e2 = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
 		queue->Publish(e2, 2);
-		SpawnEvent* e3 = new SpawnEvent(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+		auto e3 = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
 		queue->Publish(e3, 4);
 	}
 

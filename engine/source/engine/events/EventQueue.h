@@ -22,21 +22,6 @@ namespace gswy {
 
 	template <typename EntityType, typename EventType>
 	class EventQueue {
-
-	private:
-		template <typename EntityType, typename EventType>
-		struct DelayedEvent : Event<EntityType, EventType> {
-
-			DelayedEvent() = default;
-			explicit DelayedEvent(Event<EntityType, EventType>* event, float delayTime) : m_event(event), m_triggerTime(delayTime + glfwGetTime()) {
-			}
-
-			virtual ~DelayedEvent() {
-			}
-
-			Event<EntityType, EventType>* m_event;
-			float m_triggerTime;
-		};
 	
 	public:
 
@@ -50,9 +35,29 @@ namespace gswy {
 		}
 
 		typedef std::list<BaseEventHandler*> EventHandlerList;
+		typedef std::shared_ptr<Event<EntityType, EventType>> EventPtrType;
+
+	private:
+		template <typename EntityType, typename EventType>
+		struct DelayedEvent : Event<EntityType, EventType> {
+
+			DelayedEvent() = default;
+			explicit DelayedEvent(EventPtrType event, float delayTime) : m_event(event), m_triggerTime(delayTime + glfwGetTime()) {
+			}
+
+			virtual ~DelayedEvent() {
+			}
+
+			EventPtrType m_event;
+			float m_triggerTime;
+		};
+
+		typedef std::shared_ptr<DelayedEvent<EntityType, EventType>> DelayedEventPtrType;
+
+	public:
 
 		template <typename T>
-		void Subscribe(T* instance, EventType eventType, void (T::* Function)(Event<EntityType, EventType>*)) {
+		void Subscribe(T* instance, EventType eventType, void (T::* Function)(EventPtrType)) {
 			EventHandlerList* eventHandlers = m_subscribers[eventType];
 
 			if (eventHandlers == nullptr) {
@@ -63,7 +68,7 @@ namespace gswy {
 			eventHandlers->push_back(new EventHandler<T, EntityType, EventType>(instance, Function));
 		}
 
-		void Publish(Event<EntityType, EventType>* e) {
+		void Publish(EventPtrType e) {
 			EventHandlerList* eventHandlers = m_subscribers[e->m_type];
 
 			if (eventHandlers == nullptr) {
@@ -72,20 +77,20 @@ namespace gswy {
 			DEBUG_PRINT("Publish " + Str(*e));
 			for (auto& handler : *eventHandlers) {
 				if (handler != nullptr) {
-					handler->Execute(e);
+					handler->Execute(static_pointer_cast<BaseEvent>(e));
 				}
 			}
 		}
 
-		void Publish(Event<EntityType, EventType>* event, const float& delay) {
-			DelayedEvent<EntityType, EventType>* delayedEvent = new DelayedEvent<EntityType, EventType>(event, delay);
+		void Publish(EventPtrType event, const float& delay) {
+			DelayedEventPtrType delayedEvent = MemoryManager::Make_shared<DelayedEvent<EntityType, EventType>>(event, delay);
 			m_events.emplace(delayedEvent);
 		}
 
 		void Update(float frameTime) {
 			double now = glfwGetTime();
 			while (!m_events.empty()) {
-				DelayedEvent<EntityType, EventType>* delayedEvent = m_events.top();
+				DelayedEventPtrType delayedEvent = m_events.top();
 				/*
 					Since the priority queue mimic min-heap, event at the top has the lowest trigger-time.
 					If the current system-time is not greater than the trigger-time of element at the top,
@@ -106,7 +111,7 @@ namespace gswy {
 		std::map<EventType, EventHandlerList*> m_subscribers;
 
 		struct DelayedEventComparator {
-			bool operator() (const DelayedEvent<EntityType, EventType>* event1, const DelayedEvent<EntityType, EventType>* event2) {
+			bool operator() (const DelayedEventPtrType& event1, const DelayedEventPtrType& event2) {
 				return event1->m_triggerTime > event2->m_triggerTime;
 			}
 		};
@@ -114,7 +119,7 @@ namespace gswy {
 		/*
 			This queue simulates a min-heap.
 		*/
-		std::priority_queue<DelayedEvent<EntityType, EventType>*, std::vector<DelayedEvent<EntityType, EventType>*>, DelayedEventComparator> m_events;
+		std::priority_queue<DelayedEventPtrType, std::vector<DelayedEventPtrType>, DelayedEventComparator> m_events;
 
 	};
 }

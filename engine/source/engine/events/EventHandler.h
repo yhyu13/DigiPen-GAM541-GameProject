@@ -13,7 +13,7 @@ Creation date	: 02/09/2020
 
 
 #pragma once
-
+#include <memory>
 #include "Event.h"
 
 namespace gswy {
@@ -22,13 +22,13 @@ namespace gswy {
 	
 	public:
 	
-		void Execute(BaseEvent* event) {
+		void Execute(std::shared_ptr<BaseEvent> event) {
 			return HandleEvent(event);
 		}
 	
 	protected:
 	
-		virtual void HandleEvent(BaseEvent* event) = 0;
+		virtual void HandleEvent(std::shared_ptr<BaseEvent> event) = 0;
 
 	};
 
@@ -37,13 +37,13 @@ namespace gswy {
 
 	public:
 
-		typedef void (T::* HandlerFunction) (Event<EntityType, EventType>*);
+		typedef void (T::* HandlerFunction) (std::shared_ptr<Event<EntityType, EventType>>);
 
 		EventHandler(T* instance, HandlerFunction function) : m_handlerOwner(instance), m_handler(function) {
 		}
 
-		virtual void HandleEvent(BaseEvent* event) {
-			(m_handlerOwner->*m_handler)(static_cast<Event<EntityType, EventType>*>(event));
+		virtual void HandleEvent(std::shared_ptr<BaseEvent> event) {
+			(m_handlerOwner->*m_handler)(static_pointer_cast<Event<EntityType, EventType>>(event));
 		}
 
 	private:

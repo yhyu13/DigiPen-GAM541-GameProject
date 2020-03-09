@@ -28,10 +28,10 @@ namespace gswy
 			queue->Subscribe<DeathComSys>(this, EventType::DEATH, &DeathComSys::OnDEATH);
 		}
 
-		void OnDEATH(Event<GameObjectType, EventType>* e)
+		void OnDEATH(EventQueue<GameObjectType, EventType>::EventPtrType e)
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			if (auto event = static_cast<DeathEvent*>(e))
+			if (auto event = static_pointer_cast<DeathEvent>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
 				switch (event->m_entity.m_type)
@@ -44,8 +44,8 @@ namespace gswy
 				{
 					// TODO : Need proper handle of enemy death
 					PRINT("ENEMY has died!");
-					GCEvent _e(event->m_entity);
-					queue->Publish(&_e);
+					auto _e = MemoryManager::Make_shared<GCEvent>(event->m_entity);
+					queue->Publish(_e);
 				}
 					break;
 				default:
