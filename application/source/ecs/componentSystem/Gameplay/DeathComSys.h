@@ -34,6 +34,10 @@ namespace gswy
 			if (auto event = static_pointer_cast<DeathEvent>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
+
+				// Set entity to be inactive
+				event->m_entity.m_active = false;
+
 				switch (event->m_entity.m_type)
 				{
 				case GameObjectType::PLAYER:
@@ -44,7 +48,11 @@ namespace gswy
 				{
 					// TODO : Need proper handle of enemy death
 					PRINT("ENEMY has died!");
-					auto _e = MemoryManager::Make_shared<GCEvent>(event->m_entity);
+					/*auto _e = MemoryManager::Make_shared<GCEvent>(event->m_entity);
+					queue->Publish(_e);*/
+
+					// Test code : Instead of calling GC on death, making enemies fade out in 1 sec
+					auto _e = MemoryManager::Make_shared<FadeEvent>(event->m_entity, 1.f, 0.f, 1.f, EventType::GC);
 					queue->Publish(_e);
 				}
 					break;

@@ -33,7 +33,6 @@ namespace gswy {
 			return &inst;
 		}
 
-
 		virtual void Init() override {};
 		virtual void Update(double deltaTime) override {};
 		virtual void Shutdown() override {};
@@ -44,7 +43,7 @@ namespace gswy {
 		*/
 		std::shared_ptr<T> Create(std::string filePath, std::string name)
 		{
-			auto it = m_resources.find(filePath);
+			auto it = m_resources.find(name);
 			if (it != m_resources.end())
 			{
 				return it->second.second;
@@ -65,7 +64,7 @@ namespace gswy {
 		*/
 		std::shared_ptr<T> LoadFromFile(std::string filePath, std::string name)
 		{
-			auto it = m_resources.find(filePath);
+			auto it = m_resources.find(name);
 			if (it != m_resources.end())
 			{
 				return it->second.second;
@@ -123,18 +122,6 @@ namespace gswy {
 			// TODO : Engine exception
 			throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Resource with id " + str2wstr(name) + L" is not managed!");
 		}
-
-		// Deprecated
-		//bool Has(int id)
-		//{
-		//	return (Get(id) != nullptr);
-		//}
-		// Deprecated
-		//bool Has(std::string name)
-		//{
-		//	return (Get(name) != nullptr);
-		//}
-
 	private:
 		int m_currentId;
 		std::map<std::string, std::pair<int, std::shared_ptr<T>>> m_resources;

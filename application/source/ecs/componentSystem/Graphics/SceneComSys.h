@@ -29,6 +29,7 @@ namespace gswy
 		{
 			lock();
 			for (auto& entity : m_registeredEntities) {
+
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
 				m_parentWorld->Unpack(entity, sprite);
 				/* Drawing sprites */

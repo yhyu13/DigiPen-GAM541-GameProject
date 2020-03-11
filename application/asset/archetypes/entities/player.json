@@ -20,11 +20,15 @@
     {
       "component": "animation",
       "animation": {
-        "name": "PlayerAnimation1",
+        "name": [
+		  "PlayerAnimation1",
+		  "PlayerAnimation0"
+		],
         "states": [
-          "Move"
+          "Move",
+		  "Idle"
         ],
-        "current-state": "Move"
+        "current-state": "Idle"
       }
     },
     {

@@ -27,8 +27,10 @@ namespace gswy {
 	template<typename EntityType>
 	struct Entity {
 
+		bool m_active = true;
 		unsigned int m_id;
 		EntityType m_type;
+
 
 		Entity(unsigned int id, EntityType type): m_id(id), m_type(type) {
 		}

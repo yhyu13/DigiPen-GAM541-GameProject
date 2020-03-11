@@ -26,12 +26,8 @@ namespace gswy {
 		m_SpriteY = 0;
 		m_Scale = glm::vec2(1);
 		m_Rotation = 0.0f;
-<<<<<<< Updated upstream
-		
-=======
 		m_ShaderName = "Default";
 		m_alpha = 1.0f;
->>>>>>> Stashed changes
 		m_Vertices = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
@@ -51,8 +47,6 @@ namespace gswy {
 		m_SpriteY = 0;
 		m_Scale = glm::vec2(1);
 		m_Rotation = 0.0f;
-<<<<<<< Updated upstream
-=======
 		m_ShaderName = "Default";
 		m_alpha = 1.0f;
 		m_Vertices = {
@@ -61,7 +55,6 @@ namespace gswy {
 			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
->>>>>>> Stashed changes
 		m_init = false;
 	}
 
@@ -74,8 +67,8 @@ namespace gswy {
 		if (!m_init)
 		{
 			m_init = true;
-			m_SpriteVertexArray = VertexArray::Create();
-			m_SpriteVertexBuffer = VertexBuffer::Create(&m_Vertices[0], m_Vertices.size() * sizeof(float));
+			if (!m_SpriteVertexArray) m_SpriteVertexArray = VertexArray::Create();
+			if (!m_SpriteVertexBuffer) m_SpriteVertexBuffer = VertexBuffer::Create(&m_Vertices[0], m_Vertices.size() * sizeof(float));
 		}
 	}
 
@@ -92,10 +85,10 @@ namespace gswy {
 		}
 		float texWidth = GetTextureWidth();
 		float texHeight = GetTextureHeight();
-		float perTexCoordOffsetX = (float)(m_SpriteWidth / texWidth);
-		float perTexCoordOffsetY = (float)(m_SpriteHeight / texHeight);
-		float texCoordX = (float)(m_SpriteX / texWidth);
-		float texCoordY = (float)(m_SpriteY / texHeight);
+		float perTexCoordOffsetX = ((float)m_SpriteWidth / texWidth);
+		float perTexCoordOffsetY = ((float)m_SpriteHeight / texHeight);
+		float texCoordX = ((float)m_SpriteX / texWidth);
+		float texCoordY = ((float)m_SpriteY / texHeight);
 		DrawInternal(glm::vec2(0.5f), glm::vec2(texCoordX, texCoordY), glm::vec2(perTexCoordOffsetX, perTexCoordOffsetY));
 	}
 

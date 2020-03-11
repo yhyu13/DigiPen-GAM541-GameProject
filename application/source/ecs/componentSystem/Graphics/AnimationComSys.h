@@ -36,14 +36,16 @@ namespace gswy
 				m_parentWorld->Unpack(entity, sprite);
 				auto m_sprite = sprite->Get();
 				auto m_animation = animation->GetCurrentAnimation();
-				m_animation->UpdateFrame(dt);
-				/* Loading current animation into sprite component*/
-				auto currentFrame = m_animation->GetCurrentFrame();
-				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get(currentFrame->textureName));
-				m_sprite->SetSpriteX(currentFrame->x);
-				m_sprite->SetSpritey(currentFrame->y);
-				m_sprite->SetSpriteWidth(currentFrame->width);
-				m_sprite->SetSpriteHeight(currentFrame->height);
+				if (m_animation->UpdateFrame(dt))
+				{
+					/* Loading current animation into sprite component*/
+					auto currentFrame = m_animation->GetCurrentFrame();
+					m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get(currentFrame->textureName));
+					m_sprite->SetSpriteX(currentFrame->x);
+					m_sprite->SetSpritey(currentFrame->y);
+					m_sprite->SetSpriteWidth(currentFrame->width);
+					m_sprite->SetSpriteHeight(currentFrame->height);
+				}
 			}
 			unlock();
 		}

@@ -13,6 +13,7 @@
       "hitpoint",
       "death",
 	  "lifetime",
+	  "fade",
 	  
 	  "animation",
 	  "particle",

@@ -15,7 +15,17 @@ Creation date: 02/26/2020
 #include "engine/allocator/MemoryManager.h"
 #include "TileMap.h"
 
+
 namespace gswy {
+	/*
+		Use example
+		TileMapManager::GetInstance()->Init;
+		TileMapManager::GetInstance()->Add("Level1");
+		TileMapManager::GetInstance()->SetCurrentMapName("Level1");
+		// create a derived class of TileMapManager to creat your custom tilemap loader and unloader
+		...
+		TileMapManager::GetInstance()->ShutDown();
+	*/
 	class TileMapManager : public IRunTimeModule
 	{
 	public:
@@ -25,17 +35,17 @@ namespace gswy {
 			return &instance;
 		}
 
-		virtual void Init();;
-		virtual void Update(double deltaTime);;
-		virtual void LateUpdate(double deltaTime);;
-		virtual void Shutdown();;
+		virtual void Init();
+		virtual void Update(double deltaTime);
+		virtual void LateUpdate(double deltaTime);
+		virtual void Shutdown();
 
 		void SetCurrentMapName(const std::string& name);
 		const std::string& GetCurrentMapName();
 		std::shared_ptr<TileMap> GetCurrentMap();
 		void AddTileMap(const std::string& name);
 
-	private:
+	protected:
 		TileMapManager()
 		{}
 		std::string m_currentMapName;

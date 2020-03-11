@@ -14,15 +14,18 @@ Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
 Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
-#include <future>
-#include <glm/gtc/type_ptr.hpp>
 #include "EngineExport.h"
 #include "Import.h"
-#include "imgui/imgui.h"
-#include "object-factory/GameObjectFactory.h"
-#include "engine/platform/OpenGL/OpenGLPostProcessing.h"
 
 using namespace gswy;
+
+namespace gswy
+{
+	float GSWY_GetPixel2WorldNumerator()
+	{
+		return GSWY_GetWindowHeight() * 0.5f;
+	}
+}
 
 class GameLayer : public Layer {
 
@@ -36,6 +39,7 @@ public:
 
 	virtual ~GameLayer() 
 	{
+		GameTileMapManager::GetInstance()->Shutdown();
 	}
 
 	virtual void OnAttach() 
@@ -54,6 +58,9 @@ public:
 		OpenGLDebugDraw::Init();
 		m_PostProcessing.SetScreenSize(1280, 720);
 		m_PostProcessing.Init();
+
+		GameTileMapManager::GetInstance()->Init();
+
 		// Texture loader
 		ResourceAllocator<Texture2D>::GetInstance()->Init();
 		// Animation loader
@@ -79,9 +86,10 @@ public:
 	{
 		TIME("Loading Resources");
 
-		//ObjectFactory* factory = ObjectFactory::GetInstance();
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadResources("./asset/archetypes/resources.json");
+		// TODO : remove loading map test
+		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/untitled.json", "untitled");
 	}
 
 	void InitGameWorld()
@@ -148,6 +156,10 @@ public:
 				m_world->RegisterSystem(MemoryManager::Make_shared<DeathComSys>());
 				continue;
 			}
+			if (system._Equal("fade")) {
+				m_world->RegisterSystem(MemoryManager::Make_shared<FadeComSys>());
+				continue;
+			}
 			if (system._Equal("gc")) {
 				m_world->RegisterSystem(MemoryManager::Make_shared<GCComSys>());
 				continue;
@@ -187,6 +199,22 @@ public:
 		// object factory must be an abstract class in the engine and must be implemented in application
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
+
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/untitled.png","untitled");
+
+		// TODO : use proper reflection to handle map loading and background creation
+		auto obj = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+		auto sprite = SpriteCom();
+		auto m_sprite = sprite.Get();
+		m_sprite->SetSpriteScale(vec2(100.f * 32.f / GSWY_GetPixel2WorldNumerator(), 100.f * 32.f / GSWY_GetPixel2WorldNumerator()));
+		m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("untitled"));
+		m_sprite->SetSpritePosition(vec3(49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
+		m_sprite->SetSpriteRotation(0);
+		obj.AddComponent(sprite);
+
+		GameTileMapManager::GetInstance()->AddTileMap("untitled");
+		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");
+		GameTileMapManager::GetInstance()->LoadCurrentTileMap(m_world);
 	}
 
 	void BeforeRun()
@@ -234,8 +262,8 @@ public:
 	{
 		{
 			// Floating camera that centered around the player character
-			ComponentDecorator<TransformCom, GameObjectType> position;
-			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], position);
+			ComponentDecorator<TransformCom, GameObjectType> transform;
+			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
 			auto cursor = InputManager::GetInstance()->GetCursorPosition();
 			auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
 			auto delta = vec2(0);
@@ -244,9 +272,10 @@ public:
 			{
 				delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f : len);
 			}
-			auto targetPos = position->GetPos3D() + vec3(delta.x, -delta.y, 0.0f);
+			auto targetPos = transform->GetPos3D() + vec3(delta.x, -delta.y, 0.0f);
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
+			m_CameraController.SetZoomLevel(2);
 		}
 		AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 		m_CameraController.OnUpdate(ts);
@@ -296,8 +325,7 @@ public:
 				TIME("System Update");
 				Update(ts);
 			}
-		});
-		
+		});	
 		{
 			TIME("PreRender Update");
 			PreRenderUpdate(ts);
@@ -334,7 +362,7 @@ public:
 		ImGui::PopStyleVar(1);
 		ImGui::PopStyleColor(3);
 #ifdef _DEBUG
-
+		//TODO: Debug only
 		ImGui::Begin("Settings");
 		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
 		ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);

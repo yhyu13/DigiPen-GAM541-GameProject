@@ -38,8 +38,12 @@ namespace gswy
 				m_parentWorld->Unpack(entity, HitPoint);
 				if (HitPoint->IsDepleted())
 				{
-					auto e = MemoryManager::Make_shared<DeathEvent>(entity);
-					queue->Publish(e);
+					if (!HitPoint->GetIsDead())
+					{
+						auto e = MemoryManager::Make_shared<DeathEvent>(entity);
+						queue->Publish(e);
+						HitPoint->SetIsDead(true);
+					}
 				}
 			}
 		}

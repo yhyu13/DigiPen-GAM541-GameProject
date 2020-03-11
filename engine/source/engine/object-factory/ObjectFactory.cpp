@@ -93,6 +93,14 @@ namespace gswy {
 					float delay = properties["delay"].asFloat();
 					float frameCount = properties["frame-count"].asFloat();
 
+					if (name._Equal("PlayerAnimation0")) {
+						auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
+						for (int k = 0; k < 1; ++k) {
+							playerAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
+						}
+						continue;
+					}
+
 					if (name._Equal("PlayerAnimation1")) {
 						auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
 						for (int k = 0; k < 8; ++k) {
