@@ -29,6 +29,11 @@ namespace gswy
 		PLAYERSKILL1,
 		PLAYERSKILL2,
 		PLAYERSKILL3,
+
+		FADE,
+		_FADE_ING,
+		_FADE_END,
+
 		NUM
 	};
 }
@@ -42,7 +47,13 @@ std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 	case gswy::EventType::SPAWN: return o << "SPAWN";
 	case gswy::EventType::FIREWEAPON: return o << "FIREWEAPON";
 	case gswy::EventType::PLAYERWEAPON1: return o << "PLAYERWEAPON1";
+
 	case gswy::EventType::DEATH: return o << "DEATH";
+
+	case gswy::EventType::FADE: return o << "FADEIN";
+	case gswy::EventType::_FADE_ING: return o << "_FADEIN_ING";
+	case gswy::EventType::_FADE_END: return o << "_FADEIN_END";
+
 	default: return o << "(invalid value)";
 	}
 }

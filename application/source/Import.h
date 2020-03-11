@@ -24,4 +24,9 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/Gameplay/SpawningComSys.h"
 #include "ecs/componentSystem/Gameplay/HitPointComSys.h"
 #include "ecs/componentSystem/Gameplay/DeathComSys.h"
+#include "ecs/componentSystem/Gameplay/FadeComSys.h"
 #include "ecs/componentSystem/GC/GCComSys.h"
+
+///// Client application framework /////
+#include "object-factory/GameObjectFactory.h"
+#include "tilemap/GameTileMapManager.h"

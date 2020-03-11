@@ -48,6 +48,8 @@ namespace gswy {
 		void SetSpriteScale(const glm::vec2& scale);
 		void SetSpriteRotation(float rotation);
 
+		void SetSpriteAlpha(float alpha);
+		float GetSpriteAlpha();
 
 	private:
 		std::shared_ptr<Texture2D> m_Texture2D;
@@ -59,6 +61,8 @@ namespace gswy {
 		uint32_t m_SpriteX, m_SpriteY;
 		glm::vec2 m_Scale;
 		float_t m_Rotation;
+		std::string m_ShaderName;
+		float_t m_alpha;
 		bool m_init;
 	};
 }
