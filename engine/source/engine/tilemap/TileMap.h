@@ -10,31 +10,69 @@ Creation date: 02/26/2020
 - End Header ----------------------------*/
 
 #pragma once
-#include <json/json.h>
+#include <Tileson.h>
 #include "engine/allocator/MemoryManager.h"
+#include "engine/math/MathHelper.h"
+#include "engine/ai/Grid_float.h"
+#include "engine/ai/PathFinding.h"
 
 namespace gswy {
+
+	extern float GSWY_GetPixel2WorldNumerator();
+
+	/*
+	Use case:
+		auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
+		auto pathGrid = tileMapObj->GetTileGrid("Path");
+		auto Astar = tileMapObj->GetPathFinder("Path");
+		if (Astar->Search(*pathGrid, _src, _dest))
+		{
+			auto result = Astar->GetResult();
+		}
+		else
+		{
+			...
+		}
+	*/
 	class TileMap
 	{
 	public:
-		typedef MyVector(int32_t) layer_t;
+		typedef Grid_float TileGrid;
+		typedef PathFinding PathFinder;
 
 		explicit TileMap(const std::string& name)
 			:
-			m_name(name)
+			m_name(name),
+			m_Map(nullptr),
+			m_PathFinder(nullptr)
 		{
 		}
-		static std::shared_ptr<TileMap> Create(const std::string& path)
-		{
-			// TODO : Implement json serialization
-			return MemoryManager::Make_shared<TileMap>(path);
-		}
-		void AddLayer(const std::string& name, const layer_t& layer);
-		const layer_t& GetLayer(const std::string& name);
+		static std::shared_ptr<TileMap> Create(const std::string& path);
+		std::shared_ptr<tson::Map> GetMap();
+		TileGrid* GetTileGrid(const std::string& name);
+		std::shared_ptr<PathFinder> GetPathFinder(const std::string& name);
+		/*
+			World position to tile grid position
+		*/
+		ivec2 World2Grid(const vec2& v);
+		/*
+			World position to tile pixel position
+		*/
+		vec2 World2Pixel(const vec2& v);
+		/*
+			Tile pixel position to world position
+		*/
+		vec2 Pixel2World(const vec2& v);
+		/*
+			Tile grid position to world position
+		*/
+		vec2 Grid2World(const ivec2& v);
 
 	private:
 		std::string m_name;
-		std::map<std::string, layer_t> tileLayerMap;
+		std::shared_ptr<tson::Map> m_Map;
+		std::shared_ptr<PathFinder> m_PathFinder;
+		std::map<std::string, TileGrid> m_Grids;
 	};
 }
 

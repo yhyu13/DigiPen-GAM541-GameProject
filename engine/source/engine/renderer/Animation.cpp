@@ -25,7 +25,6 @@ Animation::Animation()
 	frames(0), 
 	currentFrameIndex(0), 
 	currentFrameTime(0.0),
-	m_IsIdle(true),
 	m_IsPaused(false),
 	m_IsLooping(true)
 {
@@ -48,23 +47,16 @@ const FrameData* Animation::GetCurrentFrame() const
 {
 	if (frames.size() > 0)
 	{
-		if (m_IsIdle)
-		{
-			return &frames[0];
-		}
-		else
-		{
-			return &frames[currentFrameIndex];
-		}
+		return &frames[currentFrameIndex];
 	}
 	return nullptr;
 }
 
 bool Animation::UpdateFrame(double deltaTime)
 {
-	if (m_IsPaused || m_IsIdle)
+	if (m_IsPaused)
 	{
-		return true;
+		return false;
 	}
 
 	if (frames.size() > 0)

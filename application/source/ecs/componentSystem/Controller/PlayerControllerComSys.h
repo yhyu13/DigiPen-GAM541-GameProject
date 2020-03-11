@@ -17,6 +17,7 @@ Creation date: 02/04/2020
 #include "engine/input/InputManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/AnimationCom.h"
+#include "ecs/components/SpriteCom.h"
 #include "ecs/CustomEvents.h"
 
 namespace gswy
@@ -58,6 +59,13 @@ namespace gswy
 					{
 						SpawnEvent e(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
 						queue->Publish(&e);
+
+						static bool flash = true;
+						ComponentDecorator<SpriteCom, GameObjectType> sprite;
+						m_parentWorld->Unpack(entity, sprite);
+						auto s = sprite->Get();
+						(flash)? s->SetSpriteShader("White"): s->SetSpriteShader("Default");
+						flash = !flash;
 					}
 
 					// 4. Movement with keys
@@ -93,8 +101,13 @@ namespace gswy
 
 						// Set moving velocity
 						transform->SetVelocity(glm::normalize(velocity) * speed);
+						animation->SetCurrentAnimationState("Move");
 					}
-					animation->GetCurrentAnimation()->SetAnimIdle(isIdle);
+					else
+					{
+						animation->SetCurrentAnimationState("Idle");
+					}
+					
 					return;
 				}
 		}

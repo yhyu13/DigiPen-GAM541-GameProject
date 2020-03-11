@@ -16,6 +16,7 @@ Creation date: 02/20/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "ecs/components/ParticleCom.h"
+#include "ecs/components/TransformCom.h"
 #include "ecs/EntityType.h"
 
 namespace gswy

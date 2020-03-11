@@ -27,11 +27,14 @@ namespace gswy {
 		InputManager* m_input = nullptr;
 		bool IsFullScreen = true;
 
-		WindowProperties(unsigned int width = 1000, unsigned int height = 600, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title) {
+		WindowProperties(unsigned int width = 1280, unsigned int height = 720, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title) {
 			m_input = InputManager::GetInstance();
 			m_input->SetMouseMaxPositions(width, height);
 		}
 	};
+
+	int GSWY_GetWindowWidth();
+	int GSWY_GetWindowHeight();
 
 	class ENGINE_API Window {
 
@@ -59,8 +62,8 @@ namespace gswy {
 		void Init(const WindowProperties& properties);
 
 	public:
-
-
+		static int width;
+		static int height;
 	protected:
 
 
@@ -69,5 +72,4 @@ namespace gswy {
 		WindowProperties m_windowProperties;
 		GLFWwindow* m_window;
 	};
-
 }

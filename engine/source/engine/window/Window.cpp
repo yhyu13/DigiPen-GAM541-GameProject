@@ -19,6 +19,21 @@ Creation date	: 01/26/2020
 #include <GLFW/glfw3.h>
 
 namespace gswy {
+
+
+	int Window::width = 1280;
+	int Window::height = 720;
+
+	int GSWY_GetWindowWidth()
+	{
+		return Window::width;
+	}
+
+	int GSWY_GetWindowHeight()
+	{
+		return Window::height;
+	}
+
 	
 	Window* Window::InitializeWindow(const WindowProperties& properties) {
 		return new Window(properties);
@@ -51,6 +66,8 @@ namespace gswy {
 
 	void Window::Init(const WindowProperties& properties) {
 
+		width = properties.m_width;
+		height = properties.m_height;
 		m_windowProperties.m_width = properties.m_width;
 		m_windowProperties.m_height = properties.m_height;
 		m_windowProperties.m_title = properties.m_title;
@@ -130,5 +147,4 @@ namespace gswy {
 			properties.m_input->UpdateCursorPosition(positionX, positionY);
 		});
 	}
-
 }

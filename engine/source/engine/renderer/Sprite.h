@@ -48,17 +48,20 @@ namespace gswy {
 		void SetSpriteScale(const glm::vec2& scale);
 		void SetSpriteRotation(float rotation);
 
+		void SetSpriteShader(const std::string& name);
+		void ResetSpriteShader();
 
 	private:
 		std::shared_ptr<Texture2D> m_Texture2D;
-		std::shared_ptr<VertexArray> m_SpriteVertexArray;
-		std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
+		std::shared_ptr<VertexArray> m_SpriteVertexArray = nullptr;
+		std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer = nullptr;
 		std::vector<float> m_Vertices;
 		glm::vec3 m_Position;
 		uint32_t m_SpriteWidth, m_SpriteHeight;
 		uint32_t m_SpriteX, m_SpriteY;
 		glm::vec2 m_Scale;
 		float_t m_Rotation;
+		std::string m_ShaderName;
 		bool m_init;
 	};
 }

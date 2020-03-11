@@ -54,8 +54,8 @@ namespace gswy
 				}
 			}
 		}
-
-		virtual void Render(double dt) override
+//#ifdef _DEBUG
+		virtual void PostRenderUpdate(double dt) override
 		{
 			static bool debugDraw = false;
 			if (InputManager::GetInstance()->IsKeyTriggered(GLFW_KEY_F1))
@@ -64,6 +64,7 @@ namespace gswy
 			}
 			if (debugDraw)
 			{
+				lock();
 				for (auto& entity : m_registeredEntities)
 				{
 					ComponentDecorator<BodyCom, GameObjectType> body;
@@ -81,8 +82,12 @@ namespace gswy
 						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), glm::vec2(circle->GetRadius(), circle->GetRadius()), transform->GetRotation(), glm::vec4(1.0f));
 					}
 				}
+				unlock();
 			}
 		}
+//#endif // _DEBUG
+
+		
 
 		virtual void Update(double dt) override
 		{

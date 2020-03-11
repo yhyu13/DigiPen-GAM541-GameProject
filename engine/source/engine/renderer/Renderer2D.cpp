@@ -29,6 +29,8 @@ namespace gswy {
 		std::shared_ptr<IndexBuffer> QuadIndexBuffer;
 		std::shared_ptr<Shader> QuadShader;
 		std::shared_ptr<Texture2D> QuadTexture;
+
+		std::map<std::string, std::shared_ptr<Shader>> ShaderMap;
 	};
 
 	static Renderer2DStorage* s_Data;
@@ -62,9 +64,19 @@ namespace gswy {
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data->QuadTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
-		s_Data->QuadShader = Shader::Create("./asset/shaders/QuadShader.vs", "./asset/shaders/QuadShader.fs");
+		// Create all shaders
+		s_Data->ShaderMap["Default"] = Shader::Create("./asset/shaders/QuadShader.vs", "./asset/shaders/QuadShader.fs");
+		s_Data->ShaderMap["White"] = Shader::Create("./asset/shaders/QuadShader.vs", "./asset/shaders/QuadShaderWhite.fs");
+		// Init all shaders
+		for (auto it = s_Data->ShaderMap.begin(); it != s_Data->ShaderMap.end(); ++it)
+		{
+			// OpenGL shader parameters could be assigned only after binding.
+			it->second->Bind();
+			it->second->SetInt("u_Texture", 0);
+		}
+		// Assign default shader
+		s_Data->QuadShader = s_Data->ShaderMap["Default"];
 		s_Data->QuadShader->Bind();
-		s_Data->QuadShader->SetInt("u_Texture", 0);
 	}
 
 	void Renderer2D::Shutdown()
@@ -81,8 +93,12 @@ namespace gswy {
 	{
 		s_Data->QuadIndexBuffer->Bind();
 		s_Data->QuadVertexBuffer->Bind();
-		s_Data->QuadShader->Bind();
-		s_Data->QuadShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		// Init all shaders at the begining of the scene
+		for (auto it = s_Data->ShaderMap.begin(); it != s_Data->ShaderMap.end(); ++it)
+		{
+			it->second->Bind();
+			it->second->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		}
 	}
 
 	void Renderer2D::EndScene()
@@ -96,7 +112,7 @@ namespace gswy {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, float rotation, const glm::vec4& color)
 	{
-		//s_Data->QuadShader->Bind();
+		s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetFloat4("u_Color", color);
 		s_Data->QuadTexture->Bind();
 
@@ -114,7 +130,7 @@ namespace gswy {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, float rotation, const std::shared_ptr<Texture2D>& texture)
 	{
-		//s_Data->QuadShader->Bind();
+		s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetFloat4("u_Color", glm::vec4(1.0f));
 		if (texture)
 			texture->Bind();
@@ -131,7 +147,7 @@ namespace gswy {
 	
 	void Renderer2D::DrawQuad(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<IndexBuffer>& indexBuffer, const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color, const std::shared_ptr<Texture2D>& texture)
 	{
-		//s_Data->QuadShader->Bind();
+		s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetFloat4("u_Color", color);
 
 		texture ? texture->Bind() : s_Data->QuadTexture->Bind();
@@ -169,6 +185,25 @@ namespace gswy {
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		s_Data->QuadShader->SetMat4("u_Transform", transform);
 	
+		vertexArray->Bind();
+		vertexArray->SetIndexBuffer(s_Data->QuadIndexBuffer);
+		RenderCommand::DrawIndexed(vertexArray);
+		vertexArray->Unbind();
+	}
+
+	void Renderer2D::DrawSprite(const std::shared_ptr<VertexArray>& vertexArray, const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture, const std::string& shader)
+	{
+		if (s_Data->ShaderMap.find(shader) == s_Data->ShaderMap.end())
+		{
+			// TODO : Engine exception
+			throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Shader called " + str2wstr(shader) + L" has not been managed!");
+		}
+		s_Data->QuadShader = s_Data->ShaderMap[shader];
+		s_Data->QuadShader->Bind();
+		s_Data->QuadShader->SetFloat4("u_Color", glm::vec4(1.0f));
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		s_Data->QuadShader->SetMat4("u_Transform", transform);
+		texture->Bind();
 		vertexArray->Bind();
 		vertexArray->SetIndexBuffer(s_Data->QuadIndexBuffer);
 		RenderCommand::DrawIndexed(vertexArray);

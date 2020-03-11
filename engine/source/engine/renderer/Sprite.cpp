@@ -26,7 +26,7 @@ namespace gswy {
 		m_SpriteY = 0;
 		m_Scale = glm::vec2(1);
 		m_Rotation = 0.0f;
-		
+		m_ShaderName = "Default";
 		m_Vertices = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
@@ -46,6 +46,13 @@ namespace gswy {
 		m_SpriteY = 0;
 		m_Scale = glm::vec2(1);
 		m_Rotation = 0.0f;
+		m_ShaderName = "Default";
+		m_Vertices = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
+		};
 		m_init = false;
 	}
 
@@ -58,8 +65,8 @@ namespace gswy {
 		if (!m_init)
 		{
 			m_init = true;
-			m_SpriteVertexArray = VertexArray::Create();
-			m_SpriteVertexBuffer = VertexBuffer::Create(&m_Vertices[0], m_Vertices.size() * sizeof(float));
+			if (!m_SpriteVertexArray) m_SpriteVertexArray = VertexArray::Create();
+			if (!m_SpriteVertexBuffer) m_SpriteVertexBuffer = VertexBuffer::Create(&m_Vertices[0], m_Vertices.size() * sizeof(float));
 		}
 	}
 
@@ -76,10 +83,10 @@ namespace gswy {
 		}
 		float texWidth = GetTextureWidth();
 		float texHeight = GetTextureHeight();
-		float perTexCoordOffsetX = (float)(m_SpriteWidth / texWidth);
-		float perTexCoordOffsetY = (float)(m_SpriteHeight / texHeight);
-		float texCoordX = (float)(m_SpriteX / texWidth);
-		float texCoordY = (float)(m_SpriteY / texHeight);
+		float perTexCoordOffsetX = ((float)m_SpriteWidth / texWidth);
+		float perTexCoordOffsetY = ((float)m_SpriteHeight / texHeight);
+		float texCoordX = ((float)m_SpriteX / texWidth);
+		float texCoordY = ((float)m_SpriteY / texHeight);
 		DrawInternal(glm::vec2(0.5f), glm::vec2(texCoordX, texCoordY), glm::vec2(perTexCoordOffsetX, perTexCoordOffsetY));
 	}
 
@@ -98,7 +105,7 @@ namespace gswy {
 			{ ShaderDataType::Float2, "a_TexCoord" }
 			});
 		m_SpriteVertexArray->AddVertexBuffer(m_SpriteVertexBuffer);
-		Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, m_Scale, m_Rotation, m_Texture2D);
+		Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, m_Scale, m_Rotation, m_Texture2D, m_ShaderName);
 	}
 	void Sprite::SetSpritePosition(const glm::vec3& pos) { m_Position = pos; }
 	void Sprite::SetSpriteTexture(std::shared_ptr<Texture2D>& texture2D) {
@@ -121,5 +128,13 @@ namespace gswy {
 	void Sprite::SetSpriteRotation(float rotation)
 	{
 		m_Rotation = rotation;
+	}
+	void Sprite::SetSpriteShader(const std::string& name)
+	{
+		m_ShaderName = name;
+	}
+	void Sprite::ResetSpriteShader()
+	{
+		m_ShaderName = "Default";
 	}
 }

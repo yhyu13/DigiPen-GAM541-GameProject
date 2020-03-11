@@ -40,7 +40,6 @@ namespace gswy {
 		window = std::unique_ptr<Window>(Window::InitializeWindow());
 		MemoryManager::GetInstance()->Init();
 		AudioManager::GetInstance()->Init();
-		TileMapManager::GetInstance()->Init();
 
 		// initializing imgui layer
 		m_ImGuiLayer = new ImGuiLayer();
@@ -48,7 +47,6 @@ namespace gswy {
 	}
 	
 	Engine::~Engine() {
-		TileMapManager::GetInstance()->Shutdown();
 		AudioManager::GetInstance()->Shutdown();
 		MemoryManager::GetInstance()->Shutdown();
 	}
