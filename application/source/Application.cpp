@@ -286,9 +286,10 @@ public:
 			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
 			auto cameraPos = m_CameraController.GetPosition();
 			auto mouseRelativePos = InputManager::GetInstance()->GetCursorViewPosition();
-			// Caution: multiplier of 2 here. 
+			// Caution: 
 			// It could be wrong, using debug draw to make sure the mouse entity is attached to the cursor
-			position->SetPos(vec2(cameraPos.x + 2*mouseRelativePos.x, cameraPos.y + 2*mouseRelativePos.y));
+			auto zoomLevel = m_CameraController.GetZoomLevel();
+			position->SetPos(vec2(cameraPos.x + zoomLevel *mouseRelativePos.x, cameraPos.y + zoomLevel *mouseRelativePos.y));
 		}
 		AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 		m_CameraController.OnUpdate(ts);
