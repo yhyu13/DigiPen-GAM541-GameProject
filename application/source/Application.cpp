@@ -182,19 +182,6 @@ public:
 		m_world->Init();
 
 		LoadGameWorld();
-
-		/*
-			For the purpose of testing the delayed events
-		*/
-		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-		auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
-		queue->Publish(e, 1);
-		auto e1 = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
-		queue->Publish(e1, 5);
-		auto e2 = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
-		queue->Publish(e2, 2);
-		auto e3 = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
-		queue->Publish(e3, 4);
 	}
 
 	void LoadGameWorld()
