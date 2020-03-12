@@ -212,6 +212,8 @@ public:
 		mousebody.SetMass(0);
 		mousebody.ChooseShape("AABB", 0.05, 0.05);
 		mouse.AddComponent(mousebody);
+		auto ownership = OwnershiptCom<GameObjectType>();
+		mouse.AddComponent(ownership);
 
 		GameTileMapManager::GetInstance()->AddTileMap("untitled");
 		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");
@@ -284,7 +286,9 @@ public:
 			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
 			auto cameraPos = m_CameraController.GetPosition();
 			auto mouseRelativePos = InputManager::GetInstance()->GetCursorViewPosition();
-			position->SetPos(vec2(cameraPos.x + mouseRelativePos.x, cameraPos.y + mouseRelativePos.y));
+			// Caution: multiplier of 2 here. 
+			// It could be wrong, using debug draw to make sure the mouse entity is attached to the cursor
+			position->SetPos(vec2(cameraPos.x + 2*mouseRelativePos.x, cameraPos.y + 2*mouseRelativePos.y));
 		}
 		AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 		m_CameraController.OnUpdate(ts);

@@ -12,18 +12,16 @@ Creation date: 03/11/2020
 #pragma once
 
 #include "engine/ecs/BaseComponent.h"
-#include "engine/allocator/ResouceAllocator.h"
-#include "engine/renderer/Animation.h"
 #include "engine/exception/EngineException.h"
 
 namespace gswy
 {
 	/*
-	Data class that stores references to the current animation and maintain an animation state map
+	CoolDownCom for count cool down for skills
 	*/
-	struct FireControllerCom : BaseComponent<FireControllerCom> {
+	struct CoolDownCom : BaseComponent<CoolDownCom> {
 
-		explicit FireControllerCom(double dt)
+		explicit CoolDownCom(double dt)
 			:
 			m_period(dt),
 			m_timer(0)
@@ -39,7 +37,7 @@ namespace gswy
 			}
 		}
 		
-		bool isCoolDown()
+		bool IsCoolDown()
 		{
 			return m_timer != 0;
 		}

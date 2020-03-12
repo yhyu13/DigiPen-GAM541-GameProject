@@ -16,7 +16,7 @@ Creation date: 03/11/2020
 #include "engine/ecs/GameWorld.h"
 #include "engine/input/InputManager.h"
 #include "ecs/components/TransformCom.h"
-#include "ecs/components/FireControllerCom.h"
+#include "ecs/components/CoolDownCom.h"
 #include "ecs/EntityType.h"
 #include "ecs/CustomEvents.h"
 
@@ -35,12 +35,12 @@ namespace gswy
 			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::TOWER_FIRE);
 			for (auto& tower : m_registeredEntities)
 			{
-				ComponentDecorator<FireControllerCom, GameObjectType> fireController;
-				m_parentWorld->Unpack(tower, fireController);
+				ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
+				m_parentWorld->Unpack(tower, coolDownController);
 
-				if (fireController->isCoolDown())
+				if (coolDownController->IsCoolDown())
 				{
-					fireController->Update(dt);
+					coolDownController->Update(dt);
 					continue;
 				}
 
@@ -69,7 +69,7 @@ namespace gswy
 					auto e = MemoryManager::Make_shared<FireWeaponEvent>(tower, transform->GetPos(), LookAt(closest_enmey_delta));
 					queue->Publish(e);
 				}
-				fireController->Update(dt);
+				coolDownController->Update(dt);
 			}
 
 		}
