@@ -87,7 +87,7 @@ namespace gswy
 					{
 						//PRINT(Str(entity) + " not found");
 						// TODO : Engine exception
-						throw EngineException(_CRT_WIDE(__FILE__), __LINE__, str2wstr(Str(entity) + " has not found the player!"));
+						//throw EngineException(_CRT_WIDE(__FILE__), __LINE__, str2wstr(Str(entity) + " has not found the player!"));
 					}
 				}
 			}

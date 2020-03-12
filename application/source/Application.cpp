@@ -330,11 +330,13 @@ public:
 		}
 		std::future<void> update = std::async(std::launch::async, [this, ts]()
 		{
-			{
-				TIME("System Update");
-				Update(ts);
-			}
+
 		});	
+
+		{
+			TIME("System Update");
+			Update(ts);
+		}
 		{
 			TIME("PreRender Update");
 			PreRenderUpdate(ts);
@@ -344,11 +346,11 @@ public:
 			Render(ts);
 		}
 		update.wait();
+		EventQueue<GameObjectType, EventType>::GetInstance()->Update(ts);
 		{
 			TIME("PostRender Update");
 			PostRenderUpdate(ts);
 		}
-		EventQueue<GameObjectType, EventType>::GetInstance()->Update(ts);
 		AfterFrame();
 	}
 
