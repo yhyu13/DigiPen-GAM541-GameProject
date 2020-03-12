@@ -20,14 +20,13 @@ namespace gswy
 		BACKGROUND,
 		PLAYER,
 		ENEMY,
+		TOWER_BUILD,
 		TOWER_FIRE,
 		TOWER_ICE,
 		TOWER_LIGHTNING,
-		GRENADE,
 		FIREBALL,
 		BOLT,
 		ICEBALL,
-		BULLET,
 
 		NUM
 	};
@@ -39,14 +38,13 @@ std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
 	case gswy::GameObjectType::BACKGROUND: return o << "BACKGROUND";
 	case gswy::GameObjectType::PLAYER: return o << "PLAYER";
 	case gswy::GameObjectType::ENEMY: return o << "ENEMY";
+	case gswy::GameObjectType::TOWER_BUILD: return o << "TOWER_BUILD";
 	case gswy::GameObjectType::TOWER_FIRE: return o << "TOWER_FIRE";
 	case gswy::GameObjectType::TOWER_ICE: return o << "TOWER_ICE";
 	case gswy::GameObjectType::TOWER_LIGHTNING: return o << "TOWER_LIGHTNING";
-	case gswy::GameObjectType::GRENADE: return o << "GRENADE";
 	case gswy::GameObjectType::FIREBALL: return o << "FIREBALL";
 	case gswy::GameObjectType::BOLT: return o << "BOLT";
 	case gswy::GameObjectType::ICEBALL: return o << "ICEBALL";
-	case gswy::GameObjectType::BULLET: return o << "BULLET";
 	default: return o << "(invalid value)";
 	}
 }

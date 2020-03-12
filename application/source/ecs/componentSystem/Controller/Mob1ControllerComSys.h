@@ -32,6 +32,9 @@ namespace gswy
 
 		virtual void Update(double dt) override {
 
+			// TODO: remove disable of mob controller
+			return;
+
 			static double timer = m_updateTimer;
 			timer += dt;
 			if (timer < m_updateTimer)
@@ -74,7 +77,7 @@ namespace gswy
 					{
 						auto result = Astar->GetResult();
 						// 1. Rotate
-						auto nextPos = tileMapObj->Grid2World((result.size() > 5)? result[5]: result.back());
+						auto nextPos = tileMapObj->Grid2World((result.size() > 3)? result[3]: result.back());
 						auto delta = nextPos - src;
 						transform->SetRotation(LookAt(delta));
 

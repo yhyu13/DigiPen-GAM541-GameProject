@@ -87,8 +87,6 @@ namespace gswy
 		}
 //#endif // _DEBUG
 
-		
-
 		virtual void Update(double dt) override
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
@@ -100,7 +98,8 @@ namespace gswy
 			{
 				ComponentDecorator<BodyCom, GameObjectType> body1;
 				m_parentWorld->Unpack(*first_Entity, body1);
-
+				// Reset colliding entity
+				body1->ResetOtherEntity();
 				for (auto second_Entity = first_Entity + 1; second_Entity != last_Entity; ++second_Entity)
 				{
 					// Enable collision diable map
@@ -109,14 +108,14 @@ namespace gswy
 
 					ComponentDecorator<BodyCom, GameObjectType> body2;
 					m_parentWorld->Unpack(*second_Entity, body2);
-
+					// Reset colliding entity
+					body2->ResetOtherEntity();
 					bool collides = collision->CheckCollisionAndGenerateDetection(body1->shape.get(), body1->m_PosX, body1->m_PosY, body2->shape.get(), body2->m_PosX, body2->m_PosY);						
 					if (collides)
 					{
-						ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner1;
-						m_parentWorld->Unpack(*first_Entity, owner1);
-						ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner2;
-						m_parentWorld->Unpack(*second_Entity, owner2);
+						// Set colliding entity
+						body1->SetOtherEntity(*second_Entity);
+						body2->SetOtherEntity(*first_Entity);
 						DEBUG_PRINT("Collisions Detected " + Str(*first_Entity) + Str(*second_Entity));
 						auto e = MemoryManager::Make_shared<CollisionEvent>(*first_Entity, *second_Entity);
 						queue->Publish(e);
