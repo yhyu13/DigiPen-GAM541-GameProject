@@ -116,6 +116,10 @@ public:
 				m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
 				continue;
 			}
+			if (system._Equal("tower-controller")) {
+				m_world->RegisterSystem(MemoryManager::Make_shared<TowerControllerComSys>());
+				continue;
+			}
 			if (system._Equal("scene")) {
 				m_world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
 				continue;

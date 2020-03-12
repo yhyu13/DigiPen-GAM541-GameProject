@@ -21,6 +21,7 @@ Creation date: 02/17/2020
 #include "ecs/components/OwnershiptCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/components/TransformCom.h"
+#include "ecs/components/FireControllerCom.h"
 
 namespace gswy
 {
@@ -80,6 +81,8 @@ namespace gswy
 				sprite.SetTexture("TowerFire");
 				sprite.SetScale(vec2(0.25, 0.25));
 				tower.AddComponent(sprite);
+				auto fireController = FireControllerCom(1.0);
+				tower.AddComponent(fireController);
 			}
 				break;
 			case gswy::GameObjectType::TOWER_ICE:

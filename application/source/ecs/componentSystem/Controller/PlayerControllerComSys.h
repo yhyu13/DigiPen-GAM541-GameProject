@@ -68,7 +68,7 @@ namespace gswy
 						flash = !flash;
 					}
 
-					// (Demo) 
+					// (Demo) Spawn tower by pressing keys
 					if (input->IsKeyTriggered(KEY_P))
 					{
 						PRINT("P");

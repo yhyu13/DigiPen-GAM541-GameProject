@@ -3,6 +3,8 @@
       "player-controller",
 	  "PlayerAnimationController",
       "mob-1-controller",
+	  "tower-controller",
+	  
       "weapon",
       
 	  "attached-movement",

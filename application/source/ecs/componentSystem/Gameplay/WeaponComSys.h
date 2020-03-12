@@ -47,17 +47,49 @@ namespace gswy
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				m_parentWorld->Unpack(event->m_entity, transform);
 
-				auto pos = transform->GetPos();
-				auto rot = transform->GetRotation();
-
 				switch (event->m_entity.m_type)
 				{
+				case GameObjectType::TOWER_FIRE:
+				{
+					static int num_spawn = 1;
+					for (int i = 0; i < num_spawn; ++i)
+					{
+						{
+							auto pos = event->m_pos;
+							auto rot = event->m_rot;
+							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
+							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
+							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
+							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+							transform.AddVelocity(ToVec(weapon_rot) * 5.0f);
+							weapon.AddComponent(transform);
+							auto particle = ParticleCom();
+							particle.Init<ExplosionParticle>();
+							weapon.AddComponent(particle);
+							auto animCom = AnimationCom();
+							animCom.Add("fireBallAnim1", "Move");
+							animCom.SetCurrentAnimationState("Move");
+							weapon.AddComponent(animCom);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.25, 0.25));
+							weapon.AddComponent(sprite);
+							auto aabb = BodyCom();
+							aabb.ChooseShape("Circle", 0.1);
+							weapon.AddComponent(aabb);
+							weapon.AddComponent(LifeTimeCom(2.0));
+							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+						}
+					}
+				}
+				break;
 				case GameObjectType::PLAYER:
 				{
 					static int num_spawn = 1;
 					for (int i = 0; i < num_spawn; ++i)
 					{
 						{
+							auto pos = transform->GetPos();
+							auto rot = transform->GetRotation();
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;

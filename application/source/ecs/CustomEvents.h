@@ -31,13 +31,16 @@ namespace gswy
 
 	struct FireWeaponEvent : Event<GameObjectType, EventType> {
 
-		FireWeaponEvent(const Entity<GameObjectType>& entity)
+		explicit FireWeaponEvent(const Entity<GameObjectType>& entity, const vec2& pos = vec2(0), float rot = 0)
 			:
+			m_pos(pos),
+			m_rot(rot),
 			Event(EventType::FIREWEAPON)
 		{
 			m_entity = entity;
 		}
-
+		vec2 m_pos;
+		float m_rot;
 		Entity<GameObjectType> m_entity;
 	};
 
