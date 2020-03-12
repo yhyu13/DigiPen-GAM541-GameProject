@@ -47,14 +47,14 @@ namespace gswy
 					delta.y = -delta.y;
 					transform->SetRotation(LookAt(delta));
 
-					// 2. Fire
+					// Fire
 					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 					{
 						auto e = MemoryManager::Make_shared<FireWeaponEvent>(entity);
 						queue->Publish(e);
 					}
 
-					// 3. (Demo) Spawn enemies by triggering buttons
+					// (Demo) Spawn enemies by triggering buttons
 					if (input->IsKeyTriggered(KEY_SPACE))
 					{
 						auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
@@ -68,7 +68,16 @@ namespace gswy
 						flash = !flash;
 					}
 
-					// 4. Movement with keys
+					// (Demo) 
+					if (input->IsKeyTriggered(KEY_P))
+					{
+						PRINT("P");
+						auto cursor_pos = input->GetCursorPosition();
+						auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_FIRE, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+						queue->Publish(e);
+					}
+
+					// Movement with keys
 					bool isIdle = true;
 					vec2 velocity(0);
 					float speed = 1.0f;

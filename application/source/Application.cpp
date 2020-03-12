@@ -195,11 +195,6 @@ public:
 
 	void LoadGameWorld()
 	{
-		// call load level here
-		// object factory must be an abstract class in the engine and must be implemented in application
-		GameObjectFactory* factory = GameObjectFactory::GetInstance();
-		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
-
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/untitled.png","untitled");
 
 		// TODO : use proper reflection to handle map loading and background creation
@@ -211,6 +206,11 @@ public:
 		m_sprite->SetSpritePosition(vec3(49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
 		m_sprite->SetSpriteRotation(0);
 		obj.AddComponent(sprite);
+
+		// call load level here
+		// object factory must be an abstract class in the engine and must be implemented in application
+		GameObjectFactory* factory = GameObjectFactory::GetInstance();
+		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
 
 		GameTileMapManager::GetInstance()->AddTileMap("untitled");
 		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");

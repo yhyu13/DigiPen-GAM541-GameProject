@@ -60,7 +60,7 @@ namespace gswy
 						{
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
-							auto weapon_rot = rot + RAND_F(-90, 90) * DEG2RAD;
+							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
 							transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 							weapon.AddComponent(transform);
@@ -78,10 +78,9 @@ namespace gswy
 							aabb.ChooseShape("Circle", 0.1);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(2.0));
-							weapon.AddComponent(HitPreventionCom<GameObjectType>());
-													
+							weapon.AddComponent(HitPreventionCom<GameObjectType>());				
 						}
-						{
+						/*{
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 							auto weapon_rot = rot + RAND_F(-90, 90) * DEG2RAD;
@@ -101,11 +100,11 @@ namespace gswy
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(1.0));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
-						}
+						}*/
 					}
-					num_spawn+=1;
+					//num_spawn+=1;
 					//std::cerr << 2*num_spawn << '\n';
-					{
+					/*{
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT);
 						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 						auto weapon_rot = rot;
@@ -127,7 +126,7 @@ namespace gswy
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(0.5));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
-					}
+					}*/
 				}
 					break;
 				default:

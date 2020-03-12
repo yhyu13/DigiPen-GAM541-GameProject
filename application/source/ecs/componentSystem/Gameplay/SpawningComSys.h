@@ -50,10 +50,44 @@ namespace gswy
 				case GameObjectType::ENEMY:
 					SpawnEnemey();
 					break;
+				case GameObjectType::TOWER_FIRE:
+					SpawnTower(e);
+					break;
+				case GameObjectType::TOWER_ICE:
+					SpawnTower(e);
+					break;
+				case GameObjectType::TOWER_LIGHTNING:
+					SpawnTower(e);
+					break;
 				default:
 					break;
 				}
-				
+			}
+		}
+
+		void SpawnTower(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto event = static_pointer_cast<SpawnEvent>(e);
+			switch (event->m_type)
+			{
+			case gswy::GameObjectType::TOWER_FIRE:
+			{
+				auto tower = m_parentWorld->GenerateEntity(GameObjectType::TOWER_FIRE);
+				tower.AddComponent(OwnershiptCom<GameObjectType>());
+				auto transform = TransformCom(vec3(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)),0);
+				tower.AddComponent(transform);
+				auto sprite = SpriteCom();
+				sprite.SetTexture("TowerFire");
+				sprite.SetScale(vec2(0.25, 0.25));
+				tower.AddComponent(sprite);
+			}
+				break;
+			case gswy::GameObjectType::TOWER_ICE:
+				break;
+			case gswy::GameObjectType::TOWER_LIGHTNING:
+				break;
+			default:
+				break;
 			}
 		}
 
