@@ -145,4 +145,18 @@ namespace gswy {
 	{
 		return m_cursorMaxPosition.y;
 	}
+
+	const glm::vec2 InputManager::GetCursorViewPosition() {
+
+		float a = -m_cursorMaxPosition.x / m_cursorMaxPosition.y;
+		float b = -a;
+
+		float x = lerp(a, b, m_cursorPosition.x / m_cursorMaxPosition.x);
+		float y = lerp(1.0f, -1.0f, m_cursorPosition.y / m_cursorMaxPosition.y);
+		return glm::vec2(x, y);
+	}
+
+	float InputManager::lerp(float x, float y, float t) {
+		return x * (1.f - t) + y * t;
+	}
 }
