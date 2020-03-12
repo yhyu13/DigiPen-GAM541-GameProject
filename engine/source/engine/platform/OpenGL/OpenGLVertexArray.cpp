@@ -75,7 +75,8 @@ namespace gswy {
 			index++;
 		}
 
-		m_VertexBuffers.push_back(vertexBuffer);
+		//Deprecated
+		//m_VertexBuffers.push_back(vertexBuffer);
 	}
 
 	void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)

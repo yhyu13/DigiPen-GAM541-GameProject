@@ -54,7 +54,7 @@ namespace gswy
 				}
 			}
 		}
-
+//#ifdef _DEBUG
 		virtual void PostRenderUpdate(double dt) override
 		{
 			static bool debugDraw = false;
@@ -85,6 +85,9 @@ namespace gswy
 				unlock();
 			}
 		}
+//#endif // _DEBUG
+
+		
 
 		virtual void Update(double dt) override
 		{

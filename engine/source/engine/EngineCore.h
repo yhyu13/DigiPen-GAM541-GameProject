@@ -29,7 +29,7 @@ Creation date	: 01/26/2020
 #define PRINT(x) ENGINE_INFO(Str(x));
 #else
 #define DEBUG_PRINT(x)
-#define PRINT(x) 
+#define PRINT(x) ENGINE_INFO(Str(x));
 #endif // DEBUG
 
 template <typename T>

@@ -66,10 +66,10 @@ namespace gswy {
 						if (name._Equal("animation")) {
 							auto animCom1 = AnimationCom();
 							Json::Value animation = component["animation"];
-							std::string animationName = animation["name"].asString();
+							Json::Value animationNames = animation["name"];
 							Json::Value states = animation["states"];
 							for (int k = 0; k < states.size(); ++k) {
-								animCom1.Add(animationName, states[k].asString());
+								animCom1.Add(animationNames[k].asString(), states[k].asString());
 							}
 							animCom1.SetCurrentAnimationState(animation["current-state"].asString());
 							player.AddComponent(animCom1);

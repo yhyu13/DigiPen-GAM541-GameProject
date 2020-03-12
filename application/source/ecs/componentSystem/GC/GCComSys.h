@@ -35,7 +35,7 @@ namespace gswy
 		}
 
 		virtual void Init() override {
-			m_GCList.reserve(1024);
+			m_GCList.reserve(2048);
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<GCComSys>(this, EventType::GC, &GCComSys::OnGC);
 		}
@@ -43,7 +43,7 @@ namespace gswy
 		virtual void PostRenderUpdate(double dt) override {
 			for (auto& e : m_GCList)
 			{
-				PRINT(e);
+				DEBUG_PRINT("Delete: " + Str(e));
 
 				// TODO : comment this out after we solve the deallocation problem
 				m_parentWorld->RemoveComponent<AnimationCom>(e);

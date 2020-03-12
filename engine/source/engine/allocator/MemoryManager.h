@@ -37,7 +37,7 @@ namespace gswy {
         static T* New(Arguments... parameters) noexcept
         {
 			m_AllocatedSize += sizeof(T);
-			PRINT("New : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(m_AllocatedSize));
+			DEBUG_PRINT("New : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(m_AllocatedSize));
 #if CUSTOM_ALLOCATOR 
 			return new (Allocate(sizeof(T))) T(parameters...);
 #else
@@ -51,11 +51,11 @@ namespace gswy {
         {
 			m_AllocatedSize -= sizeof(T);
 #if CUSTOM_ALLOCATOR 
-			PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str((reinterpret_cast<BlockHeader*>(p) - 1)->size) + " " + Str(m_AllocatedSize));
+			DEBUG_PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str((reinterpret_cast<BlockHeader*>(p) - 1)->size) + " " + Str(m_AllocatedSize));
 			p->~T();
 			Free(p, sizeof(T));
 #else
-			PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(m_AllocatedSize));
+			DEBUG_PRINT("Delete : " + Str(typeid(T).name()) + " " + Str(sizeof(T)) + " " + Str(m_AllocatedSize));
 			delete p;
 #endif // CUSTOM_ALLOCATOR 
            
@@ -143,7 +143,7 @@ namespace gswy {
 			if (auto p = static_cast<T*>(MemoryManager::Allocate(n * sizeof(T))))
 			{
 				MemoryManager::m_AllocatedSize += n * sizeof(T);
-				PRINT("Allocate vector : " + Str(typeid(T).name()) + " " + Str(n) + " " + Str(sizeof(T)) + " " + Str(n * sizeof(T)) + " " + Str(MemoryManager::m_AllocatedSize));
+				DEBUG_PRINT("Allocate vector : " + Str(typeid(T).name()) + " " + Str(n) + " " + Str(sizeof(T)) + " " + Str(n * sizeof(T)) + " " + Str(MemoryManager::m_AllocatedSize));
 				return p;
 			}
 			throw std::bad_alloc();
@@ -152,7 +152,7 @@ namespace gswy {
 		{ 
 			MemoryManager::Free(p, sizeof(T) * n); 
 			MemoryManager::m_AllocatedSize -= n * sizeof(T);
-			PRINT("Free vector : " + Str(typeid(T).name()) + " " + Str(n) + " " + Str(sizeof(T)) + " " + Str(n * sizeof(T)) + " " + Str(MemoryManager::m_AllocatedSize));
+			DEBUG_PRINT("Free vector : " + Str(typeid(T).name()) + " " + Str(n) + " " + Str(sizeof(T)) + " " + Str(n * sizeof(T)) + " " + Str(MemoryManager::m_AllocatedSize));
 		}
 	};
 }

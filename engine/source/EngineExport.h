@@ -40,6 +40,7 @@ Creation date	: 01/26/2020
 #include "engine/renderer/ParticleSystem.h"
 #include "engine/renderer/OrthographicCameraController.h"
 #include "engine/platform/OpenGL/OpenGLDebugDraw.h"
+#include "engine/platform/OpenGL/OpenGLPostProcessing.h"
 
 ///// Resource Allocator /////
 #include "engine/allocator/ResouceAllocator.h"
