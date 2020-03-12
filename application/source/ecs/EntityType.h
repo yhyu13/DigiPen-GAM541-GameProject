@@ -16,6 +16,7 @@ namespace gswy
 {
 	enum class GameObjectType {
 		EMPTY = 0,
+		MOUSE,
 		BACKGROUND,
 		PLAYER,
 		ENEMY,

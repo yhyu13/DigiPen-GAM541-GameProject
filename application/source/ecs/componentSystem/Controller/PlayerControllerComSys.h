@@ -72,8 +72,10 @@ namespace gswy
 					if (input->IsKeyTriggered(KEY_P))
 					{
 						PRINT("P");
-						auto cursor_pos = input->GetCursorPosition();
-						auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_FIRE, vec3(RAND_F(-1, 1), RAND_F(-1, 1), 0));
+						ComponentDecorator<TransformCom, GameObjectType> position;
+						m_parentWorld->Unpack(m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
+						auto cursor_pos = position->GetPos();
+						auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_FIRE, vec3(cursor_pos, 0));
 						queue->Publish(e);
 					}
 

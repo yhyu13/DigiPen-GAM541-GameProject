@@ -212,6 +212,16 @@ public:
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
 
+		//MOUSE SETUP
+		auto mouse = m_world->GenerateEntity(GameObjectType::MOUSE);
+		auto mouseTr = TransformCom();
+		mouseTr.SetPos(InputManager::GetInstance()->GetCursorViewPosition());
+		mouse.AddComponent(mouseTr);
+		auto mousebody = BodyCom();
+		mousebody.SetMass(0);
+		mousebody.ChooseShape("AABB", 0.05, 0.05);
+		mouse.AddComponent(mousebody);
+
 		GameTileMapManager::GetInstance()->AddTileMap("untitled");
 		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");
 		GameTileMapManager::GetInstance()->LoadCurrentTileMap(m_world);
@@ -276,6 +286,14 @@ public:
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
 			m_CameraController.SetZoomLevel(2);
+		}
+		{
+			// Update cursor world position
+			ComponentDecorator<TransformCom, GameObjectType> position;
+			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
+			auto cameraPos = m_CameraController.GetPosition();
+			auto mouseRelativePos = InputManager::GetInstance()->GetCursorViewPosition();
+			position->SetPos(vec2(cameraPos.x + mouseRelativePos.x, cameraPos.y + mouseRelativePos.y));
 		}
 		AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 		m_CameraController.OnUpdate(ts);
