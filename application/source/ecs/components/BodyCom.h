@@ -69,7 +69,6 @@ namespace gswy
 		void ResetOtherEntity()
 		{
 			m_otherEntity.m_type = GameObjectType::EMPTY;
-			m_otherEntity.m_active = false;
 		}
 
 		void SetOtherEntity(const Entity<GameObjectType>& other)

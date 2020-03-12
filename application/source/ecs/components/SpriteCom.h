@@ -28,11 +28,22 @@ namespace gswy
 		void SetTexture(const std::string& name)
 		{
 			m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get(name));
+			m_name = name;
+		}
+
+		const std::string& GetTextureName()
+		{
+			return m_name;
 		}
 
 		void SetScale(const glm::vec2& t)
 		{
 			m_sprite->SetSpriteScale(t);
+		}
+
+		void SetAlpha(float a)
+		{
+			m_sprite->SetSpriteAlpha(a);
 		}
 
 		std::shared_ptr<Sprite> Get()
@@ -41,5 +52,6 @@ namespace gswy
 		}
 	private:
 		std::shared_ptr<Sprite> m_sprite;
+		std::string m_name;
 	};
 }

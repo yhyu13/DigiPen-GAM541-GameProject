@@ -16,12 +16,24 @@
                "path":"./asset/MobMovingUnarmed.png"
             },
 			{
+               "name":"TowerHammer_On",
+               "path":"./asset/Piskel/Tower/TowerHammer_On.png"
+            },
+			{
+               "name":"TowerHammer_Off",
+               "path":"./asset/Piskel/Tower/TowerHammer_Off.png"
+            },
+			{
                "name":"TowerFire",
                "path":"./asset/Piskel/Tower/TowerFire.png"
             },
 			{
                "name":"TowerIce",
                "path":"./asset/Piskel/Tower/TowerIce.png"
+            },
+			{
+               "name":"TowerLightning",
+               "path":"./asset/Piskel/Tower/TowerLightning.png"
             },
             {
                "name":"ffireball_0001",

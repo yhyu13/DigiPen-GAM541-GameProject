@@ -15,6 +15,7 @@ Creation date: 03/11/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "engine/input/InputManager.h"
+#include "ecs/components/ActiveCom.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/CoolDownCom.h"
 #include "ecs/EntityType.h"
@@ -23,55 +24,73 @@ Creation date: 03/11/2020
 namespace gswy
 {
 	class TowerControllerComSys : public BaseComponentSystem<GameObjectType> {
-	
+	private:
+		std::vector<GameObjectType> towerTypes;
 	public:
 		TowerControllerComSys() {
+			towerTypes = { GameObjectType::TOWER_FIRE ,GameObjectType::TOWER_ICE ,GameObjectType::TOWER_LIGHTNING };
 		}
 
 		virtual void Update(double dt) override {
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto allEnemies = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY);
-			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::TOWER_FIRE);
-			for (auto& tower : m_registeredEntities)
+			for (auto& towerType : towerTypes)
 			{
-				ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
-				m_parentWorld->Unpack(tower, coolDownController);
-
-				if (coolDownController->IsCoolDown())
+				m_registeredEntities = m_parentWorld->GetAllEntityWithType(towerType);
+				for (auto& tower : m_registeredEntities)
 				{
-					coolDownController->Update(dt);
-					continue;
-				}
-
-				ComponentDecorator<TransformCom, GameObjectType> transform;
-				m_parentWorld->Unpack(tower, transform);
-				auto center = transform->GetPos();
-
-				bool find_nearest = false;
-				vec2 closest_enmey_delta(5);
-				for (auto& entity : allEnemies) {
-					ComponentDecorator<TransformCom, GameObjectType> transform;
-					m_parentWorld->Unpack(entity, transform);
-					auto enmey_pos = transform->GetPos();
-					auto delta = enmey_pos - center;
-
-					// Find the cloest enmey position
-					if (glm::length(delta) < glm::length(closest_enmey_delta))
+					// Check active
+					ComponentDecorator<ActiveCom, GameObjectType> active;
+					m_parentWorld->Unpack(tower, active);
+					if (!active->IsActive())
 					{
-						closest_enmey_delta = delta;
-						find_nearest = true;
+						continue;
 					}
-				}
+					ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
+					m_parentWorld->Unpack(tower, coolDownController);
+					if (coolDownController->IsFreezed())
+					{
+						continue;
+					}
+					if (coolDownController->IsCoolDown())
+					{
+						coolDownController->Update(dt);
+						continue;
+					}
+					ComponentDecorator<TransformCom, GameObjectType> transform;
+					m_parentWorld->Unpack(tower, transform);
+					auto center = transform->GetPos();
 
-				if (find_nearest)
-				{
-					auto e = MemoryManager::Make_shared<FireWeaponEvent>(tower, transform->GetPos(), LookAt(closest_enmey_delta));
-					queue->Publish(e);
+					bool find_nearest = false;
+					vec2 closest_enmey_delta(5);
+
+					if (towerType == GameObjectType::TOWER_LIGHTNING)
+					{
+						closest_enmey_delta = vec2(1);
+					}
+					for (auto& entity : allEnemies) {
+						ComponentDecorator<TransformCom, GameObjectType> transform;
+						m_parentWorld->Unpack(entity, transform);
+						auto enmey_pos = transform->GetPos();
+						auto delta = enmey_pos - center;
+
+						// Find the cloest enmey position
+						if (glm::length(delta) < glm::length(closest_enmey_delta))
+						{
+							closest_enmey_delta = delta;
+							find_nearest = true;
+						}
+					}
+
+					if (find_nearest)
+					{
+						auto e = MemoryManager::Make_shared<FireWeaponEvent>(tower, transform->GetPos(), LookAt(closest_enmey_delta));
+						queue->Publish(e);
+					}
+					coolDownController->Update(dt);
 				}
-				coolDownController->Update(dt);
 			}
-
 		}
 	};
 }

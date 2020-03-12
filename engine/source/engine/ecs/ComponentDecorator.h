@@ -48,6 +48,11 @@ namespace gswy {
 			return m_component;
 		}
 
+		friend void swap(ComponentDecorator<ComponentType, EntityType>& x, ComponentDecorator<ComponentType, EntityType>& y)
+		{
+			std::swap(*x.m_component, *y.m_component)
+		}
+
 	private:
 		Entity<EntityType> m_owner;
 		ComponentType* m_component;

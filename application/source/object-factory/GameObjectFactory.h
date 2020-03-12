@@ -39,6 +39,8 @@ namespace gswy {
 
 				if (type._Equal("player")) {
 					auto player = world->GenerateEntity(GameObjectType::PLAYER);
+					auto active = ActiveCom();
+					player.AddComponent(active);
 					Json::Value components = archetypeRoot["components"];
 					for (int j = 0; j < components.size(); ++j) {
 						Json::Value component = components[j];
@@ -97,6 +99,8 @@ namespace gswy {
 
 				if (type._Equal("background")) {
 					auto background = world->GenerateEntity(GameObjectType::BACKGROUND);
+					auto active = ActiveCom();
+					background.AddComponent(active);
 					Json::Value components = archetypeRoot["components"];
 					for (int j = 0; j < components.size(); ++j) {
 						Json::Value component = components[j];

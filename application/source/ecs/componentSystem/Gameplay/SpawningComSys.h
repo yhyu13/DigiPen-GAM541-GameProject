@@ -6,7 +6,7 @@ Language: c++ 11
 Platform: Windows 10 (X64)
 Project: GAM541
 Author: Hang Yu (hang.yu@digipen.edu | 60001119)
-Creation date: 02/17/2020
+Creation date: 03/12/2020
 - End Header ----------------------------*/
 
 #pragma once
@@ -22,10 +22,13 @@ Creation date: 02/17/2020
 #include "ecs/components/SpriteCom.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/CoolDownCom.h"
+#include "ecs/components/ChildrenCom.h"
 
 namespace gswy
 {
 	class SpawningComSys : public BaseComponentSystem<GameObjectType> {
+	private:
+		int m_spawnZOrder;
 	public:
 		SpawningComSys() {
 		}
@@ -49,15 +52,9 @@ namespace gswy
 				switch (event->m_type)
 				{
 				case GameObjectType::ENEMY:
-					SpawnEnemey();
+					SpawnEnemey(e);
 					break;
-				case GameObjectType::TOWER_FIRE:
-					SpawnTower(e);
-					break;
-				case GameObjectType::TOWER_ICE:
-					SpawnTower(e);
-					break;
-				case GameObjectType::TOWER_LIGHTNING:
+				case GameObjectType::TOWER_BUILD:
 					SpawnTower(e);
 					break;
 				default:
@@ -69,35 +66,92 @@ namespace gswy
 		void SpawnTower(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			auto event = static_pointer_cast<SpawnEvent>(e);
-			switch (event->m_type)
+			auto tower = m_parentWorld->GenerateEntity(GameObjectType::TOWER_BUILD);
+			auto active = ActiveCom();
+			tower.AddComponent(active);
+			tower.AddComponent(OwnershiptCom<GameObjectType>());
+			auto transform = TransformCom(vec3(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)),0);
+			tower.AddComponent(transform);
+			auto sprite = SpriteCom();
+			sprite.SetTexture("TowerHammer_On");
+			sprite.SetScale(vec2(0.25, 0.25));
+			tower.AddComponent(sprite);
+			auto body = BodyCom();
+			body.SetMass(0);
+			body.ChooseShape("AABB", 0.25, 0.25);
+			tower.AddComponent(body);
+			auto children = ChildrenCom<GameObjectType>();
 			{
-			case gswy::GameObjectType::TOWER_FIRE:
-			{
-				auto tower = m_parentWorld->GenerateEntity(GameObjectType::TOWER_FIRE);
-				tower.AddComponent(OwnershiptCom<GameObjectType>());
-				auto transform = TransformCom(vec3(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)),0);
-				tower.AddComponent(transform);
+				auto _tower = m_parentWorld->GenerateEntity(GameObjectType::TOWER_FIRE);
+				auto active = ActiveCom(false);
+				_tower.AddComponent(active);
+				_tower.AddComponent(OwnershiptCom<GameObjectType>(tower));
+				auto angle = 45 * DEG2RAD;
+				auto relativeDistance = RadToVec(angle) * .4f;
+				auto transform = TransformCom(vec3(event->m_pos.x+relativeDistance.x, event->m_pos.y+relativeDistance.y, Z_ORDER(m_spawnZOrder++)), 0);
+				_tower.AddComponent(transform);
 				auto sprite = SpriteCom();
 				sprite.SetTexture("TowerFire");
 				sprite.SetScale(vec2(0.25, 0.25));
-				tower.AddComponent(sprite);
-				auto soolDownController = CoolDownCom(1.0);
-				tower.AddComponent(soolDownController);
+				_tower.AddComponent(sprite);
+				auto coolDownController = CoolDownCom(1.0);
+				coolDownController.SetFreeze(true);
+				_tower.AddComponent(coolDownController);
+				auto body = BodyCom();
+				body.SetMass(0);
+				body.ChooseShape("AABB", 0.25, 0.25);
+				_tower.AddComponent(body);
+				children.AddEntity(_tower);
 			}
-				break;
-			case gswy::GameObjectType::TOWER_ICE:
-				break;
-			case gswy::GameObjectType::TOWER_LIGHTNING:
-				break;
-			default:
-				break;
+			{
+				auto _tower = m_parentWorld->GenerateEntity(GameObjectType::TOWER_ICE);
+				auto active = ActiveCom(false);
+				_tower.AddComponent(active);
+				_tower.AddComponent(OwnershiptCom<GameObjectType>(tower));
+				auto angle = 90 * DEG2RAD;
+				auto relativeDistance = RadToVec(angle) * .4f;
+				auto transform = TransformCom(vec3(event->m_pos.x + relativeDistance.x, event->m_pos.y + relativeDistance.y, Z_ORDER(m_spawnZOrder++)), 0);
+				_tower.AddComponent(transform);
+				auto sprite = SpriteCom();
+				sprite.SetTexture("TowerIce");
+				sprite.SetScale(vec2(0.25, 0.25));
+				_tower.AddComponent(sprite);
+				auto coolDownController = CoolDownCom(1.0);
+				_tower.AddComponent(coolDownController);
+				auto body = BodyCom();
+				body.SetMass(0);
+				body.ChooseShape("AABB", 0.25,0.25);
+				_tower.AddComponent(body);
+				children.AddEntity(_tower);
 			}
+			{
+				auto _tower = m_parentWorld->GenerateEntity(GameObjectType::TOWER_LIGHTNING);
+				auto active = ActiveCom(false);
+				_tower.AddComponent(active);
+				_tower.AddComponent(OwnershiptCom<GameObjectType>(tower));
+				auto angle = 135 * DEG2RAD;
+				auto relativeDistance = RadToVec(angle) * .4f;
+				auto transform = TransformCom(vec3(event->m_pos.x + relativeDistance.x, event->m_pos.y + relativeDistance.y, Z_ORDER(m_spawnZOrder++)), 0);
+				_tower.AddComponent(transform);
+				auto sprite = SpriteCom();
+				sprite.SetTexture("TowerLightning");
+				sprite.SetScale(vec2(0.25, 0.25));
+				_tower.AddComponent(sprite);
+				auto coolDownController = CoolDownCom(1.0);
+				_tower.AddComponent(coolDownController);
+				auto body = BodyCom();
+				body.SetMass(0);
+				body.ChooseShape("AABB", 0.25, 0.25);
+				_tower.AddComponent(body);
+				children.AddEntity(_tower);
+			}
+			tower.AddComponent(children);
 		}
 
 		/*
 			Demo
 		*/
-		void SpawnEnemey()
+		void SpawnEnemey(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY);
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
@@ -114,8 +168,5 @@ namespace gswy
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom());
 		}
-
-	private:
-		int m_spawnZOrder;
 	};
 }

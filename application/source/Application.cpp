@@ -189,14 +189,18 @@ public:
 		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/untitled.png","untitled");
 
 		// TODO : use proper reflection to handle map loading and background creation
-		auto obj = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-		auto sprite = SpriteCom();
-		auto m_sprite = sprite.Get();
-		m_sprite->SetSpriteScale(vec2(100.f * 32.f / GSWY_GetPixel2WorldNumerator(), 100.f * 32.f / GSWY_GetPixel2WorldNumerator()));
-		m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("untitled"));
-		m_sprite->SetSpritePosition(vec3(49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
-		m_sprite->SetSpriteRotation(0);
-		obj.AddComponent(sprite);
+		{
+			auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			background.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteScale(vec2(100.f * 32.f / GSWY_GetPixel2WorldNumerator(), 100.f * 32.f / GSWY_GetPixel2WorldNumerator()));
+			m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("untitled"));
+			m_sprite->SetSpritePosition(vec3(49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
+			m_sprite->SetSpriteRotation(0);
+			background.AddComponent(sprite);
+		}
 
 		// call load level here
 		// object factory must be an abstract class in the engine and must be implemented in application
@@ -204,16 +208,20 @@ public:
 		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
 
 		//MOUSE SETUP
-		auto mouse = m_world->GenerateEntity(GameObjectType::MOUSE);
-		auto mouseTr = TransformCom();
-		mouseTr.SetPos(InputManager::GetInstance()->GetCursorViewPosition());
-		mouse.AddComponent(mouseTr);
-		auto mousebody = BodyCom();
-		mousebody.SetMass(0);
-		mousebody.ChooseShape("AABB", 0.05, 0.05);
-		mouse.AddComponent(mousebody);
-		auto ownership = OwnershiptCom<GameObjectType>();
-		mouse.AddComponent(ownership);
+		{
+			auto mouse = m_world->GenerateEntity(GameObjectType::MOUSE);
+			auto active = ActiveCom();
+			mouse.AddComponent(active);
+			auto mouseTr = TransformCom();
+			mouseTr.SetPos(InputManager::GetInstance()->GetCursorViewPosition());
+			mouse.AddComponent(mouseTr);
+			auto mousebody = BodyCom();
+			mousebody.SetMass(0);
+			mousebody.ChooseShape("AABB", 0.05, 0.05);
+			mouse.AddComponent(mousebody);
+			auto ownership = OwnershiptCom<GameObjectType>();
+			mouse.AddComponent(ownership);
+		}
 
 		GameTileMapManager::GetInstance()->AddTileMap("untitled");
 		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");

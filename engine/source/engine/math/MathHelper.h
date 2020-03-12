@@ -60,9 +60,14 @@ namespace gswy
 	float LookAt(const vec2& delta);
 
 	/*
-	Return the vec2 form of a angle
+	Return the vec2 form of a angle used in game (rotated 90 degree counterclockwise)
 	*/
 	vec2 ToVec(float rotation);
+
+	/*
+	Return the vec2 form of a angle in radiance (usual coordinate)
+	*/
+	vec2 RadToVec(float rotation);
 }
 
 std::ostream& operator<<(std::ostream& o, const glm::vec3& n);

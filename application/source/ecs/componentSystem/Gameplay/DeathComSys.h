@@ -36,7 +36,9 @@ namespace gswy
 				DEBUG_PRINT("Receive " + Str(*e));
 
 				// Set entity to be inactive
-				event->m_entity.m_active = false;
+				ComponentDecorator<ActiveCom, GameObjectType> active;
+				m_parentWorld->Unpack(event->m_entity, active);
+				active->SetActive(false);
 
 				switch (event->m_entity.m_type)
 				{

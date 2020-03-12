@@ -44,8 +44,11 @@ namespace gswy
 				for (size_t j = 0; j < (size_t)GameObjectType::NUM; ++j)
 					m_CollisionDisableMap[i][j] = 0;
 
-			// Collision diable list (self-self, mutal)
-			GameObjectType diableCollisionList[] = { GameObjectType::PLAYER ,GameObjectType::FIREBALL ,GameObjectType::ICEBALL ,GameObjectType::BOLT };
+			// Collision disable list (self-self, mutal)
+			GameObjectType diableCollisionList[] = { 
+				GameObjectType::PLAYER ,GameObjectType::FIREBALL ,GameObjectType::ICEBALL ,GameObjectType::BOLT,
+				GameObjectType::TOWER_BUILD, GameObjectType::TOWER_FIRE, GameObjectType::TOWER_ICE, GameObjectType::TOWER_LIGHTNING
+			};
 			for (auto& item1 : diableCollisionList)
 			{
 				for (auto& item2 : diableCollisionList)
@@ -67,6 +70,14 @@ namespace gswy
 				lock();
 				for (auto& entity : m_registeredEntities)
 				{
+					// Check active
+					ComponentDecorator<ActiveCom, GameObjectType> active;
+					m_parentWorld->Unpack(entity, active);
+					if (!active->IsActive())
+					{
+						continue;
+					}
+
 					ComponentDecorator<BodyCom, GameObjectType> body;
 					ComponentDecorator<TransformCom, GameObjectType> transform;
 					m_parentWorld->Unpack(entity, body);
@@ -96,12 +107,28 @@ namespace gswy
 			auto last_Entity = m_registeredEntities.end();
 			for (; first_Entity != last_Entity; ++first_Entity)
 			{
+				// Check active
+				ComponentDecorator<ActiveCom, GameObjectType> active;
+				m_parentWorld->Unpack(*first_Entity, active);
+				if (!active->IsActive())
+				{
+					continue;
+				}
+
 				ComponentDecorator<BodyCom, GameObjectType> body1;
 				m_parentWorld->Unpack(*first_Entity, body1);
 				// Reset colliding entity
 				body1->ResetOtherEntity();
 				for (auto second_Entity = first_Entity + 1; second_Entity != last_Entity; ++second_Entity)
 				{
+					// Check active
+					ComponentDecorator<ActiveCom, GameObjectType> active;
+					m_parentWorld->Unpack(*second_Entity, active);
+					if (!active->IsActive())
+					{
+						continue;
+					}
+
 					// Enable collision diable map
 					if (m_CollisionDisableMap[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
 						continue;

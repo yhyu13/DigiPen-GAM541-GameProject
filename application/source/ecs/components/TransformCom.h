@@ -80,6 +80,7 @@ namespace gswy
 		{
 			return rotation;
 		}
+
 	private:
 		vec3 pos;
 		vec3 velocity;

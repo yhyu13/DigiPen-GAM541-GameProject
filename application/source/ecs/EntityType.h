@@ -35,6 +35,7 @@ namespace gswy
 std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
 	switch (n) {
 	case gswy::GameObjectType::EMPTY: return o << "EMPTY";
+	case gswy::GameObjectType::MOUSE: return o << "MOUSE";
 	case gswy::GameObjectType::BACKGROUND: return o << "BACKGROUND";
 	case gswy::GameObjectType::PLAYER: return o << "PLAYER";
 	case gswy::GameObjectType::ENEMY: return o << "ENEMY";

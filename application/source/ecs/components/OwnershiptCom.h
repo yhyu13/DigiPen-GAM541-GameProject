@@ -30,7 +30,7 @@ namespace gswy
 		{
 			m_entity = entity;
 		}
-		explicit OwnershiptCom(const EntityDecorator<EntityType>& entityDec)
+		explicit OwnershiptCom(EntityDecorator<EntityType>& entityDec)
 		{
 			m_entity = entityDec.GetEntity();
 		}

@@ -75,6 +75,8 @@ namespace gswy {
 						else if (objName.compare("Mob") == 0)
 						{
 							auto obj = world->GenerateEntity(GameObjectType::ENEMY);
+							auto active = ActiveCom();
+							obj.AddComponent(active);
 							obj.AddComponent(OwnershiptCom<GameObjectType>());
 							auto transform = TransformCom();
 							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
@@ -156,6 +158,8 @@ namespace gswy {
 						//		{
 						//			// TODO: remove draw path sprites
 						//			auto obj = world->GenerateEntity(GameObjectType::BACKGROUND);
+						//			auto active = ActiveCom();
+						//			obj.AddComponent(active);
 						//			auto sprite = SpriteCom();
 						//			auto m_sprite = sprite.Get();
 						//			// Hang Yu comment : scale the tile sprite with screen height into our normalize coordinate

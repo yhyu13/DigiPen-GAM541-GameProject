@@ -58,6 +58,8 @@ namespace gswy
 							auto pos = event->m_pos;
 							auto rot = event->m_rot;
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
+							auto active = ActiveCom();
+							weapon.AddComponent(active);
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
@@ -76,7 +78,74 @@ namespace gswy
 							auto aabb = BodyCom();
 							aabb.ChooseShape("Circle", 0.1);
 							weapon.AddComponent(aabb);
-							weapon.AddComponent(LifeTimeCom(2.0));
+							weapon.AddComponent(LifeTimeCom(1.0));
+							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+						}
+					}
+				}
+				break;
+				case GameObjectType::TOWER_ICE:
+				{
+					static int num_spawn = 1;
+					for (int i = 0; i < num_spawn; ++i)
+					{
+						{
+							auto pos = event->m_pos;
+							auto rot = event->m_rot;
+							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
+							auto active = ActiveCom();
+							weapon.AddComponent(active);
+							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
+							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
+							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+							transform.AddVelocity(ToVec(weapon_rot) * 5.0f);
+							weapon.AddComponent(transform);
+							auto animCom = AnimationCom();
+							animCom.Add("iceBallAnim1", "Move");
+							animCom.SetCurrentAnimationState("Move");
+							weapon.AddComponent(animCom);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.25, 0.25));
+							weapon.AddComponent(sprite);
+							auto aabb = BodyCom();
+							aabb.ChooseShape("Circle", 0.1);
+							weapon.AddComponent(aabb);
+							weapon.AddComponent(LifeTimeCom(1.0));
+							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+						}
+					}
+				}
+				break;
+				case GameObjectType::TOWER_LIGHTNING:
+				{
+					static int num_spawn = 1;
+					for (int i = 0; i < num_spawn; ++i)
+					{
+						{
+							auto pos = event->m_pos;
+							auto rot = event->m_rot;
+							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT);
+							auto active = ActiveCom();
+							weapon.AddComponent(active);
+							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
+							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
+							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+							weapon.AddComponent(transform);
+							auto attach = AttachedMovementCom();
+							attach.followPos = true;
+							attach.rPos = ToVec(weapon_rot) * .5f;
+							weapon.AddComponent(attach);
+							auto animCom = AnimationCom();
+							animCom.Add("boltAnim1", "Move");
+							animCom.SetCurrentAnimationState("Move");
+							weapon.AddComponent(animCom);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.25, 1));
+							weapon.AddComponent(sprite);
+							auto aabb = BodyCom();
+							aabb.ChooseShape("AABB", 0.25, 1.0);
+							weapon.AddComponent(aabb);
+							weapon.AddComponent(LifeTimeCom(3));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
 						}
 					}
@@ -91,6 +160,8 @@ namespace gswy
 							auto pos = transform->GetPos();
 							auto rot = transform->GetRotation();
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
+							auto active = ActiveCom();
+							weapon.AddComponent(active);
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
@@ -114,6 +185,8 @@ namespace gswy
 						}
 						/*{
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
+							auto active = ActiveCom();
+							weapon.AddComponent(active);
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 							auto weapon_rot = rot + RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
@@ -138,6 +211,8 @@ namespace gswy
 					//std::cerr << 2*num_spawn << '\n';
 					/*{
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT);
+						auto active = ActiveCom();
+						weapon.AddComponent(active);
 						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 						auto weapon_rot = rot;
 						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
