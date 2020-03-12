@@ -63,9 +63,9 @@ namespace gswy
 			m_GCList.clear();
 		}
 
-		void OnGC(Event<GameObjectType, EventType>* e)
+		void OnGC(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (auto event = static_cast<GCEvent*>(e))
+			if (auto event = static_pointer_cast<GCEvent>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
 				m_GCList.push_back(event->m_entity);

@@ -48,18 +48,18 @@ namespace gswy
 					delta.y = -delta.y;
 					transform->SetRotation(LookAt(delta));
 
-					// 2. Fire
+					// Fire
 					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 					{
-						FireWeaponEvent e(entity);
-						queue->Publish(&e);
+						auto e = MemoryManager::Make_shared<FireWeaponEvent>(entity);
+						queue->Publish(e);
 					}
 
-					// 3. (Demo) Spawn enemies by triggering buttons
+					// (Demo) Spawn enemies by triggering buttons
 					if (input->IsKeyTriggered(KEY_SPACE))
 					{
-						SpawnEvent e(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
-						queue->Publish(&e);
+						auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
+						queue->Publish(e);
 
 						static bool flash = true;
 						ComponentDecorator<SpriteCom, GameObjectType> sprite;
@@ -69,7 +69,18 @@ namespace gswy
 						flash = !flash;
 					}
 
-					// 4. Movement with keys
+					// (Demo) Spawn tower by pressing keys
+					if (input->IsKeyTriggered(KEY_P))
+					{
+						PRINT("P");
+						ComponentDecorator<TransformCom, GameObjectType> position;
+						m_parentWorld->Unpack(m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
+						auto cursor_pos = position->GetPos();
+						auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_FIRE, vec3(cursor_pos, 0));
+						queue->Publish(e);
+					}
+
+					// Movement with keys
 					bool isIdle = true;
 					vec2 velocity(0);
 					float speed = 1.0f;
@@ -97,8 +108,8 @@ namespace gswy
 					if (!isIdle)
 					{
 						// Play foot step sound
-						SoundEvent e("footstep02");
-						queue->Publish(&e);
+						auto e = MemoryManager::Make_shared<SoundEvent>("footstep02");
+						queue->Publish(e);
 
 						// Set moving velocity
 						transform->SetVelocity(glm::normalize(velocity) * speed);

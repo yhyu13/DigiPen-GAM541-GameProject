@@ -15,6 +15,14 @@
                "name":"MobMovingUnarmed",
                "path":"./asset/MobMovingUnarmed.png"
             },
+			{
+               "name":"TowerFire",
+               "path":"./asset/Piskel/Tower/TowerFire.png"
+            },
+			{
+               "name":"TowerIce",
+               "path":"./asset/Piskel/Tower/TowerIce.png"
+            },
             {
                "name":"ffireball_0001",
                "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0001.png"

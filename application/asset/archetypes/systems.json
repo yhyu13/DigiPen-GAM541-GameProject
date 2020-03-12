@@ -3,6 +3,8 @@
       "player-controller",
 	  "PlayerAnimationController",
       "mob-1-controller",
+	  "tower-controller",
+	  
       "weapon",
       
 	  "attached-movement",
@@ -13,6 +15,7 @@
       "hitpoint",
       "death",
 	  "lifetime",
+	  "fade",
 	  
 	  "animation",
 	  "particle",

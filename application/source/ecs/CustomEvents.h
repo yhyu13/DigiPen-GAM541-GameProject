@@ -31,13 +31,16 @@ namespace gswy
 
 	struct FireWeaponEvent : Event<GameObjectType, EventType> {
 
-		FireWeaponEvent(const Entity<GameObjectType>& entity)
+		explicit FireWeaponEvent(const Entity<GameObjectType>& entity, const vec2& pos = vec2(0), float rot = 0)
 			:
+			m_pos(pos),
+			m_rot(rot),
 			Event(EventType::FIREWEAPON)
 		{
 			m_entity = entity;
 		}
-
+		vec2 m_pos;
+		float m_rot;
 		Entity<GameObjectType> m_entity;
 	};
 
@@ -69,9 +72,9 @@ namespace gswy
 		
 		GCEvent(const Entity<GameObjectType>& entity)
 			:
-			Event(EventType::GC)
+			Event(EventType::GC),
+			m_entity(entity)
 		{
-			m_entity = entity;
 		}
 
 		Entity<GameObjectType> m_entity;
@@ -91,4 +94,54 @@ namespace gswy
 		GameObjectType m_type;
 	};
 
+	struct FadeEvent : Event<GameObjectType, EventType> {
+
+		explicit FadeEvent(const Entity<GameObjectType>& entity,float start, float end, float time, EventType _event = EventType::EMPTY)
+			:
+			Event(EventType::FADE),
+			alpha_start(start),
+			alpha_end(end),
+			time_span(time),
+			m_entity(entity),
+			event_end(_event)
+		{
+		}
+		Entity<GameObjectType> m_entity;
+		float alpha_start;
+		float alpha_end;
+		float time_span;
+		EventType event_end;
+	};
+
+	struct _FadeIngEvent : Event<GameObjectType, EventType> {
+
+		explicit _FadeIngEvent(const Entity<GameObjectType>& entity,float _delta, float _end, EventType _event)
+			:
+			Event(EventType::_FADE_ING),
+			delta(_delta),
+			end(_end),
+			m_entity(entity),
+			event_end(_event)
+		{
+		}
+
+		Entity<GameObjectType> m_entity;
+		float delta;
+		float end;
+		EventType event_end;
+	};
+
+	struct _FadeEndEvent : Event<GameObjectType, EventType> {
+
+		explicit _FadeEndEvent(const Entity<GameObjectType>& entity, EventType _event)
+			:
+			Event(EventType::_FADE_END),
+			m_entity(entity),
+			event_end(_event)
+		{
+		}
+
+		Entity<GameObjectType> m_entity;
+		EventType event_end;
+	};
 }

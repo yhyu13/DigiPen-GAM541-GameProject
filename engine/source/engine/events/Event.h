@@ -27,17 +27,20 @@ namespace gswy {
 	
 	template <typename EntityType, typename EventType>
 	struct Event: BaseEvent {
-	
+
 		Event() = default;
 		explicit Event(EventType type)
 			:m_type(type)
 		{}
+
+		explicit Event(const Event& other): m_type(other.m_type) {		
+		}
+
 		virtual ~Event() {
 		}
 
 		EventType m_type;
 	};
-
 }
 
 template <typename EntityType, typename EventType>

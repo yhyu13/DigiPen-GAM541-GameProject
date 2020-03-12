@@ -106,7 +106,7 @@ double gswy::PathFinding::calculateHValue(int row, int col, Pair dest)
 
 void gswy::PathFinding::tracePath(cell** cellDetails, Pair dest)
 {
-	DEBUG_PRINT("\nThe Path is ");
+	// DEBUG_PRINT("\nThe Path is ");
 	int row = dest.first;
 	int col = dest.second;
 
@@ -130,7 +130,7 @@ void gswy::PathFinding::tracePath(cell** cellDetails, Pair dest)
 		pair<int, int> p = Path.top();
 		m_reuslt.push_back(ivec2(p.first, p.second));
 		Path.pop();
-		DEBUG_PRINT("-> (%d,%d) ", p.first, p.second);
+		// DEBUG_PRINT("-> (%d,%d) ", p.first, p.second);
 	}
 
 	return;

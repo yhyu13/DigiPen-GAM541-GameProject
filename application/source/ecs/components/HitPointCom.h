@@ -27,6 +27,7 @@ namespace gswy
 		{
 			m_HP = 100.0;
 			m_HPLock = false;
+			m_IsDead = false;
 		}
 
 		explicit HitPointCom(double HitPoint)
@@ -50,9 +51,22 @@ namespace gswy
 			m_HPLock = b;
 		}
 
+
+		void SetIsDead(bool b)
+		{
+			m_IsDead = b;
+		}
+
+
+		bool GetIsDead()
+		{
+			return m_IsDead;
+		}
+
 	private:
 		double m_HP;
 		bool m_HPLock;
+		bool m_IsDead;
 	};
 }
 

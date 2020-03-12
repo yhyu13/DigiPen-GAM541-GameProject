@@ -46,7 +46,6 @@ namespace gswy
 			auto playerEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY);
 			for (auto& entity : m_registeredEntities) {
-
 				{
 					ComponentDecorator<TransformCom, GameObjectType> transform;
 					ComponentDecorator<AnimationCom, GameObjectType> animation;
@@ -60,7 +59,7 @@ namespace gswy
 					auto src = transform->GetPos();
 
 					auto delta = dest - src;
-					PRINT(glm::length(delta));
+					//PRINT(glm::length(delta));
 					// Stop when delta distance is small
 					if (glm::length(delta) < .2)
 					{
@@ -80,7 +79,7 @@ namespace gswy
 						transform->SetRotation(LookAt(delta));
 
 						// 2. Move
-						float speed = 1.0f;
+						float speed = .5f;
 						transform->SetVelocity(glm::normalize(delta) * speed);
 						animation->SetCurrentAnimationState("Move");
 					}
@@ -88,7 +87,7 @@ namespace gswy
 					{
 						//PRINT(Str(entity) + " not found");
 						// TODO : Engine exception
-						throw EngineException(_CRT_WIDE(__FILE__), __LINE__, str2wstr(Str(entity) + " has not found the player!"));
+						//throw EngineException(_CRT_WIDE(__FILE__), __LINE__, str2wstr(Str(entity) + " has not found the player!"));
 					}
 				}
 			}

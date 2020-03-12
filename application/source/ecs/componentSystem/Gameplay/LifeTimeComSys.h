@@ -33,8 +33,8 @@ namespace gswy
 				lifeTime->AddLifeTime(-dt);
 				if (lifeTime->IsDepleted())
 				{
-					GCEvent e(entity);
-					queue->Publish(&e);
+					auto e = MemoryManager::Make_shared<GCEvent>(entity);
+					queue->Publish(e);
 				}
 			}
 		}

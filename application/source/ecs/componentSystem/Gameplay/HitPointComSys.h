@@ -38,15 +38,19 @@ namespace gswy
 				m_parentWorld->Unpack(entity, HitPoint);
 				if (HitPoint->IsDepleted())
 				{
-					DeathEvent e(entity);
-					queue->Publish(&e);
+					if (!HitPoint->GetIsDead())
+					{
+						auto e = MemoryManager::Make_shared<DeathEvent>(entity);
+						queue->Publish(e);
+						HitPoint->SetIsDead(true);
+					}
 				}
 			}
 		}
 
-		void OnCOLLISION(Event<GameObjectType, EventType>* e)
+		void OnCOLLISION(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (auto event = static_cast<CollisionEvent*>(e))
+			if (auto event = static_pointer_cast<CollisionEvent>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
 				bool isSwasp = false;

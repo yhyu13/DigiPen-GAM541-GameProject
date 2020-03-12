@@ -15,12 +15,23 @@ Creation date	: 01/26/2020
 #pragma once
 #include "engine/exception/EngineException.h"
 
+#include "rttr/registration.h"
+
+static void f() { std::cout << "Hello World" << std::endl; }
+using namespace rttr;
+RTTR_REGISTRATION
+{
+	using namespace rttr;
+	registration::method("f", &f);
+}
+
 extern gswy::Engine* gswy::CreateEngineApplication();
 
 int main(int argc, char** argv) {
 	try
 	{
 		auto application = gswy::CreateEngineApplication();
+		type::invoke("f", {});
 		application->Run();
 		delete application;
 	}
