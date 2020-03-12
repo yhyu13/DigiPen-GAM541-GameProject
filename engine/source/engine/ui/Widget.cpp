@@ -18,6 +18,15 @@ Creation date: 02/26/2020
 
 namespace gswy {
 	
+	void WidgetManager::RenderUI()
+	{
+		if (m_Hud.GetVisible())              m_Hud.Render();
+		if (m_MainMenu.GetVisible())         m_MainMenu.Render();
+		if (m_PauseMenu.GetVisible())        m_PauseMenu.Render();
+		if (m_ShopMenu.GetVisible())         m_ShopMenu.Render();
+		if (m_InventoryMenu.GetVisible())    m_InventoryMenu.Render();
+	}
+
 	void MainMenu::Render()
 	{
 		ImVec2 windowsize = ImVec2(m_WindowSize_X, m_WindowSize_Y);

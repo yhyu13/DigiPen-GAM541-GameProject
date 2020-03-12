@@ -13,7 +13,7 @@ Creation date: 02/26/2020
 #include "imgui.h"
  
 namespace gswy {
-	
+
 	class Widget
 	{
 	public:
@@ -31,6 +31,7 @@ namespace gswy {
 	class HUD : public Widget
 	{
 	public:
+		HUD() { IsVisible = true; };
 		void Render() override;
 	};
 
@@ -38,6 +39,7 @@ namespace gswy {
 	class MainMenu : public Widget
 	{
 	public:
+		MainMenu() { IsVisible = false; };
 		void Render() override;
 	};
 
@@ -45,6 +47,7 @@ namespace gswy {
 	class PauseMenu : public Widget
 	{
 	public:
+		PauseMenu() { IsVisible = false; }; 
 		void Render() override;
 	};
 
@@ -52,6 +55,7 @@ namespace gswy {
 	class ShopMenu : public Widget
 	{
 	public:
+		ShopMenu() { IsVisible = false; };
 		void Render() override;
 	};
 
@@ -59,6 +63,29 @@ namespace gswy {
 	class InventoryMenu : public Widget
 	{
 	public:
+		InventoryMenu() { IsVisible = false; };
 		void Render() override;
+	};
+
+	class WidgetManager
+	{
+	public:
+
+		void RenderUI();
+		void SetVisible(Widget& widget, bool visible) { widget.SetVisible(visible); }
+		bool GetVisible(Widget& widget) { return widget.GetVisible(); }
+
+		HUD& GetHUD() { return m_Hud; }
+		MainMenu& GetMainMenu() { return m_MainMenu; }
+		PauseMenu& GetPauseMenu() { return m_PauseMenu; }
+		ShopMenu& GetShopMenu() { return m_ShopMenu; }
+		InventoryMenu& GetInventoryMenu() { return m_InventoryMenu; }
+
+	private:
+		HUD m_Hud;
+		MainMenu m_MainMenu;
+		PauseMenu m_PauseMenu;
+		ShopMenu m_ShopMenu;
+		InventoryMenu m_InventoryMenu;
 	};
 }

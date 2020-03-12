@@ -16,6 +16,7 @@ Creation date	: 01/26/2020
 
 #include "EngineExport.h"
 #include "Import.h"
+#include "ui/UI_Test.h"
 
 using namespace gswy;
 
@@ -58,7 +59,7 @@ public:
 		OpenGLDebugDraw::Init();
 		m_PostProcessing.SetScreenSize(1280, 720);
 		m_PostProcessing.Init();
-
+		
 		GameTileMapManager::GetInstance()->Init();
 
 		// Texture loader
@@ -105,7 +106,8 @@ public:
 		for (int i = 0; i < systems.size(); ++i) {
 			std::string system = systems[i];
 			if (system._Equal("player-controller")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
+				PlayerController = MemoryManager::Make_shared<PlayerControllerComSys>();
+				m_world->RegisterSystem(PlayerController);
 				continue;
 			}
 			if (system._Equal("PlayerAnimationController")) {
@@ -113,7 +115,7 @@ public:
 				continue;
 			}
 			if (system._Equal("mob-1-controller")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
+				//m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
 				continue;
 			}
 			if (system._Equal("scene")) {
@@ -327,38 +329,40 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
-		Instrumentor* instrumentor = Instrumentor::GetInstance();
-		ImGui::SetNextWindowBgAlpha(0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
-		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, 0);
-		ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, 0);
-		ImGui::Begin("Instrumenting Profiling");
-		for (auto& result : instrumentor->GetResults()) {
-			char entry[100];
-			strcpy(entry, "%10.3f %s\t");
-			strcat(entry, result.first);
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), entry, result.second.m_time, result.second.m_timeUnit);
-		}
-		ImGui::End();
-		ImGui::PopStyleVar(1);
-		ImGui::PopStyleColor(3);
+		PlayerController->widgetManager.RenderUI();
+		//Instrumentor* instrumentor = Instrumentor::GetInstance();
+		//ImGui::SetNextWindowBgAlpha(0.0f);
+		//ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		//ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
+		//ImGui::PushStyleColor(ImGuiCol_TitleBgActive, 0);
+		//ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, 0);
+		//ImGui::Begin("Instrumenting Profiling");
+		//for (auto& result : instrumentor->GetResults()) {
+		//	char entry[100];
+		//	strcpy(entry, "%10.3f %s\t");
+		//	strcat(entry, result.first);
+		//	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), entry, result.second.m_time, result.second.m_timeUnit);
+		//}
+		//ImGui::End();
+		//ImGui::PopStyleVar(1);
+		//ImGui::PopStyleColor(3);
 #ifdef _DEBUG
 		//TODO: Debug only
-		ImGui::Begin("Settings");
-		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
-		ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
-		ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
-		ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
-		ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
-		ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
-		ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
-		ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
-		ImGui::End();
+		//ImGui::Begin("Settings");
+		//ImGui::Checkbox("ParticleActive", &m_ParticleActive);
+		//ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
+		//ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
+		//ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
+		//ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
+		//ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
+		//ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
+		//ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
+		//ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
+		//ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
+		//ImGui::End();
 #endif // _DEBUG
 
+		//Widget Testing
 	}
 
 	static const vec3& GetCameraPosition()
@@ -373,6 +377,8 @@ private:
 	std::shared_ptr<GameWorld<GameObjectType>> m_world;
 	gswy::OpenGLPostProcessing m_PostProcessing;
 	bool m_PP = false;
+	//gswy::UI_Test ui;
+	std::shared_ptr<PlayerControllerComSys> PlayerController;
 #ifdef _DEBUG
 
 	//TODO Move to component

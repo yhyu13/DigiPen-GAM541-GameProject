@@ -19,6 +19,7 @@ Creation date: 02/04/2020
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/CustomEvents.h"
+#include "ui/UI_Test.h"
 
 namespace gswy
 {
@@ -107,9 +108,15 @@ namespace gswy
 					{
 						animation->SetCurrentAnimationState("Idle");
 					}
-					
+
+					if (input->IsKeyTriggered(KEY_Q)) widgetManager.GetInventoryMenu().SetVisible(!widgetManager.GetInventoryMenu().GetVisible());
+					if (input->IsKeyTriggered(KEY_E)) widgetManager.GetShopMenu().SetVisible(!widgetManager.GetShopMenu().GetVisible());
+					if (input->IsKeyTriggered(KEY_P)) widgetManager.GetPauseMenu().SetVisible(!widgetManager.GetPauseMenu().GetVisible());
+
 					return;
 				}
 		}
+
+		WidgetManager widgetManager;
 	};
 }
