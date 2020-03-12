@@ -62,7 +62,7 @@ namespace gswy
 					auto src = transform->GetPos();
 
 					auto delta = dest - src;
-					//PRINT(glm::length(delta));
+
 					// Stop when delta distance is small
 					if (glm::length(delta) < .2)
 					{

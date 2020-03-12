@@ -31,8 +31,9 @@ namespace gswy
 		std::vector<glm::ivec2> m_pathResult;
 		float m_speed = { 1.0f };
 		int m_pathFindingLookAhead = { 2 };
-		float m_noPathFindingThreshold = { 0.1f };
+		float m_noPathFindingThreshold = { 0.15f };
 		float m_advancePathFindingThreshold = { 0.1f };
+		float m_maxAngleRotation = { 0.8726646f};
 	public:
 		PlayerControllerComSys() {
 		}
@@ -201,8 +202,17 @@ namespace gswy
 				}
 				PRINT(m_pathResult.size());
 			}
-			transform->SetRotation(LookAt(delta));
-
+			auto angle = LookAt(delta);
+			// TODO: need fine tune
+			//if (angle > m_maxAngleRotation)
+			//{
+			//	angle = m_maxAngleRotation;
+			//}
+			//else if (angle < -m_maxAngleRotation)
+			//{
+			//	angle = -m_maxAngleRotation;
+			//}
+			transform->SetRotation(angle);
 			// 2. Move
 			transform->SetVelocity(glm::normalize(delta) * m_speed);
 			animation->SetCurrentAnimationState("Move");
