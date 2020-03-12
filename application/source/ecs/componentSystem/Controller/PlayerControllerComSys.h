@@ -112,6 +112,7 @@ namespace gswy
 					if (input->IsKeyTriggered(KEY_Q)) widgetManager.GetInventoryMenu().SetVisible(!widgetManager.GetInventoryMenu().GetVisible());
 					if (input->IsKeyTriggered(KEY_E)) widgetManager.GetShopMenu().SetVisible(!widgetManager.GetShopMenu().GetVisible());
 					if (input->IsKeyTriggered(KEY_P)) widgetManager.GetPauseMenu().SetVisible(!widgetManager.GetPauseMenu().GetVisible());
+					if (input->IsKeyTriggered(KEY_F1)) widgetManager.GetMainMenu().SetVisible(!widgetManager.GetMainMenu().GetVisible());
 
 					return;
 				}
