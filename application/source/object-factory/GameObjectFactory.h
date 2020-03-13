@@ -50,9 +50,9 @@ namespace gswy {
 							continue;
 						}
 						if (name._Equal("transform")) {
-							int x = component["x"].asInt();
-							int y = component["y"].asInt();
-							int z = component["z"].asInt();
+							float x = component["x"].asFloat();
+							float y = component["y"].asFloat();
+							float z = component["z"].asFloat();
 							player.AddComponent(TransformCom(x, y, Z_ORDER(z)));
 							continue;
 						}

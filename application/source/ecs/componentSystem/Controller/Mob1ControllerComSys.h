@@ -28,12 +28,15 @@ namespace gswy
 		double m_updateTimer = {1.0/10.0};
 	public:
 		Mob1ControllerComSys() {
+			m_systemSignature.AddComponent<BodyCom>();
+			m_systemSignature.AddComponent<TransformCom>();
+			m_systemSignature.AddComponent<AnimationCom>();
 		}
 
 		virtual void Update(double dt) override {
 
 			// TODO: remove disable of mob controller
-			return;
+			return; //Comment And Uncomment to run script for mob to move
 
 			static double timer = m_updateTimer;
 			timer += dt;
@@ -52,7 +55,9 @@ namespace gswy
 				{
 					ComponentDecorator<TransformCom, GameObjectType> transform;
 					ComponentDecorator<AnimationCom, GameObjectType> animation;
+					ComponentDecorator<BodyCom, GameObjectType> body;
 					m_parentWorld->Unpack(entity, transform);
+					m_parentWorld->Unpack(entity, body);
 					m_parentWorld->Unpack(entity, animation);
 
 					ComponentDecorator<TransformCom, GameObjectType> playerPosition;
@@ -66,7 +71,7 @@ namespace gswy
 					// Stop when delta distance is small
 					if (glm::length(delta) < .2)
 					{
-						transform->SetVelocity(vec2(0));
+						body->SetVelocity(vec2(0));
 						continue;
 					}
 
@@ -83,7 +88,7 @@ namespace gswy
 
 						// 2. Move
 						float speed = .5f;
-						transform->SetVelocity(glm::normalize(delta) * speed);
+						body->SetVelocity(glm::normalize(delta) * speed);
 						animation->SetCurrentAnimationState("Move");
 					}
 					else

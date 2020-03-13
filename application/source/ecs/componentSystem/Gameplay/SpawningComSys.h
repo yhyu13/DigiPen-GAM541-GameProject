@@ -78,6 +78,7 @@ namespace gswy
 			tower.AddComponent(sprite);
 			auto body = BodyCom();
 			body.SetMass(0);
+			body.SetPos(transform.GetPos());
 			body.ChooseShape("AABB", 0.25, 0.25);
 			tower.AddComponent(body);
 			auto children = ChildrenCom<GameObjectType>();
@@ -99,6 +100,7 @@ namespace gswy
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
 				body.SetMass(0);
+				body.SetPos(transform.GetPos());
 				body.ChooseShape("AABB", 0.25, 0.25);
 				_tower.AddComponent(body);
 				children.AddEntity(_tower);
@@ -119,6 +121,7 @@ namespace gswy
 				auto coolDownController = CoolDownCom(1.0);
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
+				body.SetPos(transform.GetPos());
 				body.SetMass(0);
 				body.ChooseShape("AABB", 0.25,0.25);
 				_tower.AddComponent(body);
@@ -141,6 +144,7 @@ namespace gswy
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
 				body.SetMass(0);
+				body.SetPos(transform.GetPos());
 				body.ChooseShape("AABB", 0.25, 0.25);
 				_tower.AddComponent(body);
 				children.AddEntity(_tower);

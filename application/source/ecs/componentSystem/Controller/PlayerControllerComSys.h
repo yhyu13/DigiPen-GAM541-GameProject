@@ -40,6 +40,9 @@ namespace gswy
 		float m_maxAngleRotation = { 0.8726646f};
 	public:
 		PlayerControllerComSys() {
+			//m_systemSignature.AddComponent<BodyCom>();
+			//m_systemSignature.AddComponent<TransformCom>();
+			//m_systemSignature.AddComponent<AnimationCom>();
 		}
 
 		virtual void Update(double dt) override {
@@ -83,6 +86,8 @@ namespace gswy
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				m_parentWorld->Unpack(m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0], transform);
 				auto cursor_pos = transform->GetPos();
+				PRINT("cursor_posx: " + Str(cursor_pos.x));
+				PRINT("cursor_posy: " + Str(cursor_pos.y));
 				auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_BUILD, vec3(cursor_pos, 0));
 				queue->Publish(e);
 			}
@@ -96,9 +101,11 @@ namespace gswy
 
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			ComponentDecorator<TransformCom, GameObjectType> transform;
+			ComponentDecorator<BodyCom, GameObjectType> body;
 			ComponentDecorator<AnimationCom, GameObjectType> animation;
 			m_parentWorld->Unpack(entity, transform);
 			m_parentWorld->Unpack(entity, animation);
+			m_parentWorld->Unpack(entity, body);
 			auto playerPos = transform->GetPos();
 
 			auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
@@ -162,13 +169,15 @@ namespace gswy
 				coolDownController->SetFreeze(false);
 				auto tower = ownership->GetEntity();
 				ComponentDecorator<TransformCom, GameObjectType> towerTransform;
+				ComponentDecorator<BodyCom, GameObjectType> towerBody;
 				ComponentDecorator<ActiveCom, GameObjectType> towerActive;
 				ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
 				m_parentWorld->Unpack(tower, towerTransform);
+				m_parentWorld->Unpack(tower, towerBody);
 
 				// Simply swap the position of build tower and this tower
-				auto towerPos = towerTransform->GetPos();
-				towerTransform->SetPos(transform->GetPos());
+				auto towerPos = towerBody->GetPos();
+				towerBody->SetPos(transform->GetPos());
 				transform->SetPos(towerPos);
 				m_parentWorld->Unpack(tower, towerActive);
 
@@ -203,7 +212,7 @@ namespace gswy
 			// Stop when delta distance is small
 			if (glm::length(delta) < m_noPathFindingThreshold)
 			{
-				transform->SetVelocity(vec2(0));
+				body->SetVelocity(vec2(0));
 				animation->SetCurrentAnimationState("Idle");
 				return;
 			}
@@ -227,12 +236,14 @@ namespace gswy
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			ComponentDecorator<TransformCom, GameObjectType> transform;
 			ComponentDecorator<AnimationCom, GameObjectType> animation;
+			ComponentDecorator<BodyCom, GameObjectType> body;
 			m_parentWorld->Unpack(entity, transform);
+			m_parentWorld->Unpack(entity, body);
 			m_parentWorld->Unpack(entity, animation);
 
 			if (m_pathResult.empty())
 			{
-				transform->SetVelocity(vec2(0));
+				body->SetVelocity(vec2(0));
 				animation->SetCurrentAnimationState("Idle");
 				return;
 			}
@@ -272,7 +283,7 @@ namespace gswy
 			//}
 			transform->SetRotation(angle);
 			// 2. Move
-			transform->SetVelocity(glm::normalize(delta) * m_speed);
+			body->SetVelocity(glm::normalize(delta) * m_speed);
 			animation->SetCurrentAnimationState("Move");
 
 			// 3. Play sound

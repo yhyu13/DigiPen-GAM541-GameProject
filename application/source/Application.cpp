@@ -179,9 +179,9 @@ public:
 		}
 
 		// Initialize game
+		LoadGameWorld();
 		m_world->Init();
 
-		LoadGameWorld();
 	}
 
 	void LoadGameWorld()
@@ -216,6 +216,7 @@ public:
 			mouseTr.SetPos(InputManager::GetInstance()->GetCursorViewPosition());
 			mouse.AddComponent(mouseTr);
 			auto mousebody = BodyCom();
+			mousebody.SetPos(mouseTr.GetPos());
 			mousebody.SetMass(0);
 			mousebody.ChooseShape("AABB", 0.05, 0.05);
 			mouse.AddComponent(mousebody);
@@ -294,7 +295,7 @@ public:
 		}
 		{
 			// Update cursor world position
-			ComponentDecorator<TransformCom, GameObjectType> position;
+			ComponentDecorator</*TransformCom*/BodyCom, GameObjectType> position;
 			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
 			auto cameraPos = m_CameraController.GetPosition();
 			auto mouseRelativePos = InputManager::GetInstance()->GetCursorViewPosition();

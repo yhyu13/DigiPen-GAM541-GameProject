@@ -56,7 +56,22 @@ namespace gswy
 					m_CollisionDisableMap[(size_t)item1][(size_t)item2] = 1;
 				}
 			}
+
+			//Body And Transform Updates
+			for (auto& entity : m_registeredEntities)
+			{
+				ComponentDecorator<TransformCom, GameObjectType> transform;
+				ComponentDecorator<BodyCom, GameObjectType> body;
+				m_parentWorld->Unpack(entity, transform);
+				m_parentWorld->Unpack(entity, body);
+
+				//Setting Initially positions of body from all entities's transforms
+				body->m_PosX = transform->GetPos().x;
+				body->m_PosY = transform->GetPos().y;
+			}
 		}
+
+
 //#ifdef _DEBUG
 		virtual void PostRenderUpdate(double dt) override
 		{
@@ -100,6 +115,34 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
+
+			//Updating Positions
+			for (auto& entity : m_registeredEntities)
+			{
+				ComponentDecorator<BodyCom, GameObjectType> body;
+				ComponentDecorator<TransformCom, GameObjectType> transform;
+				m_parentWorld->Unpack(entity, transform);
+				m_parentWorld->Unpack(entity, body);
+
+				body->Integrate(dt);
+
+				//transform->AddPos(body->GetVelocity() * (float)dt);
+
+				//After Initialising, Setting Transform of each -
+				//entity back from manipulated body positions for rendering
+				transform->SetPos(vec2(body->m_PosX, body->m_PosY));
+
+				//Checking Player Position
+				//if (entity.m_type == GameObjectType::MOUSE)
+				//{
+				//	std::cout << "\n PLayer Posx: " << body->m_PosX;
+				//	std::cout << "\n PLayer Posy: " << body->m_PosY;
+				//	std::cout << "\n PLayerT Posx: " << transform->GetPos().x;
+				//	std::cout << "\n PLayerT Posy: " << transform->GetPos().y;
+				//}
+
+			}
+
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			//For Collisions
 			auto collision = Collisions::GetInstance();
@@ -140,6 +183,13 @@ namespace gswy
 					bool collides = collision->CheckCollisionAndGenerateDetection(body1->shape.get(), body1->m_PosX, body1->m_PosY, body2->shape.get(), body2->m_PosX, body2->m_PosY);						
 					if (collides)
 					{
+						//Velocity Nullification
+						//body1->m_VelY = !body1->m_VelY;
+						//body2->m_VelX = !body1->m_VelX;
+						//body1->m_VelX = !body1->m_VelX;
+						//body2->m_VelX = !body2->m_VelX;
+
+
 						// Set colliding entity
 						body1->SetOtherEntity(*second_Entity);
 						body2->SetOtherEntity(*first_Entity);
@@ -151,18 +201,18 @@ namespace gswy
 			}
 
 			//Body And Transform Updates
-			for (auto& entity : m_registeredEntities)
-			{
-				ComponentDecorator<TransformCom, GameObjectType> transform;
-				ComponentDecorator<BodyCom, GameObjectType> body;
-				m_parentWorld->Unpack(entity, transform);
-				m_parentWorld->Unpack(entity, body);
-
-				transform->AddPos(transform->GetVelocity() * (float)dt);
-
-				body->m_PosX = transform->GetPos().x;
-				body->m_PosY = transform->GetPos().y;
-			}
+			//for (auto& entity : m_registeredEntities)
+			//{
+			//	ComponentDecorator<TransformCom, GameObjectType> transform;
+			//	ComponentDecorator<BodyCom, GameObjectType> body;
+			//	m_parentWorld->Unpack(entity, transform);
+			//	m_parentWorld->Unpack(entity, body);
+			//
+			//	transform->AddPos(transform->GetVelocity() * (float)dt);
+			//
+			//	body->m_PosX = transform->GetPos().x;
+			//	body->m_PosY = transform->GetPos().y;
+			//}
 		}
 	};
 }

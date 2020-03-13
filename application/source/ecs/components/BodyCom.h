@@ -112,6 +112,12 @@ namespace gswy
 			m_VelY = VelY;
 		}
 
+		void SetVelocity(glm::vec2& velocity)
+		{
+			m_VelX = velocity.x;
+			m_VelY = velocity.y;
+		}
+
 		void SetRestitution(float rest)
 		{
 			m_Restitution = rest;
@@ -122,33 +128,55 @@ namespace gswy
 			m_Mass = mass;
 		}
 
+		void SetPos(const vec2& v)
+		{
+			m_PosX = v.x;
+			m_PosY = v.y;
+		}
+
+		const vec2& GetPos() const
+		{
+			return vec2(m_PosX, m_PosY);
+		}
+
+		const vec2& GetVelocity() const
+		{
+			return vec2(m_VelX, m_VelY);
+		}
+
 		//void Serialize() {}
 
-		void Integrate(float Gravity, float dt)
+		void Integrate(/*float Gravity, */float dt)
 		{
-			m_AccX = m_AccY = 0.0f;
+			//m_AccX = m_AccY = 0.0f;
 
-			dt = dt / 1000.0f;
+			//dt = dt / 1000.0f;
 
 			m_PrevPosX = m_PosX;
 			m_PrevPosY = m_PosY;
 
-			m_InvMass = 1 / m_Mass;
+			if (m_Mass == 0)
+				m_InvMass = 0;
+			else
+				m_InvMass = 1 / m_Mass;
 
 			//Applying Gravity
-			float g = m_Mass * Gravity;
-			m_TotalForceY = /* m_AddedForceY * */g;
+			//float g = m_Mass * Gravity;
+			//m_TotalForceY = /* m_AddedForceY * */g;
 
 			//Apply Acceleration
-			m_AccX = m_TotalForceX * m_InvMass;
-			m_AccY = m_TotalForceY * m_InvMass;
+			//m_AccX = m_TotalForceX * m_InvMass;
+			//m_AccY = m_TotalForceY * m_InvMass;
 
 			//Change in Position
 			m_PosX = m_VelX * dt + m_PrevPosX;
 			m_PosY = m_VelY * dt + m_PrevPosY;
 
+			m_VelX *= 0.99;
+			m_VelY *= 0.99;
+
 			//Nullifying All Forces To Activate with Press of a button
-			m_TotalForceX = m_TotalForceY = 0.0f;
+			//m_TotalForceX = m_TotalForceY = 0.0f;
 		}
 	};
 }
