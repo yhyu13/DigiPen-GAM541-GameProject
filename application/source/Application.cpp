@@ -23,7 +23,7 @@ namespace gswy
 {
 	float GSWY_GetPixel2WorldNumerator()
 	{
-		return GSWY_GetWindowHeight() * 0.5f;
+		return GSWY_GetWindowHeight() * 0.66f;
 	}
 }
 
@@ -89,7 +89,7 @@ public:
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadResources("./asset/archetypes/resources.json");
 		// TODO : remove loading map test
-		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/untitled.json", "untitled");
+		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel.json", "SampleLevel");
 	}
 
 	void InitGameWorld()
@@ -186,18 +186,19 @@ public:
 
 	void LoadGameWorld()
 	{
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/untitled.png","untitled");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel.png","SampleLevel");
 
 		// TODO : use proper reflection to handle map loading and background creation
 		{
+			auto size = ResourceAllocator<TileMap>::GetInstance()->Get("SampleLevel")->GetMap()->getSize();
 			auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 			auto active = ActiveCom();
 			background.AddComponent(active);
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
-			m_sprite->SetSpriteScale(vec2(100.f * 32.f / GSWY_GetPixel2WorldNumerator(), 100.f * 32.f / GSWY_GetPixel2WorldNumerator()));
-			m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("untitled"));
-			m_sprite->SetSpritePosition(vec3(49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
+			m_sprite->SetSpriteScale(vec2(size.x * 32.f / GSWY_GetPixel2WorldNumerator(), size.y * 32.f / GSWY_GetPixel2WorldNumerator()));
+			m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"));
+			m_sprite->SetSpritePosition(vec3((size.x/2-0.5)* 32.f / GSWY_GetPixel2WorldNumerator(), -(size.y / 2 - 0.5) * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
 			m_sprite->SetSpriteRotation(0);
 			background.AddComponent(sprite);
 		}
@@ -223,8 +224,8 @@ public:
 			mouse.AddComponent(ownership);
 		}
 
-		GameTileMapManager::GetInstance()->AddTileMap("untitled");
-		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");
+		GameTileMapManager::GetInstance()->AddTileMap("SampleLevel");
+		GameTileMapManager::GetInstance()->SetCurrentMapName("SampleLevel");
 		GameTileMapManager::GetInstance()->LoadCurrentTileMap(m_world);
 
 		ComponentDecorator<TransformCom, GameObjectType> transform;
@@ -290,7 +291,7 @@ public:
 			auto targetPos = vec3(transform->GetPos(),0.0f) + vec3(delta.x, -delta.y, 0.0f);
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
-			m_CameraController.SetZoomLevel(2);
+			m_CameraController.SetZoomLevel(1.5);
 		}
 		{
 			// Update cursor world position
@@ -373,6 +374,7 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
+#ifdef _DEBUG
 		Instrumentor* instrumentor = Instrumentor::GetInstance();
 		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -389,7 +391,7 @@ public:
 		ImGui::End();
 		ImGui::PopStyleVar(1);
 		ImGui::PopStyleColor(3);
-#ifdef _DEBUG
+
 		//TODO: Debug only
 		ImGui::Begin("Settings");
 		ImGui::Checkbox("ParticleActive", &m_ParticleActive);

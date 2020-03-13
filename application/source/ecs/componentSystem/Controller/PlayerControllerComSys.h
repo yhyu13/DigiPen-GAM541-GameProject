@@ -91,8 +91,8 @@ namespace gswy
 		void HandleMouseAction()
 		{
 			auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
-			auto pathGrid = tileMapObj->GetTileGrid("Path");
-			auto Astar = tileMapObj->GetPathFinder("Path");
+			auto pathGrid = tileMapObj->GetTileGrid("PlayerBlock");
+			auto Astar = tileMapObj->GetPathFinder("PlayerBlock");
 
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			ComponentDecorator<TransformCom, GameObjectType> transform;

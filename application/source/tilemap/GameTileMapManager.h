@@ -72,7 +72,33 @@ namespace gswy {
 							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
 							transform->SetPos(tileMapObj->Pixel2World(pixelPos));
 						}
-						else if (objName.compare("Mob") == 0)
+						else if (objName.compare("Base") == 0)
+						{
+							auto obj = world->GenerateEntity(GameObjectType::BASE);
+							auto active = ActiveCom();
+							obj.AddComponent(active);
+							obj.AddComponent(OwnershiptCom<GameObjectType>());
+							auto transform = TransformCom();
+							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
+							transform.SetPos(tileMapObj->Pixel2World(pixelPos));
+							obj.AddComponent(transform);
+							auto particle = ParticleCom();
+							particle.Init<ExplosionParticle>();
+							obj.AddComponent(particle);
+							auto animCom = AnimationCom();
+							animCom.Add("BaseAnimation", "Move");
+							animCom.Add("BaseIdle", "Idle");
+							animCom.SetCurrentAnimationState("Move");
+							obj.AddComponent(animCom);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.4, 0.4));
+							obj.AddComponent(sprite);
+							auto aabb = BodyCom();
+							aabb.ChooseShape("AABB", 0.4, 0.4);
+							obj.AddComponent(aabb);
+							obj.AddComponent(HitPointCom(999));
+						}
+						else if (objName.compare("MobSpawn") == 0)
 						{
 							auto obj = world->GenerateEntity(GameObjectType::ENEMY);
 							auto active = ActiveCom();
@@ -107,6 +133,29 @@ namespace gswy {
 						continue;
 					}
 
+					if (layerName.compare("MobPath") == 0)
+					{
+						auto pathGrid = tileMapObj->GetTileGrid("MobPath");
+						for (int i = 0; i < pathGrid->X(); ++i)
+						{
+							for (int j = 0; j < pathGrid->Y(); ++j)
+							{
+								(*pathGrid)[i][j] = 1.0f;
+							}
+						}
+					}
+					else if (layerName.compare("PlayerBlock") == 0)
+					{
+						auto pathGrid = tileMapObj->GetTileGrid("PlayerBlock");
+						for (int i = 0; i < pathGrid->X(); ++i)
+						{
+							for (int j = 0; j < pathGrid->Y(); ++j)
+							{
+								(*pathGrid)[i][j] = 0.0f;
+							}
+						}
+					}
+
 					//You can of course also loop through every tile!
 					for (const auto& [pos, tile] : layer.getTileData())
 					{
@@ -119,17 +168,23 @@ namespace gswy {
 						//Get position in pixel units
 						ivec2 gridPos(std::get<0>(pos), std::get<1>(pos));
 						// Fill the grid for path finding.
-						if (layerName.compare("Path") == 0)
+						if (layerName.compare("MobPath") == 0)
 						{
-							auto pathGrid = tileMapObj->GetTileGrid("Path");
+							auto pathGrid = tileMapObj->GetTileGrid("MobPath");
+							(*pathGrid)[gridPos.x][gridPos.y] = 0.0f;
+							DEBUG_PRINT("MobPath: " + Str(gridPos.x) + " " + Str(gridPos.y));
+						}
+						else if (layerName.compare("PlayerBlock") == 0)
+						{
+							auto pathGrid = tileMapObj->GetTileGrid("PlayerBlock");
 							(*pathGrid)[gridPos.x][gridPos.y] = 1.0f;
-							DEBUG_PRINT(Str(gridPos.x) + " " + Str(gridPos.y));
+							DEBUG_PRINT("PlayerBlock: " + Str(gridPos.x) + " " + Str(gridPos.y));
 						}
 
-						/*
-							1, Create background tiles as individual sprites (warning performance critical!)
-							2, Or cheat to use a single atlas map as background but has all tiles holding a collision box.
-						*/
+						///*
+						//	1, Create background tiles as individual sprites (warning performance critical!)
+						//	2, Or cheat to use a single atlas map as background but has all tiles holding a collision box.
+						//*/
 						//for (auto& tileset : map->getTilesets())
 						//{
 						//	int firstId = tileset.getFirstgid(); //First tile id of the tileset

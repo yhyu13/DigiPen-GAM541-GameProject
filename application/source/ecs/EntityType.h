@@ -18,6 +18,7 @@ namespace gswy
 		EMPTY = 0,
 		MOUSE,
 		BACKGROUND,
+		BASE,
 		PLAYER,
 		ENEMY,
 		TOWER_BUILD,
@@ -37,6 +38,7 @@ std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
 	case gswy::GameObjectType::EMPTY: return o << "EMPTY";
 	case gswy::GameObjectType::MOUSE: return o << "MOUSE";
 	case gswy::GameObjectType::BACKGROUND: return o << "BACKGROUND";
+	case gswy::GameObjectType::BASE: return o << "BASE";
 	case gswy::GameObjectType::PLAYER: return o << "PLAYER";
 	case gswy::GameObjectType::ENEMY: return o << "ENEMY";
 	case gswy::GameObjectType::TOWER_BUILD: return o << "TOWER_BUILD";

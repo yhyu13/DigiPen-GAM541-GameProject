@@ -7,13 +7,17 @@
                "name":"PlayerMovingUnarmed",
                "path":"./asset/PlayerMovingUnarmed.png"
             },
-            {
-               "name":"Background3",
-               "path":"./asset/background3.png"
-            },
 			{
                "name":"MobMovingUnarmed",
                "path":"./asset/MobMovingUnarmed.png"
+            },
+			{
+               "name":"BaseIdle",
+               "path":"./asset/Piskel/Scene/Base_Idle.png"
+            },
+			{
+               "name":"BaseAnimation",
+               "path":"./asset/Piskel/Scene/Base_Animation.png"
             },
 			{
                "name":"TowerHammer_On",
@@ -136,6 +140,30 @@
       {
          "type":"animation",
          "animations":[
+		 	{
+               "name":"BaseIdle",
+               "properties":{
+                  "texture-name":"BaseIdle",
+                  "x": 0,
+                  "y": 0,
+                  "width": 128,
+                  "height": 128,
+                  "delay": 1.0,
+                  "frame-count": 10.0
+               }
+            },
+			{
+               "name":"BaseAnimation",
+               "properties":{
+                  "texture-name":"BaseAnimation",
+                  "x": 0,
+                  "y": 0,
+                  "width": 128,
+                  "height": 128,
+                  "delay": 1.0,
+                  "frame-count": 10.0
+               }
+            },
 			{
                "name":"PlayerAnimation0",
                "properties":{
