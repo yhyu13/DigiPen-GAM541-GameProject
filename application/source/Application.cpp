@@ -16,6 +16,7 @@ Creation date	: 01/26/2020
 
 #include "EngineExport.h"
 #include "Import.h"
+#include "ui/GameWidgetManager.h"
 
 using namespace gswy;
 
@@ -58,7 +59,6 @@ public:
 		OpenGLDebugDraw::Init();
 		m_PostProcessing.SetScreenSize(1280, 720);
 		m_PostProcessing.Init();
-
 		GameTileMapManager::GetInstance()->Init();
 
 		// Texture loader
@@ -361,6 +361,9 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
+		//Rendering all widgets
+		WidgetManager::GetInstance()->RenderUI();
+
 		Instrumentor* instrumentor = Instrumentor::GetInstance();
 		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -379,18 +382,18 @@ public:
 		ImGui::PopStyleColor(3);
 #ifdef _DEBUG
 		//TODO: Debug only
-		ImGui::Begin("Settings");
-		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
-		ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
-		ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
-		ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
-		ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
-		ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
-		ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
-		ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
-		ImGui::End();
+		//ImGui::Begin("Settings");
+		//ImGui::Checkbox("ParticleActive", &m_ParticleActive);
+		//ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
+		//ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
+		//ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
+		//ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
+		//ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
+		//ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
+		//ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
+		//ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
+		//ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
+		//ImGui::End();
 #endif // _DEBUG
 
 	}

@@ -19,7 +19,7 @@ Creation date: 02/04/2020
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/CustomEvents.h"
-#include "ui/UI_Test.h"
+#include "ui/GameWidgetManager.h"
 
 namespace gswy
 {
@@ -120,15 +120,13 @@ namespace gswy
 						animation->SetCurrentAnimationState("Idle");
 					}
 
-					if (input->IsKeyTriggered(KEY_Q)) widgetManager.GetInventoryMenu().SetVisible(!widgetManager.GetInventoryMenu().GetVisible());
-					if (input->IsKeyTriggered(KEY_E)) widgetManager.GetShopMenu().SetVisible(!widgetManager.GetShopMenu().GetVisible());
-					if (input->IsKeyTriggered(KEY_P)) widgetManager.GetPauseMenu().SetVisible(!widgetManager.GetPauseMenu().GetVisible());
-					if (input->IsKeyTriggered(KEY_F1)) widgetManager.GetMainMenu().SetVisible(!widgetManager.GetMainMenu().GetVisible());
+					if (input->IsKeyTriggered(KEY_Q)) WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!WidgetManager::GetInstance()->GetInventoryMenu().GetVisible());
+					if (input->IsKeyTriggered(KEY_E)) WidgetManager::GetInstance()->GetShopMenu().SetVisible(!WidgetManager::GetInstance()->GetShopMenu().GetVisible());
+					if (input->IsKeyTriggered(KEY_P)) WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+					if (input->IsKeyTriggered(KEY_F1)) WidgetManager::GetInstance()->GetMainMenu().SetVisible(!WidgetManager::GetInstance()->GetMainMenu().GetVisible());
 
 					return;
 				}
 		}
-
-		WidgetManager widgetManager;
 	};
 }
