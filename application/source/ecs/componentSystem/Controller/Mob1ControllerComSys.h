@@ -79,7 +79,7 @@ namespace gswy
 						transform->SetRotation(LookAt(delta));
 
 						// 2. Move
-						float speed = .5f;
+						float speed = .25f;
 						transform->SetVelocity(glm::normalize(delta) * speed);
 						animation->SetCurrentAnimationState("Move");
 					}

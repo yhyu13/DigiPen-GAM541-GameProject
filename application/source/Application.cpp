@@ -23,7 +23,7 @@ namespace gswy
 {
 	float GSWY_GetPixel2WorldNumerator()
 	{
-		return GSWY_GetWindowHeight() * 0.66f;
+		return GSWY_GetWindowHeight() * 0.75f;
 	}
 }
 
