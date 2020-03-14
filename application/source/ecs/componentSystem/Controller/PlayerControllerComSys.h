@@ -55,7 +55,7 @@ namespace gswy
 			//transform->SetRotation(LookAt(delta));
 
 			// Handle mouse action
-			if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+			if (input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				HandleMouseAction();
 			}
