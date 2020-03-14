@@ -88,10 +88,12 @@ namespace gswy {
 			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 			m_window = glfwCreateWindow(mode->width, mode->height, properties.m_title.c_str(), monitor, NULL);
+			properties.m_input->SetMouseMaxPositions(mode->width, mode->height);
 		}
 		else
 		{
 			m_window = glfwCreateWindow(properties.m_width, properties.m_height, properties.m_title.c_str(), nullptr, nullptr);
+			properties.m_input->SetMouseMaxPositions(properties.m_width, properties.m_height);
 		}
 		ASSERT(m_window == nullptr, "Failed to create window!");
 
