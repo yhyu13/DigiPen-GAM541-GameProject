@@ -13,31 +13,31 @@
             },
 			{
                "name":"BaseIdle",
-               "path":"./asset/Piskel/Scene/Base_Idle.png"
+               "path":"./asset/Sprites/Base_Idle.png"
             },
 			{
                "name":"BaseAnimation",
-               "path":"./asset/Piskel/Scene/Base_Animation.png"
+               "path":"./asset/Sprites/Base_Animation.png"
             },
 			{
                "name":"TowerHammer_On",
-               "path":"./asset/Piskel/Tower/TowerHammer_On.png"
+               "path":"./asset/Sprites/TowerHammer_On.png"
             },
 			{
                "name":"TowerHammer_Off",
-               "path":"./asset/Piskel/Tower/TowerHammer_Off.png"
+               "path":"./asset/Sprites/TowerHammer_Off.png"
             },
 			{
                "name":"TowerFire",
-               "path":"./asset/Piskel/Tower/TowerFire.png"
+               "path":"./asset/Sprites/TowerFire.png"
             },
 			{
                "name":"TowerIce",
-               "path":"./asset/Piskel/Tower/TowerIce.png"
+               "path":"./asset/Sprites/TowerIce.png"
             },
 			{
                "name":"TowerLightning",
-               "path":"./asset/Piskel/Tower/TowerLightning.png"
+               "path":"./asset/Sprites/TowerLightning.png"
             },
             {
                "name":"ffireball_0001",
