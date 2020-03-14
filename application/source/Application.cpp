@@ -291,7 +291,7 @@ public:
 			auto targetPos = vec3(transform->GetPos(),0.0f) + vec3(delta.x, -delta.y, 0.0f);
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
-			m_CameraController.SetZoomLevel(1.5);
+			m_CameraController.SetZoomLevel(1);
 		}
 		{
 			// Update cursor world position
