@@ -6,7 +6,7 @@ Language: c++ 11
 Platform: Windows 10 (X64)
 Project: GAM541
 Author: Hang Yu (hang.yu@digipen.edu | 60001119)
-Creation date: 02/04/2020
+Creation date: 03/14/2020
 - End Header ----------------------------*/
 
 #pragma once
@@ -14,13 +14,14 @@ Creation date: 02/04/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/allocator/ResouceAllocator.h"
 #include "engine/renderer/Sprite.h"
+#include "engine/allocator/MemoryManager.h"
 
 namespace gswy
 {
 	/* Data class of sprite */
-	struct SpriteCom : BaseComponent<SpriteCom> {
+	struct MiniMapSprite : BaseComponent<MiniMapSprite> {
 
-		SpriteCom()
+		MiniMapSprite()
 		{
 			m_sprite = MemoryManager::Make_shared<Sprite>();
 		}

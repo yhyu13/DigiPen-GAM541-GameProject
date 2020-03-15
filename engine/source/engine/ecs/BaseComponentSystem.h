@@ -80,6 +80,9 @@ namespace gswy {
 		virtual void Render(double frameTime) {
 		}
 
+		virtual void Render2(double frameTime) {
+		}
+
 		virtual void PostRenderUpdate(double frameTime) {
 		}
 

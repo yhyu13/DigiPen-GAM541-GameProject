@@ -47,13 +47,6 @@ namespace gswy
 			auto input = InputManager::GetInstance();
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 
-			//// 1. Making player facing the cursor
-			//auto cursor = input->GetCursorPosition();
-			//auto center = input->GetCursorMaxPosition() * 0.5f;
-			//auto delta = cursor - center;
-			//delta.y = -delta.y;
-			//transform->SetRotation(LookAt(delta));
-
 			// Handle mouse action
 			if (input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{

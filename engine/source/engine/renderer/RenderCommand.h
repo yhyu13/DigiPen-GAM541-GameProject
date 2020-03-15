@@ -40,6 +40,16 @@ namespace gswy {
 			s_RendererAPI->Clear();
 		}
 
+		inline static unsigned int CreateAndBindFBO()
+		{
+			return s_RendererAPI->CreateAndBindFBO();
+		}
+
+		inline static void DestoryAndUnBindFBO(unsigned int fbo)
+		{
+			s_RendererAPI->DestoryAndUnBindFBO(fbo);
+		}
+
 		inline static void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);

@@ -17,6 +17,13 @@
       "width": 59,
       "height": 32
     },
+	{
+      "component": "miniMapSprite",
+      "texture": "GreenLayer",
+      "scale": 0.1,
+      "width": 64,
+      "height": 64
+    },
     {
       "component": "animation",
       "animation": {

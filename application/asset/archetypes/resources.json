@@ -12,6 +12,18 @@
                "path":"./asset/MobMovingUnarmed.png"
             },
 			{
+               "name":"RedLayer",
+               "path":"./asset/Sprites/RedLayer.png"
+            },
+			{
+               "name":"BlueLayer",
+               "path":"./asset/Sprites/BlueLayer.png"
+            },
+			{
+               "name":"GreenLayer",
+               "path":"./asset/Sprites/GreenLayer.png"
+            },
+			{
                "name":"BaseIdle",
                "path":"./asset/Sprites/Base_Idle.png"
             },

@@ -25,6 +25,7 @@ Creation date: 02/17/2020
 #include "ecs/components/HitPointCom.h"
 #include "ecs/components/HitPreventionCom.h"
 #include "ecs/components/LifeTimeCom.h"
+#include "ecs/components/MiniMapSprite.h"
 #include "ecs/components/OwnershiptCom.h"
 #include "ecs/components/ParticleCom.h"
 #include "ecs/components/SpriteCom.h"
@@ -58,6 +59,7 @@ namespace gswy
 				m_parentWorld->RemoveComponent<HitPointCom>(e);
 				m_parentWorld->RemoveComponent<HitPreventionCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<LifeTimeCom>(e);
+				m_parentWorld->RemoveComponent<MiniMapSprite>(e);
 				m_parentWorld->RemoveComponent<OwnershiptCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<ParticleCom>(e);
 				m_parentWorld->RemoveComponent<SpriteCom>(e);

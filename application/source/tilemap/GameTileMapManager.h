@@ -93,6 +93,10 @@ namespace gswy {
 							auto sprite = SpriteCom();
 							sprite.SetScale(vec2(0.4, 0.4));
 							obj.AddComponent(sprite);
+							auto sprite0 = MiniMapSprite();
+							sprite0.SetScale(vec2(0.25, 0.25));
+							sprite0.SetTexture("BlueLayer");
+							obj.AddComponent(sprite0);
 							auto aabb = BodyCom();
 							aabb.ChooseShape("AABB", 0.4, 0.4);
 							obj.AddComponent(aabb);
@@ -115,6 +119,10 @@ namespace gswy {
 							auto sprite = SpriteCom();
 							sprite.SetScale(vec2(0.25, 0.25 / 70 * 50));
 							obj.AddComponent(sprite);
+							auto sprite0 = MiniMapSprite();
+							sprite0.SetScale(vec2(0.1, 0.1));
+							sprite0.SetTexture("RedLayer");
+							obj.AddComponent(sprite0);
 							auto aabb1 = BodyCom();
 							aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
 							obj.AddComponent(aabb1);

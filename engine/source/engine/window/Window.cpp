@@ -24,12 +24,12 @@ namespace gswy {
 	int Window::width = 1280;
 	int Window::height = 720;
 
-	int GSWY_GetWindowWidth()
+	float GSWY_GetWindowWidth()
 	{
 		return Window::width;
 	}
 
-	int GSWY_GetWindowHeight()
+	float GSWY_GetWindowHeight()
 	{
 		return Window::height;
 	}
