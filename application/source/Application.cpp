@@ -297,31 +297,36 @@ public:
 
 	void Render(double ts)
 	{
-		if(m_PP) m_PostProcessing.Bind();
+		//if(m_PP) m_PostProcessing.Bind();
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 
+		Renderer2D::BeginBatch(m_CameraController.GetCamera());
+		//Renderer2D::AddBatch(glm::vec3(0.0f, 0.0f, 0.0f), { 0.1f, 0.1f }, { 1.0f, 0.0f, 0.0f, 1.0f });
+		Renderer2D::DrawQuad(glm::vec3(0.5f), glm::vec2(0.1f), 0.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		Renderer2D::EndBatch();
+		Renderer2D::DrawBatch();
 		Renderer2D::BeginScene(m_CameraController.GetCamera());
-		// m_world render
 		m_world->Render(ts);
+		// m_world render
 #ifdef _DEBUG
 
 		//TODO: Move to Component Update
-		if (m_ParticleActive)
-		{
-			for (int i = 0; i < 5; i++)
-				m_ParticleSystem.Emit(m_Particle);
-		}
-
-		m_ParticleSystem.Update(ts);
-		m_ParticleSystem.Render();
+		//if (m_ParticleActive)
+		//{
+		//	for (int i = 0; i < 5; i++)
+		//		m_ParticleSystem.Emit(m_Particle);
+		//}
+		//
+		//m_ParticleSystem.Update(ts);
+		//m_ParticleSystem.Render();
 
 #endif // _DEBUG
-		if (m_PP)
-		{
-			m_PostProcessing.Unbind();
-			m_PostProcessing.Render(ts);
-		}
+		//if (m_PP)
+		//{
+		//	m_PostProcessing.Unbind();
+		//	m_PostProcessing.Render(ts);
+		//}
 		Renderer2D::EndScene();
 	}
 

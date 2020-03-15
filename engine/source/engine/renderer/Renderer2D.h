@@ -40,5 +40,19 @@ namespace gswy {
 		static void DrawSprite(const std::shared_ptr<VertexArray>& vertexArray, const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture);
 		static void DrawSprite(const std::shared_ptr<VertexArray>& vertexArray, const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture, const std::string& shader);
 		static void DrawSprite(const std::shared_ptr<VertexArray>& vertexArray, const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture, const std::string& shader, float alpha);
+		
+		static void BeginBatch(const OrthographicCamera& camera);
+		static void EndBatch();
+		static void AddBatch(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, const glm::mat4& transform = glm::mat4(1.0f), const std::shared_ptr<Texture2D>& texture = nullptr);
+		static void DrawBatch();
+
+		struct BatchStats
+		{
+			uint32_t DrawCount = 0;
+			uint32_t QuadCount = 0;
+		};
+
+		//static const BatchStats& GetStats();
+		//static void ResetStats();
 	};
 }
