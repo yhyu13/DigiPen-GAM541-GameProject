@@ -4,7 +4,7 @@
 
 namespace gswy
 {
-	FireballAttack::FireballAttack()
+	FireballAttack::FireballAttack(ActiveSkillType type): ActiveSkill(type)
 	{
 	}
 
@@ -24,7 +24,7 @@ namespace gswy
 
 	const int& FireballAttack::GetId()
 	{
-		return ActiveSkill::GetId();
+		return BaseSkill::GetId();
 	}
 
 	void FireballAttack::AddSupportSkill(std::shared_ptr<SupportSkill> skill)

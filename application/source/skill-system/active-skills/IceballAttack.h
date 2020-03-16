@@ -9,12 +9,12 @@
 
 namespace gswy
 {
-	class FireballAttack: public ActiveSkill, public Projectile
+	class IceballAttack : public ActiveSkill, public Projectile
 	{
 	public:
 
-		FireballAttack(ActiveSkillType type);
-		~FireballAttack();
+		IceballAttack(ActiveSkillType type);
+		~IceballAttack();
 
 		const int& GetCount();
 		const glm::vec3& GetVelocity();

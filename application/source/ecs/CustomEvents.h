@@ -13,6 +13,11 @@ Creation date: 02/17/2020
 #include "ecs/EntityType.h"
 #include "ecs/EventType.h"
 #include "engine/events/EventQueue.h"
+#include "skill-system/support-skills/SupportSkill.h"
+#include "skill-system/active-skills/ActiveSkill.h"
+#include "skill-system/active-skills/ActiveSkillType.h"
+
+#include <memory>
 
 namespace gswy
 {
@@ -143,5 +148,49 @@ namespace gswy
 
 		Entity<GameObjectType> m_entity;
 		EventType event_end;
+	};
+
+	struct SkillUpgradeEvent : Event<GameObjectType, EventType>
+	{
+		explicit SkillUpgradeEvent(const ActiveSkillType& type, std::shared_ptr<SupportSkill> supportSkill): Event(EventType::SKILL_UPGRADE), m_supportSkill(supportSkill), m_activeSkillType(type)
+		{
+		}
+
+		std::shared_ptr<SupportSkill> m_supportSkill;
+		ActiveSkillType m_activeSkillType;
+	};
+
+	struct SkillUseEvent : Event<GameObjectType, EventType>
+	{
+		explicit SkillUseEvent(std::shared_ptr<ActiveSkill> skill) : Event(EventType::SKILL_USE), m_skill(skill)
+		{
+		}
+
+		std::shared_ptr<ActiveSkill> m_skill;
+	};
+
+	struct SkillActivationEvent : Event<GameObjectType, EventType>
+	{
+		explicit SkillActivationEvent() : Event(EventType::SKILL_ACTIVATION)
+		{
+		}
+	};
+
+	struct SkillAdditionEvent : Event<GameObjectType, EventType>
+	{
+		explicit SkillAdditionEvent(std::shared_ptr<ActiveSkill> skill) : Event(EventType::SKILL_ADDITION), m_skill(skill)
+		{
+		}
+
+		std::shared_ptr<ActiveSkill> m_skill;
+	};
+
+	struct SkillRemovalEvent : Event<GameObjectType, EventType>
+	{
+		explicit SkillRemovalEvent(const int& id) : Event(EventType::SKILL_REMOVAL), m_id(id)
+		{
+		}
+
+		int m_id;
 	};
 }

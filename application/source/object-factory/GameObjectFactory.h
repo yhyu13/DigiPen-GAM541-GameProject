@@ -93,6 +93,11 @@ namespace gswy {
 							player.AddComponent(HitPointCom());
 							continue;
 						}
+						if (name._Equal("skill"))
+						{
+							player.AddComponent(PlayerSkillComponent());
+							continue;
+						}
 					}
 					continue;
 				}

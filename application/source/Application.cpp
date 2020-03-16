@@ -176,12 +176,15 @@ public:
 				m_world->RegisterSystem(MemoryManager::Make_shared<ParticleComSys>());
 				continue;
 			}
+			if (system._Equal("skill")) {
+				m_world->RegisterSystem(MemoryManager::Make_shared<PlayerSkillSystem>());
+			}
 		}
+		LoadGameWorld();
 
 		// Initialize game
 		m_world->Init();
 
-		LoadGameWorld();
 	}
 
 	void LoadGameWorld()

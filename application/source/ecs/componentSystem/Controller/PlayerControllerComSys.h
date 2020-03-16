@@ -26,6 +26,10 @@ Creation date: 02/04/2020
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/CustomEvents.h"
+#include "ecs/components/PlayerSkillComponent.h"
+#include "skill-system/support-skills/MultipleProjectile.h"
+#include "skill-system/active-skills/FireballAttack.h"
+#include "skill-system/active-skills/IceballAttack.h"
 
 namespace gswy
 {
@@ -40,6 +44,7 @@ namespace gswy
 		float m_maxAngleRotation = { 0.8726646f};
 	public:
 		PlayerControllerComSys() {
+			m_systemSignature.AddComponent<PlayerSkillComponent>();
 		}
 
 		virtual void Update(double dt) override {
@@ -84,6 +89,96 @@ namespace gswy
 				m_parentWorld->Unpack(m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0], transform);
 				auto cursor_pos = transform->GetPos();
 				auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_BUILD, vec3(cursor_pos, 0));
+				queue->Publish(e);
+			}
+
+			if (input->IsKeyTriggered(KEY_D)) {
+
+				PRINT("KEY D: SKILL USE");
+				// Create UseSkillEvent
+				// 
+				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkillComponent;
+				auto player = m_registeredEntities.at(0);
+				m_parentWorld->Unpack(player, playerSkillComponent);
+
+				if (playerSkillComponent->GetCurrentSkill() != nullptr)
+				{
+					auto e = MemoryManager::Make_shared<SkillUseEvent>(playerSkillComponent->GetCurrentSkill());
+					queue->Publish(e);
+				}
+			}
+
+			if (input->IsKeyTriggered(KEY_U))
+			{
+				PRINT("KEY U: SKILL UPGRADE");
+				// TODO: create a multiple projectile support skill - DONE
+				//		 create skill upgrade event with active skill id and support skill - DONE
+				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkillComponent;
+				//auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+				auto player = m_registeredEntities.at(0);
+				m_parentWorld->Unpack(player, playerSkillComponent);
+
+				std::shared_ptr<MultipleProjectile> mp = MemoryManager::Make_shared<MultipleProjectile>();
+				auto e = MemoryManager::Make_shared<SkillUpgradeEvent>(playerSkillComponent->GetCurrentSkill()->GetActiveSkillType(), mp);
+				queue->Publish(e);
+			}
+
+			if (input->IsKeyTriggered(KEY_I))
+			{
+				PRINT("KEY I: ACTIVATE SKILL ICE BALL");
+
+
+				// TODO: skill add event
+
+				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkillComponent;
+				auto player = m_registeredEntities.at(0);
+				m_parentWorld->Unpack(player, playerSkillComponent);
+
+				std::shared_ptr<IceballAttack> iceballAttack = MemoryManager::Make_shared<IceballAttack>(ActiveSkillType::ICE_BALL);
+				auto e = MemoryManager::Make_shared<SkillAdditionEvent>(iceballAttack);
+				queue->Publish(e);
+			}
+
+			if (input->IsKeyTriggered(KEY_F))
+			{
+				PRINT("KEY F: ACTIVATE SKILL FIRE BALL");
+
+
+				// TODO: skill add event
+
+				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkillComponent;
+				auto player = m_registeredEntities.at(0);
+				m_parentWorld->Unpack(player, playerSkillComponent);
+
+				std::shared_ptr<FireballAttack> fireballAttack = MemoryManager::Make_shared<FireballAttack>(ActiveSkillType::FIRE_BALL);
+				auto e = MemoryManager::Make_shared<SkillAdditionEvent>(fireballAttack);
+				queue->Publish(e);
+			}
+
+			if (input->IsKeyTriggered(KEY_S))
+			{
+				PRINT("KEY A: SWITCH BETWEEN FIRE AND ICE");
+
+				// TODO: skill add event
+
+				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkillComponent;
+				auto player = m_registeredEntities.at(0);
+				m_parentWorld->Unpack(player, playerSkillComponent);
+
+				auto e = MemoryManager::Make_shared<SkillActivationEvent>();
+				queue->Publish(e);
+			}
+
+			if (input->IsKeyTriggered(KEY_R))
+			{
+				PRINT("KEY R: REMOVE SKILL FIRE BALL");
+
+				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkillComponent;
+				auto player = m_registeredEntities.at(0);
+				m_parentWorld->Unpack(player, playerSkillComponent);
+
+				//std::shared_ptr<FireballAttack> fireballAttack = MemoryManager::Make_shared<FireballAttack>();
+				auto e = MemoryManager::Make_shared<SkillRemovalEvent>(playerSkillComponent->GetCurrentSkill()->GetId());
 				queue->Publish(e);
 			}
 		}
