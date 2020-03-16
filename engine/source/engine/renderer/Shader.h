@@ -33,6 +33,8 @@ namespace gswy {
 		virtual void SetFloat4(const std::string& name, const glm::vec4& value) = 0;
 		virtual void SetIntV(const std::string& name, int count, const int* value) = 0;
 
+		virtual uint32_t GetRendererID() = 0;
+
 		static std::shared_ptr<Shader> Create(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
 	};
 }
