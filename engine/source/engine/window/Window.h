@@ -33,8 +33,8 @@ namespace gswy {
 		}
 	};
 
-	int GSWY_GetWindowWidth();
-	int GSWY_GetWindowHeight();
+	float GSWY_GetWindowWidth();
+	float GSWY_GetWindowHeight();
 
 	class ENGINE_API Window {
 

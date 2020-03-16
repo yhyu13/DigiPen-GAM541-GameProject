@@ -7,21 +7,49 @@
                "name":"PlayerMovingUnarmed",
                "path":"./asset/PlayerMovingUnarmed.png"
             },
-            {
-               "name":"Background3",
-               "path":"./asset/background3.png"
-            },
 			{
                "name":"MobMovingUnarmed",
                "path":"./asset/MobMovingUnarmed.png"
             },
 			{
+               "name":"RedLayer",
+               "path":"./asset/Sprites/RedLayer.png"
+            },
+			{
+               "name":"BlueLayer",
+               "path":"./asset/Sprites/BlueLayer.png"
+            },
+			{
+               "name":"GreenLayer",
+               "path":"./asset/Sprites/GreenLayer.png"
+            },
+			{
+               "name":"BaseIdle",
+               "path":"./asset/Sprites/Base_Idle.png"
+            },
+			{
+               "name":"BaseAnimation",
+               "path":"./asset/Sprites/Base_Animation.png"
+            },
+			{
+               "name":"TowerHammer_On",
+               "path":"./asset/Sprites/TowerHammer_On.png"
+            },
+			{
+               "name":"TowerHammer_Off",
+               "path":"./asset/Sprites/TowerHammer_Off.png"
+            },
+			{
                "name":"TowerFire",
-               "path":"./asset/Piskel/Tower/TowerFire.png"
+               "path":"./asset/Sprites/TowerFire.png"
             },
 			{
                "name":"TowerIce",
-               "path":"./asset/Piskel/Tower/TowerIce.png"
+               "path":"./asset/Sprites/TowerIce.png"
+            },
+			{
+               "name":"TowerLightning",
+               "path":"./asset/Sprites/TowerLightning.png"
             },
             {
                "name":"ffireball_0001",
@@ -124,6 +152,30 @@
       {
          "type":"animation",
          "animations":[
+		 	{
+               "name":"BaseIdle",
+               "properties":{
+                  "texture-name":"BaseIdle",
+                  "x": 0,
+                  "y": 0,
+                  "width": 128,
+                  "height": 128,
+                  "delay": 1.0,
+                  "frame-count": 10.0
+               }
+            },
+			{
+               "name":"BaseAnimation",
+               "properties":{
+                  "texture-name":"BaseAnimation",
+                  "x": 0,
+                  "y": 0,
+                  "width": 128,
+                  "height": 128,
+                  "delay": 1.0,
+                  "frame-count": 10.0
+               }
+            },
 			{
                "name":"PlayerAnimation0",
                "properties":{

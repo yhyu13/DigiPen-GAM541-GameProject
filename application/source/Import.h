@@ -24,6 +24,7 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/Graphics/SceneComSys.h"
 #include "ecs/componentSystem/Graphics/SpriteComSys.h"
 #include "ecs/componentSystem/Graphics/AnimationComSys.h"
+#include "ecs/componentSystem/Graphics/MiniMapSceneComSys.h"
 #include "ecs/componentSystem/Graphics/ParticleComSys.h"
 #include "ecs/componentSystem/Physics/PhysicsComSys.h"
 #include "ecs/componentSystem/Physics/AttachedMovementComSys.h"

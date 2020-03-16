@@ -64,6 +64,22 @@ namespace gswy
 		float m_TotalForceY;
 		float m_Restitution;
 		std::shared_ptr<Shape> shape;
+		Entity<GameObjectType> m_otherEntity;
+
+		void ResetOtherEntity()
+		{
+			m_otherEntity.m_type = GameObjectType::EMPTY;
+		}
+
+		void SetOtherEntity(const Entity<GameObjectType>& other)
+		{
+			m_otherEntity = other;
+		}
+
+		const Entity<GameObjectType>& GetOtherEntity()
+		{
+			return m_otherEntity;
+		}
 
 		//Choose Shape, fill in width and height for the body
 		void ChooseShape(const std::string& name, float width, float height) 

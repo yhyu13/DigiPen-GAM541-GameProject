@@ -14,6 +14,7 @@ Creation date: 02/04/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
+#include "ecs/components/ActiveCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/EntityType.h"
 
@@ -29,6 +30,13 @@ namespace gswy
 		{
 			lock();
 			for (auto& entity : m_registeredEntities) {
+				// Check active
+				ComponentDecorator<ActiveCom, GameObjectType> active;
+				m_parentWorld->Unpack(entity, active);
+				if (!active->IsActive())
+				{
+					continue;
+				}
 
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
 				m_parentWorld->Unpack(entity, sprite);

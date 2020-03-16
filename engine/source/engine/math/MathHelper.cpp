@@ -20,6 +20,11 @@ float gswy::LookAt(const vec2& delta)
 	return (delta.y) > 0 ? -atanf(delta.x / (delta.y + 1e-4f)) : PI - atanf(delta.x / (delta.y + 1e-4f));
 }
 
+vec2 gswy::RadToVec(float rotation)
+{
+	return vec2(cosf(rotation), sinf(rotation));
+}
+
 vec2 gswy::ToVec(float rotation)
 {
 	return vec2(-sinf(rotation),cosf(rotation));

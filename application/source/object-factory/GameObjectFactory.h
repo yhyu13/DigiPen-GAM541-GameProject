@@ -39,6 +39,8 @@ namespace gswy {
 
 				if (type._Equal("player")) {
 					auto player = world->GenerateEntity(GameObjectType::PLAYER);
+					auto active = ActiveCom();
+					player.AddComponent(active);
 					Json::Value components = archetypeRoot["components"];
 					for (int j = 0; j < components.size(); ++j) {
 						Json::Value component = components[j];
@@ -60,6 +62,17 @@ namespace gswy {
 							int height = component["height"].asInt();
 							auto sprite0 = SpriteCom();
 							sprite0.SetScale(vec2(scale, scale / width * height));
+							player.AddComponent(sprite0);
+							continue;
+						}
+						if (name._Equal("miniMapSprite")) {
+							auto texture = component["texture"].asString();
+							float scale = component["scale"].asFloat();
+							int width = component["width"].asInt();
+							int height = component["height"].asInt();
+							auto sprite0 = MiniMapSprite();
+							sprite0.SetScale(vec2(scale, scale / width * height));
+							sprite0.SetTexture(texture);
 							player.AddComponent(sprite0);
 							continue;
 						}
@@ -97,6 +110,8 @@ namespace gswy {
 
 				if (type._Equal("background")) {
 					auto background = world->GenerateEntity(GameObjectType::BACKGROUND);
+					auto active = ActiveCom();
+					background.AddComponent(active);
 					Json::Value components = archetypeRoot["components"];
 					for (int j = 0; j < components.size(); ++j) {
 						Json::Value component = components[j];

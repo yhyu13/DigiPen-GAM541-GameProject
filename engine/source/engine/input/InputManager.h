@@ -63,6 +63,7 @@ namespace gswy {
 		const double GetMouseMaxPositionX();
 		const double GetMouseMaxPositionY();
 
+		const glm::vec2 GetCursorViewPosition(float _x, float _y);
 		const glm::vec2 GetCursorViewPosition();
 		float lerp(float x, float y, float t);
 

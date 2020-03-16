@@ -24,7 +24,8 @@ namespace gswy
 		explicit CoolDownCom(double dt)
 			:
 			m_period(dt),
-			m_timer(0)
+			m_timer(0),
+			m_freeze(false)
 		{
 		}
 
@@ -42,8 +43,19 @@ namespace gswy
 			return m_timer != 0;
 		}
 
+		void SetFreeze(bool b)
+		{
+			m_freeze = b;
+		}
+
+		bool IsFreezed()
+		{
+			return m_freeze;
+		}
+
 	private:
 		double m_period;
 		double m_timer;
+		bool m_freeze;
 	};
 }

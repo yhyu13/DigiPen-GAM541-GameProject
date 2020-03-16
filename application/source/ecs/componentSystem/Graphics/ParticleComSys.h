@@ -48,6 +48,13 @@ namespace gswy
 		{
 			lock();
 			for (auto& entity : m_registeredEntities) {
+				// Check active
+				ComponentDecorator<ActiveCom, GameObjectType> active;
+				m_parentWorld->Unpack(entity, active);
+				if (!active->IsActive())
+				{
+					continue;
+				}
 				ComponentDecorator<ParticleCom, GameObjectType> particle;
 				m_parentWorld->Unpack(entity, particle);
 				/* Drawing particle */
