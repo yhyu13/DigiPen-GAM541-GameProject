@@ -46,7 +46,6 @@ namespace gswy {
 		glm::vec2 TexCoords;
 		glm::vec4 Color;
 		float TexIndex;
-		glm::mat4 Transform;
 	};
 
 	struct Renderer2DBatchStorage
@@ -57,19 +56,22 @@ namespace gswy {
 		uint32_t BatchVertexArray = 0;
 		uint32_t BatchVertexBuffer = 0;
 		uint32_t BatchIndexBuffer = 0;
-
 		uint32_t IndexCount = 0;
 
 		Vertex* BatchBuffer = nullptr;
 		Vertex* BatchBufferPtr = nullptr;
-		
-		std::shared_ptr<Texture2D> RawTexture;
+
 		std::array<uint32_t, MaxTextures> TextureSlots;
 		uint32_t TextureSlotIndex = 1;
-		Renderer2D::BatchStats RenderStats;
 		
-		OrthographicCamera cam = OrthographicCamera(1.0f, 1.0f, 1.0f, 1.0f);
+		std::shared_ptr<Texture2D> RawTexture;
+		
 		std::shared_ptr<Shader> BatchShader;
+		std::vector<glm::vec3> VertexData;
+		std::vector<glm::vec2> TexCoord;
+
+		OrthographicCamera cam = OrthographicCamera(1.0f, 1.0f, 1.0f, 1.0f);
+		Renderer2D::BatchStats RenderStats;
 	};
 
 	static Renderer2DBatchStorage* s_BatchData;
@@ -77,7 +79,6 @@ namespace gswy {
 	void Renderer2D::Init()
 	{
 		RenderCommand::Init();
-
 
 		// Quad Rendering Initialize
 		//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -127,8 +128,8 @@ namespace gswy {
 		int samplers[32];
 		for (int i = 0; i < 32; ++i)
 			samplers[i] = i;
+		s_BatchData->BatchShader->Bind();
 		s_BatchData->BatchShader->SetIntV("u_Textures", 32, samplers);
-
 		s_BatchData->BatchBuffer = new Vertex[MaxVertexCount];
 
 		glCreateVertexArrays(1, &s_BatchData->BatchVertexArray);
@@ -146,8 +147,6 @@ namespace gswy {
 		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
 		glEnableVertexArrayAttrib(s_BatchData->BatchVertexArray, 3);
 		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexIndex));
-		glEnableVertexArrayAttrib(s_BatchData->BatchVertexArray, 4);
-		glVertexAttribPointer(4, 16, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Transform));
 
 		uint32_t indices[MaxIndexCount];
 		uint32_t offset = 0;
@@ -171,6 +170,7 @@ namespace gswy {
 		s_BatchData->RawTexture = Texture2D::Create(1, 1);
 		s_BatchData->RawTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 		s_BatchData->TextureSlots[0] = s_BatchData->RawTexture->GetRendererID();
+		
 		for (size_t i = 1; i < MaxTextures; ++i)
 			s_BatchData->TextureSlots[i] = 0;
 	}
@@ -213,8 +213,6 @@ namespace gswy {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, float rotation, const glm::vec4& color)
 	{
-		//glm::vec3 pos = glm::vec3(position.x * (cos(glm::radians(rotation)) - sin(glm::radians(rotation))), position.y * (sin(glm::radians(rotation)) + cos(glm::radians(rotation))), position.z);
-		
 		s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetFloat4("u_Color", color);
 		s_Data->QuadTexture->Bind();
@@ -224,7 +222,6 @@ namespace gswy {
 		s_Data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 		s_Data->QuadVertexArray->Unbind();
-		//AddBatch(position, scale, color, transform);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& scale, float rotation, const std::shared_ptr<Texture2D>& texture)
@@ -240,10 +237,10 @@ namespace gswy {
 			texture->Bind();
 		else
 			s_Data->QuadTexture->Bind();
-
+		
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
 		s_Data->QuadShader->SetMat4("u_Transform", transform);
-
+		
 		s_Data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 		s_Data->QuadVertexArray->Unbind();
@@ -282,7 +279,7 @@ namespace gswy {
 
 	void Renderer2D::DrawSprite(const std::shared_ptr<VertexArray>& vertexArray, const glm::vec3& position, const glm::vec2& size, float rotation, const std::shared_ptr<Texture2D>& texture)
 	{
-		//s_Data->QuadShader->Bind();
+		s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetFloat4("u_Color", glm::vec4(1.0f));
 		texture->Bind();
 	
@@ -330,7 +327,6 @@ namespace gswy {
 		vertexArray->SetIndexBuffer(s_Data->QuadIndexBuffer);
 		RenderCommand::DrawIndexed(vertexArray);
 		vertexArray->Unbind();
-		//AddBatch(position, size, glm::vec4(1, 1, 1, alpha), transform, texture);
 	}
 
 	void Renderer2D::BeginBatch(const OrthographicCamera& camera)
@@ -349,13 +345,25 @@ namespace gswy {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_BatchData->BatchBuffer);
 	}
 
-	void Renderer2D::AddBatch(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, const glm::mat4& transform, const std::shared_ptr<Texture2D>& texture)
+	void Renderer2D::AddBatch(const glm::vec3& position, const glm::vec2& scale, float rotation, const glm::vec4& color, const std::vector<glm::vec3>& vertexData, const std::vector<glm::vec2>& texCoord, const std::shared_ptr<Texture2D>& texture)
 	{
-		if (s_BatchData->IndexCount >= MaxIndexCount || s_BatchData->TextureSlotIndex > 31)
+		if (texture)
 		{
-			EndBatch();
-			DrawBatch();
-			BeginBatch(s_BatchData->cam);
+			if (s_BatchData->IndexCount >= MaxIndexCount || s_BatchData->TextureSlotIndex > 31)
+			{
+				EndBatch();
+				DrawBatch();
+				BeginBatch(s_BatchData->cam);
+			}
+		}
+		else
+		{
+			if (s_BatchData->IndexCount >= MaxIndexCount)
+			{
+				EndBatch();
+				DrawBatch();
+				BeginBatch(s_BatchData->cam);
+			}
 		}
 		glm::vec4 resolvedColor;
 		//GPU like float
@@ -365,6 +373,7 @@ namespace gswy {
 		{
 			resolvedColor = glm::vec4(1.0f);
 
+			//Get the texture already in slot
 			for (uint32_t i = 1; i < s_BatchData->TextureSlotIndex; ++i)
 			{
 				if (s_BatchData->TextureSlots[i] == texture->GetRendererID())
@@ -374,6 +383,7 @@ namespace gswy {
 				}
 			}
 
+			//New Texture
 			if (textureIndex == 0.0f)
 			{
 				textureIndex = (float)s_BatchData->TextureSlotIndex;
@@ -385,33 +395,64 @@ namespace gswy {
 		{
 			resolvedColor = color;
 		}
-		
-		s_BatchData->BatchBufferPtr->Position = { position.x, position.y, position.z };
-		s_BatchData->BatchBufferPtr->TexCoords = { 0.0f, 0.0f };
+
+		glm::vec4 pos;
+		if (!vertexData.size())
+		{
+			s_BatchData->VertexData = { 
+				glm::vec3(-0.5f, -0.5f, 0.0f),
+				glm::vec3( 0.5f, -0.5f, 0.0f),
+				glm::vec3( 0.5f,  0.5f, 0.0f),
+				glm::vec3(-0.5f,  0.5f, 0.0f)
+			};
+		}
+		else
+		{
+			s_BatchData->VertexData = vertexData;
+		}
+
+		if (!texCoord.size())
+		{
+			s_BatchData->TexCoord = {
+				glm::vec2(0.0f, 0.0f),
+				glm::vec2(1.0f, 0.0f),
+				glm::vec2(1.0f, 1.0f),
+				glm::vec2(0.0f, 1.0f)
+			};
+		}
+		else
+		{
+			s_BatchData->TexCoord = texCoord;
+		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(glm::mat4(1.0f), { scale.x, scale.y, 1.0f });
+
+		pos = transform * glm::vec4(s_BatchData->VertexData[0], 1.0f);
+		s_BatchData->BatchBufferPtr->Position = { pos.x, pos.y, pos.z };
+		s_BatchData->BatchBufferPtr->TexCoords = s_BatchData->TexCoord[0];
 		s_BatchData->BatchBufferPtr->Color = resolvedColor;
 		s_BatchData->BatchBufferPtr->TexIndex = textureIndex;
-		s_BatchData->BatchBufferPtr->Transform = transform;
 		s_BatchData->BatchBufferPtr++;
 
-		s_BatchData->BatchBufferPtr->Position = { position.x + size.x, position.y, position.z };
-		s_BatchData->BatchBufferPtr->TexCoords = { 1.0f, 0.0f };
+		pos = transform * glm::vec4(s_BatchData->VertexData[1].x, s_BatchData->VertexData[1].y, s_BatchData->VertexData[1].z, 1.0f);
+		s_BatchData->BatchBufferPtr->Position = { pos.x, pos.y, pos.z };
+		s_BatchData->BatchBufferPtr->TexCoords = s_BatchData->TexCoord[1];
 		s_BatchData->BatchBufferPtr->Color = resolvedColor;
 		s_BatchData->BatchBufferPtr->TexIndex = textureIndex;
-		s_BatchData->BatchBufferPtr->Transform = transform;
 		s_BatchData->BatchBufferPtr++;
 
-		s_BatchData->BatchBufferPtr->Position = { position.x + size.x, position.y + size.y, position.z };
-		s_BatchData->BatchBufferPtr->TexCoords = { 1.0f, 1.0f };
+		pos = transform * glm::vec4(s_BatchData->VertexData[2].x, s_BatchData->VertexData[2].y, s_BatchData->VertexData[2].z, 1.0f);
+		s_BatchData->BatchBufferPtr->Position = { pos.x, pos.y, pos.z };
+		s_BatchData->BatchBufferPtr->TexCoords = s_BatchData->TexCoord[2];
 		s_BatchData->BatchBufferPtr->Color = resolvedColor;
 		s_BatchData->BatchBufferPtr->TexIndex = textureIndex;
-		s_BatchData->BatchBufferPtr->Transform = transform;
 		s_BatchData->BatchBufferPtr++;
 
-		s_BatchData->BatchBufferPtr->Position = { position.x, position.y + size.y, position.z };
-		s_BatchData->BatchBufferPtr->TexCoords = { 0.0f, 1.0f };
+		pos = transform * glm::vec4(s_BatchData->VertexData[3].x, s_BatchData->VertexData[3].y, s_BatchData->VertexData[3].z, 1.0f);
+		s_BatchData->BatchBufferPtr->Position = { pos.x, pos.y, pos.z };
+		s_BatchData->BatchBufferPtr->TexCoords = s_BatchData->TexCoord[3];
 		s_BatchData->BatchBufferPtr->Color = resolvedColor;
 		s_BatchData->BatchBufferPtr->TexIndex = textureIndex;
-		s_BatchData->BatchBufferPtr->Transform = transform;
 		s_BatchData->BatchBufferPtr++;
 
 		s_BatchData->IndexCount += 6;
@@ -421,12 +462,13 @@ namespace gswy {
 	void Renderer2D::DrawBatch()
 	{
 		for (uint32_t i = 0; i < s_BatchData->TextureSlotIndex; ++i)
-			s_BatchData->RawTexture->Bind(s_BatchData->TextureSlots[i]);
+			glBindTextureUnit(i, s_BatchData->TextureSlots[i]);
 
 		glBindVertexArray(s_BatchData->BatchVertexArray);
 		glDrawElements(GL_TRIANGLES, s_BatchData->IndexCount, GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(0);
 		s_BatchData->RenderStats.DrawCount++;
-		//glDrawElementsBaseVertex()
+
 		s_BatchData->IndexCount = 0;
 		s_BatchData->TextureSlotIndex = 1;
 	}

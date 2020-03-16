@@ -43,7 +43,7 @@ namespace gswy {
 		
 		static void BeginBatch(const OrthographicCamera& camera);
 		static void EndBatch();
-		static void AddBatch(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, const glm::mat4& transform = glm::mat4(1.0f), const std::shared_ptr<Texture2D>& texture = nullptr);
+		static void AddBatch(const glm::vec3& position, const glm::vec2& scale, float rotation, const glm::vec4& color, const std::vector<glm::vec3>& vertexData, const std::vector<glm::vec2>& texCoord, const std::shared_ptr<Texture2D>& texture = nullptr);
 		static void DrawBatch();
 
 		struct BatchStats
