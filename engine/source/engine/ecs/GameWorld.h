@@ -70,6 +70,12 @@ namespace gswy {
 			}
 		}
 
+		void Render2(double frameTime) {
+			for (auto&& system : m_systems) {
+				system->Render2(frameTime);
+			}
+		}
+
 		void PostRenderUpdate(double frameTime) {
 			for (auto&& system : m_systems) {
 				system->PostRenderUpdate(frameTime);

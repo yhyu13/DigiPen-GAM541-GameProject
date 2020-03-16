@@ -32,9 +32,6 @@ namespace gswy
 
 		virtual void Update(double dt) override {
 
-			// TODO: remove disable of mob controller
-			return;
-
 			static double timer = m_updateTimer;
 			timer += dt;
 			if (timer < m_updateTimer)
@@ -44,9 +41,9 @@ namespace gswy
 			timer = 0.0;
 
 			auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
-			auto pathGrid = tileMapObj->GetTileGrid("Path");
-			auto Astar = tileMapObj->GetPathFinder("Path");
-			auto playerEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+			auto pathGrid = tileMapObj->GetTileGrid("MobPath");
+			auto Astar = tileMapObj->GetPathFinder("MobPath");
+			auto destEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
 			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY);
 			for (auto& entity : m_registeredEntities) {
 				{
@@ -55,10 +52,10 @@ namespace gswy
 					m_parentWorld->Unpack(entity, transform);
 					m_parentWorld->Unpack(entity, animation);
 
-					ComponentDecorator<TransformCom, GameObjectType> playerPosition;
-					m_parentWorld->Unpack(playerEntity, playerPosition);
+					ComponentDecorator<TransformCom, GameObjectType> destPosition;
+					m_parentWorld->Unpack(destEntity, destPosition);
 
-					auto dest = playerPosition->GetPos();
+					auto dest = destPosition->GetPos();
 					auto src = transform->GetPos();
 
 					auto delta = dest - src;
@@ -82,15 +79,13 @@ namespace gswy
 						transform->SetRotation(LookAt(delta));
 
 						// 2. Move
-						float speed = .5f;
+						float speed = .25f;
 						transform->SetVelocity(glm::normalize(delta) * speed);
 						animation->SetCurrentAnimationState("Move");
 					}
 					else
 					{
-						//PRINT(Str(entity) + " not found");
-						// TODO : Engine exception
-						//throw EngineException(_CRT_WIDE(__FILE__), __LINE__, str2wstr(Str(entity) + " has not found the player!"));
+						DEBUG_PRINT(Str(entity) + " not found");
 					}
 				}
 			}

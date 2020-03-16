@@ -23,7 +23,7 @@ namespace gswy
 {
 	float GSWY_GetPixel2WorldNumerator()
 	{
-		return GSWY_GetWindowHeight() * 0.5f;
+		return GSWY_GetWindowHeight() * 0.75f;
 	}
 }
 
@@ -32,6 +32,9 @@ class GameLayer : public Layer {
 public:
 
 	GameLayer()
+		:
+		m_CameraController(GSWY_GetWindowWidth() / GSWY_GetWindowHeight()),
+		m_miniMapCameraController(GSWY_GetWindowWidth() / GSWY_GetWindowHeight())
 	{
 		InitFramework();
 		InitGameWorld();
@@ -89,7 +92,9 @@ public:
 		GameObjectFactory* factory = GameObjectFactory::GetInstance();
 		factory->LoadResources("./asset/archetypes/resources.json");
 		// TODO : remove loading map test
-		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/untitled.json", "untitled");
+		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel.json", "SampleLevel");
+		// TODO : consider to move the allocation of minimap texture elsewhere.
+		m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(),GSWY_GetWindowHeight());
 	}
 
 	void InitGameWorld()
@@ -126,6 +131,10 @@ public:
 			}
 			if (system._Equal("sprite")) {
 				m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
+				continue;
+			}
+			if (system._Equal("minimap")) {
+				m_world->RegisterSystem(MemoryManager::Make_shared<MiniMapSceneComSys>());
 				continue;
 			}
 			if (system._Equal("animation")) {
@@ -189,18 +198,19 @@ public:
 
 	void LoadGameWorld()
 	{
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/untitled.png","untitled");
+		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel.png","SampleLevel");
 
 		// TODO : use proper reflection to handle map loading and background creation
 		{
+			auto size = ResourceAllocator<TileMap>::GetInstance()->Get("SampleLevel")->GetMap()->getSize();
 			auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 			auto active = ActiveCom();
 			background.AddComponent(active);
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
-			m_sprite->SetSpriteScale(vec2(100.f * 32.f / GSWY_GetPixel2WorldNumerator(), 100.f * 32.f / GSWY_GetPixel2WorldNumerator()));
-			m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("untitled"));
-			m_sprite->SetSpritePosition(vec3(49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
+			m_sprite->SetSpriteScale(vec2(size.x * 32.f / GSWY_GetPixel2WorldNumerator(), size.y * 32.f / GSWY_GetPixel2WorldNumerator()));
+			m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"));
+			m_sprite->SetSpritePosition(vec3((size.x/2-0.5)* 32.f / GSWY_GetPixel2WorldNumerator(), -(size.y / 2 - 0.5) * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
 			m_sprite->SetSpriteRotation(0);
 			background.AddComponent(sprite);
 		}
@@ -215,24 +225,33 @@ public:
 			auto mouse = m_world->GenerateEntity(GameObjectType::MOUSE);
 			auto active = ActiveCom();
 			mouse.AddComponent(active);
-			auto mouseTr = TransformCom();
-			mouseTr.SetPos(InputManager::GetInstance()->GetCursorViewPosition());
-			mouse.AddComponent(mouseTr);
+			mouse.AddComponent(TransformCom());
 			auto mousebody = BodyCom();
 			mousebody.SetMass(0);
 			mousebody.ChooseShape("AABB", 0.05, 0.05);
 			mouse.AddComponent(mousebody);
-			auto ownership = OwnershiptCom<GameObjectType>();
-			mouse.AddComponent(ownership);
+			mouse.AddComponent(OwnershiptCom<GameObjectType>());
 		}
 
-		GameTileMapManager::GetInstance()->AddTileMap("untitled");
-		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");
+		{
+			auto miniMap = m_world->GenerateEntity(GameObjectType::MINIMAP);
+			auto active = ActiveCom();
+			miniMap.AddComponent(active);
+			miniMap.AddComponent(TransformCom());
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(m_miniMapTexture);
+			miniMap.AddComponent(sprite);
+		}
+
+		GameTileMapManager::GetInstance()->AddTileMap("SampleLevel");
+		GameTileMapManager::GetInstance()->SetCurrentMapName("SampleLevel");
 		GameTileMapManager::GetInstance()->LoadCurrentTileMap(m_world);
 
 		ComponentDecorator<TransformCom, GameObjectType> transform;
 		m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
 		m_CameraController.SetPosition(vec3(transform->GetPos(),0));
+		m_miniMapCameraController.SetPosition(vec3(transform->GetPos(), 0));
 	}
 
 	void BeforeRun()
@@ -293,21 +312,64 @@ public:
 			auto targetPos = vec3(transform->GetPos(),0.0f) + vec3(delta.x, -delta.y, 0.0f);
 			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 			m_CameraController.SetPosition(newPos);
-			m_CameraController.SetZoomLevel(2);
+			m_CameraController.SetZoomLevel(1);
+			m_CameraController.OnUpdate(ts);
 		}
+		// Set 3D sound
+		//AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
+	}
+
+	void UpdateCursor(double ts)
+	{
 		{
 			// Update cursor world position
 			ComponentDecorator<TransformCom, GameObjectType> position;
 			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
 			auto cameraPos = m_CameraController.GetPosition();
 			auto mouseRelativePos = InputManager::GetInstance()->GetCursorViewPosition();
-			// Caution: 
-			// It could be wrong, using debug draw to make sure the mouse entity is attached to the cursor
 			auto zoomLevel = m_CameraController.GetZoomLevel();
-			position->SetPos(vec2(cameraPos.x + zoomLevel *mouseRelativePos.x, cameraPos.y + zoomLevel *mouseRelativePos.y));
+			position->SetPos(vec2(cameraPos.x + zoomLevel * mouseRelativePos.x, cameraPos.y + zoomLevel * mouseRelativePos.y));
 		}
-		AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
-		m_CameraController.OnUpdate(ts);
+	}
+
+	void UpdateMiniMap(double ts)
+	{
+		{
+			// Set minimap camera to be 2x the zoom level of main camera
+			m_miniMapCameraController.SetPosition(m_CameraController.GetPosition());
+			m_miniMapCameraController.SetZoomLevel(m_CameraController.GetZoomLevel() * 2);
+			m_miniMapCameraController.OnUpdate(ts);
+
+			// Update minimap world position
+			ComponentDecorator<TransformCom, GameObjectType> position;
+			ComponentDecorator<SpriteCom, GameObjectType> sprite;
+			auto miniMap = m_world->GetAllEntityWithType(GameObjectType::MINIMAP)[0];
+			m_world->Unpack(miniMap, position);
+			m_world->Unpack(miniMap, sprite);
+			// Use main camera position and zoom to display the minimap on the main camera
+			auto cameraPos = m_CameraController.GetPosition();
+			auto RelativePos = InputManager::GetInstance()->GetCursorViewPosition(11./12 * GSWY_GetWindowWidth(),1.0/12 * GSWY_GetWindowHeight());
+			auto zoomLevel = m_CameraController.GetZoomLevel();
+			position->SetPos(vec2(cameraPos.x + zoomLevel * RelativePos.x, cameraPos.y + zoomLevel * RelativePos.y));
+			// Use minimap camera for the scaling
+			sprite->SetScale(vec2(0.33 * zoomLevel * m_miniMapCameraController.GetAspectRatio(), 0.33 * zoomLevel));
+		}
+	}
+
+	void MiniMapRender(double ts)
+	{
+		auto fbo = RenderCommand::CreateAndBindFBO();
+		m_miniMapTexture->AttachToFrameBuffer();
+
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::Clear();
+
+		Renderer2D::BeginScene(m_miniMapCameraController.GetCamera());
+		// m_world render
+		m_world->Render2(ts);
+
+		Renderer2D::EndScene();
+		RenderCommand::DestoryAndUnBindFBO(fbo);
 	}
 
 	void Render(double ts)
@@ -343,10 +405,15 @@ public:
 	virtual void OnUpdate(double ts) override
 	{
 		BeforeFrame();
-		if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2)) m_PP = !m_PP;
+		if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2))
 		{
-			TIME("Camera Update");
+			m_PP = !m_PP;
+		}
+		{
+			TIME("Pre Update");
 			UpdateCamera(ts);
+			UpdateCursor(ts);
+			UpdateMiniMap(ts);
 		}
 		std::future<void> update = std::async(std::launch::async, [this, ts]()
 		{
@@ -360,6 +427,10 @@ public:
 		{
 			TIME("PreRender Update");
 			PreRenderUpdate(ts);
+		}
+		{
+			TIME("MiniMap Update");
+			MiniMapRender(ts);
 		}
 		{
 			TIME("Render Update");
@@ -376,6 +447,7 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
+#ifdef _DEBUG
 		Instrumentor* instrumentor = Instrumentor::GetInstance();
 		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -392,7 +464,7 @@ public:
 		ImGui::End();
 		ImGui::PopStyleVar(1);
 		ImGui::PopStyleColor(3);
-#ifdef _DEBUG
+
 		//TODO: Debug only
 		ImGui::Begin("Settings");
 		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
@@ -410,15 +482,13 @@ public:
 
 	}
 
-	static const vec3& GetCameraPosition()
-	{
-		return m_CameraController.GetPosition();
-	}
-
 protected:
 
 private:
-	static OrthographicCameraController m_CameraController;
+	OrthographicCameraController m_CameraController;
+	OrthographicCameraController m_miniMapCameraController;
+	std::shared_ptr<gswy::Texture2D> m_miniMapTexture;
+
 	std::shared_ptr<GameWorld<GameObjectType>> m_world;
 	gswy::OpenGLPostProcessing m_PostProcessing;
 	bool m_PP = false;
@@ -431,8 +501,6 @@ private:
 #endif // _DEBUG
 
 };
-
-OrthographicCameraController GameLayer::m_CameraController(1280.0f / 720.0f);
 
 class Application : public Engine {
 public:

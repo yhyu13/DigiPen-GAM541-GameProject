@@ -65,6 +65,17 @@ namespace gswy {
 							player.AddComponent(sprite0);
 							continue;
 						}
+						if (name._Equal("miniMapSprite")) {
+							auto texture = component["texture"].asString();
+							float scale = component["scale"].asFloat();
+							int width = component["width"].asInt();
+							int height = component["height"].asInt();
+							auto sprite0 = MiniMapSprite();
+							sprite0.SetScale(vec2(scale, scale / width * height));
+							sprite0.SetTexture(texture);
+							player.AddComponent(sprite0);
+							continue;
+						}
 						if (name._Equal("animation")) {
 							auto animCom1 = AnimationCom();
 							Json::Value animation = component["animation"];
