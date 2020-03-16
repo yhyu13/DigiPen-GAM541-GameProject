@@ -42,7 +42,7 @@ public:
 
 	virtual ~GameLayer() 
 	{
-		GameTileMapManager::GetInstance()->Shutdown();
+		GameLevelMapManager::GetInstance()->Shutdown();
 	}
 
 	virtual void OnAttach() 
@@ -62,7 +62,7 @@ public:
 		m_PostProcessing.SetScreenSize(1280, 720);
 		m_PostProcessing.Init();
 
-		GameTileMapManager::GetInstance()->Init();
+		GameLevelMapManager::GetInstance()->Init();
 
 		// Texture loader
 		ResourceAllocator<Texture2D>::GetInstance()->Init();
@@ -241,9 +241,10 @@ public:
 			miniMap.AddComponent(sprite);
 		}
 
-		GameTileMapManager::GetInstance()->AddTileMap("SampleLevel");
-		GameTileMapManager::GetInstance()->SetCurrentMapName("SampleLevel");
-		GameTileMapManager::GetInstance()->LoadCurrentTileMap(m_world);
+		GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel");
+		GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel");
+		GameLevelMapManager::GetInstance()->LoadCurrentTileMap(m_world);
+		GameLevelMapManager::GetInstance()->m_levelStart = true;
 
 		ComponentDecorator<TransformCom, GameObjectType> transform;
 		m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
@@ -402,42 +403,49 @@ public:
 	virtual void OnUpdate(double ts) override
 	{
 		BeforeFrame();
-		if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2))
+		
+		if (GameLevelMapManager::GetInstance()->m_isAnyLevelLoaded)
 		{
-			m_PP = !m_PP;
-		}
-		{
-			TIME("Pre Update");
-			UpdateCamera(ts);
-			UpdateCursor(ts);
-			UpdateMiniMap(ts);
-		}
-		std::future<void> update = std::async(std::launch::async, [this, ts]()
-		{
+			if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2))
+			{
+				m_PP = !m_PP;
+			}
+			{
+				TIME("Pre Update");
+				UpdateCamera(ts);
+				UpdateCursor(ts);
+				UpdateMiniMap(ts);
+			}
+			//std::future<void> update = std::async(std::launch::async, [this, ts]()
+			//{
 
-		});	
-
-		{
-			TIME("System Update");
-			Update(ts);
-		}
-		{
-			TIME("PreRender Update");
-			PreRenderUpdate(ts);
-		}
-		{
-			TIME("MiniMap Update");
-			MiniMapRender(ts);
-		}
-		{
-			TIME("Render Update");
-			Render(ts);
-		}
-		update.wait();
-		EventQueue<GameObjectType, EventType>::GetInstance()->Update(ts);
-		{
-			TIME("PostRender Update");
-			PostRenderUpdate(ts);
+			//});
+			{
+				TIME("System Update");
+				Update(ts);
+			}
+			{
+				TIME("PreRender Update");
+				PreRenderUpdate(ts);
+			}
+			{
+				TIME("MiniMap Update");
+				MiniMapRender(ts);
+			}
+			{
+				TIME("Render Update");
+				Render(ts);
+			}
+			//update.wait();
+			{
+				TIME("Manager Update");
+				EventQueue<GameObjectType, EventType>::GetInstance()->Update(ts);
+				GameLevelMapManager::GetInstance()->Update(ts);
+			}
+			{
+				TIME("PostRender Update");
+				PostRenderUpdate(ts);
+			}
 		}
 		AfterFrame();
 	}

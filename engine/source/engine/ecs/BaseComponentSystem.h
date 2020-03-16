@@ -86,6 +86,9 @@ namespace gswy {
 		virtual void PostRenderUpdate(double frameTime) {
 		}
 
+		virtual void RemoveAllEntities(double frameTime) {
+		}
+
 		void SetWorld(GameWorld<EntityType>* world) {
 			m_parentWorld = world;
 		}

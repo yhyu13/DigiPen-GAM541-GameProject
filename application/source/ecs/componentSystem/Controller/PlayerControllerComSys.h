@@ -16,7 +16,7 @@ Creation date: 02/04/2020
 #include "engine/ecs/GameWorld.h"
 #include "engine/input/InputManager.h"
 #include "engine/ai/PathFinding.h"
-#include "tilemap/GameTileMapManager.h"
+#include "tilemap/GameLevelMapManager.h"
 #include "ecs/components/ActiveCom.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/BodyCom.h"
@@ -83,7 +83,7 @@ namespace gswy
 
 		void HandleMouseAction()
 		{
-			auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
+			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 			auto pathGrid = tileMapObj->GetTileGrid("PlayerBlock");
 			auto Astar = tileMapObj->GetPathFinder("PlayerBlock");
 
@@ -232,7 +232,7 @@ namespace gswy
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto audio = AudioManager::GetInstance();
-			auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
+			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 			auto playerPos = transform->GetPos();
 
 			// Update click to move

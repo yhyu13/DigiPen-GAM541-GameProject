@@ -15,6 +15,7 @@ Creation date: 02/17/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "ecs/CustomEvents.h"
+#include "tilemap/GameLevelMapManager.h"
 
 namespace gswy
 {
@@ -52,6 +53,9 @@ namespace gswy
 					PRINT("ENEMY has died!");
 					/*auto _e = MemoryManager::Make_shared<GCEvent>(event->m_entity);
 					queue->Publish(_e);*/
+
+					// Add coins to player on enemy destruction
+					GameLevelMapManager::GetInstance()->m_coins += 10;
 
 					// Test code : Instead of calling GC on death, making enemies fade out in 1 sec
 					auto _e = MemoryManager::Make_shared<FadeEvent>(event->m_entity, 1.f, 0.f, 1.f, EventType::GC);

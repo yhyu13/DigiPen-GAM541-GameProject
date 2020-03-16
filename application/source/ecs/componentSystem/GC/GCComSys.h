@@ -44,6 +44,17 @@ namespace gswy
 			queue->Subscribe<GCComSys>(this, EventType::GC, &GCComSys::OnGC);
 		}
 
+		virtual void RemoveAllEntities(double dt) override {
+			for (int e = (int)GameObjectType::EMPTY; e != (int)GameObjectType::NUM; ++e)
+			{
+				for (auto& entity : m_parentWorld->GetAllEntityWithType(GameObjectType(e)))
+				{
+					m_GCList.push_back(entity);
+				}
+			}
+			PostRenderUpdate(dt);
+		}
+
 		virtual void PostRenderUpdate(double dt) override {
 			for (auto& e : m_GCList)
 			{

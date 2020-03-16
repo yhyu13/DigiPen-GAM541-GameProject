@@ -43,7 +43,7 @@ namespace gswy {
 		explicit GameWorld(std::shared_ptr<EntityManager<EntityType>> manager) : m_entityManager(manager) {
 		}
 
-		~GameWorld() {
+		virtual ~GameWorld() {
 		}
 
 		void Init() {
@@ -79,6 +79,12 @@ namespace gswy {
 		void PostRenderUpdate(double frameTime) {
 			for (auto&& system : m_systems) {
 				system->PostRenderUpdate(frameTime);
+			}
+		}
+
+		void RemoveAllEntities(double frameTime) {
+			for (auto&& system : m_systems) {
+				system->RemoveAllEntities(frameTime);
 			}
 		}
 
@@ -151,7 +157,7 @@ namespace gswy {
 			handle = ComponentDecorator<ComponentType, EntityType>(entity, manager->GetComponentByEntity(entity), manager);
 		}
 
-	private:
+	protected:
 		/*
 			Get the component-manager for a given component-type.
 			Example usage: GetComponentManager<ComponentType>();
@@ -168,7 +174,7 @@ namespace gswy {
 			return static_cast<ComponentManager<ComponentType, EntityType>*> (m_componentManagers[family].get());
 		}
 
-	private:
+	protected:
 
 		std::shared_ptr<EntityManager<EntityType>> m_entityManager;
 		std::vector<std::shared_ptr<BaseComponentSystem<EntityType>>> m_systems;

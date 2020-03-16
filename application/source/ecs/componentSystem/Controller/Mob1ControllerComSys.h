@@ -16,7 +16,7 @@ Creation date: 02/16/2020
 #include "engine/ecs/GameWorld.h"
 #include "engine/input/InputManager.h"
 #include "engine/ai/PathFinding.h"
-#include "tilemap/GameTileMapManager.h"
+#include "tilemap/GameLevelMapManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/AnimationCom.h"
 #include "ecs/EntityType.h"
@@ -40,7 +40,7 @@ namespace gswy
 			}
 			timer = 0.0;
 
-			auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
+			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 			auto pathGrid = tileMapObj->GetTileGrid("MobPath");
 			auto Astar = tileMapObj->GetPathFinder("MobPath");
 			auto destEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];

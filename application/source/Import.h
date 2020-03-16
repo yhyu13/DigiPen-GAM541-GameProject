@@ -38,4 +38,4 @@ Creation date: 02/15/2020
 
 ///// Client application framework /////
 #include "object-factory/GameObjectFactory.h"
-#include "tilemap/GameTileMapManager.h"
+#include "tilemap/GameLevelMapManager.h"
