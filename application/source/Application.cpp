@@ -362,11 +362,11 @@ public:
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 
-		Renderer2D::BeginScene(m_miniMapCameraController.GetCamera());
+		Renderer2D::BeginBatch(m_CameraController.GetCamera());
 		// m_world render
 		m_world->Render2(ts);
-
-		Renderer2D::EndScene();
+		Renderer2D::EndBatch();
+		Renderer2D::DrawBatch();
 		RenderCommand::DestoryAndUnBindFBO(fbo);
 	}
 
@@ -376,20 +376,21 @@ public:
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 
-		Renderer2D::BeginScene(m_CameraController.GetCamera());
+		Renderer2D::BeginBatch(m_CameraController.GetCamera());
+		//Renderer2D::BeginScene(m_CameraController.GetCamera());
 		// m_world render
 		m_world->Render(ts);
 #ifdef _DEBUG
 
 		//TODO: Move to Component Update
-		if (m_ParticleActive)
-		{
-			for (int i = 0; i < 5; i++)
-				m_ParticleSystem.Emit(m_Particle);
-		}
-
-		m_ParticleSystem.Update(ts);
-		m_ParticleSystem.Render();
+		//if (m_ParticleActive)
+		//{
+		//	for (int i = 0; i < 5; i++)
+		//		m_ParticleSystem.Emit(m_Particle);
+		//}
+		//
+		//m_ParticleSystem.Update(ts);
+		//m_ParticleSystem.Render();
 
 #endif // _DEBUG
 		if (m_PP)
@@ -397,7 +398,9 @@ public:
 			m_PostProcessing.Unbind();
 			m_PostProcessing.Render(ts);
 		}
-		Renderer2D::EndScene();
+		Renderer2D::EndBatch();
+		Renderer2D::DrawBatch();
+		//Renderer2D::EndScene();
 	}
 
 	virtual void OnUpdate(double ts) override
@@ -459,7 +462,7 @@ public:
 		ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, 0);
 		ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, 0);
-		ImGui::Begin("Instrumenting Profiling");
+		ImGui::Begin("Instrumenting Profiling", false, ImGuiWindowFlags_NoDecoration);
 		for (auto& result : instrumentor->GetResults()) {
 			char entry[100];
 			strcpy(entry, "%10.3f %s\t");
@@ -471,18 +474,18 @@ public:
 		ImGui::PopStyleColor(3);
 
 		//TODO: Debug only
-		ImGui::Begin("Settings");
-		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
-		ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
-		ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
-		ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
-		ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
-		ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
-		ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
-		ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
-		ImGui::End();
+		//ImGui::Begin("Settings");
+		//ImGui::Checkbox("ParticleActive", &m_ParticleActive);
+		//ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
+		//ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
+		//ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
+		//ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
+		//ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
+		//ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
+		//ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
+		//ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
+		//ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
+		//ImGui::End();
 #endif // _DEBUG
 
 	}
