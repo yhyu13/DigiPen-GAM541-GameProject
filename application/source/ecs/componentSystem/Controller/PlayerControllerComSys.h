@@ -26,6 +26,7 @@ Creation date: 02/04/2020
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/CustomEvents.h"
+#include "ui/GameWidgetManager.h"
 
 namespace gswy
 {
@@ -79,6 +80,12 @@ namespace gswy
 				auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_BUILD, vec3(cursor_pos, 0));
 				queue->Publish(e);
 			}
+
+			if (input->IsKeyTriggered(KEY_Q)) WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!WidgetManager::GetInstance()->GetInventoryMenu().GetVisible());
+			if (input->IsKeyTriggered(KEY_E)) WidgetManager::GetInstance()->GetShopMenu().SetVisible(!WidgetManager::GetInstance()->GetShopMenu().GetVisible());
+			if (input->IsKeyTriggered(KEY_P)) WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+			if (input->IsKeyTriggered(KEY_F1)) WidgetManager::GetInstance()->GetMainMenu().SetVisible(!WidgetManager::GetInstance()->GetMainMenu().GetVisible());
+
 		}
 
 		void HandleMouseAction()
