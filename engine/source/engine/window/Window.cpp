@@ -103,6 +103,12 @@ namespace gswy {
 		success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ASSERT(success < 0, "Could not initialize Glad!");
 
+		//Put info to Log
+		ENGINE_INFO(" OpenGL Info:");
+		ENGINE_INFO(" Vender: {0}", glGetString(GL_VENDOR));
+		ENGINE_INFO(" Renderer: {0}", glGetString(GL_RENDERER));
+		ENGINE_INFO(" Version: {0}", glGetString(GL_VERSION));
+
 		// Key callback
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scanCode, int action, int mods) {
 			WindowProperties& properties = *(WindowProperties*)glfwGetWindowUserPointer(window);
