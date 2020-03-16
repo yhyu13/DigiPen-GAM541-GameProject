@@ -361,11 +361,11 @@ public:
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 
-		Renderer2D::BeginScene(m_miniMapCameraController.GetCamera());
+		Renderer2D::BeginBatch(m_CameraController.GetCamera());
 		// m_world render
-		//m_world->Render2(ts);
-
-		Renderer2D::EndScene();
+		m_world->Render2(ts);
+		Renderer2D::EndBatch();
+		Renderer2D::DrawBatch();
 		RenderCommand::DestoryAndUnBindFBO(fbo);
 	}
 
@@ -454,7 +454,7 @@ public:
 		ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, 0);
 		ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, 0);
-		ImGui::Begin("Instrumenting Profiling");
+		ImGui::Begin("Instrumenting Profiling", false, ImGuiWindowFlags_NoDecoration);
 		for (auto& result : instrumentor->GetResults()) {
 			char entry[100];
 			strcpy(entry, "%10.3f %s\t");
