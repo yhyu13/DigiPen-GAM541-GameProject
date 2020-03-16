@@ -167,7 +167,7 @@ namespace gswy
 						auto aabb = BodyCom();
 						aabb.ChooseShape("Circle", 0.1);
 						weapon.AddComponent(aabb);
-						weapon.AddComponent(LifeTimeCom(2.0));
+						weapon.AddComponent(LifeTimeCom(1.0));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
@@ -201,7 +201,7 @@ namespace gswy
 						weapon.AddComponent(sprite);
 
 						auto aabb = BodyCom();
-						aabb.ChooseShape("AABB", 0.25, 0.25);
+						aabb.ChooseShape("Circle", 0.1);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
