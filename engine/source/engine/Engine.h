@@ -31,6 +31,7 @@ namespace gswy {
 		virtual void Update(double ts);
 		virtual void LateUpdate(double ts);
 
+		
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
@@ -38,10 +39,10 @@ namespace gswy {
 		inline static Engine& Get() { return *s_instance; }
 		static double TOTAL_TIME;
 		static void SetQuit(bool b) { isRunning = !b; }
-
-	private:
+	public:
 		//static Window* window;
 		static bool isRunning;
+		static bool isPaused;
 
 	private:
 		std::unique_ptr<Window> window;

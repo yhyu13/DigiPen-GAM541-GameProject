@@ -94,21 +94,21 @@ namespace gswy {
 
 	void Sprite::DrawInternal(const glm::vec2& rect, const glm::vec2& texCoord, const glm::vec2& texCoordOffset)
 	{
-		m_Vertices = {
-		   -rect.x, -rect.y, 0.0f, texCoord.x, texCoord.y,
-			rect.x, -rect.y, 0.0f, texCoord.x + texCoordOffset.x, texCoord.y,
-			rect.x,  rect.y, 0.0f, texCoord.x + texCoordOffset.x, texCoord.y + texCoordOffset.y,
-		   -rect.x,  rect.y, 0.0f, texCoord.x, texCoord.y + texCoordOffset.y
-		};
+		//m_Vertices = {
+		//   -rect.x, -rect.y, 0.0f, texCoord.x, texCoord.y,
+		//	rect.x, -rect.y, 0.0f, texCoord.x + texCoordOffset.x, texCoord.y,
+		//	rect.x,  rect.y, 0.0f, texCoord.x + texCoordOffset.x, texCoord.y + texCoordOffset.y,
+		//   -rect.x,  rect.y, 0.0f, texCoord.x, texCoord.y + texCoordOffset.y
+		//};
 
-		m_SpriteVertexBuffer->UpdateBufferData(&m_Vertices[0], m_Vertices.size() * sizeof(float));
-		m_SpriteVertexBuffer->SetLayout({
-			{ ShaderDataType::Float3, "a_Position" },
-			{ ShaderDataType::Float2, "a_TexCoord" }
-			});
-		m_SpriteVertexArray->AddVertexBuffer(m_SpriteVertexBuffer);
+		//m_SpriteVertexBuffer->UpdateBufferData(&m_Vertices[0], m_Vertices.size() * sizeof(float));
+		//m_SpriteVertexBuffer->SetLayout({
+		//	{ ShaderDataType::Float3, "a_Position" },
+		//	{ ShaderDataType::Float2, "a_TexCoord" }
+		//	});
+		//m_SpriteVertexArray->AddVertexBuffer(m_SpriteVertexBuffer);
 		//Renderer2D::DrawSprite(m_SpriteVertexArray, m_Position, m_Scale, m_Rotation, m_Texture2D, m_ShaderName, m_alpha);
-		
+		//
 		//Batch Rendering
 		m_VertexData = {
 			glm::vec3(-rect.x, -rect.y, 0.0f),

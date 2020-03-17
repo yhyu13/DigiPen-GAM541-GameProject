@@ -62,7 +62,7 @@ namespace gswy
 				HandleMouseAction_LeftPressed();
 			}
 
-			HandlePlayerMovement();
+			HandlePlayerMovement(dt);
 
 			//// TODO remove spawn enemies by triggering buttons
 			//if (input->IsKeyTriggered(KEY_SPACE))
@@ -89,10 +89,16 @@ namespace gswy
 				queue->Publish(e);
 			}
 
-			if (input->IsKeyTriggered(KEY_I)) WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!WidgetManager::GetInstance()->GetInventoryMenu().GetVisible());
-			if (input->IsKeyTriggered(KEY_P)) WidgetManager::GetInstance()->GetShopMenu().SetVisible(!WidgetManager::GetInstance()->GetShopMenu().GetVisible());
-			if (input->IsKeyTriggered(KEY_ESCAPE)) WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-			//if (input->IsKeyTriggered(KEY_F1)) WidgetManager::GetInstance()->GetMainMenu().SetVisible(!WidgetManager::GetInstance()->GetMainMenu().GetVisible());
+			if (GameLevelMapManager::GetInstance()->IsInGame())
+			{
+				if (input->IsKeyTriggered(KEY_I)) WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!WidgetManager::GetInstance()->GetInventoryMenu().GetVisible());
+				if (input->IsKeyTriggered(KEY_P)) WidgetManager::GetInstance()->GetShopMenu().SetVisible(!WidgetManager::GetInstance()->GetShopMenu().GetVisible());
+				if (input->IsKeyTriggered(KEY_ESCAPE))
+				{
+					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+					m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+				}
+			}
 		}
 
 		bool HandleMouseCondition_Move()
@@ -247,7 +253,7 @@ namespace gswy
 			}
 		}
 
-		void HandlePlayerMovement()
+		void HandlePlayerMovement(double dt)
 		{
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			ComponentDecorator<TransformCom, GameObjectType> transform;
@@ -295,14 +301,20 @@ namespace gswy
 			//{
 			//	angle = -m_maxAngleRotation;
 			//}
-			transform->SetRotation(angle);
+			if (dt)
+			{
+				transform->SetRotation(angle);
+			}
 			// 2. Move
 			transform->SetVelocity(glm::normalize(delta) * m_speed);
 			animation->SetCurrentAnimationState("Move");
 
 			// 3. Play sound
-			auto e = MemoryManager::Make_shared<SoundEvent>("footstep02");
-			queue->Publish(e);
+			if (dt)
+			{
+				auto e = MemoryManager::Make_shared<SoundEvent>("footstep02");
+				queue->Publish(e);
+			}
 		}
 	};
 }

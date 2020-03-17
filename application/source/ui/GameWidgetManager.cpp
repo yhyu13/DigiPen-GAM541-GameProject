@@ -27,7 +27,11 @@ namespace gswy {
 
 	WidgetManager::WidgetManager()
 	{
-
+		m_Hud.manager = this;
+		m_MainMenu.manager = this;
+		m_PauseMenu.manager = this;
+		m_ShopMenu.manager = this;
+		m_InventoryMenu.manager = this;
 	}
 
 	void WidgetManager::RenderUI()
@@ -52,19 +56,19 @@ namespace gswy {
 
 		if (ImGui::Button("New Game", ImVec2(500, 100)))
 		{
-			std::cout << "New game Click!" << std::endl;
+			manager->InvokeButton("New Game");
 		}
-		if (ImGui::Button("Continue", ImVec2(500, 100)))
+		if (ImGui::Button("How To Play", ImVec2(500, 100)))
 		{
-			std::cout << "Continue Click!" << std::endl;
+			manager->InvokeButton("How To Play");
 		}
 		if (ImGui::Button("Option", ImVec2(500, 100)))
 		{
-			std::cout << "Option Click!" << std::endl;
+			manager->InvokeButton("Option");
 		}
-		if (ImGui::Button("Quit", ImVec2(500, 100)))
+		if (ImGui::Button("Exit", ImVec2(500, 100)))
 		{
-			std::cout << "Quit Click!" << std::endl;
+			manager->InvokeButton("Exit");
 		}
 		ImGui::Text("This is some useful text.");
 		ImGui::End();
@@ -109,19 +113,11 @@ namespace gswy {
 		ImGui::SetWindowFontScale(1.0);
 		if (ImGui::Button("Resume", ImVec2(500, 100)))
 		{
-			std::cout << "Resume Click!" << std::endl;
+			manager->InvokeButton("Resume");
 		}
-		if (ImGui::Button("How To Play", ImVec2(500, 100)))
+		if (ImGui::Button("Main Menu", ImVec2(500, 100)))
 		{
-			std::cout << "How To Play Click!" << std::endl;
-		}
-		if (ImGui::Button("Option", ImVec2(500, 100)))
-		{
-			std::cout << "Option Click!" << std::endl;
-		}
-		if (ImGui::Button("Quit & Save", ImVec2(500, 100)))
-		{
-			std::cout << "Quit & Save Click!" << std::endl;
+			manager->InvokeButton("Main Menu");
 		}
 		ImGui::Text("This is some useful text.");
 		ImGui::End();

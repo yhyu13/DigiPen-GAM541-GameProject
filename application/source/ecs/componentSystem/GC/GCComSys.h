@@ -52,18 +52,19 @@ namespace gswy
 					m_GCList.push_back(entity);
 				}
 			}
-			PostRenderUpdate(dt);
+			GC();
 		}
 
-		virtual void PostRenderUpdate(double dt) override {
+		void GC()
+		{
 			for (auto& e : m_GCList)
 			{
-				DEBUG_PRINT("Delete: " + Str(e));
+				PRINT("Delete: " + Str(e));
 
 				// TODO : comment this out after we solve the deallocation problem
 				m_parentWorld->RemoveComponent<ActiveCom>(e);
 				m_parentWorld->RemoveComponent<AnimationCom>(e);
-				m_parentWorld->RemoveComponent<AttachedMovementCom>(e);		
+				m_parentWorld->RemoveComponent<AttachedMovementCom>(e);
 				m_parentWorld->RemoveComponent<BodyCom>(e);
 				m_parentWorld->RemoveComponent<ChildrenCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<CoolDownCom>(e);
@@ -80,6 +81,10 @@ namespace gswy
 				m_parentWorld->RemoveEntity(e);
 			}
 			m_GCList.clear();
+		}
+
+		virtual void PostRenderUpdate(double dt) override {
+			GC();
 		}
 
 		void OnGC(EventQueue<GameObjectType, EventType>::EventPtr e)
