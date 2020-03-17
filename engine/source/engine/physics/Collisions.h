@@ -12,10 +12,10 @@ Creation date	: 02/11/2020
 - End Header ----------------------------*/
 
 #pragma once
+//#include "..\..\application\source\ecs\components\BodyCom.h"
 
 namespace gswy
 {
-
 	class Shape
 	{
 	public:
@@ -30,6 +30,7 @@ namespace gswy
 		virtual ~Shape() {}
 
 		SHAPE_TYPE mType;
+
 	};
 
 	class Circle : public Shape
