@@ -52,10 +52,11 @@ namespace gswy
 				GameObjectType::TOWER_ICE, GameObjectType::TOWER_LIGHTNING,
 			};
 
-			// Collision Disable List Part2 (Mouse, ranged weapons)
+			//TODO: Do better redundant checking for ranged attacks, happenening twice
+			// Collision Disable List Part2 (Mouse, ranged weapons, player)
 			GameObjectType diableCollisionList2[] = {
 				GameObjectType::MOUSE ,GameObjectType::FIREBALL ,
-				GameObjectType::ICEBALL ,GameObjectType::BOLT,
+				GameObjectType::ICEBALL ,GameObjectType::BOLT, GameObjectType::PLAYER
 			};
 
 			for (auto& item1 : diableCollisionList)
@@ -118,11 +119,15 @@ namespace gswy
 					auto s = body->shape;
 					if (auto aabb = dynamic_pointer_cast<AABB>(s))
 					{
-						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), glm::vec2(aabb->GetWidth(), aabb->GetHeight()), transform->GetRotation(), glm::vec4(1.0f));
+						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0),
+							glm::vec2(aabb->GetWidth(), aabb->GetHeight()), 
+							transform->GetRotation(), glm::vec4(1.0f));
 					}
 					else if (auto circle = dynamic_pointer_cast<Circle>(s))
 					{
-						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), glm::vec2(circle->GetRadius(), circle->GetRadius()), transform->GetRotation(), glm::vec4(1.0f));
+						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), 
+							glm::vec2(circle->GetRadius(), circle->GetRadius()), 
+							transform->GetRotation(), glm::vec4(1.0f));
 					}
 				}
 				unlock();
@@ -182,20 +187,27 @@ namespace gswy
 					if (m_CollisionDisableMap[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
 						continue;
 
+					//For two enemies to not collide
+					if (first_Entity->m_type == second_Entity->m_type)
+						continue;
+
 					ComponentDecorator<BodyCom, GameObjectType> body2;
 					m_parentWorld->Unpack(*second_Entity, body2);
+
 					// Reset colliding entity
 					body2->ResetOtherEntity();
 
-					bool collides = collision->CheckCollisionAndGenerateDetection(body1->shape.get(), body1->m_PosX, body1->m_PosY, body2->shape.get(), body2->m_PosX, body2->m_PosY);						
+					bool collides = collision->CheckCollisionAndGenerateDetection
+						(body1->shape.get(), body1->m_PosX, body1->m_PosY, 
+							body2->shape.get(), body2->m_PosX, body2->m_PosY);		
+
 					if (collides)
 					{
 						//Velocity Nullification
-						body1->m_VelY = 0;//!body1->m_VelY;
-						body2->m_VelX = 0;//!body1->m_VelX;
-						body1->m_VelX = 0;//!body1->m_VelX;
-						body2->m_VelY = 0;//!body2->m_VelY;
-
+						body1->m_VelY = 0;
+						body2->m_VelX = 0;
+						body1->m_VelX = 0;
+						body2->m_VelY = 0;
 
 						// Set colliding entity
 						body1->SetOtherEntity(*second_Entity);

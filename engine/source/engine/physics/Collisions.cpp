@@ -42,6 +42,7 @@ AABB::~AABB()
 
 }
 
+//TODO: Recheck this works for A->B and not B->A
 glm::vec2 CheckDirection(glm::vec2 diff)
 {
 	glm::vec2 direction[] = {
@@ -57,15 +58,16 @@ glm::vec2 CheckDirection(glm::vec2 diff)
 	diff = glm::normalize(diff);
 
 	float max = 0.0f;
+	float dot_prod;
 	int best = -1;
 	for (int i = 0; i < 4; ++i)
 	{
-		float dot_prod = glm::dot(diff, direction[i]);
+		dot_prod = glm::dot(diff, direction[i]);
 
 		if (dot_prod > max)
 		{
 			max = dot_prod;
-			best = 1;
+			best = i;
 		}
 	}
 
@@ -101,7 +103,7 @@ bool gswy::CircleCollisions(Shape* Circle1, float PosX1, float PosY1,
 
 		glm::vec2 separation = edgepoint2 - edgepoint1;
 
-		float penetration = std::min(separation.x, separation.y);
+		float penetration = std::max(separation.x, separation.y);
 		glm::vec2 Collision_Normal = CheckDirection(separation);
 
 		if (separation.x > 0)// && Separation.y == 0)
@@ -159,8 +161,9 @@ bool gswy::AABBCollisions(Shape* AABB1, float PosX1, float PosY1,
 	if (br0.x < tl1.x || tl0.y < br1.y ||
 		br1.x < tl0.x || br0.y > tl1.y)
 		return false;
+
 	//Trying for separation window Between two bodies for impulse throw
-		//To find out the exact position of collision and throw bodies accordingly
+	//To find out the exact position of collision and throw bodies back accordingly
 	else
 	{
 		glm::vec2 CenterDistance = Pos2 - Pos1;
@@ -171,11 +174,25 @@ bool gswy::AABBCollisions(Shape* AABB1, float PosX1, float PosY1,
 		glm::vec2 EdgePoint2 = clamped2 + CenterDistance;
 		glm::vec2 Separation = EdgePoint2 - EdgePoint1;
 
-		float penetration = std::min(Separation.x, Separation.y);
+		float penetration = std::max(Separation.x, Separation.y);
 		glm::vec2 Collision_Normal = CheckDirection(Separation);
 
-		//std::cout << "\n	x sep: " << Separation.x;
-		//std::cout << "\n	y sep: " << Separation.y;
+		if (Collision_Normal.x == 0 && Collision_Normal.y == 1)
+		{
+			std::cout << "\n TOP ";
+		}
+		else if (Collision_Normal.x == 1 && Collision_Normal.y == 0)
+		{
+			std::cout << "\n RIGHT ";
+		}
+		else if (Collision_Normal.x == -1 && Collision_Normal.y == 0)
+		{
+			std::cout << "\n LEFT ";
+		}
+		else if (Collision_Normal.x == 0 && Collision_Normal.y == -1)
+		{
+			std::cout << "\n BOTTOM ";
+		}
 
 		//Conditional trials
 		if (Separation.x > 0)// && Separation.y == 0)
