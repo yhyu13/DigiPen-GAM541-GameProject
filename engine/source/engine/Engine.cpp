@@ -27,6 +27,7 @@ namespace gswy {
 
 	double Engine::TOTAL_TIME = 0.0;
 	bool Engine::isRunning = true;
+	bool Engine::isPaused = false;
 	Engine* Engine::s_instance = nullptr;
 
 	Engine::Engine() 
@@ -72,9 +73,17 @@ namespace gswy {
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
 
-			
+			// If isRunning is not set to false by any application code,
+			// set isRunning by window closing check
+			if (isRunning)
+			{
+				isRunning = !window->ShouldExit();
+			}
 
-			isRunning = !window->ShouldExit();
+			{
+				window->Render();
+			}
+
 			rateController->FrameEnd();
 		}
 	}

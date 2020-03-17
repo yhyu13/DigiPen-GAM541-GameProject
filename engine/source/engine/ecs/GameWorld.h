@@ -52,6 +52,17 @@ namespace gswy {
 			}
 		}
 
+		bool IsPaused()
+		{
+			return m_paused;
+		}
+
+		void SetPause(bool b)
+		{
+			m_paused = b;
+			Engine::isPaused = m_paused;
+		}
+
 		void Update(double frameTime) {
 			for (auto&& system : m_systems) {
 				system->Update(frameTime);
@@ -82,9 +93,9 @@ namespace gswy {
 			}
 		}
 
-		void RemoveAllEntities(double frameTime) {
+		void RemoveAllEntities() {
 			for (auto&& system : m_systems) {
-				system->RemoveAllEntities(frameTime);
+				system->RemoveAllEntities(0);
 			}
 		}
 
@@ -175,7 +186,7 @@ namespace gswy {
 		}
 
 	protected:
-
+		bool m_paused = {false};
 		std::shared_ptr<EntityManager<EntityType>> m_entityManager;
 		std::vector<std::shared_ptr<BaseComponentSystem<EntityType>>> m_systems;
 		std::vector<std::shared_ptr<BaseComponentManager>> m_componentManagers;

@@ -65,6 +65,11 @@ namespace gswy
 
 		virtual void PreRenderUpdate(double ts) override
 		{
+			if (!ts)
+			{
+				return;
+			}
+
 			lock();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<ParticleCom, GameObjectType> particle;

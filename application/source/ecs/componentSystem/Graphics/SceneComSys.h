@@ -14,6 +14,7 @@ Creation date: 02/04/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
+#include "ui/GameWidgetManager.h"
 #include "ecs/components/ActiveCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/EntityType.h"
