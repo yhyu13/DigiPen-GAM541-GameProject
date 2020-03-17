@@ -17,6 +17,7 @@ Creation date: 02/04/2020
 #include "engine/input/InputManager.h"
 #include "engine/ai/PathFinding.h"
 #include "tilemap/GameLevelMapManager.h"
+#include "ui/GameWidgetManager.h"
 #include "ecs/components/ActiveCom.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/BodyCom.h"
@@ -77,15 +78,21 @@ namespace gswy
 			//}
 
 			// (Demo) Spawn tower by pressing keys
-			if (input->IsKeyTriggered(KEY_P))
+			if (input->IsKeyTriggered(KEY_SPACE))
 			{
-				PRINT("P");
+				PRINT("SPACE");
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				m_parentWorld->Unpack(m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0], transform);
 				auto cursor_pos = transform->GetPos();
 				auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_BUILD, vec3(cursor_pos, 0));
 				queue->Publish(e);
 			}
+
+			if (input->IsKeyTriggered(KEY_Q)) WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!WidgetManager::GetInstance()->GetInventoryMenu().GetVisible());
+			if (input->IsKeyTriggered(KEY_E)) WidgetManager::GetInstance()->GetShopMenu().SetVisible(!WidgetManager::GetInstance()->GetShopMenu().GetVisible());
+			if (input->IsKeyTriggered(KEY_P)) WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+			if (input->IsKeyTriggered(KEY_F1)) WidgetManager::GetInstance()->GetMainMenu().SetVisible(!WidgetManager::GetInstance()->GetMainMenu().GetVisible());
+
 		}
 
 		bool HandleMouseCondition_Move()

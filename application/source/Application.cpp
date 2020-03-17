@@ -455,6 +455,7 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
+		WidgetManager::GetInstance()->RenderUI();
 #ifdef _DEBUG
 		Instrumentor* instrumentor = Instrumentor::GetInstance();
 		ImGui::SetNextWindowBgAlpha(0.0f);
