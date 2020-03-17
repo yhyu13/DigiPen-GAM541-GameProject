@@ -85,18 +85,6 @@ public:
 #endif // _DEBUG
 	}
 
-	void LoadResources()
-	{
-		TIME("Loading Resources");
-
-		GameObjectFactory* factory = GameObjectFactory::GetInstance();
-		factory->LoadResources("./asset/archetypes/resources.json");
-		// TODO : remove loading map test
-		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel.json", "SampleLevel");
-		// TODO : consider to move the allocation of minimap texture elsewhere.
-		m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(),GSWY_GetWindowHeight());
-	}
-
 	void InitGameWorld()
 	{
 		TIME("Initializing Game World");
@@ -185,12 +173,29 @@ public:
 				m_world->RegisterSystem(MemoryManager::Make_shared<ParticleComSys>());
 				continue;
 			}
+			if (system._Equal("skill"))
+			{
+				m_world->RegisterSystem(MemoryManager::Make_shared<PlayerSkillSystem>());
+				continue;
+			}
 		}
 
 		// Initialize game
 		m_world->Init();
 
 		LoadGameWorld();
+	}
+
+	void LoadResources()
+	{
+		TIME("Loading Resources");
+
+		GameObjectFactory* factory = GameObjectFactory::GetInstance();
+		factory->LoadResources("./asset/archetypes/resources.json");
+		// TODO : remove loading map test
+		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel.json", "SampleLevel");
+		// TODO : consider to move the allocation of minimap texture elsewhere.
+		m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(),GSWY_GetWindowHeight());
 	}
 
 	void LoadGameWorld()

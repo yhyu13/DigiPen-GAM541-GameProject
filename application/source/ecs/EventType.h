@@ -34,6 +34,12 @@ namespace gswy
 		_FADE_ING,
 		_FADE_END,
 
+		SKILL_ADDITION,
+		SKILL_ACTIVATION,
+		SKILL_UPGRADE,
+		SKILL_USE,
+		SKILL_REMOVAL,
+
 		NUM
 	};
 }
@@ -53,6 +59,12 @@ std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 	case gswy::EventType::FADE: return o << "FADEIN";
 	case gswy::EventType::_FADE_ING: return o << "_FADEIN_ING";
 	case gswy::EventType::_FADE_END: return o << "_FADEIN_END";
+
+	case gswy::EventType::SKILL_ADDITION: return o << "ADD SKILL";
+	case gswy::EventType::SKILL_REMOVAL: return o << "REMOVE SKILL";
+	case gswy::EventType::SKILL_ACTIVATION: return o << "ACTIVATE SKILL";
+	case gswy::EventType::SKILL_UPGRADE: return o << "UPGRADE SKILL";
+	case gswy::EventType::SKILL_USE: return o << "USE SKILL";
 
 	default: return o << "(invalid value)";
 	}

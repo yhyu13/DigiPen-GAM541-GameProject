@@ -49,6 +49,9 @@
     },
     {
       "component": "hit-point"
+    },
+	  {
+      "component": "skill"
     }
   ]
 }
