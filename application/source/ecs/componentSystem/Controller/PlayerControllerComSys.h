@@ -89,10 +89,10 @@ namespace gswy
 				queue->Publish(e);
 			}
 
-			if (input->IsKeyTriggered(KEY_Q)) WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!WidgetManager::GetInstance()->GetInventoryMenu().GetVisible());
-			if (input->IsKeyTriggered(KEY_E)) WidgetManager::GetInstance()->GetShopMenu().SetVisible(!WidgetManager::GetInstance()->GetShopMenu().GetVisible());
-			if (input->IsKeyTriggered(KEY_P)) WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-			if (input->IsKeyTriggered(KEY_F1)) WidgetManager::GetInstance()->GetMainMenu().SetVisible(!WidgetManager::GetInstance()->GetMainMenu().GetVisible());
+			if (input->IsKeyTriggered(KEY_I)) WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!WidgetManager::GetInstance()->GetInventoryMenu().GetVisible());
+			if (input->IsKeyTriggered(KEY_P)) WidgetManager::GetInstance()->GetShopMenu().SetVisible(!WidgetManager::GetInstance()->GetShopMenu().GetVisible());
+			if (input->IsKeyTriggered(KEY_ESCAPE)) WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+			//if (input->IsKeyTriggered(KEY_F1)) WidgetManager::GetInstance()->GetMainMenu().SetVisible(!WidgetManager::GetInstance()->GetMainMenu().GetVisible());
 		}
 
 		bool HandleMouseCondition_Move()
