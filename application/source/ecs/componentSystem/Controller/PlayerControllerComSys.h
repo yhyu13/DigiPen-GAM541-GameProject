@@ -47,10 +47,17 @@ namespace gswy
 			auto input = InputManager::GetInstance();
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 
+			bool b_shoudMove = HandleMouseCondition_Move();
+
 			// Handle mouse action
-			if (input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 			{
-				HandleMouseAction();
+				HandleMouseAction_LeftTriggered();
+			}
+
+			if (b_shoudMove && input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				HandleMouseAction_LeftPressed();
 			}
 
 			HandlePlayerMovement();
@@ -81,7 +88,26 @@ namespace gswy
 			}
 		}
 
-		void HandleMouseAction()
+		bool HandleMouseCondition_Move()
+		{
+			auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
+			ComponentDecorator<BodyCom, GameObjectType> mouseBodyCom;
+			m_parentWorld->Unpack(mouse, mouseBodyCom);
+
+			bool couldMove = true;
+			switch (mouseBodyCom->GetOtherEntity().m_type)
+			{
+
+			case GameObjectType::TOWER_BUILD: case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
+				couldMove = false;
+				break;
+			default:
+				break;
+			}
+			return couldMove;
+		}
+
+		void HandleMouseAction_LeftPressed()
 		{
 			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 			auto pathGrid = tileMapObj->GetTileGrid("PlayerBlock");
@@ -96,12 +122,40 @@ namespace gswy
 
 			auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
 			ComponentDecorator<TransformCom, GameObjectType> mouseTransform;
-			ComponentDecorator<BodyCom, GameObjectType> mouseBodyCom;
 			m_parentWorld->Unpack(mouse, mouseTransform);
-			m_parentWorld->Unpack(mouse, mouseBodyCom);
 			auto cursorPos = mouseTransform->GetPos();
 
-			bool isIdle = true;
+			// Click to move
+			auto dest = cursorPos;
+			auto src = playerPos;
+			auto delta = dest - src;
+			// Stop when delta distance is small
+			if (glm::length(delta) < m_noPathFindingThreshold)
+			{
+				transform->SetVelocity(vec2(0));
+				animation->SetCurrentAnimationState("Idle");
+				return;
+			}
+			auto _dest = tileMapObj->World2Grid(dest);
+			auto _src = tileMapObj->World2Grid(src);
+
+			if (Astar->Search(*pathGrid, _src, _dest))
+			{
+				m_pathResult = Astar->GetResult();
+				std::reverse(m_pathResult.begin(), m_pathResult.end());
+			}
+			else
+			{
+				PRINT(Str(entity) + " not found");
+				m_pathResult.clear();
+			}
+		}
+
+		void HandleMouseAction_LeftTriggered()
+		{
+			auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
+			ComponentDecorator<BodyCom, GameObjectType> mouseBodyCom;
+			m_parentWorld->Unpack(mouse, mouseBodyCom);
 
 			switch (mouseBodyCom->GetOtherEntity().m_type)
 			{
@@ -137,7 +191,7 @@ namespace gswy
 				}
 			}
 			break;
-			case GameObjectType::TOWER_FIRE : case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
+			case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
 			{
 				auto _tower = mouseBodyCom->GetOtherEntity();
 				ComponentDecorator<TransformCom, GameObjectType> transform;
@@ -148,6 +202,7 @@ namespace gswy
 				m_parentWorld->Unpack(_tower, ownership);
 
 				// Unfreeze tower as a way to show it has been enabled.
+				// Do not re-enabled unfreezed tower
 				if (!coolDownController->IsFreezed())
 				{
 					break;
@@ -181,37 +236,7 @@ namespace gswy
 			}
 			break;
 			default:
-				isIdle = false;
 				break;
-			}
-
-			// Click to move
-			if (isIdle)
-			{
-				return;
-			}
-			auto dest = cursorPos;
-			auto src = playerPos;
-			auto delta = dest - src;
-			// Stop when delta distance is small
-			if (glm::length(delta) < m_noPathFindingThreshold)
-			{
-				transform->SetVelocity(vec2(0));
-				animation->SetCurrentAnimationState("Idle");
-				return;
-			}
-			auto _dest = tileMapObj->World2Grid(dest);
-			auto _src = tileMapObj->World2Grid(src);
-
-			if (Astar->Search(*pathGrid, _src, _dest))
-			{
-				m_pathResult = Astar->GetResult();
-				std::reverse(m_pathResult.begin(), m_pathResult.end());
-			}
-			else
-			{
-				PRINT(Str(entity) + " not found");
-				m_pathResult.clear();
 			}
 		}
 
