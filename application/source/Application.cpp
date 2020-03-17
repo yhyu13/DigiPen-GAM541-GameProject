@@ -403,8 +403,8 @@ namespace gswy
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 			RenderCommand::Clear();
 			m_miniMapCameraController.OnUpdate(ts);
-			Renderer2D::BeginBatch(m_CameraController.GetCamera());
-			//Renderer2D::BeginScene(m_CameraController.GetCamera());
+			Renderer2D::BeginBatch(m_miniMapCameraController.GetCamera());
+			//Renderer2D::BeginScene(m_miniMapCameraController.GetCamera());
 			// m_world render
 			m_world->Render2(ts);
 			Renderer2D::EndBatch();
