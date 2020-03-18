@@ -122,6 +122,10 @@ namespace gswy
 					m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
 					continue;
 				}
+				if (system._Equal("MobPortalControllerComSys")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<MobPortalControllerComSys>());
+					continue;
+				}
 				if (system._Equal("tower-controller")) {
 					m_world->RegisterSystem(MemoryManager::Make_shared<TowerControllerComSys>());
 					continue;
@@ -290,10 +294,10 @@ namespace gswy
 				miniMap.AddComponent(sprite);
 			}
 
+			GameLevelMapManager::GetInstance()->ResetLevelData();
 			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel");
 			GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel");
 			GameLevelMapManager::GetInstance()->LoadCurrentTileMap(m_world);
-			GameLevelMapManager::GetInstance()->StartLevel();
 
 			ComponentDecorator<TransformCom, GameObjectType> transform;
 			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
