@@ -24,12 +24,12 @@ namespace gswy {
 	int Window::width = 1280;
 	int Window::height = 720;
 
-	int GSWY_GetWindowWidth()
+	float GSWY_GetWindowWidth()
 	{
 		return Window::width;
 	}
 
-	int GSWY_GetWindowHeight()
+	float GSWY_GetWindowHeight()
 	{
 		return Window::height;
 	}
@@ -41,6 +41,10 @@ namespace gswy {
 
 	void Window::Update(double dt) {
 		glfwPollEvents();
+	}
+
+	void Window::Render()
+	{
 		glfwSwapBuffers(m_window);
 	}
 
@@ -78,7 +82,30 @@ namespace gswy {
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		m_window = glfwCreateWindow(properties.m_width, properties.m_height, properties.m_title.c_str(), nullptr, nullptr);
+		if (properties.IsFullScreen)
+		{
+			//Full Screen Settings
+			auto monitor = glfwGetPrimaryMonitor();
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+			// Update window width and height
+			width = mode->width;
+			height = mode->height;
+			m_windowProperties.m_width = mode->width;
+			m_windowProperties.m_height = mode->height;
+
+			m_window = glfwCreateWindow(mode->width, mode->height, properties.m_title.c_str(), monitor, NULL);
+			properties.m_input->SetMouseMaxPositions(mode->width, mode->height);
+		}
+		else
+		{
+			m_window = glfwCreateWindow(properties.m_width, properties.m_height, properties.m_title.c_str(), nullptr, nullptr);
+			properties.m_input->SetMouseMaxPositions(properties.m_width, properties.m_height);
+		}
 		ASSERT(m_window == nullptr, "Failed to create window!");
 
 		glfwMakeContextCurrent(m_window);
@@ -86,6 +113,12 @@ namespace gswy {
 
 		success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ASSERT(success < 0, "Could not initialize Glad!");
+
+		//Put info to Log
+		ENGINE_INFO(" OpenGL Info:");
+		ENGINE_INFO(" Vender: {0}", glGetString(GL_VENDOR));
+		ENGINE_INFO(" Renderer: {0}", glGetString(GL_RENDERER));
+		ENGINE_INFO(" Version: {0}", glGetString(GL_VERSION));
 
 		// Key callback
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scanCode, int action, int mods) {

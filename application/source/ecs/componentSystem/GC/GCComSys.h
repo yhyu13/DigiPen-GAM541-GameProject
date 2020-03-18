@@ -25,6 +25,7 @@ Creation date: 02/17/2020
 #include "ecs/components/HitPointCom.h"
 #include "ecs/components/HitPreventionCom.h"
 #include "ecs/components/LifeTimeCom.h"
+#include "ecs/components/MiniMapSprite.h"
 #include "ecs/components/OwnershiptCom.h"
 #include "ecs/components/ParticleCom.h"
 #include "ecs/components/SpriteCom.h"
@@ -43,21 +44,34 @@ namespace gswy
 			queue->Subscribe<GCComSys>(this, EventType::GC, &GCComSys::OnGC);
 		}
 
-		virtual void PostRenderUpdate(double dt) override {
+		virtual void RemoveAllEntities(double dt) override {
+			for (int e = (int)GameObjectType::EMPTY; e != (int)GameObjectType::NUM; ++e)
+			{
+				for (auto& entity : m_parentWorld->GetAllEntityWithType(GameObjectType(e)))
+				{
+					m_GCList.push_back(entity);
+				}
+			}
+			GC();
+		}
+
+		void GC()
+		{
 			for (auto& e : m_GCList)
 			{
-				DEBUG_PRINT("Delete: " + Str(e));
+				PRINT("Delete: " + Str(e));
 
 				// TODO : comment this out after we solve the deallocation problem
 				m_parentWorld->RemoveComponent<ActiveCom>(e);
 				m_parentWorld->RemoveComponent<AnimationCom>(e);
-				m_parentWorld->RemoveComponent<AttachedMovementCom>(e);		
+				m_parentWorld->RemoveComponent<AttachedMovementCom>(e);
 				m_parentWorld->RemoveComponent<BodyCom>(e);
 				m_parentWorld->RemoveComponent<ChildrenCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<CoolDownCom>(e);
 				m_parentWorld->RemoveComponent<HitPointCom>(e);
 				m_parentWorld->RemoveComponent<HitPreventionCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<LifeTimeCom>(e);
+				m_parentWorld->RemoveComponent<MiniMapSprite>(e);
 				m_parentWorld->RemoveComponent<OwnershiptCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<ParticleCom>(e);
 				m_parentWorld->RemoveComponent<SpriteCom>(e);
@@ -67,6 +81,10 @@ namespace gswy
 				m_parentWorld->RemoveEntity(e);
 			}
 			m_GCList.clear();
+		}
+
+		virtual void PostRenderUpdate(double dt) override {
+			GC();
 		}
 
 		void OnGC(EventQueue<GameObjectType, EventType>::EventPtr e)

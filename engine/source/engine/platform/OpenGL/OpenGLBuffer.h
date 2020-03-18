@@ -34,6 +34,7 @@ namespace gswy {
 	private:
 		uint32_t m_RendererID;
 		BufferLayout m_Layout;
+		std::vector<float> m_Vertices;
 	};
 
 	class OpenGLIndexBuffer :public IndexBuffer

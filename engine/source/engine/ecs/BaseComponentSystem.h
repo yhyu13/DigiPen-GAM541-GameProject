@@ -80,7 +80,13 @@ namespace gswy {
 		virtual void Render(double frameTime) {
 		}
 
+		virtual void Render2(double frameTime) {
+		}
+
 		virtual void PostRenderUpdate(double frameTime) {
+		}
+
+		virtual void RemoveAllEntities(double frameTime) {
 		}
 
 		void SetWorld(GameWorld<EntityType>* world) {

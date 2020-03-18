@@ -42,6 +42,9 @@ Creation date	: 01/26/2020
 #include "engine/platform/OpenGL/OpenGLDebugDraw.h"
 #include "engine/platform/OpenGL/OpenGLPostProcessing.h"
 
+///// UI /////
+#include "engine/ui/Widget.h"
+
 ///// Resource Allocator /////
 #include "engine/allocator/ResouceAllocator.h"
 

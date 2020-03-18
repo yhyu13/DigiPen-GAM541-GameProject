@@ -9,4 +9,4 @@ Author: Hang Yu (hang.yu@digipen.edu | 60001119)
 Creation date: 03/02/2020
 - End Header ----------------------------*/
 
-#include "GameTileMapManager.h"
+#include "GameLevelMapManager.h"

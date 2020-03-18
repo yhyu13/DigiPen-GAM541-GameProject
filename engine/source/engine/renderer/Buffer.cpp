@@ -27,7 +27,7 @@ namespace gswy {
 		case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLVertexBuffer>(vertices, size);
 		}
 
-		ASSERT(false, "Unknown RendererAPI!");
+		ASSERT(true, "Unknown RendererAPI!");
 		return nullptr;
 	}
 
@@ -39,7 +39,7 @@ namespace gswy {
 		case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLIndexBuffer>(indices, size);
 		}
 
-		ASSERT(false, "Unknown RendererAPI!");
+		ASSERT(true, "Unknown RendererAPI!");
 		return nullptr;
 	}
 }

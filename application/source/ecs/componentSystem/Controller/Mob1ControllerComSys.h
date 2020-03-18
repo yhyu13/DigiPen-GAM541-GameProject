@@ -16,7 +16,7 @@ Creation date: 02/16/2020
 #include "engine/ecs/GameWorld.h"
 #include "engine/input/InputManager.h"
 #include "engine/ai/PathFinding.h"
-#include "tilemap/GameTileMapManager.h"
+#include "tilemap/GameLevelMapManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/AnimationCom.h"
 #include "ecs/EntityType.h"
@@ -28,15 +28,9 @@ namespace gswy
 		double m_updateTimer = {1.0/10.0};
 	public:
 		Mob1ControllerComSys() {
-			m_systemSignature.AddComponent<BodyCom>();
-			m_systemSignature.AddComponent<TransformCom>();
-			m_systemSignature.AddComponent<AnimationCom>();
 		}
 
 		virtual void Update(double dt) override {
-
-			// TODO: remove disable of mob controller
-			return; //Comment And Uncomment to run script for mob to move
 
 			static double timer = m_updateTimer;
 			timer += dt;
@@ -46,10 +40,10 @@ namespace gswy
 			}
 			timer = 0.0;
 
-			auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
-			auto pathGrid = tileMapObj->GetTileGrid("Path");
-			auto Astar = tileMapObj->GetPathFinder("Path");
-			auto playerEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
+			auto pathGrid = tileMapObj->GetTileGrid("MobPath");
+			auto Astar = tileMapObj->GetPathFinder("MobPath");
+			auto destEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
 			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY);
 			for (auto& entity : m_registeredEntities) {
 				{
@@ -60,10 +54,10 @@ namespace gswy
 					m_parentWorld->Unpack(entity, body);
 					m_parentWorld->Unpack(entity, animation);
 
-					ComponentDecorator<TransformCom, GameObjectType> playerPosition;
-					m_parentWorld->Unpack(playerEntity, playerPosition);
+					ComponentDecorator<TransformCom, GameObjectType> destPosition;
+					m_parentWorld->Unpack(destEntity, destPosition);
 
-					auto dest = playerPosition->GetPos();
+					auto dest = destPosition->GetPos();
 					auto src = transform->GetPos();
 
 					auto delta = dest - src;
@@ -87,15 +81,15 @@ namespace gswy
 						transform->SetRotation(LookAt(delta));
 
 						// 2. Move
-						float speed = .5f;
+						//float speed = .5f;
+						float speed = .25f;
+						//transform->SetVelocity(glm::normalize(delta) * speed);
 						body->SetVelocity(glm::normalize(delta) * speed);
 						animation->SetCurrentAnimationState("Move");
 					}
 					else
 					{
-						//PRINT(Str(entity) + " not found");
-						// TODO : Engine exception
-						//throw EngineException(_CRT_WIDE(__FILE__), __LINE__, str2wstr(Str(entity) + " has not found the player!"));
+						DEBUG_PRINT(Str(entity) + " not found");
 					}
 				}
 			}

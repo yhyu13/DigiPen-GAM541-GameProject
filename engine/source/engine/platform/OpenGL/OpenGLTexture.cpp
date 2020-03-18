@@ -41,7 +41,7 @@ namespace gswy {
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-		ASSERT(!data, "Failed to load image!");
+		ASSERT(!data, "Failed to load image :" + path + "!");
 		m_Width = width;
 		m_Height = height;
 		
@@ -73,6 +73,11 @@ namespace gswy {
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		glDeleteTextures(1, &m_RendererID);
+	}
+
+	void OpenGLTexture2D::AttachToFrameBuffer() const
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_RendererID, 0);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const

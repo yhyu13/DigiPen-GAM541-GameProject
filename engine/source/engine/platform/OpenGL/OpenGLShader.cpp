@@ -40,8 +40,8 @@ namespace gswy {
 
 			glDeleteShader(vertexShader);
 
-			ERROR("{0}", infoLog.data());
-			ASSERT(false, "Vertex shader compilation failure");
+			ENGINE_ERROR("{0}", infoLog.data());
+			ASSERT(true, "Vertex shader compilation failure");
 
 			return;
 		}
@@ -66,8 +66,8 @@ namespace gswy {
 
 			glDeleteShader(fragmentShader);
 
-			ERROR("{0}", infoLog.data());
-			ASSERT(false, "Fragment shader compilation failure");
+			ENGINE_ERROR("{0}", infoLog.data());
+			ASSERT(true, "Fragment shader compilation failure");
 
 			return;
 		}
@@ -94,8 +94,8 @@ namespace gswy {
 			glDeleteShader(vertexShader);
 			glDeleteShader(fragmentShader);
 
-			ERROR("{0}", infoLog.data());
-			ASSERT(false, "Shader link failure");
+			ENGINE_ERROR("{0}", infoLog.data());
+			ASSERT(true, "Shader link failure");
 
 			return;
 		}
@@ -149,6 +149,11 @@ namespace gswy {
 		UploadUniformFloat4(name, value);
 	}
 
+	void OpenGLShader::SetIntV(const std::string& name, int count, const int* value)
+	{
+		UploadUniformIntV(name, count, value);
+	}
+
 	void OpenGLShader::UploadUniformInt(const std::string& name, int value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
@@ -177,6 +182,12 @@ namespace gswy {
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform4f(location, value.x, value.y, value.z, value.w);
+	}
+
+	void OpenGLShader::UploadUniformIntV(const std::string& name, int count, const int* value)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1iv(location, count, value);
 	}
 
 	void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& matrix)

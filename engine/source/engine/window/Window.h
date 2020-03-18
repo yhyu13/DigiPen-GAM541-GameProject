@@ -25,6 +25,7 @@ namespace gswy {
 		unsigned int m_height;
 		std::string m_title;
 		InputManager* m_input = nullptr;
+		bool IsFullScreen = false;
 
 		WindowProperties(unsigned int width = 1280, unsigned int height = 720, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title) {
 			m_input = InputManager::GetInstance();
@@ -32,8 +33,8 @@ namespace gswy {
 		}
 	};
 
-	int GSWY_GetWindowWidth();
-	int GSWY_GetWindowHeight();
+	float GSWY_GetWindowWidth();
+	float GSWY_GetWindowHeight();
 
 	class ENGINE_API Window {
 
@@ -44,6 +45,7 @@ namespace gswy {
 		static Window* InitializeWindow(const WindowProperties& properties = WindowProperties());
 
 		void Update(double dt);
+		void Render();
 		void Shutdown();
 		bool ShouldExit();
 		void UpdateTitle(std::string title);

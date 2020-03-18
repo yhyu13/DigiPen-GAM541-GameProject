@@ -19,6 +19,8 @@ Creation date: 03/02/2020
 #include "engine/math/MathHelper.h"
 #include "engine/renderer/Texture.h"
 
+#define IS_INGAME (GameLevelMapManager::GetInstance()->IsInGame())
+
 namespace gswy {
 	/*
 	Use case
@@ -30,12 +32,12 @@ namespace gswy {
 		...
 		TileMapManager::GetInstance()->ShutDown();
 	*/
-	class GameTileMapManager : public TileMapManager
+	class GameLevelMapManager : public TileMapManager
 	{
 	public:
-		static GameTileMapManager* GetInstance()
+		static GameLevelMapManager* GetInstance()
 		{
-			static GameTileMapManager instance;
+			static GameLevelMapManager instance;
 			return &instance;
 		}
 
@@ -72,7 +74,37 @@ namespace gswy {
 							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
 							transform->SetPos(tileMapObj->Pixel2World(pixelPos));
 						}
-						else if (objName.compare("Mob") == 0)
+						else if (objName.compare("Base") == 0)
+						{
+							auto obj = world->GenerateEntity(GameObjectType::BASE);
+							auto active = ActiveCom();
+							obj.AddComponent(active);
+							obj.AddComponent(OwnershiptCom<GameObjectType>());
+							auto transform = TransformCom();
+							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
+							transform.SetPos(tileMapObj->Pixel2World(pixelPos));
+							obj.AddComponent(transform);
+							auto particle = ParticleCom();
+							particle.Init<ExplosionParticle>();
+							obj.AddComponent(particle);
+							auto animCom = AnimationCom();
+							animCom.Add("BaseAnimation", "Move");
+							animCom.Add("BaseIdle", "Idle");
+							animCom.SetCurrentAnimationState("Move");
+							obj.AddComponent(animCom);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.4, 0.4));
+							obj.AddComponent(sprite);
+							auto sprite0 = MiniMapSprite();
+							sprite0.SetScale(vec2(0.25, 0.25));
+							sprite0.SetTexture("BlueLayer");
+							obj.AddComponent(sprite0);
+							auto aabb = BodyCom();
+							aabb.ChooseShape("AABB", 0.4, 0.4);
+							obj.AddComponent(aabb);
+							obj.AddComponent(HitPointCom(999));
+						}
+						else if (objName.compare("MobSpawn") == 0)
 						{
 							auto obj = world->GenerateEntity(GameObjectType::ENEMY);
 							auto active = ActiveCom();
@@ -89,6 +121,10 @@ namespace gswy {
 							auto sprite = SpriteCom();
 							sprite.SetScale(vec2(0.25, 0.25 / 70 * 50));
 							obj.AddComponent(sprite);
+							auto sprite0 = MiniMapSprite();
+							sprite0.SetScale(vec2(0.1, 0.1));
+							sprite0.SetTexture("RedLayer");
+							obj.AddComponent(sprite0);
 							auto aabb1 = BodyCom();
 							aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
 							obj.AddComponent(aabb1);
@@ -107,6 +143,29 @@ namespace gswy {
 						continue;
 					}
 
+					if (layerName.compare("MobPath") == 0)
+					{
+						auto pathGrid = tileMapObj->GetTileGrid("MobPath");
+						for (int i = 0; i < pathGrid->X(); ++i)
+						{
+							for (int j = 0; j < pathGrid->Y(); ++j)
+							{
+								(*pathGrid)[i][j] = 1.0f;
+							}
+						}
+					}
+					else if (layerName.compare("PlayerBlock") == 0)
+					{
+						auto pathGrid = tileMapObj->GetTileGrid("PlayerBlock");
+						for (int i = 0; i < pathGrid->X(); ++i)
+						{
+							for (int j = 0; j < pathGrid->Y(); ++j)
+							{
+								(*pathGrid)[i][j] = 0.0f;
+							}
+						}
+					}
+
 					//You can of course also loop through every tile!
 					for (const auto& [pos, tile] : layer.getTileData())
 					{
@@ -119,17 +178,23 @@ namespace gswy {
 						//Get position in pixel units
 						ivec2 gridPos(std::get<0>(pos), std::get<1>(pos));
 						// Fill the grid for path finding.
-						if (layerName.compare("Path") == 0)
+						if (layerName.compare("MobPath") == 0)
 						{
-							auto pathGrid = tileMapObj->GetTileGrid("Path");
+							auto pathGrid = tileMapObj->GetTileGrid("MobPath");
+							(*pathGrid)[gridPos.x][gridPos.y] = 0.0f;
+							DEBUG_PRINT("MobPath: " + Str(gridPos.x) + " " + Str(gridPos.y));
+						}
+						else if (layerName.compare("PlayerBlock") == 0)
+						{
+							auto pathGrid = tileMapObj->GetTileGrid("PlayerBlock");
 							(*pathGrid)[gridPos.x][gridPos.y] = 1.0f;
-							DEBUG_PRINT(Str(gridPos.x) + " " + Str(gridPos.y));
+							DEBUG_PRINT("PlayerBlock: " + Str(gridPos.x) + " " + Str(gridPos.y));
 						}
 
-						/*
-							1, Create background tiles as individual sprites (warning performance critical!)
-							2, Or cheat to use a single atlas map as background but has all tiles holding a collision box.
-						*/
+						///*
+						//	1, Create background tiles as individual sprites (warning performance critical!)
+						//	2, Or cheat to use a single atlas map as background but has all tiles holding a collision box.
+						//*/
 						//for (auto& tileset : map->getTilesets())
 						//{
 						//	int firstId = tileset.getFirstgid(); //First tile id of the tileset
@@ -180,6 +245,7 @@ namespace gswy {
 					}
 				}
 			}
+			m_isAnyLevelLoaded = true;
 		}
 
 		/*
@@ -188,41 +254,70 @@ namespace gswy {
 		template <typename EntityType>
 		void UnloadCurrentTileMap(std::shared_ptr<GameWorld<EntityType>> world)
 		{
-			if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
+			//if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
+			//{
+			//	// TODO : Engine exception
+			//	throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
+			//}
+			m_isAnyLevelLoaded = false;
+		}
+
+		void StartLevel()
+		{
+			m_levelStart = true;
+		}
+
+		bool IsInGame()
+		{
+			return m_isAnyLevelLoaded;
+		}
+
+		void Update(double dt)
+		{
+			if (!m_isAnyLevelLoaded)
 			{
-				// TODO : Engine exception
-				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
+				return;
 			}
-
-			auto tileMapObj = m_tileMaps[m_currentMapName];
-			auto map = tileMapObj->GetMap();
-			//You can loop through every container of objects
-			for (auto& layer : map->getLayers())
+			if (m_levelStart)
 			{
-				// Case object layer
-				if (layer.getType() == tson::Layer::Type::ObjectGroup)
+				m_timeRemaining -= dt;
+				if (m_timeRemaining < 0)
 				{
-					for (auto& object : layer.getObjects())
-					{
-						auto objName = layer.getName();
-						PRINT("Processing " + objName);
-
-						// TODO : need proper handle of player deletion (c++ RTTR)
-						if (objName.compare("Player") == 0)
-						{
-							
-						}
-						else if (objName.compare("Mob") == 0)
-						{
-							
-						}
-					}
+					m_levelStart = false;
+					m_timeRemaining = m_timePerLevel;
+					PRINT("Level completed!");
 				}
+			}
+			else
+			{
+
 			}
 		}
 
+		void ResetLevelData()
+		{
+			PRINT("Reset level!");
+			m_isAnyLevelLoaded = false;
+			m_levelStart = false;
+			m_coins = 0;
+			
+			m_timePerLevel = 2;
+			m_timeRemaining = m_timePerLevel;
+			m_waitingPerLevel = 60;
+		}
+
 	private:
-		GameTileMapManager()
-		{}
+		GameLevelMapManager()
+		{
+			ResetLevelData();
+		}
+	public:
+		bool m_isAnyLevelLoaded;
+		bool m_levelStart;
+		int m_coins;
+
+		double m_timePerLevel;
+		double m_timeRemaining;
+		double m_waitingPerLevel;
 	};
 }

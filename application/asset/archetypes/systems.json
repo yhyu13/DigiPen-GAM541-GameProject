@@ -18,9 +18,11 @@
 	  "fade",
 	  
 	  "animation",
+	  "minimap",
 	  "particle",
 	  "sprite",
 	  "scene",
+	  "skill",
 	  
 	  "gc"
    ]

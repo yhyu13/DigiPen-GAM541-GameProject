@@ -91,7 +91,8 @@ namespace gswy {
 			glm::vec4 color = glm::lerp(particle.ColorBegin, particle.ColorEnd, life);
 			float size = glm::lerp(particle.SizeBegin, particle.SizeEnd, life);
 
-			Renderer2D::DrawQuad(m_BufferData.ParticleVertexArray, m_BufferData.ParticleIndexBuffer, particle.Position, glm::vec2(size), particle.Rotation, color);
+			//Renderer2D::DrawQuad(m_BufferData.ParticleVertexArray, m_BufferData.ParticleIndexBuffer, particle.Position, glm::vec2(size), particle.Rotation, color);
+			Renderer2D::AddBatch(particle.Position, glm::vec2(size), particle.Rotation, color, std::vector<glm::vec3>(), std::vector<glm::vec2>());
 		}
 
 	}

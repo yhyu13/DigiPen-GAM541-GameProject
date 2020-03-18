@@ -67,5 +67,8 @@ namespace gswy {
 		std::string m_ShaderName;
 		float_t m_alpha;
 		bool m_init;
+
+		std::vector<glm::vec3> m_VertexData;
+		std::vector<glm::vec2> m_TexCoord;
 	};
 }

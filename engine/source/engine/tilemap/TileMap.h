@@ -22,7 +22,7 @@ namespace gswy {
 
 	/*
 	Use case:
-		auto tileMapObj = GameTileMapManager::GetInstance()->GetCurrentMap();
+		auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 		auto pathGrid = tileMapObj->GetTileGrid("Path");
 		auto Astar = tileMapObj->GetPathFinder("Path");
 		if (Astar->Search(*pathGrid, _src, _dest))

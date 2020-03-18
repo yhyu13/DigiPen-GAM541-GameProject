@@ -23,424 +23,605 @@ namespace gswy
 {
 	float GSWY_GetPixel2WorldNumerator()
 	{
-		return GSWY_GetWindowHeight() * 0.5f;
-	}
-}
-
-class GameLayer : public Layer {
-
-public:
-
-	GameLayer()
-	{
-		InitFramework();
-		InitGameWorld();
+		return GSWY_GetWindowHeight() * 0.75f;
 	}
 
-	virtual ~GameLayer() 
-	{
-		GameTileMapManager::GetInstance()->Shutdown();
-	}
+	class GameLayer : public Layer {
 
-	virtual void OnAttach() 
-	{
-		BeforeRun();
-	}
-	virtual void OnDetach() 
-	{
-		AfterRun();
-	}
+	public:
 
-	void InitFramework()
-	{
-		// Renderer
-		Renderer2D::Init();
-		OpenGLDebugDraw::Init();
-		m_PostProcessing.SetScreenSize(1280, 720);
-		m_PostProcessing.Init();
-
-		GameTileMapManager::GetInstance()->Init();
-
-		// Texture loader
-		ResourceAllocator<Texture2D>::GetInstance()->Init();
-		// Animation loader
-		ResourceAllocator<Animation>::GetInstance()->Init();
-		// TileMap loader
-		ResourceAllocator<TileMap>::GetInstance()->Init();
-
-		LoadResources();
-#ifdef _DEBUG
-		//TODO: Move to Component Init
-		m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
-		m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 0.0f };
-		m_Particle.SizeBegin = 0.01f, m_Particle.SizeVariation = 0.0f, m_Particle.SizeEnd = 0.0f;
-		m_Particle.LifeTime = 0.1f;
-		m_Particle.Velocity = { 0.0f, 0.0f, 0.0f };
-		m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
-		m_Particle.Position = { 0.0f, 0.0f, 0.0f };
-		m_Particle.Speed = { 1.0f, 1.0f, 0.0f };
-#endif // _DEBUG
-	}
-
-	void LoadResources()
-	{
-		TIME("Loading Resources");
-
-		GameObjectFactory* factory = GameObjectFactory::GetInstance();
-		factory->LoadResources("./asset/archetypes/resources.json");
-		// TODO : remove loading map test
-		ResourceAllocator<TileMap>::GetInstance()->Create("./asset/untitled.json", "untitled");
-	}
-
-	void InitGameWorld()
-	{
-		TIME("Initializing Game World");
-
-		///////// EXAMPLE SETUP FOR TESTING ECS /////////////
-		m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
-
-		GameObjectFactory* factory = GameObjectFactory::GetInstance();
-		std::vector<std::string> systems = factory->GetSystems("./asset/archetypes/systems.json");
-
-		for (int i = 0; i < systems.size(); ++i) {
-			std::string system = systems[i];
-			if (system._Equal("player-controller")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
-				continue;
-			}
-			if (system._Equal("PlayerAnimationController")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<PlayerAnimationControllerComSys>());
-				continue;
-			}
-			if (system._Equal("mob-1-controller")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
-				continue;
-			}
-			if (system._Equal("tower-controller")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<TowerControllerComSys>());
-				continue;
-			}
-			if (system._Equal("scene")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
-				continue;
-			}
-			if (system._Equal("sprite")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
-				continue;
-			}
-			if (system._Equal("animation")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
-				continue;
-			}
-			if (system._Equal("physics")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<PhysicsComSys>());
-				continue;
-			}
-			if (system._Equal("weapon")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<WeaponComSys>());
-				continue;
-			}
-			if (system._Equal("lifetime")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<LifeTimeComSys>());
-				continue;
-			}
-			if (system._Equal("spawn")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<SpawningComSys>());
-				continue;
-			}
-			if (system._Equal("sound")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<SoundComSys>());
-				continue;
-			}
-			if (system._Equal("hitpoint")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<HitPointComSys>());
-				continue;
-			}
-			if (system._Equal("death")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<DeathComSys>());
-				continue;
-			}
-			if (system._Equal("fade")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<FadeComSys>());
-				continue;
-			}
-			if (system._Equal("gc")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<GCComSys>());
-				continue;
-			}
-			if (system._Equal("attached-movement")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<AttachedMovementComSys>());
-				continue;
-			}
-			if (system._Equal("particle")) {
-				m_world->RegisterSystem(MemoryManager::Make_shared<ParticleComSys>());
-				continue;
-			}
+		GameLayer()
+			:
+			m_CameraController(GSWY_GetWindowWidth() / GSWY_GetWindowHeight()),
+			m_miniMapCameraController(GSWY_GetWindowWidth() / GSWY_GetWindowHeight())
+		{
+			InitFramework();
+			InitGameWorld();
 		}
 
-		// Initialize game
-		LoadGameWorld();
-		m_world->Init();
-
-	}
-
-	void LoadGameWorld()
-	{
-		ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/untitled.png","untitled");
-
-		// TODO : use proper reflection to handle map loading and background creation
+		virtual ~GameLayer() 
 		{
-			auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-			auto active = ActiveCom();
-			background.AddComponent(active);
-			auto sprite = SpriteCom();
-			auto m_sprite = sprite.Get();
-			m_sprite->SetSpriteScale(vec2(100.f * 32.f / GSWY_GetPixel2WorldNumerator(), 100.f * 32.f / GSWY_GetPixel2WorldNumerator()));
-			m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("untitled"));
-			m_sprite->SetSpritePosition(vec3(49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -49.5f * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
-			m_sprite->SetSpriteRotation(0);
-			background.AddComponent(sprite);
+			GameLevelMapManager::GetInstance()->Shutdown();
 		}
 
-		// call load level here
-		// object factory must be an abstract class in the engine and must be implemented in application
-		GameObjectFactory* factory = GameObjectFactory::GetInstance();
-		factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
-
-		//MOUSE SETUP
+		virtual void OnAttach() 
 		{
-			auto mouse = m_world->GenerateEntity(GameObjectType::MOUSE);
-			auto active = ActiveCom();
-			mouse.AddComponent(active);
-			auto mouseTr = TransformCom();
-			mouseTr.SetPos(InputManager::GetInstance()->GetCursorViewPosition());
-			mouse.AddComponent(mouseTr);
-			auto mousebody = BodyCom();
-			mousebody.SetPos(mouseTr.GetPos());
-			mousebody.SetMass(0);
-			mousebody.ChooseShape("AABB", 0.05, 0.05);
-			mouse.AddComponent(mousebody);
-			auto ownership = OwnershiptCom<GameObjectType>();
-			mouse.AddComponent(ownership);
+			BeforeRun();
+		}
+		virtual void OnDetach() 
+		{
+			AfterRun();
 		}
 
-		GameTileMapManager::GetInstance()->AddTileMap("untitled");
-		GameTileMapManager::GetInstance()->SetCurrentMapName("untitled");
-		GameTileMapManager::GetInstance()->LoadCurrentTileMap(m_world);
-
-		ComponentDecorator<TransformCom, GameObjectType> transform;
-		m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
-		m_CameraController.SetPosition(vec3(transform->GetPos(),0));
-	}
-
-	void BeforeRun()
-	{
-		AudioManager::GetInstance()->PlaySound("breakout", AudioVector3{ 0, 0, 0 }, 1, 1);
-	}
-
-	void AfterRun()
-	{
-		OpenGLDebugDraw::End();
-	}
-
-	void BeforeFrame()
-	{
-	}
-
-	void AfterFrame()
-	{
-	}
-
-	virtual void Update(double ts) 
-	{
+		void InitFramework()
 		{
-			// m_world update
-			m_world->Update(ts);
+			// Renderer
+			Renderer2D::Init();
+			OpenGLDebugDraw::Init();
+			m_PostProcessing.SetScreenSize(1280, 720);
+			m_PostProcessing.Init();
+
+			GameLevelMapManager::GetInstance()->Init();
+
+			// Texture loader
+			ResourceAllocator<Texture2D>::GetInstance()->Init();
+			// Animation loader
+			ResourceAllocator<Animation>::GetInstance()->Init();
+			// TileMap loader
+			ResourceAllocator<TileMap>::GetInstance()->Init();
+
+			LoadResources();
+	#ifdef _DEBUG
+			//TODO: Move to Component Init
+			m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+			m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 0.0f };
+			m_Particle.SizeBegin = 0.01f, m_Particle.SizeVariation = 0.0f, m_Particle.SizeEnd = 0.0f;
+			m_Particle.LifeTime = 0.1f;
+			m_Particle.Velocity = { 0.0f, 0.0f, 0.0f };
+			m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
+			m_Particle.Position = { 0.0f, 0.0f, 0.0f };
+			m_Particle.Speed = { 1.0f, 1.0f, 0.0f };
+	#endif // _DEBUG
 		}
-	}
 
-
-	virtual void PreRenderUpdate(double ts)
-	{
+		void LoadResources()
 		{
-			m_world->PreRenderUpdate(ts);
+			TIME("Loading Resources");
+
+			GameObjectFactory* factory = GameObjectFactory::GetInstance();
+			factory->LoadResources("./asset/archetypes/resources.json");
+			// TODO: remove Load resources and entities
+			ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel.png", "SampleLevel");
+			// TODO : remove loading map test
+			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel.json", "SampleLevel");
+			// TODO : consider to move the allocation of minimap texture elsewhere.
+			m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(),GSWY_GetWindowHeight());
 		}
-	}
 
-	virtual void PostRenderUpdate(double ts)
-	{
+		void InitGameWorld()
 		{
-			m_world->PostRenderUpdate(ts);
+			TIME("Initializing Game World");
+
+			///////// EXAMPLE SETUP FOR TESTING ECS /////////////
+			m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
+
+			GameObjectFactory* factory = GameObjectFactory::GetInstance();
+			std::vector<std::string> systems = factory->GetSystems("./asset/archetypes/systems.json");
+
+			for (int i = 0; i < systems.size(); ++i) {
+				std::string system = systems[i];
+				if (system._Equal("player-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
+					continue;
+				}
+				if (system._Equal("PlayerAnimationController")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerAnimationControllerComSys>());
+					continue;
+				}
+				if (system._Equal("mob-1-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
+					continue;
+				}
+				if (system._Equal("tower-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<TowerControllerComSys>());
+					continue;
+				}
+				if (system._Equal("scene")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
+					continue;
+				}
+				if (system._Equal("sprite")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
+					continue;
+				}
+				if (system._Equal("minimap")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<MiniMapSceneComSys>());
+					continue;
+				}
+				if (system._Equal("animation")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
+					continue;
+				}
+				if (system._Equal("physics")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<PhysicsComSys>());
+					continue;
+				}
+				if (system._Equal("weapon")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<WeaponComSys>());
+					continue;
+				}
+				if (system._Equal("lifetime")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<LifeTimeComSys>());
+					continue;
+				}
+				if (system._Equal("spawn")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<SpawningComSys>());
+					continue;
+				}
+				if (system._Equal("sound")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<SoundComSys>());
+					continue;
+				}
+				if (system._Equal("hitpoint")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<HitPointComSys>());
+					continue;
+				}
+				if (system._Equal("death")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<DeathComSys>());
+					continue;
+				}
+				if (system._Equal("fade")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<FadeComSys>());
+					continue;
+				}
+				if (system._Equal("gc")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<GCComSys>());
+					continue;
+				}
+				if (system._Equal("attached-movement")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<AttachedMovementComSys>());
+					continue;
+				}
+				if (system._Equal("particle")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<ParticleComSys>());
+					continue;
+				}
+				if (system._Equal("skill"))
+				{
+					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerSkillSystem>());
+					continue;
+				}
+			}
+			// Initialize game
+			//m_world->Init();
+			LoadMainMenuWorld();
 		}
-	}
 
-	void UpdateCamera(double ts)
-	{
+		void LoadMainMenuWorld()
 		{
-			// Floating camera that centered around the player character
+			// Unload current tilemap
+			{
+				GameLevelMapManager::GetInstance()->UnloadCurrentTileMap(m_world);
+			}
+			// Clear all entities
+			{
+				m_world->RemoveAllEntities();
+			}
+			// Set widget
+			{
+				WidgetManager::GetInstance()->GetHUD().SetVisible(false);
+				WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(false);
+				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(false);
+				WidgetManager::GetInstance()->GetShopMenu().SetVisible(false);
+				WidgetManager::GetInstance()->GetMainMenu().SetVisible(true);
+			}
+			// Load entities
+			{
+				auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+				auto active = ActiveCom();
+				background.AddComponent(active);
+				auto sprite = SpriteCom();
+				auto m_sprite = sprite.Get();
+				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"));
+				m_sprite->SetSpriteScale(vec2(10, 10));
+				m_sprite->SetSpritePosition(vec3(0));
+				background.AddComponent(sprite);
+			}
+			m_CameraController.SetPosition(vec3(0));
+			m_miniMapCameraController.SetPosition(vec3(0));
+		}
+
+		void LoadGameWorld()
+		{
+			{
+				m_world->SetPause(false);
+			}
+			// Clear all entities
+			{
+				m_world->RemoveAllEntities();
+			}
+			// Set widget
+			{
+				WidgetManager::GetInstance()->GetHUD().SetVisible(true);
+				WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(false);
+				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(false);
+				WidgetManager::GetInstance()->GetShopMenu().SetVisible(false);
+				WidgetManager::GetInstance()->GetMainMenu().SetVisible(false);
+			}
+			{
+				auto size = ResourceAllocator<TileMap>::GetInstance()->Get("SampleLevel")->GetMap()->getSize();
+				auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+				auto active = ActiveCom();
+				background.AddComponent(active);
+				auto sprite = SpriteCom();
+				auto m_sprite = sprite.Get();
+				m_sprite->SetSpriteScale(vec2(size.x * 32.f / GSWY_GetPixel2WorldNumerator(), size.y * 32.f / GSWY_GetPixel2WorldNumerator()));
+				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"));
+				m_sprite->SetSpritePosition(vec3((size.x/2-0.5)* 32.f / GSWY_GetPixel2WorldNumerator(), -(size.y / 2 - 0.5) * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
+				background.AddComponent(sprite);
+			}
+
+			// call load level here
+			// object factory must be an abstract class in the engine and must be implemented in application
+			GameObjectFactory* factory = GameObjectFactory::GetInstance();
+			factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
+
+			//MOUSE SETUP
+			{
+				auto mouse = m_world->GenerateEntity(GameObjectType::MOUSE);
+				auto active = ActiveCom();
+				mouse.AddComponent(active);
+				mouse.AddComponent(TransformCom());
+				auto mousebody = BodyCom();
+				mousebody.SetMass(0);
+				mousebody.ChooseShape("AABB", 0.05, 0.05);
+				mouse.AddComponent(mousebody);
+				mouse.AddComponent(OwnershiptCom<GameObjectType>());
+			}
+
+			{
+				auto miniMap = m_world->GenerateEntity(GameObjectType::MINIMAP);
+				auto active = ActiveCom();
+				miniMap.AddComponent(active);
+				miniMap.AddComponent(TransformCom());
+				auto sprite = SpriteCom();
+				auto m_sprite = sprite.Get();
+				m_sprite->SetSpriteTexture(m_miniMapTexture);
+				miniMap.AddComponent(sprite);
+			}
+
+			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel");
+			GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel");
+			GameLevelMapManager::GetInstance()->LoadCurrentTileMap(m_world);
+			GameLevelMapManager::GetInstance()->StartLevel();
+
 			ComponentDecorator<TransformCom, GameObjectType> transform;
 			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
-			auto cursor = InputManager::GetInstance()->GetCursorPosition();
-			auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
-			auto delta = vec2(0);
-			auto len = glm::length(cursor - center);
-			if (len > 1e-2)
+			m_CameraController.SetPosition(vec3(transform->GetPos(),0));
+			m_miniMapCameraController.SetPosition(vec3(transform->GetPos(), 0));
+		}
+
+		void BeforeRun()
+		{
+			AudioManager::GetInstance()->PlaySound("breakout", AudioVector3{ 0, 0, 0 }, 1, 1);
+		}
+
+		void AfterRun()
+		{
+			OpenGLDebugDraw::End();
+		}
+
+		void BeforeFrame()
+		{
+		}
+
+		void AfterFrame()
+		{
+		}
+
+		virtual void Update(double ts)
+		{
 			{
-				delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f : len);
+				// m_world update
+				m_world->Update(ts);
 			}
-			auto targetPos = vec3(transform->GetPos(),0.0f) + vec3(delta.x, -delta.y, 0.0f);
-			auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
-			m_CameraController.SetPosition(newPos);
-			m_CameraController.SetZoomLevel(2);
 		}
+
+		virtual void PreRenderUpdate(double ts)
 		{
-			// Update cursor world position
-			ComponentDecorator</*TransformCom*/BodyCom, GameObjectType> position;
-			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
-			auto cameraPos = m_CameraController.GetPosition();
-			auto mouseRelativePos = InputManager::GetInstance()->GetCursorViewPosition();
-			// Caution: 
-			// It could be wrong, using debug draw to make sure the mouse entity is attached to the cursor
-			auto zoomLevel = m_CameraController.GetZoomLevel();
-			position->SetPos(vec2(cameraPos.x + zoomLevel *mouseRelativePos.x, cameraPos.y + zoomLevel *mouseRelativePos.y));
+			{
+				m_world->PreRenderUpdate(ts);
+			}
 		}
-		AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
-		m_CameraController.OnUpdate(ts);
-	}
 
-	void Render(double ts)
-	{
-		if(m_PP) m_PostProcessing.Bind();
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-		RenderCommand::Clear();
-
-		Renderer2D::BeginScene(m_CameraController.GetCamera());
-		// m_world render
-		m_world->Render(ts);
-#ifdef _DEBUG
-
-		//TODO: Move to Component Update
-		if (m_ParticleActive)
+		virtual void PostRenderUpdate(double ts)
 		{
-			for (int i = 0; i < 5; i++)
-				m_ParticleSystem.Emit(m_Particle);
+			{
+				m_world->PostRenderUpdate(ts);
+			}
 		}
 
-		m_ParticleSystem.Update(ts);
-		m_ParticleSystem.Render();
-
-#endif // _DEBUG
-		if (m_PP)
+		void UpdateCamera(double ts)
 		{
-			m_PostProcessing.Unbind();
-			m_PostProcessing.Render(ts);
+			{
+				// Floating camera that centered around the player character
+				ComponentDecorator<TransformCom, GameObjectType> transform;
+				m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
+				auto cursor = InputManager::GetInstance()->GetCursorPosition();
+				auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
+				auto delta = vec2(0);
+				/*auto len = glm::length(cursor - center);
+				if (len > 1e-2)
+				{
+					delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f : len);
+				}*/
+				auto targetPos = vec3(transform->GetPos(),0.0f) + vec3(delta.x, -delta.y, 0.0f);
+				auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
+				m_CameraController.SetPosition(newPos);
+				m_CameraController.SetZoomLevel(1);
+			}
+			// Set 3D sound
+			//AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 		}
-		Renderer2D::EndScene();
-	}
 
-	virtual void OnUpdate(double ts) override
-	{
-		BeforeFrame();
-		if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2)) m_PP = !m_PP;
+		void UpdateCursor(double ts)
 		{
-			TIME("Camera Update");
-			UpdateCamera(ts);
+			{
+				// Update cursor world position
+				ComponentDecorator</*TransformCom*/BodyCom, GameObjectType> position;
+				m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
+				auto cameraPos = m_CameraController.GetPosition();
+				auto mouseRelativePos = InputManager::GetInstance()->GetCursorViewPosition();
+				auto zoomLevel = m_CameraController.GetZoomLevel();
+				position->SetPos(vec2(cameraPos.x + zoomLevel * mouseRelativePos.x, cameraPos.y + zoomLevel * mouseRelativePos.y));
+			}
 		}
-		std::future<void> update = std::async(std::launch::async, [this, ts]()
+
+		void UpdateMiniMap(double ts)
+		{
+			{
+				// Set minimap camera to be 2x the zoom level of main camera
+				m_miniMapCameraController.SetPosition(m_CameraController.GetPosition());
+				m_miniMapCameraController.SetZoomLevel(m_CameraController.GetZoomLevel() * 2);
+				
+				// Update minimap world position
+				ComponentDecorator<TransformCom, GameObjectType> position;
+				ComponentDecorator<SpriteCom, GameObjectType> sprite;
+				auto miniMap = m_world->GetAllEntityWithType(GameObjectType::MINIMAP)[0];
+				m_world->Unpack(miniMap, position);
+				m_world->Unpack(miniMap, sprite);
+				// Use main camera position and zoom to display the minimap on the main camera
+				auto cameraPos = m_CameraController.GetPosition();
+				auto RelativePos = InputManager::GetInstance()->GetCursorViewPosition(11./12 * GSWY_GetWindowWidth(),1.0/12 * GSWY_GetWindowHeight());
+				auto zoomLevel = m_CameraController.GetZoomLevel();
+				position->SetPos(vec2(cameraPos.x + zoomLevel * RelativePos.x, cameraPos.y + zoomLevel * RelativePos.y));
+				// Use minimap camera for the scaling
+				sprite->SetScale(vec2(0.33 * zoomLevel * m_miniMapCameraController.GetAspectRatio(), 0.33 * zoomLevel));
+			}
+		}
+
+		void MiniMapRender(double ts)
+		{
+			auto fbo = RenderCommand::CreateAndBindFBO();
+			m_miniMapTexture->AttachToFrameBuffer();
+
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::Clear();
+			m_miniMapCameraController.OnUpdate(ts);
+			Renderer2D::BeginBatch(m_miniMapCameraController.GetCamera());
+			//Renderer2D::BeginScene(m_miniMapCameraController.GetCamera());
+			// m_world render
+			m_world->Render2(ts);
+			Renderer2D::EndBatch();
+			Renderer2D::DrawBatch();
+			//Renderer2D::EndScene();
+			RenderCommand::DestoryAndUnBindFBO(fbo);
+		}
+
+		void Render(double ts)
+		{
+			if(m_PP) m_PostProcessing.Bind();
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::Clear();
+			m_CameraController.OnUpdate(ts);
+			Renderer2D::BeginBatch(m_CameraController.GetCamera());
+			//Renderer2D::BeginScene(m_CameraController.GetCamera());
+			// m_world render
+			m_world->Render(ts);
+	#ifdef _DEBUG
+
+			//TODO: Move to Component Update
+			//if (m_ParticleActive)
+			//{
+			//	for (int i = 0; i < 5; i++)
+			//		m_ParticleSystem.Emit(m_Particle);
+			//}
+			//
+			//m_ParticleSystem.Update(ts);
+			//m_ParticleSystem.Render();
+
+	#endif // _DEBUG
+			if (m_PP)
+			{
+				m_PostProcessing.Unbind();
+				m_PostProcessing.Render(ts);
+			}
+			Renderer2D::EndBatch();
+			Renderer2D::DrawBatch();
+			//Renderer2D::EndScene();
+		}
+
+		virtual void OnUpdate(double ts) override
+		{
+			BeforeFrame();
+		
+			double dt = (!m_world->IsPaused())? ts: 0;
+
+			{
+				if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2))
+				{
+					m_PP = !m_PP;
+				}
+				if (IS_INGAME)
+				{
+					TIME("Pre Update");
+					UpdateCamera(dt);
+					UpdateCursor(dt);
+					UpdateMiniMap(dt);
+				}
+				//std::future<void> update = std::async(std::launch::async, [this, ts]()
+				//{
+
+				//});
+				if (IS_INGAME)
+				{
+					TIME("System Update");
+					Update(dt);
+				}
+				{
+					TIME("PreRender Update");
+					PreRenderUpdate(dt);
+				}
+				if (IS_INGAME)
+				{
+					TIME("MiniMap Update");
+					MiniMapRender(dt);
+				}
+				{
+					TIME("Render Update");
+					Render(dt);
+				}
+				//update.wait();
+				if (IS_INGAME)
+				{
+					TIME("Manager Update");
+					EventQueue<GameObjectType, EventType>::GetInstance()->Update(dt);
+					GameLevelMapManager::GetInstance()->Update(dt);
+				}
+				if (IS_INGAME)
+				{
+					TIME("PostRender Update");
+					PostRenderUpdate(dt);
+				}
+			}
+			AfterFrame();
+		}
+
+		virtual void OnImGuiRender() override
 		{
 
-		});	
 
+			WidgetManager::GetInstance()->RenderUI();
+	#ifdef _DEBUG
+			Instrumentor* instrumentor = Instrumentor::GetInstance();
+			ImGui::SetNextWindowBgAlpha(0.0f);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
+			ImGui::PushStyleColor(ImGuiCol_TitleBgActive, 0);
+			ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, 0);
+			ImGui::Begin("Instrumenting Profiling", false, ImGuiWindowFlags_NoDecoration);
+			for (auto& result : instrumentor->GetResults()) {
+				char entry[100];
+				strcpy(entry, "%10.3f %s\t");
+				strcat(entry, result.first);
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), entry, result.second.m_time, result.second.m_timeUnit);
+			}
+			ImGui::End();
+			ImGui::PopStyleVar(1);
+			ImGui::PopStyleColor(3);
+
+			//TODO: Debug only
+			//ImGui::Begin("Settings");
+			//ImGui::Checkbox("ParticleActive", &m_ParticleActive);
+			//ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
+			//ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
+			//ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
+			//ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
+			//ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
+			//ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
+			//ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
+			//ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
+			//ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
+			//ImGui::End();
+	#endif // _DEBUG
+
+		}
+
+	protected:
+
+	private:
+		OrthographicCameraController m_CameraController;
+		OrthographicCameraController m_miniMapCameraController;
+		std::shared_ptr<gswy::Texture2D> m_miniMapTexture;
+
+		std::shared_ptr<GameWorld<GameObjectType>> m_world;
+		gswy::OpenGLPostProcessing m_PostProcessing;
+		bool m_PP = false;
+	#ifdef _DEBUG
+
+		//TODO Move to component
+		gswy::ExplosionParticle m_ParticleSystem;
+		gswy::Particle m_Particle;
+		bool m_ParticleActive = true;
+	#endif // _DEBUG
+
+
+	public:
+		void OnImGuiButtonClicke(const std::string& buttonName)
 		{
-			TIME("System Update");
-			Update(ts);
+			PRINT(buttonName);
+
+			// Main menu
+			if (buttonName.compare("New Game") == 0)
+			{
+				// TODO
+				LoadGameWorld();
+				m_world->Init();
+			}
+			if (buttonName.compare("How To Play") == 0)
+			{
+				// TODO
+			}
+			if (buttonName.compare("Option") == 0)
+			{
+				// TODO
+			}
+			if (buttonName.compare("Exit") == 0)
+			{
+				// TODO
+				Engine::SetQuit(true);
+			}
+
+			// In game pause menu
+			if (buttonName.compare("Resume") == 0)
+			{
+				// TODO
+				m_world->SetPause(!m_world->IsPaused());
+				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
+			}
+			if (buttonName.compare("Main Menu") == 0)
+			{
+				// TODO
+				LoadMainMenuWorld();
+			}
+
 		}
-		{
-			TIME("PreRender Update");
-			PreRenderUpdate(ts);
-		}
-		{
-			TIME("Render Update");
-			Render(ts);
-		}
-		update.wait();
-		EventQueue<GameObjectType, EventType>::GetInstance()->Update(ts);
-		{
-			TIME("PostRender Update");
-			PostRenderUpdate(ts);
-		}
-		AfterFrame();
-	}
-
-	virtual void OnImGuiRender() override
-	{
-		Instrumentor* instrumentor = Instrumentor::GetInstance();
-		ImGui::SetNextWindowBgAlpha(0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
-		ImGui::PushStyleColor(ImGuiCol_TitleBgActive, 0);
-		ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, 0);
-		ImGui::Begin("Instrumenting Profiling");
-		for (auto& result : instrumentor->GetResults()) {
-			char entry[100];
-			strcpy(entry, "%10.3f %s\t");
-			strcat(entry, result.first);
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), entry, result.second.m_time, result.second.m_timeUnit);
-		}
-		ImGui::End();
-		ImGui::PopStyleVar(1);
-		ImGui::PopStyleColor(3);
-#ifdef _DEBUG
-		//TODO: Debug only
-		ImGui::Begin("Settings");
-		ImGui::Checkbox("ParticleActive", &m_ParticleActive);
-		ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
-		ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
-		ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
-		ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
-		ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
-		ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
-		ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
-		ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
-		ImGui::End();
-#endif // _DEBUG
-
-	}
-
-	static const vec3& GetCameraPosition()
-	{
-		return m_CameraController.GetPosition();
-	}
-
-protected:
-
-private:
-	static OrthographicCameraController m_CameraController;
-	std::shared_ptr<GameWorld<GameObjectType>> m_world;
-	gswy::OpenGLPostProcessing m_PostProcessing;
-	bool m_PP = false;
-#ifdef _DEBUG
-
-	//TODO Move to component
-	gswy::ExplosionParticle m_ParticleSystem;
-	gswy::Particle m_Particle;
-	bool m_ParticleActive = true;
-#endif // _DEBUG
-
-};
-
-OrthographicCameraController GameLayer::m_CameraController(1280.0f / 720.0f);
+	};
+}
 
 class Application : public Engine {
 public:
 	Application()
 	{
-		PushLayer(new GameLayer());
+		GameLayer* gameLayer = new GameLayer();
+		WidgetManager::ButtonInvokeFunction f = std::bind(&GameLayer::OnImGuiButtonClicke, gameLayer, std::placeholders::_1);
+		WidgetManager::GetInstance()->SetButtonInvoker(f);
+		PushLayer(gameLayer);
 	}
 
 	~Application()
 	{
+		
 	}
 };
 
