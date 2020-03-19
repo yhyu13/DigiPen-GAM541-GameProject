@@ -91,9 +91,13 @@ namespace gswy
 			GameObjectFactory* factory = GameObjectFactory::GetInstance();
 			factory->LoadResources("./asset/archetypes/resources.json");
 			// TODO: remove Load resources and entities
-			ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel.png", "SampleLevel");
+			ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel1.png", "SampleLevel1");
+			ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel2.png", "SampleLevel2");
+			ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel3.png", "SampleLevel3");
 			// TODO : remove loading map test
-			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel.json", "SampleLevel");
+			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel1.json", "SampleLevel1");
+			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel2.json", "SampleLevel2");
+			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel3.json", "SampleLevel3");
 			// TODO : consider to move the allocation of minimap texture elsewhere.
 			m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(),GSWY_GetWindowHeight());
 		}
@@ -226,7 +230,7 @@ namespace gswy
 				background.AddComponent(active);
 				auto sprite = SpriteCom();
 				auto m_sprite = sprite.Get();
-				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"));
+				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel1"));
 				m_sprite->SetSpriteScale(vec2(10, 10));
 				m_sprite->SetSpritePosition(vec3(0));
 				background.AddComponent(sprite);
@@ -237,6 +241,9 @@ namespace gswy
 
 		void LoadGameWorld()
 		{
+			auto sampleID = Str(RAND_I(1, 4));
+			PRINT("Loading map ID " + sampleID);
+
 			{
 				m_world->SetPause(false);
 			}
@@ -253,14 +260,14 @@ namespace gswy
 				WidgetManager::GetInstance()->GetMainMenu().SetVisible(false);
 			}
 			{
-				auto size = ResourceAllocator<TileMap>::GetInstance()->Get("SampleLevel")->GetMap()->getSize();
+				auto size = ResourceAllocator<TileMap>::GetInstance()->Get("SampleLevel"+ sampleID)->GetMap()->getSize();
 				auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 				auto active = ActiveCom();
 				background.AddComponent(active);
 				auto sprite = SpriteCom();
 				auto m_sprite = sprite.Get();
 				m_sprite->SetSpriteScale(vec2(size.x * 32.f / GSWY_GetPixel2WorldNumerator(), size.y * 32.f / GSWY_GetPixel2WorldNumerator()));
-				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"));
+				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"+ sampleID));
 				m_sprite->SetSpritePosition(vec3((size.x/2-0.5)* 32.f / GSWY_GetPixel2WorldNumerator(), -(size.y / 2 - 0.5) * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
 				background.AddComponent(sprite);
 			}
@@ -295,8 +302,10 @@ namespace gswy
 			}
 
 			GameLevelMapManager::GetInstance()->ResetLevelData();
-			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel");
-			GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel");
+			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel1");
+			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel2");
+			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel3");
+			GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel" + sampleID);
 			GameLevelMapManager::GetInstance()->LoadCurrentTileMap(m_world);
 
 			ComponentDecorator<TransformCom, GameObjectType> transform;
