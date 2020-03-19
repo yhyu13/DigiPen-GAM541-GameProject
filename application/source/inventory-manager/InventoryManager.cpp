@@ -6,7 +6,7 @@
 namespace gswy
 {
 
-	InventoryManager::InventoryManager()
+	InventoryManager::InventoryManager(): m_items(std::make_shared<Items>())
 	{
 	}
 

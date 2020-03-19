@@ -1,0 +1,59 @@
+{
+  "items": [
+    {
+      "id": "0",
+      "type": "FIRE",
+      "category": "ACTIVE",
+      "tags": [
+        "PROJECTILE",
+        "RANGE"
+      ],
+      "purchased": 0,
+      "text": [
+        "some useful information",
+        "some useful information"
+      ]
+    },
+    {
+      "id": "1",
+      "type": "ICE",
+      "category": "ACTIVE",
+      "tags": [
+        "PROJECTILE",
+        "RANGE"
+      ],
+      "purchased": 0,
+      "text": [
+        "something",
+        "something"
+      ]
+    },
+    {
+      "id": "2",
+      "type": "MULTIPLE-PROJECTILE",
+      "category": "SUPPORT",
+      "tags": [
+        "PROJECTILE"
+      ],
+      "purchased": 0,
+      "text": [
+        "something",
+        "something"
+      ]
+    },
+    {
+      "id": "3",
+      "type": "AOE",
+      "category": "SUPPORT",
+      "tags": [
+        "PROJECTILE",
+        "RANGE"
+      ],
+      "purchased": 0,
+      "text": [
+        "something",
+        "something"
+      ]
+    }
+  ]
+}
