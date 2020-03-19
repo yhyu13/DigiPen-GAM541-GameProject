@@ -17,6 +17,8 @@ Creation date	: 01/26/2020
 #include "EngineExport.h"
 #include "Import.h"
 
+#include "inventory-manager/InventoryManager.h"
+
 using namespace gswy;
 
 namespace gswy
@@ -96,6 +98,9 @@ namespace gswy
 			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel.json", "SampleLevel");
 			// TODO : consider to move the allocation of minimap texture elsewhere.
 			m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(),GSWY_GetWindowHeight());
+
+			InventoryManager* inventoryManager = InventoryManager::GetInstance();
+			//inventoryManager->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
 		}
 
 		void InitGameWorld()

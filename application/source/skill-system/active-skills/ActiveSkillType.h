@@ -18,6 +18,7 @@ namespace gswy
 	{
 		FIRE_BALL,
 		ICE_BALL,
+		UNKNOWN,
 		NUM
 	};
 }
