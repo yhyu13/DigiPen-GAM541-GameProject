@@ -14,8 +14,8 @@
       "component": "sprite",
       "texture": "",
       "scale": 0.25,
-      "width": 59,
-      "height": 32
+      "width": 64,
+      "height": 64
     },
 	{
       "component": "miniMapSprite",
@@ -28,12 +28,14 @@
       "component": "animation",
       "animation": {
         "name": [
-		  "PlayerAnimation1",
-		  "PlayerAnimation0"
+		  "PlayerAnimation_Idle",
+		  "PlayerAnimation_Moving",
+		  "PlayerAnimation_Attack"
 		],
         "states": [
+		  "Idle",
           "Move",
-		  "Idle"
+		  "Attack"
         ],
         "current-state": "Idle"
       }
@@ -43,8 +45,8 @@
       "shape": {
         "type": "AABB",
         "scale": 0.25,
-        "width": 59,
-        "height": 32
+        "width": 64,
+        "height": 64
       }
     },
     {

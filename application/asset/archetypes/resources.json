@@ -3,13 +3,21 @@
       {
          "type":"textures",
          "textures":[
-            {
-               "name":"PlayerMovingUnarmed",
-               "path":"./asset/PlayerMovingUnarmed.png"
+			{
+               "name":"Player_Idle",
+               "path":"./asset/Sprites/Player_Idle.png"
             },
 			{
-               "name":"MobMovingUnarmed",
-               "path":"./asset/MobMovingUnarmed.png"
+               "name":"PlayerTwoHanded_Attack",
+               "path":"./asset/Sprites/PlayerTwoHanded_Attack.png"
+            },
+			{
+               "name":"Mob1_Unarmed_Moving",
+               "path":"./asset/Sprites/Mob1_Unarmed_Moving.png"
+            },
+			{
+               "name":"Mob1_Unarmed_Attack",
+               "path":"./asset/Sprites/Mob1_Unarmed_Attack.png"
             },
 			{
                "name":"RedLayer",
@@ -177,37 +185,61 @@
                }
             },
 			{
-               "name":"PlayerAnimation0",
+               "name":"PlayerAnimation_Idle",
                "properties":{
-                  "texture-name":"PlayerMovingUnarmed",
-                  "x": 59,
+                  "texture-name":"Player_Idle",
+                  "x": 64,
                   "y": 0,
-                  "width": 59,
-                  "height": 32,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-            {
-               "name":"PlayerAnimation1",
-               "properties":{
-                  "texture-name":"PlayerMovingUnarmed",
-                  "x": 59,
-                  "y": 0,
-                  "width": 59,
-                  "height": 32,
+                  "width": 64,
+                  "height": 64,
                   "delay": 1.0,
                   "frame-count": 15.0
                }
             },
 			{
-               "name":"MobAnimation1",
+               "name":"PlayerAnimation_Moving",
                "properties":{
-                  "texture-name":"MobMovingUnarmed",
-                  "x": 0,
-                  "y": 50,
-                  "width": 70,
-                  "height": 50,
+                  "texture-name":"Player_Idle",
+                  "x": 64,
+                  "y": 0,
+                  "width": 64,
+                  "height": 64,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+            {
+               "name":"PlayerAnimation_Attack",
+               "properties":{
+                  "texture-name":"PlayerTwoHanded_Attack",
+                  "x": 64,
+                  "y": 0,
+                  "width": 64,
+                  "height": 64,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+			{
+               "name":"Mob1Animation_Moving",
+               "properties":{
+                  "texture-name":"Mob1_Unarmed_Moving",
+                  "x": 140,
+                  "y": 0,
+                  "width": 140,
+                  "height": 100,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+			{
+               "name":"Mob1Animation_Attack",
+               "properties":{
+                  "texture-name":"Mob1_Unarmed_Attack",
+                  "x": 140,
+                  "y": 0,
+                  "width": 140,
+                  "height": 100,
                   "delay": 1.0,
                   "frame-count": 15.0
                }

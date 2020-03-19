@@ -390,9 +390,10 @@ namespace gswy {
 		*/
 		bool AdvanceLevel()
 		{
-			if (m_currentLevel++ < m_maxLevel)
+			if (m_currentLevel <= m_maxLevel)
 			{
 				m_levelStart = false;
+				m_currentLevel++;
 				return true;
 			}
 			else
