@@ -28,6 +28,7 @@ namespace gswy
 
 	private:
 		size_t m_CollisionDisableMap[(size_t)GameObjectType::NUM][(size_t)GameObjectType::NUM];
+		size_t m_CollisionDisableMap2[(size_t)GameObjectType::NUM][(size_t)GameObjectType::NUM];
 
 	public:
 		PhysicsComSys()
@@ -44,6 +45,10 @@ namespace gswy
 				for (size_t j = 0; j < (size_t)GameObjectType::NUM; ++j)
 					m_CollisionDisableMap[i][j] = 0;
 
+			for (size_t i = 0; i < (size_t)GameObjectType::NUM; ++i)
+				for (size_t j = 0; j < (size_t)GameObjectType::NUM; ++j)
+					m_CollisionDisableMap2[i][j] = 0;
+
 			// Collision disable list (self-self, mutal)
 			GameObjectType diableCollisionList[] = { 
 				GameObjectType::PLAYER ,GameObjectType::FIREBALL ,
@@ -56,7 +61,7 @@ namespace gswy
 			// Collision Disable List Part2 (Mouse, ranged weapons, player)
 			GameObjectType diableCollisionList2[] = {
 				GameObjectType::MOUSE ,GameObjectType::FIREBALL ,
-				GameObjectType::ICEBALL ,GameObjectType::BOLT, GameObjectType::PLAYER
+				GameObjectType::ICEBALL ,GameObjectType::BOLT, GameObjectType::PLAYER, GameObjectType::ENEMY
 			};
 
 			for (auto& item1 : diableCollisionList)
@@ -71,7 +76,7 @@ namespace gswy
 			{
 				for (auto& item2 : diableCollisionList2)
 				{
-					m_CollisionDisableMap[(size_t)item1][(size_t)item2] = 1;
+					m_CollisionDisableMap2[(size_t)item1][(size_t)item2] = 1;
 				}
 			}
 
@@ -187,9 +192,12 @@ namespace gswy
 					if (m_CollisionDisableMap[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
 						continue;
 
+					//if (m_CollisionDisableMap2[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
+					//	continue;
+
 					//For two enemies to not collide
-					if (first_Entity->m_type == second_Entity->m_type)
-						continue;
+					//if (first_Entity->m_type == GameObjectType::ENEMY && second_Entity->m_type == GameObjectType::ENEMY)
+					//	continue;
 
 					ComponentDecorator<BodyCom, GameObjectType> body2;
 					m_parentWorld->Unpack(*second_Entity, body2);
@@ -203,11 +211,14 @@ namespace gswy
 
 					if (collides)
 					{
-						//Velocity Nullification
-						body1->m_VelY = 0;
-						body2->m_VelX = 0;
-						body1->m_VelX = 0;
-						body2->m_VelY = 0;
+						if (!m_CollisionDisableMap2[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
+						{
+							//Velocity Nullification
+							body1->m_VelY = 0;
+							body2->m_VelX = 0;
+							body1->m_VelX = 0;
+							body2->m_VelY = 0;
+						}
 
 						// Set colliding entity
 						body1->SetOtherEntity(*second_Entity);

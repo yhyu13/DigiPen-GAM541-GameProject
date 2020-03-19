@@ -162,7 +162,7 @@ namespace gswy
 						auto weapon_rot = rot;
 						if (num_spawn > 1)
 						{
-							weapon_rot += RAND_F(-90, 90) * DEG2RAD;
+							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
 						}
 						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
 						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
@@ -202,7 +202,7 @@ namespace gswy
 						auto weapon_rot = rot;
 						if (num_spawn > 1)
 						{
-							weapon_rot += RAND_F(-90, 90) * DEG2RAD;
+							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
 						}
 						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
 						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
