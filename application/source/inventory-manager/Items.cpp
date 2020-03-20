@@ -18,10 +18,6 @@ namespace gswy
 		m_itemIdToIndexMapping[m_size] = m_size;
 	}
 
-	void Items::Update(std::shared_ptr<Item> item)
-	{
-	}
-
 	std::shared_ptr<Item> Items::GetItem(const int& id)
 	{
 		int index = m_itemIdToIndexMapping[id];
