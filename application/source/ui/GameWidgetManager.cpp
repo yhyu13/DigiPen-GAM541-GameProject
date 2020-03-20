@@ -162,33 +162,41 @@ namespace gswy {
 
 	void ShopMenu::Render()
 	{
-		ImVec2 shopWindowSize = ImVec2(500, 600);
+		ImVec2 shopWindowSize = ImVec2(500, 400);
 		ImGui::SetNextWindowSize(shopWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - shopWindowSize.x, 0));
+		ImGui::SetNextWindowPos(ImVec2(0, 0));
 		ImGui::Begin("Shop", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		if (ImGui::BeginTabBar("ShopTabBar"))
 		{
-			if (ImGui::BeginTabItem("Totem"))
+			if (ImGui::BeginTabItem("ACTIVE"))
 			{
-				ImGui::Button("Skill", ImVec2(100, 100));
+				ImGui::Dummy(ImVec2(250, 15));
+				ImGui::Button("FIRE 1", ImVec2(50, 25));
+				ImGui::Dummy(ImVec2(250, 15));
+				ImGui::Button("FIRE 2", ImVec2(50, 25));
+				ImGui::Dummy(ImVec2(250, 15));
+				ImGui::Button("ICE 1", ImVec2(50, 25));
+				ImGui::Dummy(ImVec2(250, 15));
+				ImGui::Button("ICE 2", ImVec2(50, 25));
+				ImGui::Dummy(ImVec2(250, 15));
+
+				//ImGui::SetCursorPos(ImVec2(shopWindowSize.x + 100, shopWindowSize.y - 50));
+				ImGui::SetCursorPos(ImVec2(50, shopWindowSize.y - 50));
+				ImGui::Button("PURCHASE", ImVec2(150, 25));
+				ImGui::SetCursorPos(ImVec2(shopWindowSize.x - 200, shopWindowSize.y - 50));
+				ImGui::Button("INSTALL", ImVec2(150, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("Acitve Skill"))
+			if (ImGui::BeginTabItem("SUPPORT"))
 			{
+				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
+				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
 				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
 				ImGui::Button("Skill", ImVec2(100, 100));
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Passive Skill"))
 			{
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("Support Skill"))
-			{
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
 				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
 				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
 				ImGui::Button("Skill", ImVec2(100, 100));
@@ -208,48 +216,37 @@ namespace gswy {
 	void InventoryMenu::Render()
 	{
 		//Inventory
-		ImGui::SetNextWindowSize(ImVec2(500, 600));
-		ImGui::SetNextWindowPos(ImVec2(0, 0));
+		ImVec2 InventoryWindowSize = ImVec2(500, 400);
+		ImGui::SetNextWindowSize(InventoryWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - InventoryWindowSize.x, 0));
 		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 
 		if (ImGui::BeginTabBar("InventoryTabBar"))
 		{
 			if (ImGui::BeginTabItem("Skill 1"))
 			{
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("ACTIVE 1", ImVec2(300, 50));	
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Skill 2"))
 			{
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("ACTIVE 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Devotion Skill"))
