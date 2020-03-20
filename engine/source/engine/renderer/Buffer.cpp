@@ -42,4 +42,16 @@ namespace gswy {
 		ASSERT(true, "Unknown RendererAPI!");
 		return nullptr;
 	}
+
+	std::shared_ptr<FrameBuffer> FrameBuffer::Create(uint32_t width, uint32_t height)
+	{
+		switch (Renderer2D::GetAPI())
+		{
+		case RendererAPI::API::None: ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLFrameBuffer>(width, height);
+		}
+
+		ASSERT(true, "Unknown RendererAPI!");
+		return nullptr;
+	}
 }

@@ -143,4 +143,17 @@ namespace gswy {
 
 		static std::shared_ptr<IndexBuffer> Create(uint32_t* indices, uint32_t size);
 	};
+
+	class FrameBuffer
+	{
+	public:
+		virtual ~FrameBuffer() = default;
+
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		virtual uint32_t GetRendererID() const = 0;
+		virtual uint32_t GetRenderTargetID() const = 0;
+		static std::shared_ptr<FrameBuffer> Create(uint32_t width, uint32_t height);
+	};
 }
