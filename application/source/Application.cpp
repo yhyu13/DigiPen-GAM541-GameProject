@@ -100,7 +100,7 @@ namespace gswy
 			m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(),GSWY_GetWindowHeight());
 
 			InventoryManager* inventoryManager = InventoryManager::GetInstance();
-			//inventoryManager->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
+			inventoryManager->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
 		}
 
 		void InitGameWorld()
