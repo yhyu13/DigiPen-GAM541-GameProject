@@ -12,6 +12,7 @@ Creation date: 03/12/2020
 
 #pragma once
 #include "engine/ui/Widget.h"
+#include "engine/renderer/Buffer.h"
 
 namespace gswy {
 
@@ -19,8 +20,21 @@ namespace gswy {
 	class HUD : public Widget
 	{
 	public:
-		HUD() { IsVisible = true; };
+		HUD();
 		void Render() override;
+
+		std::shared_ptr<FrameBuffer> GetFrameBuffer() const { return m_FrameBuffer; }
+
+	private:
+		int m_TimerMin;
+		int m_TimerSec;
+		int m_Wave;
+		int m_Coins;
+		float m_Progress;
+		float m_Mana;
+		float m_Sanity;
+
+		std::shared_ptr<FrameBuffer> m_FrameBuffer;
 	};
 
 	//new game, continue, option, how to play, quit

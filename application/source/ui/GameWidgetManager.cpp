@@ -70,30 +70,67 @@ namespace gswy {
 		ImGui::End();
 	}
 
+	HUD::HUD() 
+	{ 
+		IsVisible = true; 
+		m_TimerMin = 0; 
+		m_TimerSec = 0; 
+		m_Wave = 0; 
+		m_Coins = 0;
+		m_Progress = 0.5f;
+		m_Mana = 0.5f;
+		m_Sanity = 0.5f;
+		m_FrameBuffer = FrameBuffer::Create(m_WindowSize_X, m_WindowSize_Y);
+	}
+
 	void HUD::Render()
-	{
-		//Text : Wave
+	{	
+		//Text : Timer
 		ImVec2 nextWindowSize = ImVec2(60, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0], m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::Text("Wave 0");
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0], nextWindowSize[1]));
+		ImGui::Begin("Timer", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Text("%i : %i", m_TimerMin, m_TimerSec);
 		ImGui::End();
-
+		
+		//Text : Wave
+		nextWindowSize = ImVec2(60, 20);
+		ImGui::SetNextWindowSize(nextWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 65));
+		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Text("Wave : %i", m_Wave);
+		ImGui::End();
+		
+		//Text : Coin
+		nextWindowSize = ImVec2(60, 20);
+		ImGui::SetNextWindowSize(nextWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 135));
+		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Text("Coin : %i", m_Coins);
+		ImGui::End();
+		
+		//Progress Bar : Base Life
+		nextWindowSize = ImVec2(500, 20);
+		ImGui::SetNextWindowSize(nextWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 100));
+		ImGui::Begin("Base Life", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::ProgressBar(m_Progress);
+		ImGui::End();
+		
 		//Progress Bar : Mana
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - nextWindowSize[0] - 100, m_WindowSize_Y - nextWindowSize[1] - 100));
 		ImGui::Begin("Mana", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::ProgressBar(0.5f);
+		ImGui::ProgressBar(m_Mana);
 		ImGui::End();
-
+		
 		//Progress Bar : Sanity
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(100, m_WindowSize_Y - nextWindowSize[1] - 100));
 		ImGui::Begin("Sanity", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::ProgressBar(0.5f);
+		ImGui::ProgressBar(m_Sanity);
 		ImGui::End();
 	}
 
