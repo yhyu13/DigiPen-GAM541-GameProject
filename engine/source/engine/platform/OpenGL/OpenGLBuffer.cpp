@@ -95,6 +95,7 @@ namespace gswy {
 		glBindRenderbuffer(GL_RENDERBUFFER, m_DepthID);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthID);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
