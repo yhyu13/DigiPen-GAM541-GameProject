@@ -16,6 +16,8 @@ Creation date: 03/12/2020
 
 namespace gswy {
 
+	class WidgetManager;
+
 	//Player HP, player skill cooldown, coins that build towers, #of waves
 	class HUD : public Widget
 	{
@@ -24,6 +26,7 @@ namespace gswy {
 		void Render() override;
 
 		std::shared_ptr<FrameBuffer> GetFrameBuffer() const { return m_FrameBuffer; }
+		WidgetManager* manager;
 
 	private:
 		int m_TimerMin;
@@ -35,6 +38,7 @@ namespace gswy {
 		float m_Sanity;
 
 		std::shared_ptr<FrameBuffer> m_FrameBuffer;
+		
 	};
 
 	//new game, continue, option, how to play, quit
@@ -43,6 +47,7 @@ namespace gswy {
 	public:
 		MainMenu() { IsVisible = false; };
 		void Render() override;
+		WidgetManager* manager;
 	};
 
 	//Resume, option, how to play, quit & save
@@ -51,6 +56,7 @@ namespace gswy {
 	public:
 		PauseMenu() { IsVisible = false; };
 		void Render() override;
+		WidgetManager* manager;
 	};
 
 	//Purchase tower upgrades, purchase player skill upgrades
@@ -59,6 +65,7 @@ namespace gswy {
 	public:
 		ShopMenu() { IsVisible = false; };
 		void Render() override;
+		WidgetManager* manager;
 	};
 
 	//Allocate attributes, install support skills into basic skills, account basic stats (#HP, #monster killed, #experience)
@@ -67,17 +74,22 @@ namespace gswy {
 	public:
 		InventoryMenu() { IsVisible = false; };
 		void Render() override;
+		WidgetManager* manager;
 	};
 
 	class WidgetManager
 	{
 	public:
+		typedef std::function<void(const std::string&)> ButtonInvokeFunction;
 
 		static WidgetManager* GetInstance();
 
 		void RenderUI();
 		void SetVisible(Widget& widget, bool visible) { widget.SetVisible(visible); }
 		bool GetVisible(Widget& widget) { return widget.GetVisible(); }
+
+		void SetButtonInvoker(const ButtonInvokeFunction& f) { buttonInvoker = f; }
+		void InvokeButton(const std::string& name) { buttonInvoker(name); }
 
 		HUD& GetHUD() { return m_Hud; }
 		MainMenu& GetMainMenu() { return m_MainMenu; }
@@ -88,6 +100,7 @@ namespace gswy {
 	private:
 		WidgetManager();
 		static WidgetManager* s_instance;
+		ButtonInvokeFunction buttonInvoker;
 
 		HUD m_Hud;
 		MainMenu m_MainMenu;

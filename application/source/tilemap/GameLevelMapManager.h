@@ -19,6 +19,8 @@ Creation date: 03/02/2020
 #include "engine/math/MathHelper.h"
 #include "engine/renderer/Texture.h"
 
+#define IS_INGAME (GameLevelMapManager::GetInstance()->IsInGame())
+
 namespace gswy {
 	/*
 	Use case
@@ -252,13 +254,22 @@ namespace gswy {
 		template <typename EntityType>
 		void UnloadCurrentTileMap(std::shared_ptr<GameWorld<EntityType>> world)
 		{
-			if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
-			{
-				// TODO : Engine exception
-				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
-			}
-			world->RemoveAllEntities(0);
+			//if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
+			//{
+			//	// TODO : Engine exception
+			//	throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
+			//}
 			m_isAnyLevelLoaded = false;
+		}
+
+		void StartLevel()
+		{
+			m_levelStart = true;
+		}
+
+		bool IsInGame()
+		{
+			return m_isAnyLevelLoaded;
 		}
 
 		void Update(double dt)

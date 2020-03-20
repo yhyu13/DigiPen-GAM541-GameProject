@@ -41,6 +41,10 @@ namespace gswy {
 
 	void Window::Update(double dt) {
 		glfwPollEvents();
+	}
+
+	void Window::Render()
+	{
 		glfwSwapBuffers(m_window);
 	}
 
