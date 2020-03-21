@@ -3,6 +3,7 @@
       "player-controller",
 	  "PlayerAnimationController",
       "mob-1-controller",
+	  "MobPortalControllerComSys",
 	  "tower-controller",
 	  
       "weapon",
