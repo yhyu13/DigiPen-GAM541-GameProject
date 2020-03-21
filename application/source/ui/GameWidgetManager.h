@@ -81,6 +81,9 @@ namespace gswy {
 		InventoryMenu() { IsVisible = false; };
 		void Render() override;
 		WidgetManager* manager;
+
+	private:
+		
 	};
 
 	class WidgetManager

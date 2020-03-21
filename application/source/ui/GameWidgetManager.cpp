@@ -12,6 +12,7 @@ Creation date: 03/12/2020
 
 #include "engine-precompiled-header.h"
 #include "GameWidgetManager.h"
+#include "../inventory-manager/InventoryManager.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -171,39 +172,42 @@ namespace gswy {
 			if (ImGui::BeginTabItem("ACTIVE"))
 			{
 				ImGui::Dummy(ImVec2(250, 15));
-				ImGui::Button("FIRE 1", ImVec2(50, 25));
-				ImGui::Dummy(ImVec2(250, 15));
-				ImGui::Button("FIRE 2", ImVec2(50, 25));
-				ImGui::Dummy(ImVec2(250, 15));
-				ImGui::Button("ICE 1", ImVec2(50, 25));
-				ImGui::Dummy(ImVec2(250, 15));
-				ImGui::Button("ICE 2", ImVec2(50, 25));
-				ImGui::Dummy(ImVec2(250, 15));
+				auto items = InventoryManager::GetInstance()->GetActiveItems();
+				auto begin = items.begin();
+				auto end = items.end();
+				for (auto it = begin; it != end; it++)
+				{
+					//Query : have been purchased
+					bool bPurchased = (*it)->m_purchased;
 
+					//Query : color
+					ImGui::PushStyleColor(ImGuiCol_Button, bPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(1.0f, 0.0f, 0.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 1.0f));
+					if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(50, 25)))
+					{
+
+					}
+					ImGui::PopStyleColor(3);
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::BeginTooltip();
+
+						//Query : skill detail 
+						for(auto s : (*it)->m_text)
+							ImGui::Text("%s\n",s.c_str());
+						ImGui::EndTooltip();
+					}
+				}
+				ImGui::Dummy(ImVec2(250, 15));
+				
 				ImGui::SetCursorPos(ImVec2(50, shopWindowSize.y - 50));
-				ImGui::Button("PURCHASE", ImVec2(150, 25));
+				if (ImGui::Button("PURCHASE", ImVec2(150, 25)))
+				{
+					
+				}
 				ImGui::SetCursorPos(ImVec2(shopWindowSize.x - 200, shopWindowSize.y - 50));
 				ImGui::Button("INSTALL", ImVec2(150, 25));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("SUPPORT"))
-			{
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("Passive Skill"))
-			{
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("Devotion Skill"))
-			{
-				ImGui::Button("Skill", ImVec2(100, 100));
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();
@@ -225,12 +229,17 @@ namespace gswy {
 			if (ImGui::BeginTabItem("1"))
 			{
 				ImGui::Dummy(ImVec2(500, 25));
-				ImGui::Button("ACTIVE 1", ImVec2(300, 50));	
+				//Query : replace name when ACTIVE 1 has been installed
+				std::string act1 = "ACTIVE 1";
+				ImGui::Button(act1.c_str(), ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup1 = "SUPPORT 1";
 				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup2 = "SUPPORT 2";
 				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup3 = "SUPPORT 3";
 				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
@@ -238,12 +247,17 @@ namespace gswy {
 			if (ImGui::BeginTabItem("2"))
 			{
 				ImGui::Dummy(ImVec2(500, 25));
-				ImGui::Button("ACTIVE 1", ImVec2(300, 50));
+				//Query : replace name when ACTIVE 2 has been installed
+				std::string act1 = "ACTIVE 1";
+				ImGui::Button(act1.c_str(), ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup1 = "SUPPORT 1";
 				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup2 = "SUPPORT 2";
 				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup3 = "SUPPORT 3";
 				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
@@ -251,12 +265,35 @@ namespace gswy {
 			if (ImGui::BeginTabItem("3"))
 			{
 				ImGui::Dummy(ImVec2(500, 25));
-				ImGui::Button("ACTIVE 1", ImVec2(300, 50));
+				//Query : replace name when ACTIVE 3 has been installed
+				std::string act1 = "ACTIVE 1";
+				ImGui::Button(act1.c_str(), ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup1 = "SUPPORT 1";
 				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup2 = "SUPPORT 2";
 				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup3 = "SUPPORT 3";
+				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("4"))
+			{
+				ImGui::Dummy(ImVec2(500, 25));
+				//Query : replace name when ACTIVE 4 has been installed
+				std::string act1 = "ACTIVE 1";
+				ImGui::Button(act1.c_str(), ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup1 = "SUPPORT 1";
+				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup2 = "SUPPORT 2";
+				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup3 = "SUPPORT 3";
 				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
