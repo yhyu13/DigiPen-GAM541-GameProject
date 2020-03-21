@@ -316,7 +316,7 @@ namespace gswy
 
 		void BeforeRun()
 		{
-			AudioManager::GetInstance()->PlaySound("breakout", AudioVector3{ 0, 0, 0 }, 1, 1);
+			//AudioManager::GetInstance()->PlaySound("breakout", AudioVector3{ 0, 0, 0 }, 1, 1);
 		}
 
 		void AfterRun()

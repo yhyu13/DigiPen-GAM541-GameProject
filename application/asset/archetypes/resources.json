@@ -3,6 +3,10 @@
       {
          "type":"textures",
          "textures":[
+		 	{
+               "name":"Portal_0",
+               "path":"./asset/Sprites/Portal_0.png"
+            },
 			{
                "name":"Player_Idle",
                "path":"./asset/Sprites/Player_Idle.png"
@@ -161,6 +165,18 @@
          "type":"animation",
          "animations":[
 		 	{
+               "name":"PortalAnimation_0",
+               "properties":{
+                  "texture-name":"Portal_0",
+                  "x": 128,
+                  "y": 0,
+                  "width": 128,
+                  "height": 128,
+                  "delay": 1.0,
+                  "frame-count": 10.0
+               }
+            },
+		 	{
                "name":"BaseIdle",
                "properties":{
                   "texture-name":"BaseIdle",
@@ -176,7 +192,7 @@
                "name":"BaseAnimation",
                "properties":{
                   "texture-name":"BaseAnimation",
-                  "x": 0,
+                  "x": 128,
                   "y": 0,
                   "width": 128,
                   "height": 128,

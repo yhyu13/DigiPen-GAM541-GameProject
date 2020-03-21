@@ -159,6 +159,13 @@ namespace gswy
 			obj.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
 			auto cooldown = CoolDownCom(RAND_F(0.5,1.0));
 			obj.AddComponent(cooldown);
+			auto animCom = AnimationCom();
+			animCom.Add("PortalAnimation_0", "Move");
+			animCom.SetCurrentAnimationState("Move");
+			obj.AddComponent(animCom);
+			auto sprite = SpriteCom();
+			sprite.SetScale(vec2(0.4, 0.4));
+			obj.AddComponent(sprite);
 		}
 
 		void SpawnEnemey(EventQueue<GameObjectType, EventType>::EventPtr e)
