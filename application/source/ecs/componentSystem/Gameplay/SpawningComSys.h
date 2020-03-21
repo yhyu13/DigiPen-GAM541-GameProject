@@ -51,6 +51,9 @@ namespace gswy
 				DEBUG_PRINT("Receive " + Str(*e));
 				switch (event->m_type)
 				{
+				case GameObjectType::ENEMY_PORTAL:
+					SpawnEnemeyPortal(e);
+					break;
 				case GameObjectType::ENEMY:
 					SpawnEnemey(e);
 					break;
@@ -148,27 +151,44 @@ namespace gswy
 			tower.AddComponent(children);
 		}
 
-		/*
-			Demo
-		*/
+		void SpawnEnemeyPortal(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto event = static_pointer_cast<SpawnEvent>(e);
+			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_PORTAL);
+			obj.AddComponent(ActiveCom());
+			obj.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+			auto cooldown = CoolDownCom(RAND_F(0.5,1.0));
+			obj.AddComponent(cooldown);
+			auto animCom = AnimationCom();
+			animCom.Add("PortalAnimation_0", "Move");
+			animCom.SetCurrentAnimationState("Move");
+			obj.AddComponent(animCom);
+			auto sprite = SpriteCom();
+			sprite.SetScale(vec2(0.4, 0.4));
+			obj.AddComponent(sprite);
+		}
+
 		void SpawnEnemey(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
+			auto event = static_pointer_cast<SpawnEvent>(e);
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY);
+			obj.AddComponent(ActiveCom());
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
-			obj.AddComponent(TransformCom(RAND_F(-1, 1), RAND_F(-1, 1), Z_ORDER(m_spawnZOrder++)));
+			obj.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
 			auto animCom2 = AnimationCom();
-			animCom2.Add("MobAnimation1", "Move");
+			animCom2.Add("Mob1Animation_Moving", "Move");
+			animCom2.Add("Mob1Animation_Attack", "Attack");
 			animCom2.SetCurrentAnimationState("Move");
 			obj.AddComponent(animCom2);
 			auto sprite = SpriteCom();
-			sprite.SetScale(vec2(0.25, 0.25 / 70 * 50));
+			sprite.SetScale(vec2(0.5, 0.5 / 70 * 50));
 			obj.AddComponent(sprite);
 			auto sprite0 = MiniMapSprite();
 			sprite0.SetScale(vec2(0.1, 0.1));
 			sprite0.SetTexture("RedLayer");
 			obj.AddComponent(sprite0);
 			auto aabb1 = BodyCom();
-			aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
+			aabb1.ChooseShape("AABB", 0.5, 0.5 / 70 * 50);
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom());
 		}

@@ -20,6 +20,7 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/Controller/PlayerControllerComSys.h"
 #include "ecs/componentSystem/Controller/PlayerAnimationControllerComSys.h"
 #include "ecs/componentSystem/Controller/Mob1ControllerComSys.h"
+#include "ecs/componentSystem/Controller/MobPortalControllerComSys.h"
 #include "ecs/componentSystem/Controller/TowerControllerComSys.h"
 #include "ecs/componentSystem/Graphics/SceneComSys.h"
 #include "ecs/componentSystem/Graphics/SpriteComSys.h"

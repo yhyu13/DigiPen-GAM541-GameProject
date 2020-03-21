@@ -21,6 +21,7 @@ namespace gswy
 		MINIMAP,
 		BASE,
 		PLAYER,
+		ENEMY_PORTAL,
 		ENEMY,
 		TOWER_BUILD,
 		TOWER_FIRE,
@@ -34,22 +35,4 @@ namespace gswy
 	};
 }
 
-std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
-	switch (n) {
-	case gswy::GameObjectType::EMPTY: return o << "EMPTY";
-	case gswy::GameObjectType::MOUSE: return o << "MOUSE";
-	case gswy::GameObjectType::BACKGROUND: return o << "BACKGROUND";
-	case gswy::GameObjectType::MINIMAP: return o << "MINIMAP";
-	case gswy::GameObjectType::BASE: return o << "BASE";
-	case gswy::GameObjectType::PLAYER: return o << "PLAYER";
-	case gswy::GameObjectType::ENEMY: return o << "ENEMY";
-	case gswy::GameObjectType::TOWER_BUILD: return o << "TOWER_BUILD";
-	case gswy::GameObjectType::TOWER_FIRE: return o << "TOWER_FIRE";
-	case gswy::GameObjectType::TOWER_ICE: return o << "TOWER_ICE";
-	case gswy::GameObjectType::TOWER_LIGHTNING: return o << "TOWER_LIGHTNING";
-	case gswy::GameObjectType::FIREBALL: return o << "FIREBALL";
-	case gswy::GameObjectType::BOLT: return o << "BOLT";
-	case gswy::GameObjectType::ICEBALL: return o << "ICEBALL";
-	default: return o << "(invalid value)";
-	}
-}
+std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n);

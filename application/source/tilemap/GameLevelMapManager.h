@@ -18,6 +18,7 @@ Creation date: 03/02/2020
 #include "engine/ecs/GameWorld.h"
 #include "engine/math/MathHelper.h"
 #include "engine/renderer/Texture.h"
+#include "ecs/CustomEvents.h"
 
 #define IS_INGAME (GameLevelMapManager::GetInstance()->IsInGame())
 
@@ -44,15 +45,17 @@ namespace gswy {
 		/*
 			This is the method to load the current TileMap into world
 		*/
-		template <typename EntityType>
-		void LoadCurrentTileMap(std::shared_ptr<GameWorld<EntityType>> world)
+		template<typename Enitity>
+		void LoadCurrentTileMap(std::shared_ptr<GameWorld<Enitity>> world)
 		{
+			if (!m_world) m_world = world;
+
 			if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
 			{
 				// TODO : Engine exception
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
 			}
-
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto tileMapObj = m_tileMaps[m_currentMapName];
 			auto map = tileMapObj->GetMap();
 			//You can loop through every container of objects
@@ -104,31 +107,17 @@ namespace gswy {
 							obj.AddComponent(aabb);
 							obj.AddComponent(HitPointCom(999));
 						}
-						else if (objName.compare("MobSpawn") == 0)
+						else if (objName.compare("MobSpawn1") == 0)
 						{
-							auto obj = world->GenerateEntity(GameObjectType::ENEMY);
-							auto active = ActiveCom();
-							obj.AddComponent(active);
-							obj.AddComponent(OwnershiptCom<GameObjectType>());
-							auto transform = TransformCom();
 							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
-							transform.SetPos(tileMapObj->Pixel2World(pixelPos));
-							obj.AddComponent(transform);
-							auto animCom2 = AnimationCom();
-							animCom2.Add("MobAnimation1", "Move");
-							animCom2.SetCurrentAnimationState("Move");
-							obj.AddComponent(animCom2);
-							auto sprite = SpriteCom();
-							sprite.SetScale(vec2(0.25, 0.25 / 70 * 50));
-							obj.AddComponent(sprite);
-							auto sprite0 = MiniMapSprite();
-							sprite0.SetScale(vec2(0.1, 0.1));
-							sprite0.SetTexture("RedLayer");
-							obj.AddComponent(sprite0);
-							auto aabb1 = BodyCom();
-							aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
-							obj.AddComponent(aabb1);
-							obj.AddComponent(HitPointCom());
+							auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY_PORTAL, vec3(tileMapObj->Pixel2World(pixelPos), 0));
+							queue->Publish(e);
+						}
+						else if (objName.compare("Towers1") == 0)
+						{
+							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
+							auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_BUILD, vec3(tileMapObj->Pixel2World(pixelPos), 0));
+							queue->Publish(e);
 						}
 					}
 				}
@@ -205,7 +194,6 @@ namespace gswy {
 						//		int columns = tileset.getColumns(); 
 						//		int rows = tileset.getTileCount() / columns;
 
-
 						//		int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
 
 						//		//The baseTilePosition can be used to calculate offset on its related tileset image.
@@ -251,22 +239,88 @@ namespace gswy {
 		/*
 			This is the method to unload the current TileMap from world
 		*/
-		template <typename EntityType>
-		void UnloadCurrentTileMap(std::shared_ptr<GameWorld<EntityType>> world)
+		template<typename Enitity>
+		void UnloadCurrentTileMap(std::shared_ptr<GameWorld<Enitity>> world)
 		{
 			//if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
 			//{
 			//	// TODO : Engine exception
 			//	throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
 			//}
+			if (!m_world) m_world = world;
 			m_isAnyLevelLoaded = false;
 		}
 
-		void StartLevel()
+		template<typename Enitity>
+		void LoadLevel(std::shared_ptr<GameWorld<Enitity>> world, int level)
 		{
-			m_levelStart = true;
+			if (!m_world) m_world = world;
+
+			if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
+			{
+				// TODO : Engine exception
+				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
+			}
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto tileMapObj = m_tileMaps[m_currentMapName];
+			auto map = tileMapObj->GetMap();
+			//You can loop through every container of objects
+			for (auto& layer : map->getLayers())
+			{
+				// Case object layer
+				if (layer.getType() == tson::Layer::Type::ObjectGroup)
+				{
+					for (auto& object : layer.getObjects())
+					{
+						auto objName = layer.getName();
+						PRINT("Processing " + objName);
+
+						if (objName.compare("MobSpawn" + Str(level)) == 0)
+						{
+							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
+							auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY_PORTAL, vec3(tileMapObj->Pixel2World(pixelPos), 0));
+							queue->Publish(e);
+						}
+						else if (objName.compare("Towers" + Str(level)) == 0)
+						{
+							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
+							auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_BUILD, vec3(tileMapObj->Pixel2World(pixelPos), 0));
+							queue->Publish(e);
+						}
+					}
+				}
+			}
 		}
 
+		/*
+			Start the level (start the count down, mainly)
+		*/
+		void StartLevel()
+		{
+			PRINT("Start level!");
+			m_levelStart = true;
+			m_timeOut = false;
+		}
+
+		/*
+			Check if the level is started
+		*/
+		bool IsLevelStarted()
+		{
+			return m_levelStart;
+		}
+
+		/*
+			Check time out
+		*/
+		bool IsTimeOut()
+		{
+			return m_timeOut;
+		}
+
+		/*
+			Check if in game or not
+		*/
 		bool IsInGame()
 		{
 			return m_isAnyLevelLoaded;
@@ -278,19 +332,34 @@ namespace gswy {
 			{
 				return;
 			}
-			if (m_levelStart)
+			// Check level is running and do count down
+			if (m_levelStart && !m_timeOut)
 			{
 				m_timeRemaining -= dt;
 				if (m_timeRemaining < 0)
 				{
-					m_levelStart = false;
+					m_timeOut = true;
 					m_timeRemaining = m_timePerLevel;
-					PRINT("Level completed!");
+					PRINT("Time's up, kill all reminaing monsters to finish the level!");
 				}
 			}
-			else
+			// Check if a level is finished
+			else if (IsLevelFinsihed())
 			{
-
+				// Check level remains started
+				if (m_levelStart)
+				{
+					// Stop level and 
+					if (AdvanceLevel())
+					{
+						PRINT("Load new level");
+						LoadLevel(m_world, m_currentLevel);
+					}
+					else
+					{
+						PRINT("You have beat the game!");
+					}
+				}
 			}
 		}
 
@@ -298,12 +367,39 @@ namespace gswy {
 		{
 			PRINT("Reset level!");
 			m_isAnyLevelLoaded = false;
+			m_timeOut = false;
 			m_levelStart = false;
 			m_coins = 0;
-			
+			m_currentLevel = 1;
+			m_maxLevel = 3;
+
 			m_timePerLevel = 2;
 			m_timeRemaining = m_timePerLevel;
-			m_waitingPerLevel = 60;
+		}
+
+	private:
+		/*
+			A level is finished when there is no remaining enemy, this level remains started, and time is out.
+		*/
+		bool IsLevelFinsihed()
+		{
+			return m_world->GetAllEntityWithType(GameObjectType::ENEMY).empty() && IsLevelStarted() && m_timeOut;
+		}
+		/*
+			Advance level if is possible
+		*/
+		bool AdvanceLevel()
+		{
+			if (m_currentLevel <= m_maxLevel)
+			{
+				m_levelStart = false;
+				m_currentLevel++;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 	private:
@@ -312,12 +408,16 @@ namespace gswy {
 			ResetLevelData();
 		}
 	public:
+		std::shared_ptr<GameWorld<GameObjectType>> m_world;
+
 		bool m_isAnyLevelLoaded;
 		bool m_levelStart;
+		bool m_timeOut;
 		int m_coins;
+		int m_currentLevel;
+		int m_maxLevel;
 
 		double m_timePerLevel;
 		double m_timeRemaining;
-		double m_waitingPerLevel;
 	};
 }

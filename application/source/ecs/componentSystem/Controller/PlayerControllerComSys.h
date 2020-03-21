@@ -180,11 +180,10 @@ namespace gswy
 			if (input->IsKeyTriggered(KEY_SPACE))
 			{
 				PRINT("SPACE");
-				ComponentDecorator<TransformCom, GameObjectType> transform;
-				m_parentWorld->Unpack(m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0], transform);
-				auto cursor_pos = transform->GetPos();
-				auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::TOWER_BUILD, vec3(cursor_pos, 0));
-				queue->Publish(e);
+				if (!GameLevelMapManager::GetInstance()->IsLevelStarted())
+				{
+					GameLevelMapManager::GetInstance()->StartLevel();
+				}
 			}
 
 			if (GameLevelMapManager::GetInstance()->IsInGame())

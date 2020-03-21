@@ -64,6 +64,7 @@ namespace gswy
 					if (glm::length(delta) < .2)
 					{
 						transform->SetVelocity(vec2(0));
+						animation->SetCurrentAnimationState("Attack");
 						continue;
 					}
 
