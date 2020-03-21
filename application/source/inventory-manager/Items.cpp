@@ -2,6 +2,7 @@
 
 namespace gswy
 {
+	int count = 0;
 
 	Items::Items() : m_supportSkillCount(0)
 	{
@@ -13,6 +14,7 @@ namespace gswy
 
 	void Items::Add(std::shared_ptr<Item> item)
 	{
+		item->m_id = count++;
 		if (item->m_category._Equal("ACTIVE"))
 		{
 			m_activeItems.push_back(item);
