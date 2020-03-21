@@ -186,6 +186,27 @@ namespace gswy {
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 1.0f));
 					if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(50, 25)))
 					{
+						//item hasn't been purchased
+						if (!(*it)->m_purchased)
+						{
+							m_ClickedItem.second = true;
+						}
+						//item hasn been purchased
+						else
+						{
+							//open support penel
+						}
+						//item hasn't been purchased but click
+						if (m_ClickedItem.second)
+						{
+							m_ClickedItem = std::make_pair((*it), true);
+						}
+						//item hasn't been purchased and do unclick 
+						else
+						{
+							m_ClickedItem = std::make_pair((*it), false);
+						}
+						
 
 					}
 					ImGui::PopStyleColor(3);
@@ -204,7 +225,9 @@ namespace gswy {
 				ImGui::SetCursorPos(ImVec2(50, shopWindowSize.y - 50));
 				if (ImGui::Button("PURCHASE", ImVec2(150, 25)))
 				{
-					
+					//if (m_ClickedItem.second) 
+					//	InventoryManager::GetInstance()->PurchaseItem(items, m_ClickedItem.first);
+
 				}
 				ImGui::SetCursorPos(ImVec2(shopWindowSize.x - 200, shopWindowSize.y - 50));
 				ImGui::Button("INSTALL", ImVec2(150, 25));

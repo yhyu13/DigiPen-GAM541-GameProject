@@ -13,6 +13,7 @@ Creation date: 03/12/2020
 #pragma once
 #include "engine/ui/Widget.h"
 #include "engine/renderer/Buffer.h"
+#include "inventory-manager/Item.h"
 
 namespace gswy {
 
@@ -72,6 +73,9 @@ namespace gswy {
 		ShopMenu() { IsVisible = false; };
 		void Render() override;
 		WidgetManager* manager;
+
+	private:
+		std::pair<std::shared_ptr<Item>, bool> m_ClickedItem;
 	};
 
 	//Allocate attributes, install support skills into basic skills, account basic stats (#HP, #monster killed, #experience)
