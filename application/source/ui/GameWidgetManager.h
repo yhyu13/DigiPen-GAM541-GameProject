@@ -28,6 +28,12 @@ namespace gswy {
 		std::shared_ptr<FrameBuffer> GetFrameBuffer() const { return m_FrameBuffer; }
 		WidgetManager* manager;
 
+		void  SetTimeMinute(int timeMin) { m_TimerMin = timeMin; }
+		void  SetTimeSecond(int timeSec) { m_TimerSec = timeSec; }
+		void  SetWave(int wave) { m_Wave = wave; }
+		void  SetCoinNum(int coinNum) { m_Coins = coinNum; }
+		void  SetProgress(float wave) { m_Wave = wave; }
+
 	private:
 		int m_TimerMin;
 		int m_TimerSec;

@@ -180,7 +180,6 @@ namespace gswy {
 				ImGui::Button("ICE 2", ImVec2(50, 25));
 				ImGui::Dummy(ImVec2(250, 15));
 
-				//ImGui::SetCursorPos(ImVec2(shopWindowSize.x + 100, shopWindowSize.y - 50));
 				ImGui::SetCursorPos(ImVec2(50, shopWindowSize.y - 50));
 				ImGui::Button("PURCHASE", ImVec2(150, 25));
 				ImGui::SetCursorPos(ImVec2(shopWindowSize.x - 200, shopWindowSize.y - 50));
@@ -223,7 +222,7 @@ namespace gswy {
 
 		if (ImGui::BeginTabBar("InventoryTabBar"))
 		{
-			if (ImGui::BeginTabItem("Skill 1"))
+			if (ImGui::BeginTabItem("1"))
 			{
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::Button("ACTIVE 1", ImVec2(300, 50));	
@@ -236,7 +235,7 @@ namespace gswy {
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("Skill 2"))
+			if (ImGui::BeginTabItem("2"))
 			{
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::Button("ACTIVE 1", ImVec2(300, 50));
@@ -249,23 +248,17 @@ namespace gswy {
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("Devotion Skill"))
+			if (ImGui::BeginTabItem("3"))
 			{
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("ACTIVE 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();
