@@ -36,5 +36,7 @@ namespace gswy
 			supporting skills that have the tag
 		*/
 		std::map<std::string, std::vector<int>> m_tagsAndSupportSkills;
+
+		static int count;
 	};
 }
