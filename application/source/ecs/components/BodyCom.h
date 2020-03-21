@@ -180,6 +180,7 @@ namespace gswy
 			m_PosX = m_VelX * dt + m_PrevPosX;
 			m_PosY = m_VelY * dt + m_PrevPosY;
 
+			//Simulating Friction
 			m_VelX *= 0.99;
 			m_VelY *= 0.99;
 
