@@ -178,7 +178,8 @@ namespace gswy
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY);
 			obj.AddComponent(ActiveCom());
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
-			obj.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
+			obj.AddComponent(transform);
 			auto animCom2 = AnimationCom();
 			animCom2.Add("Mob1Animation_Moving", "Move");
 			animCom2.Add("Mob1Animation_Attack", "Attack");
@@ -192,7 +193,7 @@ namespace gswy
 			sprite0.SetTexture("RedLayer");
 			obj.AddComponent(sprite0);
 			auto aabb1 = BodyCom();
-			aabb1.SetPos(vec2(event->m_pos.x, event->m_pos.y));
+			aabb1.SetPos3D(transform.GetPos3D());
 			aabb1.ChooseShape("AABB", 0.5, 0.5 / 70 * 50);
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom());

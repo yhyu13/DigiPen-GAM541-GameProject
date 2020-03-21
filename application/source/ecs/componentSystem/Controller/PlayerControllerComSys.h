@@ -69,14 +69,17 @@ namespace gswy
 			HandlePlayerMovement(dt);
 
 			//// TODO remove spawn enemies by triggering buttons
-			//if (input->IsKeyTriggered(KEY_SPACE))
+			//if (input->IsKeyTriggered(KEY_T))
 			//{
+			//	PRINT("KEY T: CALL ENEMY");
 			//	auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
 			//	queue->Publish(e);
 			//
 			//	static bool flash = true;
+			//	//auto enemy = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY)[0];
+			//	//auto enemy = m_registeredEntities.at(1);
 			//	ComponentDecorator<SpriteCom, GameObjectType> sprite;
-			//	m_parentWorld->Unpack(entity, sprite);
+			//	m_parentWorld->Unpack(enemy, sprite);
 			//	auto s = sprite->Get();
 			//	(flash)? s->SetSpriteShader("White"): s->SetSpriteShader("Default");
 			//	flash = !flash;
@@ -241,7 +244,8 @@ namespace gswy
 			// Stop when delta distance is small
 			if (glm::length(delta) < m_noPathFindingThreshold)
 			{
-				transform->SetVelocity(vec2(0));
+				//transform->SetVelocity(vec2(0));
+				body->SetVelocity(vec2(0));
 				animation->SetCurrentAnimationState("Idle");
 				return;
 			}

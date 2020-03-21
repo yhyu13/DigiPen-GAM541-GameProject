@@ -61,7 +61,9 @@ namespace gswy
 			// Collision Disable List Part2 (Mouse, ranged weapons, player)
 			GameObjectType diableCollisionList2[] = {
 				GameObjectType::MOUSE ,GameObjectType::FIREBALL ,
-				GameObjectType::ICEBALL ,GameObjectType::BOLT, GameObjectType::ENEMY
+				GameObjectType::ICEBALL ,GameObjectType::BOLT, GameObjectType::ENEMY,
+				GameObjectType::TOWER_BUILD, GameObjectType::TOWER_FIRE,
+				GameObjectType::TOWER_ICE, GameObjectType::TOWER_LIGHTNING,
 			};
 
 			for (auto& item1 : diableCollisionList)
@@ -226,10 +228,10 @@ namespace gswy
 						if ((body1->GetOtherEntity().m_type == GameObjectType::ENEMY) &&
 							(body2->GetOtherEntity().m_type == GameObjectType::ENEMY))
 						{
-							body1->m_PosX = body1->m_PrevPosX;
-							body1->m_PosY = body1->m_PrevPosY;
-							body2->m_PosX = body2->m_PrevPosX;
-							body2->m_PosY = body2->m_PrevPosY;
+							//body1->m_PosX = body1->m_PrevPosX;
+							//body1->m_PosY = body1->m_PrevPosY;
+							//body2->m_PosX = body2->m_PrevPosX;
+							//body2->m_PosY = body2->m_PrevPosY;
 						}
 					}
 				}
