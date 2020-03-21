@@ -32,14 +32,27 @@ namespace gswy
 		virtual void Update(double dt) override {
 			
 			for (auto& entity : m_registeredEntities) {
-				ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> onwer;
-				ComponentDecorator<TransformCom, GameObjectType> transform;
-				ComponentDecorator<AttachedMovementCom, GameObjectType> attach;
-				ComponentDecorator<TransformCom, GameObjectType> owner_transform;
-				m_parentWorld->Unpack(entity, onwer);
-				m_parentWorld->Unpack(onwer->GetEntity(), owner_transform);
-				m_parentWorld->Unpack(entity, transform);
-				m_parentWorld->Unpack(entity, attach);
+
+				// Check active
+				auto active = GetComponent<ActiveCom>(entity);
+				if (!active->IsActive())
+				{
+					continue;
+				}
+
+				auto onwer = GetComponent<OwnershiptCom<GameObjectType>>(entity);
+
+				// Check active
+				active = GetComponent<ActiveCom>(onwer->GetEntity());
+				if (!active->IsActive())
+				{
+					continue;
+				}
+
+				auto owner_transform = GetComponent<TransformCom>(onwer->GetEntity());
+				auto transform = GetComponent<TransformCom>(entity);
+				auto attach = GetComponent<AttachedMovementCom>(entity);
+
 				if (attach->followPos)
 				{
 					transform->SetPos(owner_transform->GetPos() + attach->rPos);

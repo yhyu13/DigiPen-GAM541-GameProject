@@ -33,18 +33,61 @@ namespace gswy
 
 		virtual void Update(double dt) override {
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			std::vector<Entity<GameObjectType>> deathList;
+
+			// Calculate hp
 			for (auto& entity : m_registeredEntities) {
-				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
-				m_parentWorld->Unpack(entity, HitPoint);
+				
+				// Check active
+				auto active = GetComponent<ActiveCom>(entity);
+				if (!active->IsActive())
+				{
+					continue;
+				}
+
+				auto HitPoint = GetComponent<HitPointCom>(entity);
+
 				if (HitPoint->IsDepleted())
 				{
-					if (!HitPoint->GetIsDead())
+					if (!HitPoint->IsDead())
 					{
-						auto e = MemoryManager::Make_shared<DeathEvent>(entity);
-						queue->Publish(e);
 						HitPoint->SetIsDead(true);
+						deathList.push_back(entity);
 					}
 				}
+			}
+
+			// Change hp bar
+			auto bars = m_parentWorld->GetAllEntityWithType(GameObjectType::HP_BAR);
+			for (auto& hp_barEntity : bars)
+			{
+				// Check active
+				auto active = GetComponent<ActiveCom>(hp_barEntity);
+				if (!active->IsActive())
+				{
+					continue;
+				}
+
+				auto ownerCom = GetComponent<OwnershiptCom<GameObjectType>>(hp_barEntity);
+				// Remove hp bar for dead onwer entity
+				if (std::find(deathList.begin(), deathList.end(), ownerCom->GetEntity()) != deathList.end())
+				{
+					auto e = MemoryManager::Make_shared<DeathEvent>(hp_barEntity);
+					queue->Publish(e);
+					continue;
+				}
+
+				// Scale the hp bar on hp changes
+				auto ownerHPCom = GetComponent<HitPointCom>(ownerCom->GetEntity());
+				auto hp_barSprite = GetComponent<SpriteCom>(hp_barEntity);
+				hp_barSprite->SetScale(vec2(ownerHPCom->GetPercentageHP() * 0.20, 0.02));
+			}
+
+			// Publish death event
+			for (auto& entity : deathList)
+			{
+				auto e = MemoryManager::Make_shared<DeathEvent>(entity);
+				queue->Publish(e);
 			}
 		}
 

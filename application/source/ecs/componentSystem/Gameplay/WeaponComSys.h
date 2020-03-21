@@ -44,8 +44,7 @@ namespace gswy
 			if (auto event = static_pointer_cast<FireWeaponEvent>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
-				ComponentDecorator<TransformCom, GameObjectType> transform;
-				m_parentWorld->Unpack(event->m_entity, transform);
+				auto transform = GetComponent<TransformCom>(event->m_entity);
 
 				switch (event->m_entity.m_type)
 				{
