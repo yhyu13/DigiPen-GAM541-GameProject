@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <map>
+#include <set>
 
 namespace gswy
 {
@@ -17,12 +18,23 @@ namespace gswy
 		~Items();
 
 		void Add(std::shared_ptr<Item> item);
-		std::shared_ptr<Item> GetItem(const int& id);
-		std::vector<std::shared_ptr<Item>> GetItems();
+
+		std::vector<std::shared_ptr<Item>> GetActiveItems();
+		std::vector<std::shared_ptr<Item>> GetSupportItems();
+		std::set<std::shared_ptr<Item>> GetSupportItems(std::shared_ptr<Item> activeItem);
 
 	private:
-		int m_size;
-		std::vector<std::shared_ptr<Item>> m_items;
-		std::map<int, int> m_itemIdToIndexMapping;
+
+		int m_supportSkillCount;
+
+		std::vector<std::shared_ptr<Item>> m_activeItems;
+
+		std::vector<std::shared_ptr<Item>> m_supportItems;
+
+		/*
+			This map maintains mapping between a tag and the
+			supporting skills that have the tag
+		*/
+		std::map<std::string, std::vector<int>> m_tagsAndSupportSkills;
 	};
 }

@@ -47,17 +47,41 @@ namespace gswy
 		}
 	}
 
-	void InventoryManager::Purchase(const int& id)
+	void InventoryManager::PurchaseItem(std::vector<std::shared_ptr<Item>> items, std::shared_ptr<Item> item)
 	{
-		std::shared_ptr<Item> item = m_items->GetItem(id);
-		if (item != nullptr)
+		auto it = std::find_if(items.begin(), items.end(), [&](std::shared_ptr<Item> const& theItem)
+			{
+				return theItem->m_id == item->m_id;
+			});
+
+		if (it != items.end())
 		{
-			item->m_purchased = true;
+			(*it)->m_purchased = true;
 		}
 	}
 
-	std::vector<std::shared_ptr<Item>> InventoryManager::GetItems()
+	void InventoryManager::PurchaseActiveItem(std::shared_ptr<Item> item)
 	{
-		return m_items->GetItems();
+		PurchaseItem(m_items->GetActiveItems(), item);
+	}
+
+	void InventoryManager::PurchaseSupportItem(std::shared_ptr<Item> item)
+	{
+		PurchaseItem(m_items->GetSupportItems(), item);
+	}
+
+	std::vector<std::shared_ptr<Item>> InventoryManager::GetActiveItems()
+	{
+		return m_items->GetActiveItems();
+	}
+
+	std::vector<std::shared_ptr<Item>> InventoryManager::GetSupportItems()
+	{
+		return m_items->GetSupportItems();
+	}
+
+	std::set<std::shared_ptr<Item>> InventoryManager::GetSupportItems(std::shared_ptr<Item> item)
+	{
+		return m_items->GetSupportItems(item);
 	}
 }

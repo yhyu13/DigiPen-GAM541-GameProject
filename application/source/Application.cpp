@@ -101,6 +101,9 @@ namespace gswy
 
 			InventoryManager* inventoryManager = InventoryManager::GetInstance();
 			inventoryManager->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
+			std::vector<std::shared_ptr<Item>> activeItems = inventoryManager->GetActiveItems();
+			std::vector<std::shared_ptr<Item>> supportItems = inventoryManager->GetSupportItems();
+			std::set<std::shared_ptr<Item>> relatedSupportItems = inventoryManager->GetSupportItems(activeItems.at(0));
 		}
 
 		void InitGameWorld()

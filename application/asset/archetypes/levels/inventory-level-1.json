@@ -9,6 +9,7 @@
         "RANGE"
       ],
       "purchased": 0,
+      "installed": 0,
       "text": [
         "some useful information",
         "some useful information"
@@ -23,6 +24,7 @@
         "RANGE"
       ],
       "purchased": 0,
+      "installed": 0,
       "text": [
         "something",
         "something"
@@ -36,6 +38,7 @@
         "PROJECTILE"
       ],
       "purchased": 0,
+      "installed": 0,
       "text": [
         "something",
         "something"
@@ -50,6 +53,7 @@
         "RANGE"
       ],
       "purchased": 0,
+      "installed": 0,
       "text": [
         "something",
         "something"
