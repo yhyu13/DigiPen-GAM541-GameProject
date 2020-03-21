@@ -52,6 +52,7 @@ namespace gswy
 
 		float m_PosX;
 		float m_PosY;
+		float m_PosZ;
 		float m_Mass;
 		float m_AccX;
 		float m_AccY;
@@ -116,6 +117,13 @@ namespace gswy
 		{
 			m_VelX = velocity.x;
 			m_VelY = velocity.y;
+		}
+
+		void SetPos3D(const glm::vec3& pos)
+		{
+			m_PosX = pos.x;
+			m_PosY = pos.y;
+			m_PosZ = pos.z;
 		}
 
 		void SetRestitution(float rest)

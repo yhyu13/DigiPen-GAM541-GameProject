@@ -61,7 +61,7 @@ namespace gswy
 			// Collision Disable List Part2 (Mouse, ranged weapons, player)
 			GameObjectType diableCollisionList2[] = {
 				GameObjectType::MOUSE ,GameObjectType::FIREBALL ,
-				GameObjectType::ICEBALL ,GameObjectType::BOLT, GameObjectType::PLAYER, GameObjectType::ENEMY
+				GameObjectType::ICEBALL ,GameObjectType::BOLT, GameObjectType::ENEMY
 			};
 
 			for (auto& item1 : diableCollisionList)
@@ -89,8 +89,9 @@ namespace gswy
 				m_parentWorld->Unpack(entity, body);
 
 				//Setting Initially positions of body from all entities's transforms
-				body->m_PosX = transform->GetPos().x;
-				body->m_PosY = transform->GetPos().y;
+				body->m_PosX = transform->GetPos3D().x;
+				body->m_PosY = transform->GetPos3D().y;
+				body->m_PosZ = transform->GetPos3D().z;
 			}
 		}
 
@@ -155,7 +156,7 @@ namespace gswy
 
 				//After Initialising, Setting Transform of each -
 				//entity back from manipulated body positions for rendering
-				transform->SetPos(vec2(body->m_PosX, body->m_PosY));
+				transform->SetPos3D(vec3(body->m_PosX, body->m_PosY, body->m_PosZ));
 
 			}
 
@@ -192,13 +193,6 @@ namespace gswy
 					if (m_CollisionDisableMap[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
 						continue;
 
-					//if (m_CollisionDisableMap2[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
-					//	continue;
-
-					//For two enemies to not collide
-					//if (first_Entity->m_type == GameObjectType::ENEMY && second_Entity->m_type == GameObjectType::ENEMY)
-					//	continue;
-
 					ComponentDecorator<BodyCom, GameObjectType> body2;
 					m_parentWorld->Unpack(*second_Entity, body2);
 
@@ -226,6 +220,17 @@ namespace gswy
 						DEBUG_PRINT("Collisions Detected " + Str(*first_Entity) + Str(*second_Entity));
 						auto e = MemoryManager::Make_shared<CollisionEvent>(*first_Entity, *second_Entity);
 						queue->Publish(e);
+
+						//Trial For enemies to not get into each other/ Creating Traffic
+						//Restoring previous position/ before collision
+						if ((body1->GetOtherEntity().m_type == GameObjectType::ENEMY) &&
+							(body2->GetOtherEntity().m_type == GameObjectType::ENEMY))
+						{
+							body1->m_PosX = body1->m_PrevPosX;
+							body1->m_PosY = body1->m_PrevPosY;
+							body2->m_PosX = body2->m_PrevPosX;
+							body2->m_PosY = body2->m_PrevPosY;
+						}
 					}
 				}
 			}

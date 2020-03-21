@@ -144,7 +144,7 @@ namespace gswy
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
 				body.SetMass(0);
-				body.SetPos(transform.GetPos());
+				body.SetPos(vec3(transform.GetPos(), Z_ORDER(m_spawnZOrder++)));
 				body.ChooseShape("AABB", 0.25, 0.25);
 				_tower.AddComponent(body);
 				children.AddEntity(_tower);
@@ -167,6 +167,8 @@ namespace gswy
 			auto sprite = SpriteCom();
 			sprite.SetScale(vec2(0.25, 0.25 / 70 * 50));
 			obj.AddComponent(sprite);
+			auto coolDownController = CoolDownCom(1.5);
+			obj.AddComponent(coolDownController);
 			auto sprite0 = MiniMapSprite();
 			sprite0.SetScale(vec2(0.1, 0.1));
 			sprite0.SetTexture("RedLayer");

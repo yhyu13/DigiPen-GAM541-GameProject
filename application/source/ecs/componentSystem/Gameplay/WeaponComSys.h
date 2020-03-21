@@ -147,7 +147,7 @@ namespace gswy
 							sprite.SetScale(vec2(0.25, 1));
 							weapon.AddComponent(sprite);
 							auto aabb = BodyCom();
-							aabb.SetPos(transform.GetPos());
+							aabb.SetPos3D(transform.GetPos3D());
 							aabb.ChooseShape("AABB", 0.25, 1.0);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(3));

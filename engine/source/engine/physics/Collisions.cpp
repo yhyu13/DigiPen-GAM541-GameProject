@@ -174,25 +174,25 @@ bool gswy::AABBCollisions(Shape* AABB1, float PosX1, float PosY1,
 		glm::vec2 EdgePoint2 = clamped2 + CenterDistance;
 		glm::vec2 Separation = EdgePoint2 - EdgePoint1;
 
-		float penetration = std::max(Separation.x, Separation.y);
+		float penetration = std::min(Separation.x, Separation.y);
 		glm::vec2 Collision_Normal = CheckDirection(Separation);
 
-		if (Collision_Normal.x == 0 && Collision_Normal.y == 1)
-		{
-			std::cout << "\n TOP ";
-		}
-		else if (Collision_Normal.x == 1 && Collision_Normal.y == 0)
-		{
-			std::cout << "\n RIGHT ";
-		}
-		else if (Collision_Normal.x == -1 && Collision_Normal.y == 0)
-		{
-			std::cout << "\n LEFT ";
-		}
-		else if (Collision_Normal.x == 0 && Collision_Normal.y == -1)
-		{
-			std::cout << "\n BOTTOM ";
-		}
+		//if (Collision_Normal.x == 0 && Collision_Normal.y == 1)
+		//{
+		//	std::cout << "\n TOP ";
+		//}
+		//else if (Collision_Normal.x == 1 && Collision_Normal.y == 0)
+		//{
+		//	std::cout << "\n RIGHT ";
+		//}
+		//else if (Collision_Normal.x == -1 && Collision_Normal.y == 0)
+		//{
+		//	std::cout << "\n LEFT ";
+		//}
+		//else if (Collision_Normal.x == 0 && Collision_Normal.y == -1)
+		//{
+		//	std::cout << "\n BOTTOM ";
+		//}
 
 		//Conditional trials
 		if (Separation.x > 0)// && Separation.y == 0)
