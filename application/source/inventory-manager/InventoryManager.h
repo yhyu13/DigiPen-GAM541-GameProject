@@ -2,10 +2,10 @@
 
 #include "Items.h"
 
-#include <vector>
-#include <string>
-#include <map>
-#include <memory>
+//#include <vector>
+//#include <string>
+//#include <map>
+//#include <memory>
 
 namespace gswy
 {
@@ -19,8 +19,12 @@ namespace gswy
 		~InventoryManager();
 
 		void LoadInventory(const std::string& filepath);
-		void Purchase(const int& id);
-		std::vector<std::shared_ptr<Item>> GetItems();
+		void PurchaseItem(std::vector<std::shared_ptr<Item>> items, std::shared_ptr<Item> item);
+		void PurchaseActiveItem(std::shared_ptr<Item> item);
+		void PurchaseSupportItem(std::shared_ptr<Item> item);
+		std::vector<std::shared_ptr<Item>> GetActiveItems();
+		std::vector<std::shared_ptr<Item>> GetSupportItems();
+		std::set<std::shared_ptr<Item>> GetSupportItems(std::shared_ptr<Item> item);
 
 	private:
 

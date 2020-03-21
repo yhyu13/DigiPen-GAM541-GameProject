@@ -2,7 +2,7 @@
 
 namespace gswy
 {
-	Item::Item() : m_purchased(false)
+	Item::Item() : m_purchased(false), m_installed(false)
 	{
 	}
 
