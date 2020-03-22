@@ -162,10 +162,10 @@ namespace gswy
 						auto weapon_rot = rot;
 						if (num_spawn > 1)
 						{
-							weapon_rot += RAND_F(-90, 90) * DEG2RAD;
+							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
 						}
 						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-						transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
+						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 						weapon.AddComponent(transform);
 						auto particle = ParticleCom();
 						particle.Init<ExplosionParticle>();
@@ -178,6 +178,8 @@ namespace gswy
 						sprite.SetScale(vec2(0.25, 0.25));
 						weapon.AddComponent(sprite);
 						auto aabb = BodyCom();
+						aabb.SetPos(transform.GetPos());
+						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
 						aabb.ChooseShape("Circle", 0.1);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
@@ -200,10 +202,10 @@ namespace gswy
 						auto weapon_rot = rot;
 						if (num_spawn > 1)
 						{
-							weapon_rot += RAND_F(-90, 90) * DEG2RAD;
+							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
 						}
 						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-						transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
+						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 						weapon.AddComponent(transform);
 						auto animCom = AnimationCom();
 						animCom.Add("iceBallAnim1", "Move");
@@ -214,6 +216,8 @@ namespace gswy
 						weapon.AddComponent(sprite);
 
 						auto aabb = BodyCom();
+						aabb.SetPos(transform.GetPos());
+						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
 						aabb.ChooseShape("Circle", 0.1);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));

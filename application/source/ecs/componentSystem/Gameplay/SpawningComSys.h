@@ -81,6 +81,7 @@ namespace gswy
 			tower.AddComponent(sprite);
 			auto body = BodyCom();
 			body.SetMass(0);
+			body.SetPos(transform.GetPos());
 			body.ChooseShape("AABB", 0.25, 0.25);
 			tower.AddComponent(body);
 			auto children = ChildrenCom<GameObjectType>();
@@ -102,6 +103,7 @@ namespace gswy
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
 				body.SetMass(0);
+				body.SetPos(transform.GetPos());
 				body.ChooseShape("AABB", 0.25, 0.25);
 				_tower.AddComponent(body);
 				children.AddEntity(_tower);
@@ -122,6 +124,7 @@ namespace gswy
 				auto coolDownController = CoolDownCom(1.0);
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
+				body.SetPos(transform.GetPos());
 				body.SetMass(0);
 				body.ChooseShape("AABB", 0.25,0.25);
 				_tower.AddComponent(body);
@@ -144,6 +147,7 @@ namespace gswy
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
 				body.SetMass(0);
+				body.SetPos(vec3(transform.GetPos(), Z_ORDER(m_spawnZOrder++)));
 				body.ChooseShape("AABB", 0.25, 0.25);
 				_tower.AddComponent(body);
 				children.AddEntity(_tower);
@@ -174,7 +178,8 @@ namespace gswy
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY);
 			obj.AddComponent(ActiveCom());
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
-			obj.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
+			obj.AddComponent(transform);
 			auto animCom2 = AnimationCom();
 			animCom2.Add("Mob1Animation_Moving", "Move");
 			animCom2.Add("Mob1Animation_Attack", "Attack");
@@ -188,6 +193,7 @@ namespace gswy
 			sprite0.SetTexture("RedLayer");
 			obj.AddComponent(sprite0);
 			auto aabb1 = BodyCom();
+			aabb1.SetPos3D(transform.GetPos3D());
 			aabb1.ChooseShape("AABB", 0.5, 0.5 / 70 * 50);
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom());

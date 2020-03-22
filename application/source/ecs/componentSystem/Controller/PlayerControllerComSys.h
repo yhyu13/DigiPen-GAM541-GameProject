@@ -69,14 +69,17 @@ namespace gswy
 			HandlePlayerMovement(dt);
 
 			//// TODO remove spawn enemies by triggering buttons
-			//if (input->IsKeyTriggered(KEY_SPACE))
+			//if (input->IsKeyTriggered(KEY_T))
 			//{
+			//	PRINT("KEY T: CALL ENEMY");
 			//	auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
 			//	queue->Publish(e);
-
+			//
 			//	static bool flash = true;
+			//	//auto enemy = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY)[0];
+			//	//auto enemy = m_registeredEntities.at(1);
 			//	ComponentDecorator<SpriteCom, GameObjectType> sprite;
-			//	m_parentWorld->Unpack(entity, sprite);
+			//	m_parentWorld->Unpack(enemy, sprite);
 			//	auto s = sprite->Get();
 			//	(flash)? s->SetSpriteShader("White"): s->SetSpriteShader("Default");
 			//	flash = !flash;
@@ -225,9 +228,11 @@ namespace gswy
 
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			ComponentDecorator<TransformCom, GameObjectType> transform;
+			ComponentDecorator<BodyCom, GameObjectType> body;
 			ComponentDecorator<AnimationCom, GameObjectType> animation;
 			m_parentWorld->Unpack(entity, transform);
 			m_parentWorld->Unpack(entity, animation);
+			m_parentWorld->Unpack(entity, body);
 			auto playerPos = transform->GetPos();
 
 			auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
@@ -242,7 +247,8 @@ namespace gswy
 			// Stop when delta distance is small
 			if (glm::length(delta) < m_noPathFindingThreshold)
 			{
-				transform->SetVelocity(vec2(0));
+				//transform->SetVelocity(vec2(0));
+				body->SetVelocity(vec2(0));
 				animation->SetCurrentAnimationState("Idle");
 				return;
 			}
@@ -320,13 +326,15 @@ namespace gswy
 				coolDownController->SetFreeze(false);
 				auto tower = ownership->GetEntity();
 				ComponentDecorator<TransformCom, GameObjectType> towerTransform;
+				ComponentDecorator<BodyCom, GameObjectType> towerBody;
 				ComponentDecorator<ActiveCom, GameObjectType> towerActive;
 				ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
 				m_parentWorld->Unpack(tower, towerTransform);
+				m_parentWorld->Unpack(tower, towerBody);
 
 				// Simply swap the position of build tower and this tower
-				auto towerPos = towerTransform->GetPos();
-				towerTransform->SetPos(transform->GetPos());
+				auto towerPos = towerBody->GetPos();
+				towerBody->SetPos(transform->GetPos());
 				transform->SetPos(towerPos);
 				m_parentWorld->Unpack(tower, towerActive);
 
@@ -355,12 +363,14 @@ namespace gswy
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			ComponentDecorator<TransformCom, GameObjectType> transform;
 			ComponentDecorator<AnimationCom, GameObjectType> animation;
+			ComponentDecorator<BodyCom, GameObjectType> body;
 			m_parentWorld->Unpack(entity, transform);
+			m_parentWorld->Unpack(entity, body);
 			m_parentWorld->Unpack(entity, animation);
 
 			if (m_pathResult.empty())
 			{
-				transform->SetVelocity(vec2(0));
+				body->SetVelocity(vec2(0));
 				animation->SetCurrentAnimationState("Idle");
 				return;
 			}
@@ -403,7 +413,7 @@ namespace gswy
 				transform->SetRotation(angle);
 			}
 			// 2. Move
-			transform->SetVelocity(glm::normalize(delta) * m_speed);
+			body->SetVelocity(glm::normalize(delta) * m_speed);
 			animation->SetCurrentAnimationState("Move");
 
 			// 3. Play sound
