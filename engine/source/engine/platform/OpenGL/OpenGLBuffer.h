@@ -53,4 +53,23 @@ namespace gswy {
 		uint32_t m_RendererID;
 		uint32_t m_Count;
 	};
+
+	class OpenGLFrameBuffer :public FrameBuffer
+	{
+	public:
+		OpenGLFrameBuffer(uint32_t width, uint32_t height);
+
+		virtual ~OpenGLFrameBuffer();
+
+		virtual void Bind() const;
+		virtual void Unbind() const;
+
+		inline uint32_t GetRendererID() const { return m_RendererID; }
+		inline uint32_t GetRenderTargetID() const { return m_RenderTargetID; }
+
+	private:
+		uint32_t m_RendererID;
+		uint32_t m_RenderTargetID;
+		uint32_t m_DepthID;
+	};
 }

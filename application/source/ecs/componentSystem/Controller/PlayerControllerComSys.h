@@ -108,9 +108,12 @@ namespace gswy
 				auto player = m_registeredEntities.at(0);
 				m_parentWorld->Unpack(player, playerSkillComponent);
 
-				std::shared_ptr<MultipleProjectile> mp = MemoryManager::Make_shared<MultipleProjectile>();
-				auto e = MemoryManager::Make_shared<SkillUpgradeEvent>(playerSkillComponent->GetCurrentSkill()->GetActiveSkillType(), mp);
-				queue->Publish(e);
+				if (playerSkillComponent->GetCurrentSkill() != nullptr)
+				{
+					std::shared_ptr<MultipleProjectile> mp = MemoryManager::Make_shared<MultipleProjectile>();
+					auto e = MemoryManager::Make_shared<SkillUpgradeEvent>(playerSkillComponent->GetCurrentSkill()->GetActiveSkillType(), mp);
+					queue->Publish(e);
+				}
 			}
 
 			if (input->IsKeyTriggered(KEY_G))

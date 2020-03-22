@@ -12,6 +12,7 @@ Creation date: 03/12/2020
 
 #include "engine-precompiled-header.h"
 #include "GameWidgetManager.h"
+#include "../inventory-manager/InventoryManager.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -74,30 +75,67 @@ namespace gswy {
 		ImGui::End();
 	}
 
+	HUD::HUD() 
+	{ 
+		IsVisible = true; 
+		m_TimerMin = 0; 
+		m_TimerSec = 0; 
+		m_Wave = 0; 
+		m_Coins = 0;
+		m_Progress = 0.5f;
+		m_Mana = 0.5f;
+		m_Sanity = 0.5f;
+		m_FrameBuffer = FrameBuffer::Create(m_WindowSize_X, m_WindowSize_Y);
+	}
+
 	void HUD::Render()
-	{
-		//Text : Wave
+	{	
+		//Text : Timer
 		ImVec2 nextWindowSize = ImVec2(60, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0], m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::Text("Wave 0");
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0], nextWindowSize[1]));
+		ImGui::Begin("Timer", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Text("%i : %i", m_TimerMin, m_TimerSec);
 		ImGui::End();
-
+		
+		//Text : Wave
+		nextWindowSize = ImVec2(60, 20);
+		ImGui::SetNextWindowSize(nextWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 65));
+		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Text("Wave : %i", m_Wave);
+		ImGui::End();
+		
+		//Text : Coin
+		nextWindowSize = ImVec2(60, 20);
+		ImGui::SetNextWindowSize(nextWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 135));
+		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Text("Coin : %i", m_Coins);
+		ImGui::End();
+		
+		//Progress Bar : Base Life
+		nextWindowSize = ImVec2(500, 20);
+		ImGui::SetNextWindowSize(nextWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 100));
+		ImGui::Begin("Base Life", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::ProgressBar(m_Progress);
+		ImGui::End();
+		
 		//Progress Bar : Mana
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - nextWindowSize[0] - 100, m_WindowSize_Y - nextWindowSize[1] - 100));
 		ImGui::Begin("Mana", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::ProgressBar(0.5f);
+		ImGui::ProgressBar(m_Mana);
 		ImGui::End();
-
+		
 		//Progress Bar : Sanity
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(100, m_WindowSize_Y - nextWindowSize[1] - 100));
 		ImGui::Begin("Sanity", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::ProgressBar(0.5f);
+		ImGui::ProgressBar(m_Sanity);
 		ImGui::End();
 	}
 
@@ -125,41 +163,74 @@ namespace gswy {
 
 	void ShopMenu::Render()
 	{
-		ImVec2 shopWindowSize = ImVec2(500, 600);
+		ImVec2 shopWindowSize = ImVec2(500, 400);
 		ImGui::SetNextWindowSize(shopWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - shopWindowSize.x, 0));
+		ImGui::SetNextWindowPos(ImVec2(0, 0));
 		ImGui::Begin("Shop", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		if (ImGui::BeginTabBar("ShopTabBar"))
 		{
-			if (ImGui::BeginTabItem("Totem"))
+			if (ImGui::BeginTabItem("ACTIVE"))
 			{
-				ImGui::Button("Skill", ImVec2(100, 100));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("Acitve Skill"))
-			{
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("Passive Skill"))
-			{
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("Support Skill"))
-			{
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill", ImVec2(100, 100));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("Devotion Skill"))
-			{
-				ImGui::Button("Skill", ImVec2(100, 100));
+				ImGui::Dummy(ImVec2(250, 15));
+				auto items = InventoryManager::GetInstance()->GetActiveItems();
+				auto begin = items.begin();
+				auto end = items.end();
+				for (auto it = begin; it != end; it++)
+				{
+					//Query : have been purchased
+					bool bPurchased = (*it)->m_purchased;
+
+					//Query : color
+					ImGui::PushStyleColor(ImGuiCol_Button, bPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(1.0f, 0.0f, 0.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 1.0f));
+					if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(50, 25)))
+					{
+						//item hasn't been purchased
+						if (!(*it)->m_purchased)
+						{
+							m_ClickedItem.second = true;
+						}
+						//item hasn been purchased
+						else
+						{
+							//open support penel
+						}
+						//item hasn't been purchased but click
+						if (m_ClickedItem.second)
+						{
+							m_ClickedItem = std::make_pair((*it), true);
+						}
+						//item hasn't been purchased and do unclick 
+						else
+						{
+							m_ClickedItem = std::make_pair((*it), false);
+						}
+						
+
+					}
+					ImGui::PopStyleColor(3);
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::BeginTooltip();
+
+						//Query : skill detail 
+						for(auto s : (*it)->m_text)
+							ImGui::Text("%s\n",s.c_str());
+						ImGui::EndTooltip();
+					}
+				}
+				ImGui::Dummy(ImVec2(250, 15));
+				
+				ImGui::SetCursorPos(ImVec2(50, shopWindowSize.y - 50));
+				if (ImGui::Button("PURCHASE", ImVec2(150, 25)))
+				{
+					//if (m_ClickedItem.second) 
+					//	InventoryManager::GetInstance()->PurchaseItem(items, m_ClickedItem.first);
+
+				}
+				ImGui::SetCursorPos(ImVec2(shopWindowSize.x - 200, shopWindowSize.y - 50));
+				ImGui::Button("INSTALL", ImVec2(150, 25));
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();
@@ -171,67 +242,83 @@ namespace gswy {
 	void InventoryMenu::Render()
 	{
 		//Inventory
-		ImGui::SetNextWindowSize(ImVec2(500, 600));
-		ImGui::SetNextWindowPos(ImVec2(0, 0));
+		ImVec2 InventoryWindowSize = ImVec2(500, 400);
+		ImGui::SetNextWindowSize(InventoryWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - InventoryWindowSize.x, 0));
 		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 
 		if (ImGui::BeginTabBar("InventoryTabBar"))
 		{
-			if (ImGui::BeginTabItem("Skill 1"))
+			if (ImGui::BeginTabItem("1"))
 			{
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
+				ImGui::Dummy(ImVec2(500, 25));
+				//Query : replace name when ACTIVE 1 has been installed
+				std::string act1 = "ACTIVE 1";
+				ImGui::Button(act1.c_str(), ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup1 = "SUPPORT 1";
+				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup2 = "SUPPORT 2";
+				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup3 = "SUPPORT 3";
+				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("Skill 2"))
+			if (ImGui::BeginTabItem("2"))
 			{
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
+				ImGui::Dummy(ImVec2(500, 25));
+				//Query : replace name when ACTIVE 2 has been installed
+				std::string act1 = "ACTIVE 1";
+				ImGui::Button(act1.c_str(), ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup1 = "SUPPORT 1";
+				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup2 = "SUPPORT 2";
+				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup3 = "SUPPORT 3";
+				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("Devotion Skill"))
+			if (ImGui::BeginTabItem("3"))
 			{
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100)); ImGui::SameLine();
-				ImGui::Button("Skill Slot", ImVec2(100, 100));
-				ImGui::Separator();
+				ImGui::Dummy(ImVec2(500, 25));
+				//Query : replace name when ACTIVE 3 has been installed
+				std::string act1 = "ACTIVE 1";
+				ImGui::Button(act1.c_str(), ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup1 = "SUPPORT 1";
+				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup2 = "SUPPORT 2";
+				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup3 = "SUPPORT 3";
+				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("4"))
+			{
+				ImGui::Dummy(ImVec2(500, 25));
+				//Query : replace name when ACTIVE 4 has been installed
+				std::string act1 = "ACTIVE 1";
+				ImGui::Button(act1.c_str(), ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup1 = "SUPPORT 1";
+				ImGui::Button("SUPPORT 1", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup2 = "SUPPORT 2";
+				ImGui::Button("SUPPORT 2", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
+				std::string sup3 = "SUPPORT 3";
+				ImGui::Button("SUPPORT 3", ImVec2(300, 50));
+				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();

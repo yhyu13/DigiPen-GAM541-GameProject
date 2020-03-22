@@ -12,6 +12,8 @@ Creation date: 03/12/2020
 
 #pragma once
 #include "engine/ui/Widget.h"
+#include "engine/renderer/Buffer.h"
+#include "inventory-manager/Item.h"
 
 namespace gswy {
 
@@ -21,9 +23,29 @@ namespace gswy {
 	class HUD : public Widget
 	{
 	public:
-		HUD() { IsVisible = true; };
+		HUD();
 		void Render() override;
+
+		std::shared_ptr<FrameBuffer> GetFrameBuffer() const { return m_FrameBuffer; }
 		WidgetManager* manager;
+
+		void  SetTimeMinute(int timeMin) { m_TimerMin = timeMin; }
+		void  SetTimeSecond(int timeSec) { m_TimerSec = timeSec; }
+		void  SetWave(int wave) { m_Wave = wave; }
+		void  SetCoinNum(int coinNum) { m_Coins = coinNum; }
+		void  SetProgress(float wave) { m_Wave = wave; }
+
+	private:
+		int m_TimerMin;
+		int m_TimerSec;
+		int m_Wave;
+		int m_Coins;
+		float m_Progress;
+		float m_Mana;
+		float m_Sanity;
+
+		std::shared_ptr<FrameBuffer> m_FrameBuffer;
+		
 	};
 
 	//new game, continue, option, how to play, quit
@@ -51,6 +73,9 @@ namespace gswy {
 		ShopMenu() { IsVisible = false; };
 		void Render() override;
 		WidgetManager* manager;
+
+	private:
+		std::pair<std::shared_ptr<Item>, bool> m_ClickedItem;
 	};
 
 	//Allocate attributes, install support skills into basic skills, account basic stats (#HP, #monster killed, #experience)
@@ -60,6 +85,9 @@ namespace gswy {
 		InventoryMenu() { IsVisible = false; };
 		void Render() override;
 		WidgetManager* manager;
+
+	private:
+		
 	};
 
 	class WidgetManager

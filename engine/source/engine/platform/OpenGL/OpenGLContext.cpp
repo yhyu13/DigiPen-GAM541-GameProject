@@ -32,10 +32,10 @@ namespace gswy {
 		ASSERT(status, "Failed to initialize Glad");
 		
 		//Put info to Log
-		//gswy_CORE_INFO(" OpenGL Info:");
-		//gswy_CORE_INFO(" Vender: {0}", glGetString(GL_VENDOR));
-		//gswy_CORE_INFO(" Renderer: {0}", glGetString(GL_RENDERER));
-		//gswy_CORE_INFO(" Version: {0}", glGetString(GL_VERSION));
+		ENGINE_INFO(" OpenGL Info:");
+		ENGINE_INFO(" Vender: {0}", glGetString(GL_VENDOR));
+		ENGINE_INFO(" Renderer: {0}", glGetString(GL_RENDERER));
+		ENGINE_INFO(" Version: {0}", glGetString(GL_VERSION));
 	}
 
 	void OpenGLContext::SwapBuffers()

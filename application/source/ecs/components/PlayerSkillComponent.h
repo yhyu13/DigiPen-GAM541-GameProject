@@ -24,6 +24,9 @@ namespace gswy
 {
 	struct PlayerSkillComponent : BaseComponent<PlayerSkillComponent>
 	{
+		PlayerSkillComponent(): m_currentSkill(nullptr)
+		{
+		}
 
 		void AddSkill(std::shared_ptr<ActiveSkill> skill)
 		{
