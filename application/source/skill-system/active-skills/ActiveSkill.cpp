@@ -39,4 +39,14 @@ namespace gswy
 	{
 		return m_type;
 	}
+
+	void ActiveSkill::AddSupportSkill(const int& slot, std::shared_ptr<SupportSkill> skill)
+	{
+		m_suppportSkillsUpdated[slot] = skill;
+	}
+
+	std::shared_ptr<SupportSkill> ActiveSkill::GetSupportSkill(const int& slot)
+	{
+		return m_suppportSkillsUpdated[slot];
+	}
 }

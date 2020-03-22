@@ -26,10 +26,12 @@ namespace gswy
 		BaseSkill();
 		virtual ~BaseSkill();
 
+		std::set<SkillTag> GetSkillTags();
+
 	protected:
 
-		void AddSkillTag(const SkillTag& tag);
-		void RemoveSkillTag(const SkillTag& tag);
+		virtual void AddSkillTag(const SkillTag& tag);
+		virtual void RemoveSkillTag(const SkillTag& tag);
 
 		const int& GetId();
 

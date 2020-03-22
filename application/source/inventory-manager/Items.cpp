@@ -2,7 +2,7 @@
 
 namespace gswy
 {
-	int count = 0;
+	int Items::count = 0;
 
 	Items::Items() : m_supportSkillCount(0)
 	{

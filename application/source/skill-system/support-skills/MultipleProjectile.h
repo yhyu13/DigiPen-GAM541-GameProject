@@ -22,7 +22,7 @@ namespace gswy
 	class MultipleProjectile: public SupportSkill
 	{
 	public:
-		MultipleProjectile();
+		MultipleProjectile(SupportSkillType type);
 		~MultipleProjectile();
 
 		void SetCount(const int& count);
