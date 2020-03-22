@@ -279,7 +279,7 @@ namespace gswy {
 				{
 					if (m_ClickedItem.first && m_ClickedItem.second)
 					{
-						InventoryManager::GetInstance()->Install(0, 0, m_ClickedItem.first);
+						InventoryManager::GetInstance()->Install(1, 1, m_ClickedItem.first);
 					}
 					else if(m_ClickedSupportItem.first && m_ClickedSupportItem.second)
 					{
@@ -309,7 +309,7 @@ namespace gswy {
 				//Query : replace name when ACTIVE 1 has been installed
 				std::string act1 = "ACTIVE 1";
 				//auto SkillManager::GetInstance()->GetSkill(0, 0)->m_type.c_str();
-				ImGui::Button(SkillManager::GetInstance()->GetSkill(0, 0)->m_type.c_str(), ImVec2(300, 50));
+				ImGui::Button(SkillManager::GetInstance()->GetSkill(1, 1)->m_type.c_str(), ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
 				std::string sup1 = "SUPPORT 1";
 				ImGui::Button("SUPPORT 1", ImVec2(300, 50));

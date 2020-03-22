@@ -33,12 +33,12 @@ namespace gswy
 		SkillManager();
 
 		std::shared_ptr<SupportSkill> GetSupportingSkill(const std::string& type);
-		const std::string& GetSkillType(ActiveSkillType type);
-		const std::string& GetSkillType(SupportSkillType type);
+		std::string GetSkillType(ActiveSkillType type);
+		std::string GetSkillType(SupportSkillType type);
 		std::set<std::string> GetSkillTags(std::shared_ptr<BaseSkill> skill);
 
 	private:
 
-		std::shared_ptr<ActiveSkill> m_skillsUpdated[4];
+		std::shared_ptr<ActiveSkill> m_skills[4];
 	};
 }

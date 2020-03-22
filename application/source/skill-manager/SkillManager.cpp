@@ -35,8 +35,10 @@ namespace gswy
 			case 1: Add a skill first time
 		
 		*/
+		const int skill_ = skillNumber - 1;
+		int slot_ = slotNumber - 1;
 
-		if (slotNumber == 0 && item->m_category._Equal("ACTIVE"))
+		if (slot_ == 0 && item->m_category._Equal("ACTIVE"))
 		{
 			std::shared_ptr<ActiveSkill> newSkill;
 			if (item->m_type._Equal("FIRE-BALL"))
@@ -47,7 +49,7 @@ namespace gswy
 			{
 				newSkill = std::make_shared<FireballAttack>(ActiveSkillType::ICE_BALL);
 			}
-			std::shared_ptr<ActiveSkill> currentSkill = m_skillsUpdated[skillNumber];
+			std::shared_ptr<ActiveSkill> currentSkill = m_skills[skill_];
 			if (currentSkill != nullptr)
 			{
 				// over-write the existing active skill
@@ -60,24 +62,25 @@ namespace gswy
 						newSkill->AddSupportSkill(slot, supportSkill);
 					}
 				}
-				m_skillsUpdated[skillNumber] = newSkill;
+				m_skills[skill_] = newSkill;
 			}
 			else
 			{
 				// just store the active skill
-				m_skillsUpdated[skillNumber] = newSkill;
+				m_skills[skill_] = newSkill;
 			}
 		}
-		else if (slotNumber > 0 && item->m_category._Equal("SUPPORT"))
+		else if (slot_ > 0 && item->m_category._Equal("SUPPORT"))
 		{
-			std::shared_ptr<ActiveSkill> activeSkill = m_skillsUpdated[skillNumber];
+			slot_ -= 1;
+			std::shared_ptr<ActiveSkill> activeSkill = m_skills[skill_];
 			if (activeSkill != nullptr)
 			{
 				std::shared_ptr<SupportSkill> supportSkill;
 				if (item->m_type._Equal("MULTIPLE-PROJECTILE"))
 				{
 					supportSkill = std::make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
-					activeSkill->AddSupportSkill(slotNumber, supportSkill);
+					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 			}
 		}
@@ -85,11 +88,13 @@ namespace gswy
 
 	std::shared_ptr<Skill> SkillManager::GetSkill(const int& skillNumber, const int& slotNumber)
 	{
+		int skill_ = skillNumber - 1;
+		int slot_ = slotNumber - 1;
 		std::shared_ptr<Skill> skill = nullptr;
-		std::shared_ptr<ActiveSkill> activeSkill = m_skillsUpdated[skillNumber];
+		std::shared_ptr<ActiveSkill> activeSkill = m_skills[skill_];
 		if (activeSkill != nullptr)
 		{
-			if (slotNumber < 0) // just return the information about active skill
+			if (slot_ == 0) // just return the information about active skill
 			{
 				skill = std::make_shared<Skill>();
 				skill->m_category = "ACTIVE";
@@ -100,8 +105,9 @@ namespace gswy
 			}
 			else
 			{
+				slot_ -= 1;
 				skill = std::make_shared<Skill>();
-				std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(slotNumber);
+				std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(slot_);
 				skill->m_category = "SUPPORT";
 				skill->m_type = GetSkillType(supportSkill->GetSkillType());
 				skill->m_skillNumber = skillNumber;
@@ -112,7 +118,7 @@ namespace gswy
 		return skill;
 	}
 
-	const std::string& SkillManager::GetSkillType(ActiveSkillType type)
+	std::string SkillManager::GetSkillType(ActiveSkillType type)
 	{
 		if (type == ActiveSkillType::FIRE_BALL)
 		{
@@ -127,7 +133,7 @@ namespace gswy
 		return "";
 	}
 
-	const std::string& SkillManager::GetSkillType(SupportSkillType type)
+	std::string SkillManager::GetSkillType(SupportSkillType type)
 	{
 		if (type == SupportSkillType::MULTIPLE_PROJECTILE)
 		{

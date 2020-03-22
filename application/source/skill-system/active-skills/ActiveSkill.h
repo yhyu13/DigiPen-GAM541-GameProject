@@ -36,8 +36,8 @@ namespace gswy
 		virtual std::shared_ptr<SupportSkill> GetSupportSkill(const int& slot);
 
 	private:
-		std::set<std::shared_ptr<SupportSkill>> m_supportSkills;
+		std::set<std::shared_ptr<SupportSkill>> m_supportSkillsLegacy;
 		ActiveSkillType m_type;
-		std::shared_ptr<SupportSkill> m_suppportSkillsUpdated[3];
+		std::shared_ptr<SupportSkill> m_suppportSkills[3];
 	};
 }

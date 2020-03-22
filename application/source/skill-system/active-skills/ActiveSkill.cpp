@@ -32,7 +32,7 @@ namespace gswy
 
 	void ActiveSkill::AddSupportSkill(std::shared_ptr<SupportSkill> skill)
 	{
-		m_supportSkills.insert(skill);
+		m_supportSkillsLegacy.insert(skill);
 	}
 
 	ActiveSkillType ActiveSkill::GetActiveSkillType()
@@ -42,11 +42,11 @@ namespace gswy
 
 	void ActiveSkill::AddSupportSkill(const int& slot, std::shared_ptr<SupportSkill> skill)
 	{
-		m_suppportSkillsUpdated[slot] = skill;
+		m_suppportSkills[slot] = skill;
 	}
 
 	std::shared_ptr<SupportSkill> ActiveSkill::GetSupportSkill(const int& slot)
 	{
-		return m_suppportSkillsUpdated[slot];
+		return m_suppportSkills[slot];
 	}
 }
