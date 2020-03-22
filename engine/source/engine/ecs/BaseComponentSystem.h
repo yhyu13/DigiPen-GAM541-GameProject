@@ -15,6 +15,7 @@ Creation date	: 02/03/2020
 #include <atomic>
 #include "Entity.h"
 #include "BitMaskSignature.h"
+#include "ComponentDecorator.h"
 
 namespace gswy {
 
@@ -89,6 +90,14 @@ namespace gswy {
 		virtual void RemoveAllEntities(double frameTime) {
 		}
 
+		template<class ComponentType>
+		ComponentDecorator<ComponentType, EntityType> GetComponent(Entity<EntityType> entity)
+		{
+			ComponentDecorator<ComponentType, EntityType> com;
+			m_parentWorld->Unpack(entity, com);
+			return com;
+		}
+		
 		void SetWorld(GameWorld<EntityType>* world) {
 			m_parentWorld = world;
 		}

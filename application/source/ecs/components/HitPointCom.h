@@ -26,6 +26,7 @@ namespace gswy
 		HitPointCom()
 		{
 			m_HP = 100.0;
+			m_MaxHP = m_HP;
 			m_HPLock = false;
 			m_IsDead = false;
 		}
@@ -33,12 +34,13 @@ namespace gswy
 		explicit HitPointCom(double HitPoint)
 		{
 			m_HP = HitPoint;
+			m_MaxHP = m_HP;
 			m_HPLock = false;
 		}
 
 		void AddHitPoint(double HitPoint)
 		{
-			if (!m_HPLock) m_HP += HitPoint;
+			if (!m_HPLock && (m_HP + HitPoint <= m_MaxHP)) m_HP += HitPoint;
 		}
 
 		bool IsDepleted()
@@ -51,20 +53,24 @@ namespace gswy
 			m_HPLock = b;
 		}
 
-
 		void SetIsDead(bool b)
 		{
 			m_IsDead = b;
 		}
 
-
-		bool GetIsDead()
+		bool IsDead()
 		{
 			return m_IsDead;
 		}
 
+		double GetPercentageHP()
+		{
+			return (m_HP > 0)? m_HP / m_MaxHP: 0;
+		}
+
 	private:
 		double m_HP;
+		double m_MaxHP;
 		bool m_HPLock;
 		bool m_IsDead;
 	};

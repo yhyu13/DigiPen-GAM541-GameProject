@@ -324,6 +324,7 @@ namespace gswy
 
 		void BeforeRun()
 		{
+			// Play BGM
 			//AudioManager::GetInstance()->PlaySound("breakout", AudioVector3{ 0, 0, 0 }, 1, 1);
 		}
 
@@ -371,11 +372,13 @@ namespace gswy
 				auto cursor = InputManager::GetInstance()->GetCursorPosition();
 				auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
 				auto delta = vec2(0);
-				/*auto len = glm::length(cursor - center);
-				if (len > 1e-2)
-				{
-					delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f : len);
-				}*/
+
+				// Enable it if you want have crusing camera effect
+				//auto len = glm::length(cursor - center);
+				//if (len > 1e-2)
+				//{
+				//	delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f : len);
+				//}
 				auto targetPos = vec3(transform->GetPos(),0.0f) + vec3(delta.x, -delta.y, 0.0f);
 				auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 				m_CameraController.SetPosition(newPos);
