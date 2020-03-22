@@ -194,7 +194,7 @@ namespace gswy
 			obj.AddComponent(sprite0);
 			auto aabb1 = BodyCom();
 			aabb1.SetPos3D(transform.GetPos3D());
-			aabb1.ChooseShape("AABB", 0.5, 0.5 / 70 * 50);
+			aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom());
 		}

@@ -20,6 +20,8 @@ namespace gswy
 {
 	struct BodyCom : BaseComponent<BodyCom>
 	{
+	public:
+
 		BodyCom() = default;
 		BodyCom(float posx, float posy)
 			:m_PosX(posx), m_PosY(posy), m_Mass(0), m_AccX(0), m_AccY(0),
@@ -50,6 +52,7 @@ namespace gswy
 			return *this;
 		}
 
+	public:
 		float m_PosX;
 		float m_PosY;
 		float m_PosZ;
@@ -66,6 +69,8 @@ namespace gswy
 		float m_Restitution;
 		std::shared_ptr<Shape> shape;
 		Entity<GameObjectType> m_otherEntity;
+
+	public:
 
 		void ResetOtherEntity()
 		{
@@ -124,6 +129,11 @@ namespace gswy
 			m_PosX = pos.x;
 			m_PosY = pos.y;
 			m_PosZ = pos.z;
+		}
+
+		const vec3& GetPos3D()
+		{
+			return vec3(m_PosX, m_PosY, m_PosZ);
 		}
 
 		void SetRestitution(float rest)

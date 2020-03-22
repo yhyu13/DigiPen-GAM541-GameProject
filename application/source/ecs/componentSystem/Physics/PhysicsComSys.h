@@ -228,10 +228,17 @@ namespace gswy
 						if ((body1->GetOtherEntity().m_type == GameObjectType::ENEMY) &&
 							(body2->GetOtherEntity().m_type == GameObjectType::ENEMY))
 						{
+							//TODO: Some Kind of resolution for bodies to keep moving until the base is reached
 							//body1->m_PosX = body1->m_PrevPosX;
 							//body1->m_PosY = body1->m_PrevPosY;
 							//body2->m_PosX = body2->m_PrevPosX;
 							//body2->m_PosY = body2->m_PrevPosY;
+
+							//TODO: Needs Refinement, Trying to create traffic
+							//body1->m_VelY = 0;
+							//body2->m_VelX = 0;
+							//body1->m_VelX = 0;
+							//body2->m_VelY = 0;
 						}
 					}
 				}
