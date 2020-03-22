@@ -14,6 +14,7 @@
 
 #include "skill-system/support-skills/SupportSkill.h"
 #include "Skill.h"
+#include "Skills.h"
 
 namespace gswy
 {
@@ -27,6 +28,9 @@ namespace gswy
 
 		void AddSkill(const int& skillNumber, const int& slotNumber, std::shared_ptr<Item> item);
 		std::shared_ptr<Skill> GetSkill(const int& skillNumber, const int& slotNumber);
+		std::shared_ptr<Skills> GetSkill(const int& skillNumber);
+		void RemoveSkill(int skillNumber, int slotNumber);
+		std::shared_ptr<ActiveSkill> GetActiveSkill(int skillNumber);
 
 	private:
 

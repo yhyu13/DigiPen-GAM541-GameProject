@@ -27,6 +27,7 @@ namespace gswy
 		virtual ~SupportSkill();
 
 		virtual void HandleSkill(BaseSkill* skill) = 0;
+		virtual void RemoveSkill(std::shared_ptr<BaseSkill> skill) = 0;
 		virtual SupportSkillType GetSkillType();
 
 	private:

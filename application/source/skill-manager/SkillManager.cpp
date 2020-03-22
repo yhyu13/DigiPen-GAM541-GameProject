@@ -32,8 +32,17 @@ namespace gswy
 	void SkillManager::AddSkill(const int& skillNumber, const int& slotNumber, std::shared_ptr<Item> item)
 	{
 		/*
-			case 1: Add a skill first time
-		
+			Layout of the skill-panel:
+
+			===========================================
+			SKILL-1	|	SKILL-2	|	SKILL-3	|	SKILL-4
+			========|===========|===========|==========
+			SLOT-1	|	SLOT-1	|	SLOT-1	|	SLOT-1	<======= ACTIVE SKILLS
+			========|===========|===========|==========
+			SLOT-2	|	SLOT-2	|	SLOT-2	|	SLOT-2	<======= SUPPORT SKILLS
+			SLOT-3	|	SLOT-3	|	SLOT-3	|	SLOT-3	<======= SUPPORT SKILLS
+			SLOT-4	|	SLOT-4	|	SLOT-4	|	SLOT-4	<======= SUPPORT SKILLS
+			===========================================
 		*/
 		const int skill_ = skillNumber - 1;
 		int slot_ = slotNumber - 1;
@@ -47,13 +56,16 @@ namespace gswy
 			}
 			else if (item->m_type._Equal("ICE-BALL"))
 			{
-				newSkill = std::make_shared<FireballAttack>(ActiveSkillType::ICE_BALL);
+				newSkill = std::make_shared<IceballAttack>(ActiveSkillType::ICE_BALL);
 			}
 			std::shared_ptr<ActiveSkill> currentSkill = m_skills[skill_];
 			if (currentSkill != nullptr)
 			{
-				// over-write the existing active skill
-				// must call HandleSkill method for each support skill
+
+				/*
+					Before over-writing an existing active skill.
+					Update the new skill with support skills of the existing active skill.
+				*/
 				for (int slot = 0; slot < 3; ++slot)
 				{
 					std::shared_ptr<SupportSkill> supportSkill = currentSkill->GetSupportSkill(slot);
@@ -62,12 +74,11 @@ namespace gswy
 						newSkill->AddSupportSkill(slot, supportSkill);
 					}
 				}
-				m_skills[skill_] = newSkill;
+				m_skills[skill_] = newSkill; // over-write the active skill
 			}
 			else
 			{
-				// just store the active skill
-				m_skills[skill_] = newSkill;
+				m_skills[skill_] = newSkill; // new active skill
 			}
 		}
 		else if (slot_ > 0 && item->m_category._Equal("SUPPORT"))
@@ -76,10 +87,16 @@ namespace gswy
 			std::shared_ptr<ActiveSkill> activeSkill = m_skills[skill_];
 			if (activeSkill != nullptr)
 			{
-				std::shared_ptr<SupportSkill> supportSkill;
+				std::shared_ptr<SupportSkill> existingSupportSkill = activeSkill->GetSupportSkill(slot_);
+				if (existingSupportSkill != nullptr) // a support-skill already exists at the slot 
+				{
+					// remove the behavior of the existing support-skill from the active-skill
+					existingSupportSkill->RemoveSkill(activeSkill);
+				}
+
 				if (item->m_type._Equal("MULTIPLE-PROJECTILE"))
 				{
-					supportSkill = std::make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
+					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
 					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 			}
@@ -99,8 +116,6 @@ namespace gswy
 				skill = std::make_shared<Skill>();
 				skill->m_category = "ACTIVE";
 				skill->m_type = GetSkillType(activeSkill->GetActiveSkillType());
-				skill->m_skillNumber = skillNumber;
-				skill->m_slotNumber = slotNumber;
 				skill->m_tags = GetSkillTags(activeSkill);
 			}
 			else
@@ -108,14 +123,88 @@ namespace gswy
 				slot_ -= 1;
 				skill = std::make_shared<Skill>();
 				std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(slot_);
-				skill->m_category = "SUPPORT";
-				skill->m_type = GetSkillType(supportSkill->GetSkillType());
-				skill->m_skillNumber = skillNumber;
-				skill->m_slotNumber = slotNumber;
-				skill->m_tags = GetSkillTags(supportSkill);
+				if (supportSkill != nullptr)
+				{
+					skill->m_category = "SUPPORT";
+					skill->m_type = GetSkillType(supportSkill->GetSkillType());
+					skill->m_tags = GetSkillTags(supportSkill);
+				}
 			}
+
+			skill->m_skillNumber = skillNumber;
+			skill->m_slotNumber = slotNumber;
 		}
 		return skill;
+	}
+
+	std::shared_ptr<Skills> SkillManager::GetSkill(const int& skillNumber)
+	{
+		int skill_ = skillNumber - 1;
+		std::shared_ptr<Skills> skills = std::make_shared<Skills>();
+		std::shared_ptr<ActiveSkill> activeSkill = m_skills[skill_];
+		if (activeSkill != nullptr)
+		{
+			std::shared_ptr<Skill> skill = std::make_shared<Skill>();
+			skill->m_category = "ACTIVE";
+			skill->m_type = GetSkillType(activeSkill->GetActiveSkillType());
+			skill->m_tags = GetSkillTags(activeSkill);
+			skill->m_skillNumber = skillNumber;
+			skill->m_slotNumber = 1;
+			skills->m_skills[0] = skill;
+
+			for (int i = 0; i < 3; ++i)
+			{
+				std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(i);
+				if (supportSkill != nullptr)
+				{
+					std::shared_ptr<Skill> skill = std::make_shared<Skill>();
+					skill->m_category = "SUPPORT";
+					skill->m_type = GetSkillType(supportSkill->GetSkillType());
+					skill->m_tags = GetSkillTags(supportSkill);
+					skill->m_skillNumber = skillNumber;
+					skill->m_slotNumber = i + 2;
+					skills->m_skills[i + 1] = skill;
+				}
+			}
+		}
+		skills->m_skillNumber = skillNumber;
+		return skills;
+	}
+
+	void SkillManager::RemoveSkill(int skillNumber, int slotNumber)
+	{
+		skillNumber -= 1;
+		slotNumber -= 1;
+		std::shared_ptr<ActiveSkill> activeSkill = m_skills[skillNumber];
+		if (activeSkill != nullptr)
+		{
+			if (slotNumber == 0) // remove the active skill
+			{
+				// remove all the support skills
+				for (int i = 0; i < 3; ++i)
+				{
+					if (activeSkill->GetSupportSkill(i) != nullptr)
+					{
+						activeSkill->ResetSupportSkill(i);
+					}
+				}
+				activeSkill = nullptr;
+			}
+			else
+			{
+				slotNumber -= 1;
+				if (activeSkill->GetSupportSkill(slotNumber) != nullptr)
+				{
+					activeSkill->GetSupportSkill(slotNumber)->RemoveSkill(activeSkill); // remove behavior of support-skill from active-skill
+					activeSkill->ResetSupportSkill(slotNumber); // reset the support skill
+				}
+			}
+		}
+	}
+
+	std::shared_ptr<ActiveSkill> SkillManager::GetActiveSkill(int skillNumber)
+	{
+		return m_skills[skillNumber - 1];
 	}
 
 	std::string SkillManager::GetSkillType(ActiveSkillType type)

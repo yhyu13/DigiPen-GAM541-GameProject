@@ -25,13 +25,14 @@ namespace gswy
 		MultipleProjectile(SupportSkillType type);
 		~MultipleProjectile();
 
-		void SetCount(const int& count);
-		const int& GetCount();
+		void SetMultiplier(const int& multiplier);
+		const int& GetMultiplier();
 
-		void HandleSkill(BaseSkill* skill);
+		virtual void HandleSkill(BaseSkill* skill) override;
+		virtual void RemoveSkill(std::shared_ptr<BaseSkill> skill) override;
 
 	private:
 
-		int m_count;
+		int m_multiplier;
 	};
 }

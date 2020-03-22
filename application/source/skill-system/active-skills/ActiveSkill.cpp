@@ -49,4 +49,10 @@ namespace gswy
 	{
 		return m_suppportSkills[slot];
 	}
+
+	void ActiveSkill::ResetSupportSkill(const int& slot)
+	{
+		m_suppportSkills[slot].reset();
+		m_suppportSkills[slot] = nullptr;
+	}
 }
