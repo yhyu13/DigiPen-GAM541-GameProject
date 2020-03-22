@@ -110,7 +110,7 @@ namespace gswy
 
 				if (playerSkillComponent->GetCurrentSkill() != nullptr)
 				{
-					std::shared_ptr<MultipleProjectile> mp = MemoryManager::Make_shared<MultipleProjectile>();
+					std::shared_ptr<MultipleProjectile> mp = MemoryManager::Make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
 					auto e = MemoryManager::Make_shared<SkillUpgradeEvent>(playerSkillComponent->GetCurrentSkill()->GetActiveSkillType(), mp);
 					queue->Publish(e);
 				}

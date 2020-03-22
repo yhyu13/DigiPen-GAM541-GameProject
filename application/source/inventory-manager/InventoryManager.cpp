@@ -1,4 +1,5 @@
 #include "InventoryManager.h"
+#include "skill-manager/SkillManager.h"
 
 #include <json/json.h>
 #include <fstream>
@@ -83,5 +84,16 @@ namespace gswy
 	std::set<std::shared_ptr<Item>> InventoryManager::GetSupportItems(std::shared_ptr<Item> item)
 	{
 		return m_items->GetSupportItems(item);
+	}
+
+	void InventoryManager::Install(const int& skillNumber, const int& slotNumber, std::shared_ptr<Item> item)
+	{
+		if (item->m_purchased)
+		{
+			// call skill manager to install the skill
+			SkillManager* skillManager = SkillManager::GetInstance();
+			skillManager->AddSkill(skillNumber, slotNumber, item);
+			item->m_installed = true;
+		}
 	}
 }

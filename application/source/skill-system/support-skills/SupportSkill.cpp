@@ -16,7 +16,7 @@ Creation date	: 03/13/2020
 namespace gswy
 {
 	
-	SupportSkill::SupportSkill()
+	SupportSkill::SupportSkill(SupportSkillType type): m_type(type)
 	{
 		AddSkillTag(SkillTag::SUPPORT);
 	}
@@ -26,4 +26,8 @@ namespace gswy
 		RemoveSkillTag(SkillTag::SUPPORT);
 	}
 
+	SupportSkillType SupportSkill::GetSkillType()
+	{
+		return m_type;
+	}
 }

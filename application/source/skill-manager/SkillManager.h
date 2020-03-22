@@ -10,8 +10,10 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <set>
 
 #include "skill-system/support-skills/SupportSkill.h"
+#include "Skill.h"
 
 namespace gswy
 {
@@ -23,24 +25,20 @@ namespace gswy
 		static SkillManager* GetInstance();
 		~SkillManager();
 
-		std::shared_ptr<ActiveSkill> GetCurrentSkill();
-		std::map<int, std::shared_ptr<ActiveSkill>> GetAvailableSkills();
-
-
-		void AddActiveSkill(std::shared_ptr<Item> item);
-		void RemoveActiveSkill(const int& activeSkillId);
-		void UpgradeActiveSkill(const int& activeSkillId, std::shared_ptr<Item> supportingSkill);
+		void AddSkill(const int& skillNumber, const int& slotNumber, std::shared_ptr<Item> item);
+		std::shared_ptr<Skill> GetSkill(const int& skillNumber, const int& slotNumber);
 
 	private:
 
 		SkillManager();
 
 		std::shared_ptr<SupportSkill> GetSupportingSkill(const std::string& type);
+		const std::string& GetSkillType(ActiveSkillType type);
+		const std::string& GetSkillType(SupportSkillType type);
+		std::set<std::string> GetSkillTags(std::shared_ptr<BaseSkill> skill);
 
 	private:
 
-		std::shared_ptr<ActiveSkill> m_currentSkill;
-
-		std::map<int, std::shared_ptr<ActiveSkill>> m_availableSkills;
+		std::shared_ptr<ActiveSkill> m_skillsUpdated[4];
 	};
 }

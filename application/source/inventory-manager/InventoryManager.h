@@ -25,6 +25,7 @@ namespace gswy
 		std::vector<std::shared_ptr<Item>> GetActiveItems();
 		std::vector<std::shared_ptr<Item>> GetSupportItems();
 		std::set<std::shared_ptr<Item>> GetSupportItems(std::shared_ptr<Item> item);
+		void Install(const int& skillNumber, const int& slotNumber, std::shared_ptr<Item> item);
 
 	private:
 
