@@ -249,7 +249,7 @@ namespace gswy
 
 		void LoadGameWorld()
 		{
-			auto sampleID = Str(RAND_I(1, 4));
+			auto sampleID = Str(3);
 			PRINT("Loading map ID " + sampleID);
 
 			{
