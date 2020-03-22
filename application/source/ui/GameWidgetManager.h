@@ -76,6 +76,8 @@ namespace gswy {
 
 	private:
 		std::pair<std::shared_ptr<Item>, bool> m_ClickedItem;
+		std::pair<std::shared_ptr<Item>, bool> m_ClickedSupportItem;
+		bool m_OpenSupportWindow = false;
 	};
 
 	//Allocate attributes, install support skills into basic skills, account basic stats (#HP, #monster killed, #experience)
