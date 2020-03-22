@@ -173,9 +173,10 @@ namespace gswy
 
 	void SkillManager::RemoveSkill(int skillNumber, int slotNumber)
 	{
+		// adjusting the skill number and slot number
 		skillNumber -= 1;
 		slotNumber -= 1;
-		std::shared_ptr<ActiveSkill> activeSkill = m_skills[skillNumber];
+		std::shared_ptr<ActiveSkill>& activeSkill = m_skills[skillNumber];
 		if (activeSkill != nullptr)
 		{
 			if (slotNumber == 0) // remove the active skill
@@ -188,10 +189,13 @@ namespace gswy
 						activeSkill->ResetSupportSkill(i);
 					}
 				}
+				activeSkill.reset();
 				activeSkill = nullptr;
 			}
 			else
 			{
+				// adjusting the slot number of the support skill, as the skill in slot 2 corresponds to
+				// the support skill at index 0 in the support-skills array
 				slotNumber -= 1;
 				if (activeSkill->GetSupportSkill(slotNumber) != nullptr)
 				{

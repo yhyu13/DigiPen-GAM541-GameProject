@@ -55,4 +55,5 @@ namespace gswy
 		m_suppportSkills[slot].reset();
 		m_suppportSkills[slot] = nullptr;
 	}
+
 }

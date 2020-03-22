@@ -118,6 +118,13 @@ namespace gswy
 			// add support skills
 			skillManager->AddSkill(1, 2, supportItems.at(0));
 			skillManager->AddSkill(2, 2, supportItems.at(0));
+
+			skillManager->AddSkill(2, 3, supportItems.at(0));
+			skillManager->AddSkill(2, 4, supportItems.at(0));
+
+			skillManager->RemoveSkill(2, 3);
+
+			skillManager->RemoveSkill(1, 1);
 		}
 
 		void InitGameWorld()
