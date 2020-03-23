@@ -124,7 +124,6 @@ namespace gswy
 
 			skillManager->RemoveSkill(2, 3);
 
-			skillManager->RemoveSkill(1, 1);
 		}
 
 		void InitGameWorld()
