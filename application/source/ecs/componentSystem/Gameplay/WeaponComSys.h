@@ -66,7 +66,7 @@ namespace gswy
 							// Transformation com
 							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-							transform.AddVelocity(ToVec(weapon_rot) * 5.0f);
+							//transform.AddVelocity(ToVec(weapon_rot) * 5.0f);
 							weapon.AddComponent(transform);
 
 							// Particle com
@@ -87,6 +87,8 @@ namespace gswy
 
 							// Collision box
 							auto aabb = BodyCom();
+							aabb.SetPos(transform.GetPos());
+							aabb.SetVelocity(ToVec(weapon_rot) * 5.0f);
 							aabb.ChooseShape("Circle", 0.1);
 							weapon.AddComponent(aabb);
 
@@ -113,7 +115,7 @@ namespace gswy
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-							transform.AddVelocity(ToVec(weapon_rot) * 5.0f);
+							//transform.AddVelocity(ToVec(weapon_rot) * 5.0f);
 							weapon.AddComponent(transform);
 							auto animCom = AnimationCom();
 							animCom.Add("iceBallAnim1", "Move");
@@ -124,6 +126,8 @@ namespace gswy
 							weapon.AddComponent(sprite);
 							auto aabb = BodyCom();
 							aabb.ChooseShape("Circle", 0.1);
+							aabb.SetPos(transform.GetPos());
+							aabb.SetVelocity(ToVec(weapon_rot) * 5.0f);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(1.0));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
@@ -158,6 +162,7 @@ namespace gswy
 							sprite.SetScale(vec2(0.25, 1));
 							weapon.AddComponent(sprite);
 							auto aabb = BodyCom();
+							aabb.SetPos3D(transform.GetPos3D());
 							aabb.ChooseShape("AABB", 0.25, 1.0);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(3));
@@ -180,7 +185,7 @@ namespace gswy
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-							transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
+							//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 							weapon.AddComponent(transform);
 							auto particle = ParticleCom();
 							particle.Init<ExplosionParticle>();
@@ -193,6 +198,9 @@ namespace gswy
 							sprite.SetScale(vec2(0.25, 0.25));
 							weapon.AddComponent(sprite);
 							auto aabb = BodyCom();
+							aabb.SetPos(transform.GetPos());
+							aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+							//aabb.SetMass(10);
 							aabb.ChooseShape("Circle", 0.1);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(2.0));

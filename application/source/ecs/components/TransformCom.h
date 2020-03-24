@@ -50,6 +50,12 @@ namespace gswy
 			pos.x = v.x;
 			pos.y = v.y;
 		}
+		void SetPos3D(const vec3& v)
+		{
+			pos.x = v.x;
+			pos.y = v.y;
+			pos.z = v.z;
+		}
 		void AddVelocity(const vec2& v)
 		{
 			velocity.x += v.x;

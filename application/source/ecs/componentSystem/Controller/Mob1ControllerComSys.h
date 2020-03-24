@@ -49,7 +49,9 @@ namespace gswy
 				{
 					ComponentDecorator<TransformCom, GameObjectType> transform;
 					ComponentDecorator<AnimationCom, GameObjectType> animation;
+					ComponentDecorator<BodyCom, GameObjectType> body;
 					m_parentWorld->Unpack(entity, transform);
+					m_parentWorld->Unpack(entity, body);
 					m_parentWorld->Unpack(entity, animation);
 
 					ComponentDecorator<TransformCom, GameObjectType> destPosition;
@@ -63,8 +65,9 @@ namespace gswy
 					// Stop when delta distance is small
 					if (glm::length(delta) < .2)
 					{
-						transform->SetVelocity(vec2(0));
+						//transform->SetVelocity(vec2(0));
 						animation->SetCurrentAnimationState("Attack");
+						body->SetVelocity(vec2(0));
 						continue;
 					}
 
@@ -80,8 +83,10 @@ namespace gswy
 						transform->SetRotation(LookAt(delta));
 
 						// 2. Move
+						//float speed = .5f;
 						float speed = .25f;
-						transform->SetVelocity(glm::normalize(delta) * speed);
+						//transform->SetVelocity(glm::normalize(delta) * speed);
+						body->SetVelocity(glm::normalize(delta) * speed);
 						animation->SetCurrentAnimationState("Move");
 					}
 					else

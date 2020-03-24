@@ -42,6 +42,38 @@ AABB::~AABB()
 
 }
 
+//TODO: Recheck this works for A->B and not B->A
+glm::vec2 CheckDirection(glm::vec2 diff)
+{
+	glm::vec2 direction[] = {
+		glm::vec2(0.0f, 1.0f),	// up
+
+		glm::vec2(1.0f, 0.0f),	// right
+
+		glm::vec2(0.0f, -1.0f),	// down
+
+		glm::vec2(-1.0f, 0.0f) // left
+	};
+
+	diff = glm::normalize(diff);
+
+	float max = 0.0f;
+	float dot_prod;
+	int best = -1;
+	for (int i = 0; i < 4; ++i)
+	{
+		dot_prod = glm::dot(diff, direction[i]);
+
+		if (dot_prod > max)
+		{
+			max = dot_prod;
+			best = i;
+		}
+	}
+
+	return direction[best];
+}
+
 bool gswy::CircleCollisions(Shape* Circle1, float PosX1, float PosY1,
 	Shape* Circle2, float PosX2, float PosY2)
 {
@@ -51,14 +83,51 @@ bool gswy::CircleCollisions(Shape* Circle1, float PosX1, float PosY1,
 	Radius1 = ((Circle*)Circle1)->GetRadius();
 	Radius2 = ((Circle*)Circle2)->GetRadius();
 
+	glm::vec2 Pos2(PosX2, PosY2);
+	glm::vec2 Pos1(PosX1, PosY1);
+
 	CCDistSq = pow((PosX2 - PosX1), 2) + pow((PosY2 - PosY1), 2);
 
 	//Actual Collision test
 	float dissq = pow((Radius1 + Radius2), 2);
 	if (CCDistSq > dissq)
 		return false;
+	else
+	{
+		glm::vec2 CenterDistance = Pos2 - Pos1;
+		glm::vec2 clamped1 = glm::clamp(CenterDistance, -Radius1, Radius1);
+		glm::vec2 clamped2 = glm::clamp(CenterDistance, -Radius2, Radius2);
 
-	return true;
+		glm::vec2 edgepoint1 = CenterDistance + clamped1;
+		glm::vec2 edgepoint2 = CenterDistance + clamped2;
+
+		glm::vec2 separation = edgepoint2 - edgepoint1;
+
+		float penetration = std::max(separation.x, separation.y);
+		glm::vec2 Collision_Normal = CheckDirection(separation);
+
+		if (separation.x > 0)// && Separation.y == 0)
+		{
+			PosX1 = PosX1 - separation.x / 100;
+			PosX2 = PosX2 + separation.x / 100;
+		}
+		else //if(Separation.x < 0 && Separation.y == 0)
+		{
+			PosX1 = PosX1 - separation.x / 100;
+			PosX2 = PosX2 + separation.x / 100;
+		}
+		if (separation.y > 0)// && Separation.x == 0)
+		{
+			PosY1 = PosY1 - separation.y / 100;
+			PosY2 = PosY2 + separation.y / 100;
+		}
+		else //if (Separation.y < 0 && Separation.x == 0)
+		{
+			PosY1 = PosY1 - separation.y / 100;
+			PosY2 = PosY2 + separation.y / 100;
+		}
+		return true;
+	}
 }
 
 bool gswy::AABBCollisions(Shape* AABB1, float PosX1, float PosY1,
@@ -69,6 +138,12 @@ bool gswy::AABBCollisions(Shape* AABB1, float PosX1, float PosY1,
 	AABB* pAABB2 = (AABB*)AABB2;
 
 	glm::vec2 tl0, br0, tl1, br1;
+
+	glm::vec2 Pos1(PosX1, PosY1);
+	glm::vec2 Pos2(PosX2, PosY2);
+
+	glm::vec2 AABB_HalfExtents1((pAABB1->GetWidth() / 2), (pAABB1->GetHeight() / 2));
+	glm::vec2 AABB_HalfExtents2((pAABB2->GetWidth() / 2), (pAABB2->GetHeight() / 2));
 
 	//Rectangle 1
 	tl0.x = PosX1 - (pAABB1->GetWidth() / 2);
@@ -87,7 +162,63 @@ bool gswy::AABBCollisions(Shape* AABB1, float PosX1, float PosY1,
 		br1.x < tl0.x || br0.y > tl1.y)
 		return false;
 
-	return true;
+	//Trying for separation window Between two bodies for impulse throw
+	//To find out the exact position of collision and throw bodies back accordingly
+	else
+	{
+		glm::vec2 CenterDistance = Pos2 - Pos1;
+		glm::vec2 clamped1 = glm::clamp(CenterDistance, -AABB_HalfExtents1, AABB_HalfExtents1);
+		glm::vec2 clamped2 = glm::clamp(CenterDistance, -AABB_HalfExtents2, AABB_HalfExtents2);
+
+		glm::vec2 EdgePoint1 = clamped1 + CenterDistance;
+		glm::vec2 EdgePoint2 = clamped2 + CenterDistance;
+		glm::vec2 Separation = EdgePoint2 - EdgePoint1;
+
+		float penetration = std::min(Separation.x, Separation.y);
+		glm::vec2 Collision_Normal = CheckDirection(Separation);
+
+		//if (Collision_Normal.x == 0 && Collision_Normal.y == 1)
+		//{
+		//	std::cout << "\n TOP ";
+		//}
+		//else if (Collision_Normal.x == 1 && Collision_Normal.y == 0)
+		//{
+		//	std::cout << "\n RIGHT ";
+		//}
+		//else if (Collision_Normal.x == -1 && Collision_Normal.y == 0)
+		//{
+		//	std::cout << "\n LEFT ";
+		//}
+		//else if (Collision_Normal.x == 0 && Collision_Normal.y == -1)
+		//{
+		//	std::cout << "\n BOTTOM ";
+		//}
+
+		//Conditional trials
+		if (Separation.x > 0)// && Separation.y == 0)
+		{
+			PosX1 = PosX1 - Separation.x / 100;
+			PosX2 = PosX2 + Separation.x / 100;
+		}
+		else //if(Separation.x < 0 && Separation.y == 0)
+		{
+			PosX1 = PosX1 - Separation.x / 100;
+			PosX2 = PosX2 + Separation.x / 100;
+		}
+		if (Separation.y > 0)// && Separation.x == 0)
+		{
+			PosY1 = PosY1 - Separation.y / 100;
+			PosY2 = PosY2 + Separation.y / 100;
+		}
+		else //if (Separation.y < 0 && Separation.x == 0)
+		{
+			PosY1 = PosY1 - Separation.y / 100;
+			PosY2 = PosY2 + Separation.y / 100;
+		}
+		return true;
+
+
+	}
 }
 
 
@@ -113,10 +244,40 @@ bool gswy::CircleAABBCollisions(Shape* Circle1, float PosX1, float PosY1,
 
 	difference = edgepoint - Circle_Center;
 
-	if (glm::length(difference) <= Radius1)
+	if (glm::length(difference) > Radius1)
+		return false;
+	else
+	{
+		glm::vec2 CenterDistance(AABB_Center - Circle_Center);
+		glm::vec2 clamped1 = glm::clamp(difference, -Radius1, Radius1);
+		
+		glm::vec2 edgepoint1 = difference + clamped1;
+		glm::vec2 separation = edgepoint1 - edgepoint;
+		float penetration = std::min(separation.x, separation.y);
+		glm::vec2 Collision_Normal = CheckDirection(separation);
+		
+		if (separation.x > 0)// && Separation.y == 0)
+		{
+			PosX1 = PosX1 - separation.x / 100;
+			PosX2 = PosX2 + separation.x / 100;
+		}
+		else //if(Separation.x < 0 && Separation.y == 0)
+		{
+			PosX1 = PosX1 - separation.x / 100;
+			PosX2 = PosX2 + separation.x / 100;
+		}
+		if (separation.y > 0)// && Separation.x == 0)
+		{
+			PosY1 = PosY1 - separation.y / 100;
+			PosY2 = PosY2 + separation.y / 100;
+		}
+		else //if (Separation.y < 0 && Separation.x == 0)
+		{
+			PosY1 = PosY1 - separation.y / 100;
+			PosY2 = PosY2 + separation.y / 100;
+		}
 		return true;
-
-	return false;
+	}
 }
 
 bool gswy::AABBCircleCollisions(Shape* AABB1, float PosX1, float PosY1,

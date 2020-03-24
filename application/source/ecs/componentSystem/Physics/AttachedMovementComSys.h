@@ -27,11 +27,24 @@ namespace gswy
 			m_systemSignature.AddComponent<OwnershiptCom<GameObjectType>>();
 			m_systemSignature.AddComponent<AttachedMovementCom>();
 			m_systemSignature.AddComponent<TransformCom>();
+			m_systemSignature.AddComponent<BodyCom>();
 		}
 
 		virtual void Update(double dt) override {
 			
 			for (auto& entity : m_registeredEntities) {
+				//ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> onwer;
+				//ComponentDecorator<TransformCom, GameObjectType> transform;
+				//ComponentDecorator<AttachedMovementCom, GameObjectType> attach;
+				//ComponentDecorator<BodyCom, GameObjectType> body;
+				//ComponentDecorator<TransformCom, GameObjectType> owner_transform;
+				//ComponentDecorator<BodyCom, GameObjectType> owner_body;
+				//m_parentWorld->Unpack(entity, onwer);
+				//m_parentWorld->Unpack(onwer->GetEntity(), owner_transform);
+				//m_parentWorld->Unpack(onwer->GetEntity(), owner_body);
+				//m_parentWorld->Unpack(entity, transform);
+				//m_parentWorld->Unpack(entity, body);
+				//m_parentWorld->Unpack(entity, attach);
 
 				// Check active
 				auto active = GetComponent<ActiveCom>(entity);
@@ -52,6 +65,8 @@ namespace gswy
 				auto owner_transform = GetComponent<TransformCom>(onwer->GetEntity());
 				auto transform = GetComponent<TransformCom>(entity);
 				auto attach = GetComponent<AttachedMovementCom>(entity);
+				auto owner_body = GetComponent<BodyCom>(onwer->GetEntity());
+				auto body = GetComponent<BodyCom>(entity);
 
 				if (attach->followPos)
 				{
@@ -63,7 +78,7 @@ namespace gswy
 				}
 				if (attach->followVelocity)
 				{
-					transform->SetVelocity(owner_transform->GetVelocity() + attach->rVelocity);
+					body->SetVelocity(owner_body->GetVelocity() + attach->rVelocity);
 				}
 			}
 		}

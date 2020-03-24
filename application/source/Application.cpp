@@ -225,7 +225,7 @@ namespace gswy
 				}
 			}
 			// Initialize game
-			m_world->Init();
+			//m_world->Init();
 			LoadMainMenuWorld();
 		}
 
@@ -408,7 +408,7 @@ namespace gswy
 		{
 			{
 				// Update cursor world position
-				ComponentDecorator<TransformCom, GameObjectType> position;
+				ComponentDecorator</*TransformCom*/BodyCom, GameObjectType> position;
 				m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::MOUSE)[0], position);
 				auto cameraPos = m_CameraController.GetPosition();
 				auto mouseRelativePos = InputManager::GetInstance()->GetCursorViewPosition();
@@ -616,6 +616,7 @@ namespace gswy
 			{
 				// TODO
 				LoadGameWorld();
+				m_world->Init();
 			}
 			if (buttonName.compare("How To Play") == 0)
 			{
