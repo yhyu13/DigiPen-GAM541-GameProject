@@ -13,6 +13,7 @@ Creation date: 03/12/2020
 #include "engine-precompiled-header.h"
 #include "GameWidgetManager.h"
 #include "../inventory-manager/InventoryManager.h"
+#include "../skill-manager/SkillManager.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -142,12 +143,11 @@ namespace gswy {
 	void PauseMenu::Render()
 	{
 		ImVec2 windowsize = ImVec2(1920, 1080);
-		ImVec2 nextWindowSize(500, 500);
+		ImVec2 nextWindowSize(500, 230);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
 
-		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
-		float f = 0.0;
+		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::SetWindowFontScale(1.0);
 		if (ImGui::Button("Resume", ImVec2(500, 100)))
 		{
@@ -175,41 +175,34 @@ namespace gswy {
 				auto items = InventoryManager::GetInstance()->GetActiveItems();
 				auto begin = items.begin();
 				auto end = items.end();
-				for (auto it = begin; it != end; it++)
+				for (auto it = begin; it != end; ++it)
 				{
 					//Query : have been purchased
 					bool bPurchased = (*it)->m_purchased;
-
+					
 					//Query : color
 					ImGui::PushStyleColor(ImGuiCol_Button, bPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(1.0f, 0.0f, 0.0f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 1.0f));
 					if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(50, 25)))
 					{
+						m_ClickedItem.first = (*it);
+						m_ClickedItem.second = !m_ClickedItem.second;
+
 						//item hasn't been purchased
-						if (!(*it)->m_purchased)
+						if ((*it)->m_purchased)
 						{
-							m_ClickedItem.second = true;
+							//open support penel
 						}
 						//item hasn been purchased
 						else
 						{
-							//open support penel
+							
 						}
-						//item hasn't been purchased but click
-						if (m_ClickedItem.second)
-						{
-							m_ClickedItem = std::make_pair((*it), true);
-						}
-						//item hasn't been purchased and do unclick 
-						else
-						{
-							m_ClickedItem = std::make_pair((*it), false);
-						}
-						
-
 					}
 					ImGui::PopStyleColor(3);
+
+					//Active Skill Tooltip
 					if (ImGui::IsItemHovered())
 					{
 						ImGui::BeginTooltip();
@@ -221,16 +214,77 @@ namespace gswy {
 					}
 				}
 				ImGui::Dummy(ImVec2(250, 15));
+				ImGui::SameLine();
+				ImGui::SetCursorPos(ImVec2(100, 35));
+				//Support Skills
+				if (m_ClickedItem.first && m_ClickedItem.second)
+				{
+					if (m_ClickedItem.first->m_purchased)
+					{
+						ImGui::BeginChild("child", ImVec2(300, 300), true);
+						auto supportItems = InventoryManager::GetInstance()->GetSupportItems();
+						auto sbegin = supportItems.begin();
+						auto send = supportItems.end();
+						for (auto it = sbegin; it != send; ++it)
+						{
+							bool bSupportPurchased = (*it)->m_purchased;
+							//Query : color
+							ImGui::PushStyleColor(ImGuiCol_Button, bSupportPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
+							ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(1.0f, 0.0f, 0.0f));
+							ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 1.0f));
+							if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(150, 50)))
+							{
+								m_ClickedSupportItem.first = (*it);
+								m_ClickedSupportItem.second = !m_ClickedSupportItem.second;
+							}
+							ImGui::PopStyleColor(3);
+							ImGui::SameLine();
+
+							//Support Skill Tooltip
+							if (ImGui::IsItemHovered())
+							{
+								ImGui::BeginTooltip();
+
+								//Query : skill detail 
+								for (auto s : (*it)->m_text)
+									ImGui::Text("%s\n", s.c_str());
+								ImGui::EndTooltip();
+							}
+						}
+						ImGui::EndChild();
+					}
+				}
+				
+
+				//Support child window
 				
 				ImGui::SetCursorPos(ImVec2(50, shopWindowSize.y - 50));
 				if (ImGui::Button("PURCHASE", ImVec2(150, 25)))
 				{
-					//if (m_ClickedItem.second) 
-					//	InventoryManager::GetInstance()->PurchaseItem(items, m_ClickedItem.first);
+					if (m_ClickedItem.first && m_ClickedItem.second)
+					{
+						InventoryManager::GetInstance()->PurchaseActiveItem(m_ClickedItem.first);
+						//m_ClickedItem.second = false;
+					}
+					
+					if (m_ClickedSupportItem.first && m_ClickedSupportItem.second)
+					{
+						InventoryManager::GetInstance()->PurchaseSupportItem(m_ClickedSupportItem.first);
+						m_ClickedSupportItem.second = false;
+					}
 
 				}
 				ImGui::SetCursorPos(ImVec2(shopWindowSize.x - 200, shopWindowSize.y - 50));
-				ImGui::Button("INSTALL", ImVec2(150, 25));
+				if (ImGui::Button("INSTALL", ImVec2(150, 25)))
+				{
+					if (m_ClickedItem.first && m_ClickedItem.second)
+					{
+						InventoryManager::GetInstance()->Install(1, 1, m_ClickedItem.first);
+					}
+					else if(m_ClickedSupportItem.first && m_ClickedSupportItem.second)
+					{
+					}
+				}
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();
@@ -254,7 +308,8 @@ namespace gswy {
 				ImGui::Dummy(ImVec2(500, 25));
 				//Query : replace name when ACTIVE 1 has been installed
 				std::string act1 = "ACTIVE 1";
-				ImGui::Button(act1.c_str(), ImVec2(300, 50));
+				//auto SkillManager::GetInstance()->GetSkill(0, 0)->m_type.c_str();
+				ImGui::Button(SkillManager::GetInstance()->GetSkill(1, 1)->m_type.c_str(), ImVec2(300, 50));
 				ImGui::Dummy(ImVec2(500, 25));
 				std::string sup1 = "SUPPORT 1";
 				ImGui::Button("SUPPORT 1", ImVec2(300, 50));

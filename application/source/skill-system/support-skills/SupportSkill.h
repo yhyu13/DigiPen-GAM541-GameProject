@@ -13,6 +13,7 @@ Creation date	: 03/13/2020
 #pragma once
 
 #include "skill-system/BaseSkill.h"
+#include "skill-system/support-skills/SupportSkillType.h"
 
 #include <memory>
 
@@ -22,9 +23,16 @@ namespace gswy
 
 	public:
 
-		SupportSkill();
+		SupportSkill(SupportSkillType type);
 		virtual ~SupportSkill();
 
 		virtual void HandleSkill(BaseSkill* skill) = 0;
+		virtual void RemoveSkill(std::shared_ptr<BaseSkill> skill) = 0;
+		virtual SupportSkillType GetSkillType();
+
+	private:
+
+		SupportSkillType m_type;
+
 	};
 }

@@ -33,6 +33,6 @@ namespace gswy
 
 		virtual const int& GetId() override;
 		virtual void AddSupportSkill(std::shared_ptr<SupportSkill> skill) override;
-
+		virtual void AddSupportSkill(const int& slot, std::shared_ptr<SupportSkill> skill) override;
 	};
 }

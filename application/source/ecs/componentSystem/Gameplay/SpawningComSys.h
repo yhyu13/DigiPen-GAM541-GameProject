@@ -197,6 +197,23 @@ namespace gswy
 			aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom());
+
+			// Mob floating hp bar
+			{
+				auto hp_bar = m_parentWorld->GenerateEntity(GameObjectType::HP_BAR);
+				auto active = ActiveCom();
+				hp_bar.AddComponent(active);
+				hp_bar.AddComponent(OwnershiptCom<GameObjectType>(obj));
+				auto attach = AttachedMovementCom();
+				attach.followPos = true;
+				attach.rPos = vec2(0, 0.2);
+				hp_bar.AddComponent(attach);
+				hp_bar.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+				auto sprite = SpriteCom();
+				sprite.SetTexture("RedLayer");
+				sprite.SetScale(vec2(0.20, 0.02));
+				hp_bar.AddComponent(sprite);
+			}
 		}
 	};
 }

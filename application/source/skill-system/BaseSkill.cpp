@@ -39,4 +39,9 @@ namespace gswy
 	{
 		return m_id;
 	}
+
+	std::set<SkillTag> BaseSkill::GetSkillTags()
+	{
+		return m_tags;
+	}
 }

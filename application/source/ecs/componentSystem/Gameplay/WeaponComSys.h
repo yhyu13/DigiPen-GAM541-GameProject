@@ -44,8 +44,7 @@ namespace gswy
 			if (auto event = static_pointer_cast<FireWeaponEvent>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
-				ComponentDecorator<TransformCom, GameObjectType> transform;
-				m_parentWorld->Unpack(event->m_entity, transform);
+				auto transform = GetComponent<TransformCom>(event->m_entity);
 
 				switch (event->m_entity.m_type)
 				{
@@ -58,29 +57,45 @@ namespace gswy
 							auto pos = event->m_pos;
 							auto rot = event->m_rot;
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
+							
+							// Active com
 							auto active = ActiveCom();
 							weapon.AddComponent(active);
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
+							
+							// Transformation com
 							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
 							//transform.AddVelocity(ToVec(weapon_rot) * 5.0f);
 							weapon.AddComponent(transform);
+
+							// Particle com
 							auto particle = ParticleCom();
 							particle.Init<ExplosionParticle>();
 							weapon.AddComponent(particle);
+
+							// Animation com
 							auto animCom = AnimationCom();
 							animCom.Add("fireBallAnim1", "Move");
 							animCom.SetCurrentAnimationState("Move");
 							weapon.AddComponent(animCom);
+
+							// Sprite com
 							auto sprite = SpriteCom();
 							sprite.SetScale(vec2(0.25, 0.25));
 							weapon.AddComponent(sprite);
+
+							// Collision box
 							auto aabb = BodyCom();
 							aabb.SetPos(transform.GetPos());
 							aabb.SetVelocity(ToVec(weapon_rot) * 5.0f);
 							aabb.ChooseShape("Circle", 0.1);
 							weapon.AddComponent(aabb);
+
+							// Fireball last for 1 sec
 							weapon.AddComponent(LifeTimeCom(1.0));
+
+							// Fireball does not hit one target twice
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
 						}
 					}

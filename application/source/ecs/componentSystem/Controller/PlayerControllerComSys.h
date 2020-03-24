@@ -31,6 +31,7 @@ Creation date: 02/04/2020
 #include "skill-system/support-skills/MultipleProjectile.h"
 #include "skill-system/active-skills/FireballAttack.h"
 #include "skill-system/active-skills/IceballAttack.h"
+#include "skill-manager/SkillManager.h"
 
 namespace gswy
 {
@@ -84,6 +85,29 @@ namespace gswy
 			//	(flash)? s->SetSpriteShader("White"): s->SetSpriteShader("Default");
 			//	flash = !flash;
 			//}
+
+			SkillManager* skillManager = SkillManager::GetInstance();
+
+			if (input->IsKeyTriggered(KEY_Q)) // FIRE-BALL
+			{
+				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(1);
+				if (skill != nullptr)
+				{
+					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
+					queue->Publish(e);
+				}
+			}
+
+			if (input->IsKeyTriggered(KEY_W)) // ICE-BALL
+			{
+				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(2);
+				if (skill != nullptr)
+				{
+					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
+					queue->Publish(e);
+				}
+			}
+
 			if (input->IsKeyTriggered(KEY_D))
 			{
 
@@ -113,7 +137,7 @@ namespace gswy
 
 				if (playerSkillComponent->GetCurrentSkill() != nullptr)
 				{
-					std::shared_ptr<MultipleProjectile> mp = MemoryManager::Make_shared<MultipleProjectile>();
+					std::shared_ptr<MultipleProjectile> mp = MemoryManager::Make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
 					auto e = MemoryManager::Make_shared<SkillUpgradeEvent>(playerSkillComponent->GetCurrentSkill()->GetActiveSkillType(), mp);
 					queue->Publish(e);
 				}

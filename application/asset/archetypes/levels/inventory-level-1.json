@@ -2,7 +2,7 @@
   "items": [
     {
       "id": "0",
-      "type": "FIRE",
+      "type": "FIRE-BALL",
       "category": "ACTIVE",
       "tags": [
         "PROJECTILE",
@@ -17,7 +17,7 @@
     },
     {
       "id": "1",
-      "type": "ICE",
+      "type": "ICE-BALL",
       "category": "ACTIVE",
       "tags": [
         "PROJECTILE",

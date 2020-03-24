@@ -28,6 +28,7 @@ Creation date: 02/17/2020
 #include "ecs/components/MiniMapSprite.h"
 #include "ecs/components/OwnershiptCom.h"
 #include "ecs/components/ParticleCom.h"
+#include "ecs/components/PlayerSkillComponent.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/components/TransformCom.h"
 
@@ -61,8 +62,11 @@ namespace gswy
 			{
 				PRINT("Delete: " + Str(e));
 
-				// TODO : comment this out after we solve the deallocation problem
-				m_parentWorld->RemoveComponent<ActiveCom>(e);
+				// Instead of removing the entity from ActiveCom manager like we do for all other component,
+				// we set activeCom to false
+				auto active = GetComponent<ActiveCom>(e);
+				active->SetActive(false);
+
 				m_parentWorld->RemoveComponent<AnimationCom>(e);
 				m_parentWorld->RemoveComponent<AttachedMovementCom>(e);
 				m_parentWorld->RemoveComponent<BodyCom>(e);
@@ -74,6 +78,7 @@ namespace gswy
 				m_parentWorld->RemoveComponent<MiniMapSprite>(e);
 				m_parentWorld->RemoveComponent<OwnershiptCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<ParticleCom>(e);
+				m_parentWorld->RemoveComponent<PlayerSkillComponent>(e);
 				m_parentWorld->RemoveComponent<SpriteCom>(e);
 				m_parentWorld->RemoveComponent<TransformCom>(e);
 

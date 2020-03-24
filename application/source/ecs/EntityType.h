@@ -23,6 +23,7 @@ namespace gswy
 		PLAYER,
 		ENEMY_PORTAL,
 		ENEMY,
+		HP_BAR,
 		TOWER_BUILD,
 		TOWER_FIRE,
 		TOWER_ICE,

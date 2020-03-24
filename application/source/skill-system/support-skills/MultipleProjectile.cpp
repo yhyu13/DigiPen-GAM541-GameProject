@@ -17,7 +17,7 @@ Creation date	: 03/13/2020
 
 namespace gswy
 {
-	MultipleProjectile::MultipleProjectile() : m_count(2)
+	MultipleProjectile::MultipleProjectile(SupportSkillType type) : SupportSkill(type), m_multiplier(2)
 	{
 	}
 
@@ -25,14 +25,14 @@ namespace gswy
 	{
 	}
 
-	void MultipleProjectile::SetCount(const int& count)
+	void MultipleProjectile::SetMultiplier(const int& multiplier)
 	{
-		m_count = count;
+		m_multiplier = multiplier;
 	}
 
-	const int& MultipleProjectile::GetCount()
+	const int& MultipleProjectile::GetMultiplier()
 	{
-		return m_count;
+		return m_multiplier;
 	}
 
 	void MultipleProjectile::HandleSkill(BaseSkill* skill)
@@ -40,7 +40,21 @@ namespace gswy
 		Projectile* projectile = dynamic_cast<Projectile*> (skill);
 		if (projectile != nullptr)
 		{
-			projectile->SetCount(m_count);
+			projectile->SetCount(projectile->GetCount() * m_multiplier);
+		}
+	}
+
+	void MultipleProjectile::RemoveSkill(std::shared_ptr<BaseSkill> skill)
+	{
+		std::shared_ptr<Projectile> projectile = std::dynamic_pointer_cast<Projectile> (skill);
+		if (projectile != nullptr)
+		{
+			int count = projectile->GetCount() / m_multiplier;
+			if (count == 0)
+			{
+				count = 1;
+			}
+			projectile->SetCount(count);
 		}
 	}
 }
