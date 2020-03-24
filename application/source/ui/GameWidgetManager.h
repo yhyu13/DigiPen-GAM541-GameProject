@@ -84,12 +84,13 @@ namespace gswy {
 	class InventoryMenu : public Widget
 	{
 	public:
-		InventoryMenu() { IsVisible = false; };
+		InventoryMenu() { IsVisible = false; m_CurrentTab = 1; };
 		void Render() override;
 		WidgetManager* manager;
+		unsigned int GetCurrentTab() const { return m_CurrentTab; }
 
 	private:
-		
+		unsigned int m_CurrentTab;
 	};
 
 	class WidgetManager
