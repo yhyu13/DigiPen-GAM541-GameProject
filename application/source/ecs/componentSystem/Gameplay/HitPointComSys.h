@@ -126,8 +126,21 @@ namespace gswy
 		{
 			switch (entityB.m_type)
 			{
-			case GameObjectType::ENEMY_1:
+			case GameObjectType::ENEMY_PROJECTILE:
 			{
+				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				ComponentDecorator<HitPreventionCom<GameObjectType>, GameObjectType> HitPrevention;
+				m_parentWorld->Unpack(entityA, HitPoint);
+				m_parentWorld->Unpack(entityB, HitPrevention);
+
+				// Note: Fireball has hit prevention that only applies one hit to enemy
+				if (!HitPrevention->IsIncluded(entityA))
+				{
+					HitPrevention->Add(entityA);
+					HitPoint->AddHitPoint(-10);
+
+					PRINT("Player is hit! HP: " + Str(HitPoint->GetPercentageHP()*100) + "%");
+				}
 			}	
 				break;
 			default:

@@ -417,7 +417,7 @@ namespace gswy
 				{
 					m_pathResult.pop_back();
 				}
-				PRINT(m_pathResult.size());
+				//PRINT(m_pathResult.size());
 			}
 			auto angle = LookAt(delta);
 			// TODO: need fine tune

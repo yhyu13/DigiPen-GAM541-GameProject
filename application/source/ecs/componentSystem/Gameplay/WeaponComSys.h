@@ -53,7 +53,7 @@ namespace gswy
 					{
 						auto pos = event->m_pos;
 						auto rot = event->m_rot;
-						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
+						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_PROJECTILE);
 						auto active = ActiveCom();
 						weapon.AddComponent(active);
 						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
