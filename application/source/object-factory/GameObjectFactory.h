@@ -25,8 +25,115 @@ namespace gswy {
 
 		~GameObjectFactory();
 
+		virtual void LoadResources(const std::string& filepath) override;
+
 		template <typename EntityType>
-		void LoadLevel(const std::string& filepath, std::shared_ptr<GameWorld<EntityType>> world) {
+		void LoadSystem(const std::string& filepath, std::shared_ptr<GameWorld<EntityType>> m_world)
+		{
+			for (auto & system: GetSystems(filepath)) {
+				if (system._Equal("player-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
+					continue;
+				}
+				if (system._Equal("PlayerAnimationController")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerAnimationControllerComSys>());
+					continue;
+				}
+				if (system._Equal("mob-1-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<Mob1ControllerComSys>());
+					continue;
+				}
+				if (system._Equal("mob-2-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<Mob2ControllerComSys>());
+					continue;
+				}
+				if (system._Equal("mob-1-Boss-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<Mob1BossControllerComSys>());
+					continue;
+				}
+				if (system._Equal("MobPortalControllerComSys")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<MobPortalControllerComSys>());
+					continue;
+				}
+				if (system._Equal("tower-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<TowerControllerComSys>());
+					continue;
+				}
+				if (system._Equal("base-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<BaseControllerComSys>());
+					continue;
+				}
+				if (system._Equal("scene")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<SceneComSys>());
+					continue;
+				}
+				if (system._Equal("sprite")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<SpriteComSys>());
+					continue;
+				}
+				if (system._Equal("minimap")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<MiniMapSceneComSys>());
+					continue;
+				}
+				if (system._Equal("animation")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<AnimationComSys>());
+					continue;
+				}
+				if (system._Equal("physics")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<PhysicsComSys>());
+					continue;
+				}
+				if (system._Equal("weapon")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<WeaponComSys>());
+					continue;
+				}
+				if (system._Equal("lifetime")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<LifeTimeComSys>());
+					continue;
+				}
+				if (system._Equal("spawn")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<SpawningComSys>());
+					continue;
+				}
+				if (system._Equal("sound")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<SoundComSys>());
+					continue;
+				}
+				if (system._Equal("hitpoint")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<HitPointComSys>());
+					continue;
+				}
+				if (system._Equal("death")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<DeathComSys>());
+					continue;
+				}
+				if (system._Equal("fade")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<FadeComSys>());
+					continue;
+				}
+				if (system._Equal("gc")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<GCComSys>());
+					continue;
+				}
+				if (system._Equal("attached-movement")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<AttachedMovementComSys>());
+					continue;
+				}
+				if (system._Equal("particle")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<ParticleComSys>());
+					continue;
+				}
+				if (system._Equal("skill"))
+				{
+					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerSkillSystem>());
+					continue;
+				}
+			}
+		}
+
+		template <typename EntityType>
+		void LoadLevel(const std::string& filepath, std::shared_ptr<GameWorld<EntityType>> world) 
+		{
 			Json::Value root;
 			GetIfstream(filepath) >> root;
 

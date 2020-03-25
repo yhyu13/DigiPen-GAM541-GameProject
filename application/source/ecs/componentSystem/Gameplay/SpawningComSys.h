@@ -54,8 +54,14 @@ namespace gswy
 				case GameObjectType::ENEMY_PORTAL:
 					SpawnEnemeyPortal(e);
 					break;
-				case GameObjectType::ENEMY:
-					SpawnEnemey(e);
+				case GameObjectType::ENEMY_1:
+					SpawnEnemey1(e);
+					break;
+				case GameObjectType::ENEMY_2:
+					SpawnEnemey2(e);
+					break;
+				case GameObjectType::ENEMY_BOSS_1:
+					SpawnEnemeyBoss1(e);
 					break;
 				case GameObjectType::TOWER_BUILD:
 					SpawnTower(e);
@@ -147,7 +153,7 @@ namespace gswy
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
 				body.SetMass(0);
-				body.SetPos(vec3(transform.GetPos(), Z_ORDER(m_spawnZOrder++)));
+				body.SetPos(transform.GetPos());
 				body.ChooseShape("AABB", 0.25, 0.25);
 				_tower.AddComponent(body);
 				children.AddEntity(_tower);
@@ -172,10 +178,10 @@ namespace gswy
 			obj.AddComponent(sprite);
 		}
 
-		void SpawnEnemey(EventQueue<GameObjectType, EventType>::EventPtr e)
+		void SpawnEnemey1(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			auto event = static_pointer_cast<SpawnEvent>(e);
-			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY);
+			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_1);
 			obj.AddComponent(ActiveCom());
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
 			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
@@ -193,10 +199,104 @@ namespace gswy
 			sprite0.SetTexture("RedLayer");
 			obj.AddComponent(sprite0);
 			auto aabb1 = BodyCom();
-			aabb1.SetPos3D(transform.GetPos3D());
+			aabb1.SetPos(transform.GetPos());
+			aabb1.ChooseShape("AABB", 0.5, 0.5 / 70 * 50);
+			obj.AddComponent(aabb1);
+			obj.AddComponent(HitPointCom(100));
+			auto cooldown = CoolDownCom(0.1);
+			obj.AddComponent(cooldown);
+
+			// Mob floating hp bar
+			{
+				auto hp_bar = m_parentWorld->GenerateEntity(GameObjectType::HP_BAR);
+				auto active = ActiveCom();
+				hp_bar.AddComponent(active);
+				hp_bar.AddComponent(OwnershiptCom<GameObjectType>(obj));
+				auto attach = AttachedMovementCom();
+				attach.followPos = true;
+				attach.rPos = vec2(0, 0.2);
+				hp_bar.AddComponent(attach);
+				hp_bar.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+				auto sprite = SpriteCom();
+				sprite.SetTexture("RedLayer");
+				sprite.SetScale(vec2(0.20, 0.02));
+				hp_bar.AddComponent(sprite);
+			}
+		}
+
+		void SpawnEnemey2(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto event = static_pointer_cast<SpawnEvent>(e);
+			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_2);
+			obj.AddComponent(ActiveCom());
+			obj.AddComponent(OwnershiptCom<GameObjectType>());
+			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
+			obj.AddComponent(transform);
+			auto animCom2 = AnimationCom();
+			animCom2.Add("Mob2Animation_Moving", "Move");
+			animCom2.Add("Mob2Animation_Attack", "Attack");
+			animCom2.SetCurrentAnimationState("Move");
+			obj.AddComponent(animCom2);
+			auto sprite = SpriteCom();
+			sprite.SetScale(vec2(0.5, 0.5 / 70 * 50));
+			obj.AddComponent(sprite);
+			auto sprite0 = MiniMapSprite();
+			sprite0.SetScale(vec2(0.1, 0.1));
+			sprite0.SetTexture("RedLayer");
+			obj.AddComponent(sprite0);
+			auto aabb1 = BodyCom();
+			aabb1.SetPos(transform.GetPos());
 			aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
 			obj.AddComponent(aabb1);
-			obj.AddComponent(HitPointCom());
+			obj.AddComponent(HitPointCom(75));
+			auto cooldown = CoolDownCom(0.1);
+			obj.AddComponent(cooldown);
+
+			// Mob floating hp bar
+			{
+				auto hp_bar = m_parentWorld->GenerateEntity(GameObjectType::HP_BAR);
+				auto active = ActiveCom();
+				hp_bar.AddComponent(active);
+				hp_bar.AddComponent(OwnershiptCom<GameObjectType>(obj));
+				auto attach = AttachedMovementCom();
+				attach.followPos = true;
+				attach.rPos = vec2(0, 0.2);
+				hp_bar.AddComponent(attach);
+				hp_bar.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+				auto sprite = SpriteCom();
+				sprite.SetTexture("RedLayer");
+				sprite.SetScale(vec2(0.20, 0.02));
+				hp_bar.AddComponent(sprite);
+			}
+		}
+
+		void SpawnEnemeyBoss1(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto event = static_pointer_cast<SpawnEvent>(e);
+			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_BOSS_1);
+			obj.AddComponent(ActiveCom());
+			obj.AddComponent(OwnershiptCom<GameObjectType>());
+			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
+			obj.AddComponent(transform);
+			auto animCom2 = AnimationCom();
+			animCom2.Add("Mob1_BossAnimation_Moving", "Move");
+			animCom2.Add("Mob1_BossAnimation_Attack", "Attack");
+			animCom2.SetCurrentAnimationState("Move");
+			obj.AddComponent(animCom2);
+			auto sprite = SpriteCom();
+			sprite.SetScale(vec2(0.5, 0.5));
+			obj.AddComponent(sprite);
+			auto sprite0 = MiniMapSprite();
+			sprite0.SetScale(vec2(0.2, 0.2));
+			sprite0.SetTexture("RedLayer");
+			obj.AddComponent(sprite0);
+			auto aabb1 = BodyCom();
+			aabb1.SetPos(transform.GetPos());
+			aabb1.ChooseShape("AABB", 0.5, 0.5);
+			obj.AddComponent(aabb1);
+			obj.AddComponent(HitPointCom(200));
+			auto cooldown = CoolDownCom(0.1);
+			obj.AddComponent(cooldown);
 
 			// Mob floating hp bar
 			{

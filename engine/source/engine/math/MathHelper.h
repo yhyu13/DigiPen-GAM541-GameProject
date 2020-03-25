@@ -39,7 +39,7 @@ using namespace glm;
 #ifndef RAD2DEG
 #define RAD2DEG 57.2957795131
 #endif // !PI
-
+//
 #define RAND_I(LO, HI) LO + static_cast <int> (rand()) / (static_cast <int> (RAND_MAX / (HI - LO)))
 #define RAND_F(LO, HI) LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)))
 #define IN_RANGE(a, x, y) (a >= x && a <= y)

@@ -48,6 +48,36 @@ namespace gswy
 
 				switch (event->m_entity.m_type)
 				{
+				case GameObjectType::ENEMY_2:
+				{
+					{
+						auto pos = event->m_pos;
+						auto rot = event->m_rot;
+						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
+						auto active = ActiveCom();
+						weapon.AddComponent(active);
+						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
+						auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
+						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+						//transform.AddVelocity(ToVec(weapon_rot) * 5.0f);
+						weapon.AddComponent(transform);
+						auto animCom = AnimationCom();
+						animCom.Add("iceBallAnim1", "Move");
+						animCom.SetCurrentAnimationState("Move");
+						weapon.AddComponent(animCom);
+						auto sprite = SpriteCom();
+						sprite.SetScale(vec2(0.25, 0.25));
+						weapon.AddComponent(sprite);
+						auto aabb = BodyCom();
+						aabb.ChooseShape("Circle", 0.1);
+						aabb.SetPos(transform.GetPos());
+						aabb.SetVelocity(ToVec(weapon_rot) * 1.0f);
+						weapon.AddComponent(aabb);
+						weapon.AddComponent(LifeTimeCom(1));
+						weapon.AddComponent(HitPreventionCom<GameObjectType>());
+					}
+				}
+				break;
 				case GameObjectType::TOWER_FIRE:
 				{
 					static int num_spawn = 1;

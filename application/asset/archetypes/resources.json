@@ -24,6 +24,18 @@
                "path":"./asset/Sprites/Mob1_Unarmed_Attack.png"
             },
 			{
+               "name":"Mob2_Unarmed_Attack",
+               "path":"./asset/Sprites/Mob2_Unarmed_Attack.png"
+            },
+			{
+               "name":"Mob1_Boss_Moving",
+               "path":"./asset/Sprites/Mob1_Boss_Moving.png"
+            },
+			{
+               "name":"Mob1_Boss_Attack",
+               "path":"./asset/Sprites/Mob1_Boss_Attack.png"
+            },
+			{
                "name":"RedLayer",
                "path":"./asset/Sprites/RedLayer.png"
             },
@@ -256,6 +268,54 @@
                   "y": 0,
                   "width": 140,
                   "height": 100,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+			{
+               "name":"Mob2Animation_Moving",
+               "properties":{
+                  "texture-name":"Mob2_Unarmed_Attack",
+                  "x": 140,
+                  "y": 0,
+                  "width": 140,
+                  "height": 100,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+			{
+               "name":"Mob2Animation_Attack",
+               "properties":{
+                  "texture-name":"Mob2_Unarmed_Attack",
+                  "x": 140,
+                  "y": 0,
+                  "width": 140,
+                  "height": 100,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+			{
+               "name":"Mob1_BossAnimation_Moving",
+               "properties":{
+                  "texture-name":"Mob1_Boss_Moving",
+                  "x": 128,
+                  "y": 0,
+                  "width": 128,
+                  "height": 128,
+                  "delay": 1.0,
+                  "frame-count": 15.0
+               }
+            },
+			{
+               "name":"Mob1_BossAnimation_Attack",
+               "properties":{
+                  "texture-name":"Mob1_Boss_Attack",
+                  "x": 128,
+                  "y": 0,
+                  "width": 128,
+                  "height": 128,
                   "delay": 1.0,
                   "frame-count": 15.0
                }

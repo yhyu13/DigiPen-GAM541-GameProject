@@ -72,8 +72,7 @@ namespace gswy
 			//// TODO remove spawn enemies by triggering buttons
 			//if (input->IsKeyTriggered(KEY_T))
 			//{
-			//	PRINT("KEY T: CALL ENEMY");
-			//	auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
+			//	auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY_1, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
 			//	queue->Publish(e);
 			//
 			//	static bool flash = true;
@@ -272,7 +271,7 @@ namespace gswy
 			if (glm::length(delta) < m_noPathFindingThreshold)
 			{
 				//transform->SetVelocity(vec2(0));
-				body->SetVelocity(vec2(0));
+				body->SetVelocity(0,0);
 				animation->SetCurrentAnimationState("Idle");
 				return;
 			}
@@ -334,7 +333,7 @@ namespace gswy
 			case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
 			{
 				auto _tower = mouseBodyCom->GetOtherEntity();
-				ComponentDecorator<TransformCom, GameObjectType> transform;
+				ComponentDecorator<BodyCom, GameObjectType> transform;
 				ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
 				ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> ownership;
 				m_parentWorld->Unpack(_tower, transform);
@@ -349,11 +348,9 @@ namespace gswy
 				}
 				coolDownController->SetFreeze(false);
 				auto tower = ownership->GetEntity();
-				ComponentDecorator<TransformCom, GameObjectType> towerTransform;
 				ComponentDecorator<BodyCom, GameObjectType> towerBody;
 				ComponentDecorator<ActiveCom, GameObjectType> towerActive;
 				ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
-				m_parentWorld->Unpack(tower, towerTransform);
 				m_parentWorld->Unpack(tower, towerBody);
 
 				// Simply swap the position of build tower and this tower

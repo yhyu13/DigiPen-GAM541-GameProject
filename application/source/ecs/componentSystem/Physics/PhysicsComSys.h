@@ -28,72 +28,38 @@ namespace gswy
 
 	private:
 		size_t m_CollisionDisableMap[(size_t)GameObjectType::NUM][(size_t)GameObjectType::NUM];
-		size_t m_CollisionDisableMap2[(size_t)GameObjectType::NUM][(size_t)GameObjectType::NUM];
-
+		std::vector<GameObjectType> enemyTypes;
 	public:
 		PhysicsComSys()
 		{
 			m_systemSignature.AddComponent<BodyCom>();
 			m_systemSignature.AddComponent<TransformCom>();
 			m_systemSignature.AddComponent<OwnershiptCom<GameObjectType>>();
+
+			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
 		}
 
 		virtual void Init() override
 		{
-			// Init collision diable map
+			// Init collision disable map
 			for (size_t i = 0; i < (size_t)GameObjectType::NUM; ++i)
 				for (size_t j = 0; j < (size_t)GameObjectType::NUM; ++j)
 					m_CollisionDisableMap[i][j] = 0;
 
-			for (size_t i = 0; i < (size_t)GameObjectType::NUM; ++i)
-				for (size_t j = 0; j < (size_t)GameObjectType::NUM; ++j)
-					m_CollisionDisableMap2[i][j] = 0;
-
 			// Collision disable list (self-self, mutal)
-			GameObjectType diableCollisionList[] = { 
+			GameObjectType disableCollisionList[] = { 
 				GameObjectType::PLAYER ,GameObjectType::FIREBALL ,
 				GameObjectType::ICEBALL ,GameObjectType::BOLT,
 				GameObjectType::TOWER_BUILD, GameObjectType::TOWER_FIRE,
 				GameObjectType::TOWER_ICE, GameObjectType::TOWER_LIGHTNING,
 			};
 
-			//TODO: Do better redundant checking for ranged attacks, happenening twice
-			// Collision Disable List Part2 (Mouse, ranged weapons, player)
-			GameObjectType diableCollisionList2[] = {
-				GameObjectType::MOUSE ,GameObjectType::FIREBALL ,
-				GameObjectType::ICEBALL ,GameObjectType::BOLT, GameObjectType::ENEMY,
-				GameObjectType::TOWER_BUILD, GameObjectType::TOWER_FIRE,
-				GameObjectType::TOWER_ICE, GameObjectType::TOWER_LIGHTNING,
-			};
-
-			for (auto& item1 : diableCollisionList)
+			for (auto& item1 : disableCollisionList)
 			{
-				for (auto& item2 : diableCollisionList)
+				for (auto& item2 : disableCollisionList)
 				{
 					m_CollisionDisableMap[(size_t)item1][(size_t)item2] = 1;
 				}
-			}
-
-			for (auto& item1 : diableCollisionList2)
-			{
-				for (auto& item2 : diableCollisionList2)
-				{
-					m_CollisionDisableMap2[(size_t)item1][(size_t)item2] = 1;
-				}
-			}
-
-			//Body And Transform Updates
-			for (auto& entity : m_registeredEntities)
-			{
-				ComponentDecorator<TransformCom, GameObjectType> transform;
-				ComponentDecorator<BodyCom, GameObjectType> body;
-				m_parentWorld->Unpack(entity, transform);
-				m_parentWorld->Unpack(entity, body);
-
-				//Setting Initially positions of body from all entities's transforms
-				body->m_PosX = transform->GetPos3D().x;
-				body->m_PosY = transform->GetPos3D().y;
-				body->m_PosZ = transform->GetPos3D().z;
 			}
 		}
 
@@ -159,7 +125,7 @@ namespace gswy
 				//After Initialising, Setting Transform of each -
 				//entity back from manipulated body positions for rendering
 				transform->SetPos3D(vec3(body->m_PosX, body->m_PosY, body->m_PosZ));
-
+				transform->SetVelocity(body->GetVelocity());
 			}
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
@@ -193,7 +159,15 @@ namespace gswy
 
 					// Enable collision diable map
 					if (m_CollisionDisableMap[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
+					{
 						continue;
+					}
+						
+					if ((std::find(enemyTypes.begin(), enemyTypes.end(), first_Entity->m_type) != enemyTypes.end()) &&
+						(std::find(enemyTypes.begin(), enemyTypes.end(), second_Entity->m_type) != enemyTypes.end()))
+					{
+						continue;
+					}
 
 					ComponentDecorator<BodyCom, GameObjectType> body2;
 					m_parentWorld->Unpack(*second_Entity, body2);
@@ -207,39 +181,12 @@ namespace gswy
 
 					if (collides)
 					{
-						if (!m_CollisionDisableMap2[(size_t)first_Entity->m_type][(size_t)second_Entity->m_type])
-						{
-							//Velocity Nullification
-							body1->m_VelY = 0;
-							body2->m_VelX = 0;
-							body1->m_VelX = 0;
-							body2->m_VelY = 0;
-						}
-
 						// Set colliding entity
 						body1->SetOtherEntity(*second_Entity);
 						body2->SetOtherEntity(*first_Entity);
 						DEBUG_PRINT("Collisions Detected " + Str(*first_Entity) + Str(*second_Entity));
 						auto e = MemoryManager::Make_shared<CollisionEvent>(*first_Entity, *second_Entity);
 						queue->Publish(e);
-
-						//Trial For enemies to not get into each other/ Creating Traffic
-						//Restoring previous position/ before collision
-						if ((body1->GetOtherEntity().m_type == GameObjectType::ENEMY) &&
-							(body2->GetOtherEntity().m_type == GameObjectType::ENEMY))
-						{
-							//TODO: Some Kind of resolution for bodies to keep moving until the base is reached
-							//body1->m_PosX = body1->m_PrevPosX;
-							//body1->m_PosY = body1->m_PrevPosY;
-							//body2->m_PosX = body2->m_PrevPosX;
-							//body2->m_PosY = body2->m_PrevPosY;
-
-							//TODO: Needs Refinement, Trying to create traffic
-							//body1->m_VelY = 0;
-							//body2->m_VelX = 0;
-							//body1->m_VelX = 0;
-							//body2->m_VelY = 0;
-						}
 					}
 				}
 			}

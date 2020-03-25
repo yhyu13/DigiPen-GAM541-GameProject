@@ -49,6 +49,17 @@ namespace gswy
 		Entity<GameObjectType> m_entity;
 	};
 
+	struct AttackBaseEvent : Event<GameObjectType, EventType> {
+
+		explicit AttackBaseEvent(float damage)
+			:
+			m_damage(damage),
+			Event(EventType::ATTACKBASE)
+		{
+		}
+		float m_damage;
+	};
+
 	struct SoundEvent : Event<GameObjectType, EventType> {
 
 		SoundEvent(const std::string& name)

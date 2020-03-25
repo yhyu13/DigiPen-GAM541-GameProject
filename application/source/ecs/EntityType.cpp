@@ -20,7 +20,10 @@ std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
 	case gswy::GameObjectType::BASE: return o << "BASE";
 	case gswy::GameObjectType::PLAYER: return o << "PLAYER";
 	case gswy::GameObjectType::ENEMY_PORTAL: return o << "ENEMY_PORTAL";
-	case gswy::GameObjectType::ENEMY: return o << "ENEMY";
+	case gswy::GameObjectType::ENEMY_1: return o << "ENEMY_1";
+	case gswy::GameObjectType::ENEMY_2: return o << "ENEMY_2";
+	case gswy::GameObjectType::ENEMY_BOSS_1: return o << "ENEMY_BOSS_1";
+
 	case gswy::GameObjectType::HP_BAR: return o << "HP_BAR";
 	case gswy::GameObjectType::TOWER_BUILD: return o << "TOWER_BUILD";
 	case gswy::GameObjectType::TOWER_FIRE: return o << "TOWER_FIRE";

@@ -36,23 +36,13 @@ namespace gswy
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
 
-				// Set entity to be inactive
-				ComponentDecorator<ActiveCom, GameObjectType> active;
-				m_parentWorld->Unpack(event->m_entity, active);
-				active->SetActive(false);
-
 				switch (event->m_entity.m_type)
 				{
 				case GameObjectType::PLAYER:
 					// TODO : Need proper handle of player death
 					throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Player has died");
 					break;
-				case GameObjectType::HP_BAR:
-				{
-					auto _e = MemoryManager::Make_shared<GCEvent>(event->m_entity);
-					queue->Publish(_e);
-				}
-				case GameObjectType::ENEMY:
+				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:
 				{
 					// TODO : Need proper handle of enemy death
 					PRINT("ENEMY has died!");

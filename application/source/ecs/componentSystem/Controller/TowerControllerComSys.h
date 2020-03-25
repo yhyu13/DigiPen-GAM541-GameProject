@@ -34,7 +34,7 @@ namespace gswy
 		virtual void Update(double dt) override {
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			auto allEnemies = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY);
+			auto allEnemies = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY_1);
 			for (auto& towerType : towerTypes)
 			{
 				m_registeredEntities = m_parentWorld->GetAllEntityWithType(towerType);
@@ -53,9 +53,10 @@ namespace gswy
 					{
 						continue;
 					}
+
+					coolDownController->Update(dt);
 					if (coolDownController->IsCoolDown())
 					{
-						coolDownController->Update(dt);
 						continue;
 					}
 					ComponentDecorator<TransformCom, GameObjectType> transform;
@@ -88,7 +89,6 @@ namespace gswy
 						auto e = MemoryManager::Make_shared<FireWeaponEvent>(tower, transform->GetPos(), LookAt(closest_enmey_delta));
 						queue->Publish(e);
 					}
-					coolDownController->Update(dt);
 				}
 			}
 		}

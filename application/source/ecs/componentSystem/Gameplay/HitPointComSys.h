@@ -72,7 +72,7 @@ namespace gswy
 				// Remove hp bar for dead onwer entity
 				if (std::find(deathList.begin(), deathList.end(), ownerCom->GetEntity()) != deathList.end())
 				{
-					auto e = MemoryManager::Make_shared<DeathEvent>(hp_barEntity);
+					auto e = MemoryManager::Make_shared<GCEvent>(hp_barEntity);
 					queue->Publish(e);
 					continue;
 				}
@@ -105,7 +105,7 @@ namespace gswy
 				case GameObjectType::PLAYER:
 					PLAYER(entityA, entityB);
 					return;
-				case GameObjectType::ENEMY:
+				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:
 					ENEMY(entityA, entityB);
 					return;
 				default:
@@ -126,11 +126,8 @@ namespace gswy
 		{
 			switch (entityB.m_type)
 			{
-			case GameObjectType::ENEMY:
+			case GameObjectType::ENEMY_1:
 			{
-				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
-				m_parentWorld->Unpack(entityA, HitPoint);
-				//HitPoint->AddHitPoint(-1);
 			}	
 				break;
 			default:
@@ -172,6 +169,7 @@ namespace gswy
 				}
 			}
 			break;
+
 			default:
 				break;
 			}

@@ -36,6 +36,7 @@ namespace gswy
 			m_HP = HitPoint;
 			m_MaxHP = m_HP;
 			m_HPLock = false;
+			m_IsDead = false;
 		}
 
 		void AddHitPoint(double HitPoint)

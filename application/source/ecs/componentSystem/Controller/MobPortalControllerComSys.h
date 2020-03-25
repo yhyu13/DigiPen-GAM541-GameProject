@@ -28,7 +28,7 @@ namespace gswy
 		std::vector<GameObjectType> enemyTypes;
 	public:
 		MobPortalControllerComSys() {
-			enemyTypes = { GameObjectType::ENEMY };
+			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
 		}
 
 		virtual void Update(double dt) override {

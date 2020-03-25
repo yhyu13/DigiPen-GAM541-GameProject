@@ -22,7 +22,10 @@ namespace gswy
 		BASE,
 		PLAYER,
 		ENEMY_PORTAL,
-		ENEMY,
+		ENEMY_1,
+		ENEMY_2,
+		ENEMY_BOSS_1,
+
 		HP_BAR,
 		TOWER_BUILD,
 		TOWER_FIRE,

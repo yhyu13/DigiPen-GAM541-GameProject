@@ -72,10 +72,14 @@ namespace gswy {
 						// TODO : need proper handle of player creation (c++ RTTR)
 						if (objName.compare("Player") == 0)
 						{
+							auto player = world->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 							ComponentDecorator<TransformCom, GameObjectType> transform;
-							world->Unpack(world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
+							ComponentDecorator<BodyCom, GameObjectType> body;
+							world->Unpack(player, transform);
+							world->Unpack(player, body);
 							vec2 pixelPos(object.getPosition().x, object.getPosition().y);
 							transform->SetPos(tileMapObj->Pixel2World(pixelPos));
+							body->SetPos(transform->GetPos());
 						}
 						else if (objName.compare("Base") == 0)
 						{
@@ -103,6 +107,7 @@ namespace gswy {
 							sprite0.SetTexture("BlueLayer");
 							obj.AddComponent(sprite0);
 							auto aabb = BodyCom();
+							aabb.SetPos(transform.GetPos());
 							aabb.ChooseShape("AABB", 0.4, 0.4);
 							obj.AddComponent(aabb);
 							obj.AddComponent(HitPointCom(999));
@@ -383,7 +388,7 @@ namespace gswy {
 		*/
 		bool IsLevelFinsihed()
 		{
-			return m_world->GetAllEntityWithType(GameObjectType::ENEMY).empty() && IsLevelStarted() && m_timeOut;
+			return m_world->GetAllEntityWithType(GameObjectType::ENEMY_1).empty() && IsLevelStarted() && m_timeOut;
 		}
 		/*
 			Advance level if is possible

@@ -19,6 +19,8 @@ std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 	case gswy::EventType::GC: return o << "GC";
 	case gswy::EventType::SPAWN: return o << "SPAWN";
 	case gswy::EventType::FIREWEAPON: return o << "FIREWEAPON";
+	case gswy::EventType::ATTACKBASE: return o << "ATTACKBASE";
+
 	case gswy::EventType::PLAYERWEAPON1: return o << "PLAYERWEAPON1";
 
 	case gswy::EventType::DEATH: return o << "DEATH";
