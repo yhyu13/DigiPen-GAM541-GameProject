@@ -60,10 +60,6 @@ namespace gswy
 				{
 					transform->SetRotation(owner_transform->GetRotation() + attach->rRot);
 				}
-				if (attach->followVelocity)
-				{
-					transform->SetVelocity(owner_transform->GetVelocity() + attach->rVelocity);
-				}
 			}
 		}
 	};
