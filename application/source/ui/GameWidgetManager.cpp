@@ -186,10 +186,11 @@ namespace gswy {
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 1.0f));
 					if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(50, 25)))
 					{
-						ImGui::OpenPopup((*it)->m_type.c_str());
-
-						m_ClickedItem.first = (*it);
-						m_ClickedItem.second = !m_ClickedItem.second;
+						//TODO: fix different installed on page 
+						if(!(*it)->m_purchased || !(*it)->m_installed)
+							ImGui::OpenPopup((*it)->m_type.c_str());
+						else
+							m_OpenSupportWindow = true;
 
 						//item hasn't been purchased
 						if ((*it)->m_purchased)
@@ -203,6 +204,8 @@ namespace gswy {
 						}
 					}
 					ImGui::PopStyleColor(3);
+
+					//Popup action to select
 					if (ImGui::BeginPopup((*it)->m_type.c_str()))
 					{
 						//Item has not been purchased
@@ -231,7 +234,7 @@ namespace gswy {
 							//Item has been purchased and installed
 							else
 							{
-								m_OpenSupportWindow = true;
+								//m_OpenSupportWindow = true;
 							}
 						}
 						ImGui::EndPopup();
@@ -249,113 +252,76 @@ namespace gswy {
 					}
 				}
 				ImGui::Dummy(ImVec2(250, 15));
-				ImGui::SameLine();
-				ImGui::SetCursorPos(ImVec2(100, 35));
-				//Support Skills
-				if (m_OpenSupportWindow)
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("SUPPORT"))
+			{
+				auto supportItems = InventoryManager::GetInstance()->GetSupportItems();
+				auto sbegin = supportItems.begin();
+				auto send = supportItems.end();
+				for (auto it = sbegin; it != send; ++it)
 				{
-					if (m_ClickedItem.first->m_purchased)
+					bool bSupportPurchased = (*it)->m_purchased;
+					//Query : color
+					ImGui::PushStyleColor(ImGuiCol_Button, bSupportPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(1.0f, 0.0f, 0.0f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 1.0f));
+					if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(150, 50)))
 					{
-						ImGui::BeginChild("child", ImVec2(300, 300), true);
-						auto supportItems = InventoryManager::GetInstance()->GetSupportItems();
-						auto sbegin = supportItems.begin();
-						auto send = supportItems.end();
-						for (auto it = sbegin; it != send; ++it)
+						ImGui::OpenPopup((*it)->m_type.c_str());
+					}
+					ImGui::PopStyleColor(3);
+
+					if (ImGui::BeginPopup((*it)->m_type.c_str()))
+					{
+						//Item has not been purchased
+						if (!bSupportPurchased)
 						{
-							bool bSupportPurchased = (*it)->m_purchased;
-							//Query : color
-							ImGui::PushStyleColor(ImGuiCol_Button, bSupportPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
-							ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(1.0f, 0.0f, 0.0f));
-							ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 1.0f));
-							if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(150, 50)))
+							if (ImGui::Selectable("SupportPurchase"))
 							{
-								ImGui::OpenPopup((*it)->m_type.c_str());
-
-								m_ClickedSupportItem.first = (*it);
-								m_ClickedSupportItem.second = !m_ClickedSupportItem.second;
-							}
-							ImGui::PopStyleColor(3);
-
-							if (ImGui::BeginPopup((*it)->m_type.c_str()))
-							{
-								//Item has not been purchased
-								if (!bSupportPurchased)
-								{
-									if (ImGui::Selectable("SupportPurchase"))
-									{
-										InventoryManager::GetInstance()->PurchaseSupportItem((*it));
-									}
-								}
-								else
-								{
-									if (ImGui::BeginMenu("SupportInstall"))
-									{
-										if (ImGui::MenuItem("SUPPORT 1"))
-										{
-											unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-											InventoryManager::GetInstance()->Install(tabNum, 2, (*it));
-										}
-										if (ImGui::MenuItem("SUPPORT 2"))
-										{
-											unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-											InventoryManager::GetInstance()->Install(tabNum, 3, (*it));
-										}
-										if (ImGui::MenuItem("SUPPORT 3"))
-										{
-											unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-											InventoryManager::GetInstance()->Install(tabNum, 4, (*it));
-										}
-										ImGui::EndMenu();
-									}
-								}
-								ImGui::EndPopup();
-							}
-
-							ImGui::SameLine();
-
-							//Support Skill Tooltip
-							if (ImGui::IsItemHovered())
-							{
-								ImGui::BeginTooltip();
-
-								//Query : skill detail 
-								for (auto s : (*it)->m_text)
-									ImGui::Text("%s\n", s.c_str());
-								ImGui::EndTooltip();
+								InventoryManager::GetInstance()->PurchaseSupportItem((*it));
 							}
 						}
-						ImGui::EndChild();
+						else
+						{
+							if (ImGui::BeginMenu("SupportInstall"))
+							{
+								if (ImGui::MenuItem("SUPPORT 1"))
+								{
+									unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
+									InventoryManager::GetInstance()->Install(tabNum, 2, (*it));
+								}
+								if (ImGui::MenuItem("SUPPORT 2"))
+								{
+									unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
+									InventoryManager::GetInstance()->Install(tabNum, 3, (*it));
+								}
+								if (ImGui::MenuItem("SUPPORT 3"))
+								{
+									unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
+									InventoryManager::GetInstance()->Install(tabNum, 4, (*it));
+								}
+								ImGui::EndMenu();
+							}
+						}
+						ImGui::EndPopup();
+					}
+
+					ImGui::SameLine();
+
+					//Support Skill Tooltip
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::BeginTooltip();
+
+						//Query : skill detail 
+						for (auto s : (*it)->m_text)
+							ImGui::Text("%s\n", s.c_str());
+						ImGui::EndTooltip();
 					}
 				}
-
-				//Support child window
-				//ImGui::SetCursorPos(ImVec2(50, shopWindowSize.y - 50));
-				//if (ImGui::Button("PURCHASE", ImVec2(150, 25)))
-				//{
-				//	if (m_ClickedItem.first && m_ClickedItem.second)
-				//	{
-				//		InventoryManager::GetInstance()->PurchaseActiveItem(m_ClickedItem.first);
-				//		//m_ClickedItem.second = false;
-				//	}
-				//	
-				//	if (m_ClickedSupportItem.first && m_ClickedSupportItem.second)
-				//	{
-				//		InventoryManager::GetInstance()->PurchaseSupportItem(m_ClickedSupportItem.first);
-				//		m_ClickedSupportItem.second = false;
-				//	}
-				//
-				//}
-				//ImGui::SetCursorPos(ImVec2(shopWindowSize.x - 200, shopWindowSize.y - 50));
-				//if (ImGui::Button("INSTALL", ImVec2(150, 25)))
-				//{
-				//	if (m_ClickedItem.first && m_ClickedItem.second)
-				//	{
-				//		InventoryManager::GetInstance()->Install(1, 1, m_ClickedItem.first);
-				//	}
-				//	else if(m_ClickedSupportItem.first && m_ClickedSupportItem.second)
-				//	{
-				//	}
-				//}
+				
 				ImGui::EndTabItem();
 			}
 			ImGui::EndTabBar();
