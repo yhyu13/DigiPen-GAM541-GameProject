@@ -30,6 +30,7 @@ Creation date	: 03/15/2020
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/CustomEvents.h"
+#include "skill-manager/SkillManager.h"
 
 #include <sstream>
 
@@ -60,6 +61,7 @@ namespace gswy
 			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_USE, &PlayerSkillSystem::OnSkillUse);
 			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_ADDITION, &PlayerSkillSystem::OnAddSkill);
 			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_REMOVAL, &PlayerSkillSystem::OnRemoveSkill);
+			queue->Subscribe<PlayerSkillSystem>(this, EventType::FORK, &PlayerSkillSystem::OnFork);
 		}
 
 		virtual void Update(double dt) override
@@ -227,6 +229,64 @@ namespace gswy
 			}
 
 		}
+
+	void OnFork(EventQueue<GameObjectType, EventType>::EventPtr event)
+	{
+		auto forkEvent = std::static_pointer_cast<ForkEvent>(event);
+		ActiveSkillType type = forkEvent->m_skillType;
+		glm::vec2 position = forkEvent->m_position;
+		float rotation = forkEvent->m_rotation;
+
+		APP_DEBUG("Fork Event Received: {0}", forkEvent->m_type);
+
+		SkillManager* manager = SkillManager::GetInstance();
+		std::shared_ptr<ActiveSkill> skill = manager->GetActiveSkill(forkEvent->m_skillType);
+		if (skill != nullptr)
+		{
+			if (auto fireballAttack = std::dynamic_pointer_cast<FireballAttack>(skill))
+			{
+				int num_spawn = fireballAttack->GetForkCount();
+ 				for (int i = 0; i < num_spawn; ++i)
+				{
+					{
+						auto pos = position;
+						auto rot = rotation;
+						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FORKED_FIREBALL);
+						auto active = ActiveCom();
+						weapon.AddComponent(active);
+						weapon.AddComponent(OwnershiptCom<GameObjectType>(*m_player));
+						auto weapon_rot = rot;
+						if (num_spawn > 1)
+						{
+							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
+						}
+						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
+						weapon.AddComponent(transform);
+						auto particle = ParticleCom();
+						particle.Init<ExplosionParticle>();
+						weapon.AddComponent(particle);
+						auto animCom = AnimationCom();
+						animCom.Add("fireBallAnim1", "Move");
+						animCom.SetCurrentAnimationState("Move");
+						weapon.AddComponent(animCom);
+						auto sprite = SpriteCom();
+						sprite.SetScale(vec2(0.25, 0.25));
+						weapon.AddComponent(sprite);
+						auto aabb = BodyCom();
+						aabb.SetPos(transform.GetPos());
+						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+						aabb.ChooseShape("Circle", 0.1);
+						weapon.AddComponent(aabb);
+						weapon.AddComponent(LifeTimeCom(1.0));
+						weapon.AddComponent(HitPreventionCom<GameObjectType>());
+					}
+				}
+			}
+		}
+
+		APP_DEBUG("Fork Event PROCESSED: {0}", forkEvent->m_type);
+	}
 
 	private:
 		std::shared_ptr<Entity<GameObjectType>> m_player;

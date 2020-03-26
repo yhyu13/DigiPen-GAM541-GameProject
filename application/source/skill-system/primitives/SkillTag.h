@@ -17,6 +17,7 @@ namespace gswy
 	enum class SkillTag
 	{
 		PROJECTILE,
+		FORK,
 		SPEED,
 		AOE,
 		SUPPORT,

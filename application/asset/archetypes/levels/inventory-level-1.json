@@ -46,6 +46,21 @@
     },
     {
       "id": "3",
+      "type": "FORK",
+      "category": "SUPPORT",
+      "tags": [
+        "PROJECTILE",
+        "NON-PENETRATING"
+      ],
+      "purchased": 0,
+      "installed": 0,
+      "text": [
+        "something",
+        "something"
+      ]
+    },
+    {
+      "id": "4",
       "type": "AOE",
       "category": "SUPPORT",
       "tags": [

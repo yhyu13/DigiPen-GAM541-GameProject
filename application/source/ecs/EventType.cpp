@@ -34,6 +34,7 @@ std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 	case gswy::EventType::SKILL_ACTIVATION: return o << "ACTIVATE SKILL";
 	case gswy::EventType::SKILL_UPGRADE: return o << "UPGRADE SKILL";
 	case gswy::EventType::SKILL_USE: return o << "USE SKILL";
+	case gswy::EventType::FORK: return o << "FORK";
 
 	default: return o << "(invalid value)";
 	}

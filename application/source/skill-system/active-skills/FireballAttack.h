@@ -15,13 +15,14 @@ Creation date	: 03/13/2020
 #include "ActiveSkill.h"
 #include "skill-system/support-skills/SupportSkill.h"
 #include "skill-system/primitives/Projectile.h"
+#include "skill-system/primitives/Fork.h"
 
 #include <set>
 #include <memory>
 
 namespace gswy
 {
-	class FireballAttack: public ActiveSkill, public Projectile
+	class FireballAttack: public ActiveSkill, public Projectile, public Fork
 	{
 	public:
 
@@ -29,6 +30,9 @@ namespace gswy
 		~FireballAttack();
 
 		const int& GetCount();
+		const int& GetForkCount();
+		const bool& IsFork();
+		void SetFork(const bool& fork);
 		const glm::vec3& GetVelocity();
 
 		virtual const int& GetId() override;

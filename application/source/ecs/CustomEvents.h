@@ -16,6 +16,7 @@ Creation date: 02/17/2020
 #include "skill-system/support-skills/SupportSkill.h"
 #include "skill-system/active-skills/ActiveSkill.h"
 #include "skill-system/active-skills/ActiveSkillType.h"
+#include "glm/glm.hpp"
 
 #include <memory>
 
@@ -23,15 +24,17 @@ namespace gswy
 {
 	struct CollisionEvent : Event<GameObjectType, EventType> {
 
-		CollisionEvent(const Entity<GameObjectType>& entity1, const Entity<GameObjectType>& entity2)
+		CollisionEvent(const Entity<GameObjectType>& entity1, const Entity<GameObjectType>& entity2, const glm::vec2& position, const float& rotation)
 			:
-			Event(EventType::COLLISION)
+			Event(EventType::COLLISION), m_position(position), m_rotation(rotation)
 		{
 			m_entityA = entity1;
 			m_entityB = entity2;
 		}
 		Entity<GameObjectType> m_entityA;
 		Entity<GameObjectType> m_entityB;
+		glm::vec2 m_position;
+		float m_rotation;
 	};
 
 	struct FireWeaponEvent : Event<GameObjectType, EventType> {
@@ -203,5 +206,16 @@ namespace gswy
 		}
 
 		int m_id;
+	};
+
+	struct ForkEvent : Event<GameObjectType, EventType>
+	{
+		explicit ForkEvent(const ActiveSkillType& type, const glm::vec2& position, const float& rotation) : Event(EventType::FORK), m_skillType(type), m_position(position), m_rotation(rotation)
+		{
+		}
+
+		ActiveSkillType m_skillType;
+		glm::vec2 m_position;
+		float m_rotation;
 	};
 }

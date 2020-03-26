@@ -31,6 +31,7 @@ namespace gswy
 		std::shared_ptr<Skills> GetSkill(const int& skillNumber);
 		void RemoveSkill(int skillNumber, int slotNumber);
 		std::shared_ptr<ActiveSkill> GetActiveSkill(int skillNumber);
+		std::shared_ptr<ActiveSkill> GetActiveSkill(ActiveSkillType type);
 
 	private:
 

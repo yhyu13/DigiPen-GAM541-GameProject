@@ -42,6 +42,8 @@ namespace gswy
 		SKILL_USE,
 		SKILL_REMOVAL,
 
+		FORK,
+
 		NUM
 	};
 }
