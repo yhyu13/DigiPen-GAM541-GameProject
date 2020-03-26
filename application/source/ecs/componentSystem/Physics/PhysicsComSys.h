@@ -29,6 +29,7 @@ namespace gswy
 	private:
 		size_t m_CollisionDisableMap[(size_t)GameObjectType::NUM][(size_t)GameObjectType::NUM];
 		std::vector<GameObjectType> enemyTypes;
+
 	public:
 		PhysicsComSys()
 		{
@@ -132,8 +133,9 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			//For Collisions
 			auto collision = Collisions::GetInstance();
-			auto first_Entity = m_registeredEntities.begin();
-			auto last_Entity = m_registeredEntities.end();
+			vector<Entity<GameObjectType>> new_(m_registeredEntities);
+			auto first_Entity = new_.begin();
+			auto last_Entity = new_.end();
 			for (; first_Entity != last_Entity; ++first_Entity)
 			{
 				// Check active

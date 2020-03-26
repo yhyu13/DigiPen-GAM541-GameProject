@@ -34,16 +34,6 @@ namespace gswy
 		return Fork::GetForkCount();
 	}
 
-	const bool& FireballAttack::IsFork()
-	{
-		return Fork::IsFork();
-	}
-
-	void FireballAttack::SetFork(const bool& fork)
-	{
-		Fork::SetFork(fork);
-	}
-
 	const glm::vec3& FireballAttack::GetVelocity()
 	{
 		return Projectile::GetVelocity();

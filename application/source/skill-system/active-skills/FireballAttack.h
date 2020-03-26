@@ -31,8 +31,6 @@ namespace gswy
 
 		const int& GetCount();
 		const int& GetForkCount();
-		const bool& IsFork();
-		void SetFork(const bool& fork);
 		const glm::vec3& GetVelocity();
 
 		virtual const int& GetId() override;

@@ -173,9 +173,6 @@ namespace gswy
 				auto e = MemoryManager::Make_shared<GCEvent>(entityB);
 				queue->Publish(e);
 
-				//auto active = GetComponent<ActiveCom>(entityB);
-				//active->SetActive(false);
-
 				auto forkEvent = MemoryManager::Make_shared<ForkEvent>(ActiveSkillType::FIRE_BALL, position, rotation);
 				queue->Publish(forkEvent);
 			}
@@ -194,7 +191,6 @@ namespace gswy
 					HitPrevention->Add(entityA);
 					HitPoint->AddHitPoint(-5);
 				}
-
 			}
 			break;
 

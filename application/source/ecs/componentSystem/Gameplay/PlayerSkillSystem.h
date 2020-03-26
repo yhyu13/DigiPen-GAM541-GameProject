@@ -51,16 +51,10 @@ namespace gswy
 
 		void Init()
 		{
-			//m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
-			//m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
 			m_spawnZOrder = 5000;
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_ACTIVATION, &PlayerSkillSystem::OnSkillActivation);
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_UPGRADE, &PlayerSkillSystem::OnSkillUpgrade);
 			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_USE, &PlayerSkillSystem::OnSkillUse);
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_ADDITION, &PlayerSkillSystem::OnAddSkill);
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_REMOVAL, &PlayerSkillSystem::OnRemoveSkill);
 			queue->Subscribe<PlayerSkillSystem>(this, EventType::FORK, &PlayerSkillSystem::OnFork);
 		}
 
@@ -70,67 +64,6 @@ namespace gswy
 			{
 				m_spawnZOrder = 5000;
 			}
-		}
-
-		void OnAddSkill(EventQueue<GameObjectType, EventType>::EventPtr event /*std::shared_ptr<ActiveSkill> skill*/)
-		{
-			//if (m_player == nullptr) {
-			//	m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
-			//}
-			if (m_player == nullptr)
-			{
-				m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
-			}
-
-			APP_DEBUG("Skill Added: {0}", event->m_type);
-			ComponentDecorator<PlayerSkillComponent, GameObjectType> skillComponent;
-			m_parentWorld->Unpack(*m_player, skillComponent);
-
-			auto skillAddEvent = std::static_pointer_cast<SkillAdditionEvent>(event);
-			skillComponent->AddSkill(skillAddEvent->m_skill);
-		}
-
-		void OnRemoveSkill(EventQueue<GameObjectType, EventType>::EventPtr event /*const int& id*/)
-		{
-			APP_DEBUG("Skill Remove: {0}", event->m_type);
-			//if (m_player == nullptr)
-			//{
-			//	m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
-			//}
-			//Entity<GameObjectType> player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
-			/*ComponentDecorator<PlayerSkillComponent, GameObjectType> skillComponent;
-			m_parentWorld->Unpack(*m_player, skillComponent);
-			skillComponent->RemoveSkill(id);*/
-		}
-
-		void OnSkillActivation(EventQueue<GameObjectType, EventType>::EventPtr event)
-		{
-			// TODO: do stuff like switching between fire-ball and ice-ball
-			//std::shared_ptr<SkillActivationEvent> skillUpgradeEvent = std::static_pointer_cast<SkillActivationEvent>(event);
-			if (m_player == nullptr)
-			{
-				m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
-			}
-
-			ComponentDecorator<PlayerSkillComponent, GameObjectType> skillComponent;
-			m_parentWorld->Unpack(*m_player, skillComponent);
-			skillComponent->SwitchCurrentSkill();
-		}
-
-		void OnSkillUpgrade(EventQueue<GameObjectType, EventType>::EventPtr event)
-		{
-			// TODO: do stuff like updating the parameters of fireballs
-			// Event must have support skill and active skill information
-			APP_DEBUG("Skill Upgraded: {0}", event->m_type);
-			std::shared_ptr<SkillUpgradeEvent> skillUpgradeEvent = std::static_pointer_cast<SkillUpgradeEvent>(event);
-			if (m_player == nullptr)
-			{
-				m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
-			}
-			
-			ComponentDecorator<PlayerSkillComponent, GameObjectType> skillComponent;
-			m_parentWorld->Unpack(*m_player, skillComponent);
-			skillComponent->UpgradeSkill(skillUpgradeEvent->m_activeSkillType, skillUpgradeEvent->m_supportSkill);
 		}
 
 		void OnSkillUse(EventQueue<GameObjectType, EventType>::EventPtr event)
@@ -239,6 +172,11 @@ namespace gswy
 
 		APP_DEBUG("Fork Event Received: {0}", forkEvent->m_type);
 
+		if (m_player == nullptr)
+		{
+			m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
+		}
+
 		SkillManager* manager = SkillManager::GetInstance();
 		std::shared_ptr<ActiveSkill> skill = manager->GetActiveSkill(forkEvent->m_skillType);
 		if (skill != nullptr)
@@ -271,7 +209,7 @@ namespace gswy
 						animCom.SetCurrentAnimationState("Move");
 						weapon.AddComponent(animCom);
 						auto sprite = SpriteCom();
-						sprite.SetScale(vec2(0.25, 0.25));
+						sprite.SetScale(vec2(0.15, 0.15));
 						weapon.AddComponent(sprite);
 						auto aabb = BodyCom();
 						aabb.SetPos(transform.GetPos());

@@ -191,12 +191,12 @@ namespace gswy
 			m_PosY = v.y;
 		}
 
-		const vec2& GetPos() const
+		const vec2 GetPos() const
 		{
 			return vec2(m_PosX, m_PosY);
 		}
 
-		const vec2& GetVelocity() const
+		const vec2 GetVelocity() const
 		{
 			return vec2(m_VelX, m_VelY);
 		}
