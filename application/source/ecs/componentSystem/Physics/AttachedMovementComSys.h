@@ -27,7 +27,6 @@ namespace gswy
 			m_systemSignature.AddComponent<OwnershiptCom<GameObjectType>>();
 			m_systemSignature.AddComponent<AttachedMovementCom>();
 			m_systemSignature.AddComponent<TransformCom>();
-			m_systemSignature.AddComponent<BodyCom>();
 		}
 
 		virtual void Update(double dt) override {
@@ -50,10 +49,8 @@ namespace gswy
 				}
 
 				auto owner_transform = GetComponent<TransformCom>(onwer->GetEntity());
-				auto owner_body = GetComponent<BodyCom>(onwer->GetEntity());
 				auto transform = GetComponent<TransformCom>(entity);
 				auto attach = GetComponent<AttachedMovementCom>(entity);
-				auto body = GetComponent<BodyCom>(entity);
 
 				if (attach->followPos)
 				{
@@ -62,10 +59,6 @@ namespace gswy
 				if (attach->followRot)
 				{
 					transform->SetRotation(owner_transform->GetRotation() + attach->rRot);
-				}
-				if (attach->followVelocity)
-				{
-					body->SetVelocity(owner_body->GetVelocity() + attach->rVelocity);
 				}
 			}
 		}

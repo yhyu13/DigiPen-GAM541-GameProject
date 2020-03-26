@@ -39,6 +39,8 @@ namespace gswy
 		SKILL_USE,
 		FORK,
 
+		LOAD_MAIN_MENU,
+
 		NUM
 	};
 }

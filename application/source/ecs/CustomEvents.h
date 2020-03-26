@@ -183,4 +183,11 @@ namespace gswy
 		glm::vec2 m_position;
 		float m_rotation;
 	};
+
+	struct LoadMainMenuEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadMainMenuEvent() : Event(EventType::LOAD_MAIN_MENU)
+		{
+		}
+	};
 }
