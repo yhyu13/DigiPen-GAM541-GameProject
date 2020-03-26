@@ -37,6 +37,7 @@ namespace gswy
 		{
 			InitFramework();
 			InitGameWorld();
+			StartUp();
 		}
 
 		virtual ~GameLayer() 
@@ -51,37 +52,6 @@ namespace gswy
 		virtual void OnDetach() 
 		{
 			AfterRun();
-		}
-
-		void InitFramework()
-		{
-			// Renderer
-			Renderer2D::Init();
-			OpenGLDebugDraw::Init();
-			m_PostProcessing.SetScreenSize(1280, 720);
-			m_PostProcessing.Init();
-
-			GameLevelMapManager::GetInstance()->Init();
-
-			// Texture loader
-			ResourceAllocator<Texture2D>::GetInstance()->Init();
-			// Animation loader
-			ResourceAllocator<Animation>::GetInstance()->Init();
-			// TileMap loader
-			ResourceAllocator<TileMap>::GetInstance()->Init();
-
-			LoadResources();
-	#ifdef _DEBUG
-			//TODO: Move to Component Init
-			m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
-			m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 0.0f };
-			m_Particle.SizeBegin = 0.01f, m_Particle.SizeVariation = 0.0f, m_Particle.SizeEnd = 0.0f;
-			m_Particle.LifeTime = 0.1f;
-			m_Particle.Velocity = { 0.0f, 0.0f, 0.0f };
-			m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
-			m_Particle.Position = { 0.0f, 0.0f, 0.0f };
-			m_Particle.Speed = { 1.0f, 1.0f, 0.0f };
-	#endif // _DEBUG
 		}
 
 		void LoadResources()
@@ -120,7 +90,36 @@ namespace gswy
 			skillManager->AddSkill(2, 4, supportItems.at(0));
 
 			skillManager->RemoveSkill(2, 3);
+		}
 
+		void InitFramework()
+		{
+			// Renderer
+			Renderer2D::Init();
+			OpenGLDebugDraw::Init();
+			m_PostProcessing.SetScreenSize(1280, 720);
+			m_PostProcessing.Init();
+
+			GameLevelMapManager::GetInstance()->Init();
+
+			// Texture loader
+			ResourceAllocator<Texture2D>::GetInstance()->Init();
+			// Animation loader
+			ResourceAllocator<Animation>::GetInstance()->Init();
+			// TileMap loader
+			ResourceAllocator<TileMap>::GetInstance()->Init();
+
+#ifdef _DEBUG
+			//TODO: Move to Component Init
+			m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+			m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 0.0f };
+			m_Particle.SizeBegin = 0.01f, m_Particle.SizeVariation = 0.0f, m_Particle.SizeEnd = 0.0f;
+			m_Particle.LifeTime = 0.1f;
+			m_Particle.Velocity = { 0.0f, 0.0f, 0.0f };
+			m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
+			m_Particle.Position = { 0.0f, 0.0f, 0.0f };
+			m_Particle.Speed = { 1.0f, 1.0f, 0.0f };
+#endif // _DEBUG
 		}
 
 		void InitGameWorld()
@@ -135,6 +134,38 @@ namespace gswy
 			
 			// Initialize game
 			m_world->Init();
+		}
+
+		void StartUp()
+		{
+			// Load logo
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/DigiPen_RED_1024px.png", "Logo");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(2, 2.0 / 1024 * 237));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+
+			// Load all resources
+			LoadResources();
+
+			// Publish start events
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_MAIN_MENU, &GameLayer::OnLoadMainMenuWorld);
+
+			// Fading logo
+			/*auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, 0.f, 1.f, EventType::GC);
+			queue->Publish(_e, 1.0f);*/
+			auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
+			queue->Publish(_e1, 2.0f);
+		}
+
+		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
 			LoadMainMenuWorld();
 		}
 
@@ -172,9 +203,9 @@ namespace gswy
 			m_miniMapCameraController.SetPosition(vec3(0));
 		}
 
-		void LoadGameWorld()
+		void LoadGameWorld(int level)
 		{
-			auto sampleID = Str(1);
+			auto sampleID = Str(level);
 			PRINT("Loading map ID " + sampleID);
 			{
 				m_world->SetPause(false);
@@ -421,6 +452,7 @@ namespace gswy
 				//{
 
 				//});
+				//update.wait();
 				if (IS_INGAME)
 				{
 					TIME("System Update");
@@ -439,8 +471,6 @@ namespace gswy
 					TIME("Render Update");
 					Render(dt);
 				}
-				//update.wait();
-				if (IS_INGAME)
 				{
 					TIME("Manager Update");
 					EventQueue<GameObjectType, EventType>::GetInstance()->Update(dt);
@@ -523,7 +553,7 @@ namespace gswy
 			if (buttonName.compare("New Game") == 0)
 			{
 				// TODO
-				LoadGameWorld();
+				LoadGameWorld(1);
 			}
 			if (buttonName.compare("How To Play") == 0)
 			{

@@ -42,6 +42,8 @@ namespace gswy
 		SKILL_USE,
 		SKILL_REMOVAL,
 
+		LOAD_MAIN_MENU,
+
 		NUM
 	};
 }

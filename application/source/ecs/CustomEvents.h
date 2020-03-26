@@ -204,4 +204,11 @@ namespace gswy
 
 		int m_id;
 	};
+
+	struct LoadMainMenuEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadMainMenuEvent() : Event(EventType::LOAD_MAIN_MENU)
+		{
+		}
+	};
 }

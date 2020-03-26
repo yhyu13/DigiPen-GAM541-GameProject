@@ -4,6 +4,10 @@
          "type":"textures",
          "textures":[
 		 	{
+               "name":"Logo",
+               "path":"./asset/DigiPen_WHITE_1024px.png"
+            },
+		 	{
                "name":"Portal_0",
                "path":"./asset/Sprites/Portal_0.png"
             },
