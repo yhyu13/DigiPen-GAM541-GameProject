@@ -184,18 +184,14 @@ namespace gswy {
 					ImGui::PushStyleColor(ImGuiCol_Button, bPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(1.0f, 0.0f, 0.0f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::ImColor(0.0f, 0.0f, 1.0f));
-					if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(50, 25)))
+					if (ImGui::Button(((*it)->m_type).c_str(), ImVec2(150, 50)))
 					{
-						//TODO: fix different installed on page 
-						if(!(*it)->m_purchased || !(*it)->m_installed)
-							ImGui::OpenPopup((*it)->m_type.c_str());
-						else
-							m_OpenSupportWindow = true;
+						ImGui::OpenPopup((*it)->m_type.c_str());
 
 						//item hasn't been purchased
 						if ((*it)->m_purchased)
 						{
-							//open support penel
+							
 						}
 						//item hasn been purchased
 						else
@@ -218,23 +214,15 @@ namespace gswy {
 						}
 						else
 						{
-							//Item has been purchased but installed
-							if (!(*it)->m_installed)
+							//Item has been purchased
+							unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
+							if (ImGui::BeginMenu("InstallPopup"))
 							{
-								if (ImGui::BeginMenu("InstallPopup"))
+								if (ImGui::MenuItem("ACTIVE"))
 								{
-									if (ImGui::MenuItem("ACTIVE"))
-									{
-										unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-										InventoryManager::GetInstance()->Install(tabNum, 1, (*it));
-									}
-									ImGui::EndMenu();
+									InventoryManager::GetInstance()->Install(tabNum, 1, (*it));
 								}
-							}
-							//Item has been purchased and installed
-							else
-							{
-								//m_OpenSupportWindow = true;
+								ImGui::EndMenu();
 							}
 						}
 						ImGui::EndPopup();
