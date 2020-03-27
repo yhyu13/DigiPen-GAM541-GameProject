@@ -141,10 +141,10 @@ namespace gswy
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_MAIN_MENU, &GameLayer::OnLoadMainMenuWorld);
 
 			// Fading logo
-			/*auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, 0.f, 1.f, EventType::GC);
-			queue->Publish(_e, 1.0f);*/
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, 0.f, 1.f, EventType::GC);
+			queue->Publish(_e, 1.0f);
 			auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-			queue->Publish(_e1, 2.0f);
+			queue->Publish(_e1, 3.0f);
 		}
 
 		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)

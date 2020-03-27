@@ -365,13 +365,13 @@ namespace gswy {
 				BeginBatch(s_BatchData->cam);
 			}
 		}
-		glm::vec4 resolvedColor;
+		glm::vec4 resolvedColor = color;
 		//GPU like float
 		float textureIndex = 0.0f;
 
 		if (texture)
 		{
-			resolvedColor = glm::vec4(1.0f);
+			resolvedColor = color;
 
 			//Get the texture already in slot
 			for (uint32_t i = 1; i < s_BatchData->TextureSlotIndex; ++i)

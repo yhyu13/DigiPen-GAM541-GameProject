@@ -124,7 +124,7 @@ namespace gswy {
 			glm::vec2(texCoord.x, texCoord.y + texCoordOffset.y)
 		};
 
-		Renderer2D::AddBatch(m_Position, m_Scale, m_Rotation, glm::vec4(1.0f), m_VertexData, m_TexCoord, m_Texture2D);
+		Renderer2D::AddBatch(m_Position, m_Scale, m_Rotation, glm::vec4(1.0f, 1.0f, 1.0f, m_alpha), m_VertexData, m_TexCoord, m_Texture2D);
 	}
 	void Sprite::SetSpritePosition(const glm::vec3& pos) { m_Position = pos; }
 	void Sprite::SetSpriteTexture(std::shared_ptr<Texture2D>& texture2D) {
