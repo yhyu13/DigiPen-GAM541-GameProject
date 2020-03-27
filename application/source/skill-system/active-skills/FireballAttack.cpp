@@ -29,6 +29,11 @@ namespace gswy
 		return Projectile::GetCount();
 	}
 
+	const int& FireballAttack::GetForkCount()
+	{
+		return Fork::GetForkCount();
+	}
+
 	const glm::vec3& FireballAttack::GetVelocity()
 	{
 		return Projectile::GetVelocity();

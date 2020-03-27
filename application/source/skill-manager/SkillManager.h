@@ -1,3 +1,16 @@
+/* Start Header -------------------------------------------------------
+Copyright (C) 2020 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+Language		: C++ 11
+Platform		: Windows 10 (X64)
+Project			: GAM541
+Filename		: SkillManager.h
+Purpose			: Holds headers for skill manager.
+Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
+Creation date	: 03/20/2020
+- End Header ----------------------------*/
+
 #pragma once
 
 #include "skill-system/active-skills/ActiveSkill.h"
@@ -31,6 +44,7 @@ namespace gswy
 		std::shared_ptr<Skills> GetSkill(const int& skillNumber);
 		void RemoveSkill(int skillNumber, int slotNumber);
 		std::shared_ptr<ActiveSkill> GetActiveSkill(int skillNumber);
+		std::shared_ptr<ActiveSkill> GetActiveSkill(ActiveSkillType type);
 
 	private:
 

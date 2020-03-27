@@ -5,23 +5,29 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 Language		: C++ 11
 Platform		: Windows 10 (X64)
 Project			: GAM541
-Filename		: SkillTag.h
+Filename		: Fork.h
 Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
-Creation date	: 03/13/2020
+Creation date	: 03/15/2020
 - End Header ----------------------------*/
 
 #pragma once
 
+#include "skill-system/BaseSkill.h"
+
 namespace gswy
 {
-	enum class SkillTag
+	class Fork : virtual public BaseSkill
 	{
-		PROJECTILE,
-		FORK,
-		SPEED,
-		AOE,
-		SUPPORT,
-		ACTIVE,
-		NUM
+	public:
+
+		Fork();
+		~Fork();
+
+		const int& GetForkCount();
+		void SetForkCount(const int& forkCount);
+
+	private:
+
+		int m_forkCount;
 	};
 }

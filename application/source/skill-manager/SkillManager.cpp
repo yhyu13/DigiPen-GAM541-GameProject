@@ -1,7 +1,21 @@
+/* Start Header -------------------------------------------------------
+Copyright (C) 2020 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+Language		: C++ 11
+Platform		: Windows 10 (X64)
+Project			: GAM541
+Filename		: SkillManager.cpp
+Purpose			: Holds gameplay logic for handling player skills.
+Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
+Creation date	: 03/20/2020
+- End Header ----------------------------*/
+
 #include "SkillManager.h"
 #include "skill-system/active-skills/FireballAttack.h"
 #include "skill-system/active-skills/IceballAttack.h"
 #include "skill-system/support-skills/MultipleProjectile.h"
+#include "skill-system/support-skills/Forking.h"
 #include "Skill.h"
 
 namespace gswy
@@ -97,6 +111,11 @@ namespace gswy
 				if (item->m_type._Equal("MULTIPLE-PROJECTILE"))
 				{
 					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
+					activeSkill->AddSupportSkill(slot_, supportSkill);
+				}
+				if (item->m_type._Equal("FORK"))
+				{
+					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<Forking>();
 					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 			}
@@ -233,6 +252,11 @@ namespace gswy
 			return "MULTIPLE-PROJECTILE";
 		}
 
+		if (type == SupportSkillType::FORK)
+		{
+			return "FORK";
+		}
+
 		return "";
 	}
 
@@ -254,6 +278,10 @@ namespace gswy
 			{
 				result.emplace("PROJECTILE");
 			}
+			if ((*it) == SkillTag::FORK)
+			{
+				result.emplace("FORK");
+			}
 			if ((*it) == SkillTag::SPEED)
 			{
 				result.emplace("SPEED");
@@ -264,5 +292,18 @@ namespace gswy
 			}
 		}
 		return result;
+	}
+
+	std::shared_ptr<ActiveSkill> SkillManager::GetActiveSkill(ActiveSkillType type)
+	{
+		std::shared_ptr<ActiveSkill> skill = nullptr;
+		for (int i = 0; i < 4; ++i)
+		{
+			if (m_skills[i] != nullptr && m_skills[i]->GetActiveSkillType() == type)
+			{
+				skill = m_skills[i];
+			}
+		}
+		return skill;
 	}
 }

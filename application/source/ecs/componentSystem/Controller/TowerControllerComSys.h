@@ -26,15 +26,17 @@ namespace gswy
 	class TowerControllerComSys : public BaseComponentSystem<GameObjectType> {
 	private:
 		std::vector<GameObjectType> towerTypes;
+		std::vector<GameObjectType> enemyTypes;
 	public:
 		TowerControllerComSys() {
 			towerTypes = { GameObjectType::TOWER_FIRE ,GameObjectType::TOWER_ICE ,GameObjectType::TOWER_LIGHTNING };
+			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
 		}
 
 		virtual void Update(double dt) override {
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			auto allEnemies = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY_1);
+			auto allEnemies = m_parentWorld->GetAllEntityWithType(enemyTypes[RAND_I(0, enemyTypes.size())]);
 			for (auto& towerType : towerTypes)
 			{
 				m_registeredEntities = m_parentWorld->GetAllEntityWithType(towerType);

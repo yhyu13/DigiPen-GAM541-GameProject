@@ -29,6 +29,7 @@ namespace gswy
 	private:
 		size_t m_CollisionDisableMap[(size_t)GameObjectType::NUM][(size_t)GameObjectType::NUM];
 		std::vector<GameObjectType> enemyTypes;
+
 	public:
 		PhysicsComSys()
 		{
@@ -52,6 +53,7 @@ namespace gswy
 				GameObjectType::ICEBALL ,GameObjectType::BOLT,
 				GameObjectType::TOWER_BUILD, GameObjectType::TOWER_FIRE,
 				GameObjectType::TOWER_ICE, GameObjectType::TOWER_LIGHTNING,
+				GameObjectType::FORKED_FIREBALL
 			};
 
 			for (auto& item1 : disableCollisionList)
@@ -131,8 +133,9 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			//For Collisions
 			auto collision = Collisions::GetInstance();
-			auto first_Entity = m_registeredEntities.begin();
-			auto last_Entity = m_registeredEntities.end();
+			vector<Entity<GameObjectType>> new_(m_registeredEntities);
+			auto first_Entity = new_.begin();
+			auto last_Entity = new_.end();
 			for (; first_Entity != last_Entity; ++first_Entity)
 			{
 				// Check active
@@ -145,6 +148,7 @@ namespace gswy
 
 				ComponentDecorator<BodyCom, GameObjectType> body1;
 				m_parentWorld->Unpack(*first_Entity, body1);
+
 				// Reset colliding entity
 				body1->ResetOtherEntity();
 				for (auto second_Entity = first_Entity + 1; second_Entity != last_Entity; ++second_Entity)
@@ -171,6 +175,8 @@ namespace gswy
 
 					ComponentDecorator<BodyCom, GameObjectType> body2;
 					m_parentWorld->Unpack(*second_Entity, body2);
+					ComponentDecorator<TransformCom, GameObjectType> transform;
+					m_parentWorld->Unpack(*second_Entity, transform);
 
 					// Reset colliding entity
 					body2->ResetOtherEntity();
@@ -185,7 +191,7 @@ namespace gswy
 						body1->SetOtherEntity(*second_Entity);
 						body2->SetOtherEntity(*first_Entity);
 						DEBUG_PRINT("Collisions Detected " + Str(*first_Entity) + Str(*second_Entity));
-						auto e = MemoryManager::Make_shared<CollisionEvent>(*first_Entity, *second_Entity);
+						auto e = MemoryManager::Make_shared<CollisionEvent>(*first_Entity, *second_Entity, body2->GetPos(), transform->GetRotation());
 						queue->Publish(e);
 					}
 				}

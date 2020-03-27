@@ -75,3 +75,6 @@ Creation date	: 01/26/2020
 
 //// Object Factory ////
 #include "engine/object-factory/ObjectFactory.h"
+
+//// Utility ////
+#include "engine/utility/Timer.h"

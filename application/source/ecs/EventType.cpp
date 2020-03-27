@@ -29,11 +29,8 @@ std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 	case gswy::EventType::_FADE_ING: return o << "_FADEIN_ING";
 	case gswy::EventType::_FADE_END: return o << "_FADEIN_END";
 
-	case gswy::EventType::SKILL_ADDITION: return o << "ADD SKILL";
-	case gswy::EventType::SKILL_REMOVAL: return o << "REMOVE SKILL";
-	case gswy::EventType::SKILL_ACTIVATION: return o << "ACTIVATE SKILL";
-	case gswy::EventType::SKILL_UPGRADE: return o << "UPGRADE SKILL";
 	case gswy::EventType::SKILL_USE: return o << "USE SKILL";
+	case gswy::EventType::FORK: return o << "FORK";
 
 	default: return o << "(invalid value)";
 	}

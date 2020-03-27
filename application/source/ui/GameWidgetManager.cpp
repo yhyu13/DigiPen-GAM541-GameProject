@@ -78,7 +78,7 @@ namespace gswy {
 
 	HUD::HUD() 
 	{ 
-		IsVisible = true; 
+		IsVisible = false; 
 		m_TimerMin = 0; 
 		m_TimerSec = 0; 
 		m_Wave = 0; 

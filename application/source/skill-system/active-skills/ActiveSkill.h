@@ -35,6 +35,7 @@ namespace gswy
 		virtual void AddSupportSkill(const int& slot, std::shared_ptr<SupportSkill> skill);
 		virtual std::shared_ptr<SupportSkill> GetSupportSkill(const int& slot);
 		virtual void ResetSupportSkill(const int& slot);
+		virtual bool HasSupportSkill(const SupportSkillType& type);
 
 	private:
 		std::set<std::shared_ptr<SupportSkill>> m_supportSkillsLegacy;

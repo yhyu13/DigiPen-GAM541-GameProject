@@ -30,6 +30,7 @@ Creation date	: 03/15/2020
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/CustomEvents.h"
+#include "skill-manager/SkillManager.h"
 
 #include <sstream>
 
@@ -50,16 +51,11 @@ namespace gswy
 
 		void Init()
 		{
-			//m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
-			//m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
 			m_spawnZOrder = 5000;
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_ACTIVATION, &PlayerSkillSystem::OnSkillActivation);
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_UPGRADE, &PlayerSkillSystem::OnSkillUpgrade);
 			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_USE, &PlayerSkillSystem::OnSkillUse);
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_ADDITION, &PlayerSkillSystem::OnAddSkill);
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_REMOVAL, &PlayerSkillSystem::OnRemoveSkill);
+			queue->Subscribe<PlayerSkillSystem>(this, EventType::FORK, &PlayerSkillSystem::OnFork);
 		}
 
 		virtual void Update(double dt) override
@@ -68,67 +64,6 @@ namespace gswy
 			{
 				m_spawnZOrder = 5000;
 			}
-		}
-
-		void OnAddSkill(EventQueue<GameObjectType, EventType>::EventPtr event /*std::shared_ptr<ActiveSkill> skill*/)
-		{
-			//if (m_player == nullptr) {
-			//	m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
-			//}
-			if (m_player == nullptr)
-			{
-				m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
-			}
-
-			APP_DEBUG("Skill Added: {0}", event->m_type);
-			ComponentDecorator<PlayerSkillComponent, GameObjectType> skillComponent;
-			m_parentWorld->Unpack(*m_player, skillComponent);
-
-			auto skillAddEvent = std::static_pointer_cast<SkillAdditionEvent>(event);
-			skillComponent->AddSkill(skillAddEvent->m_skill);
-		}
-
-		void OnRemoveSkill(EventQueue<GameObjectType, EventType>::EventPtr event /*const int& id*/)
-		{
-			APP_DEBUG("Skill Remove: {0}", event->m_type);
-			//if (m_player == nullptr)
-			//{
-			//	m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
-			//}
-			//Entity<GameObjectType> player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
-			/*ComponentDecorator<PlayerSkillComponent, GameObjectType> skillComponent;
-			m_parentWorld->Unpack(*m_player, skillComponent);
-			skillComponent->RemoveSkill(id);*/
-		}
-
-		void OnSkillActivation(EventQueue<GameObjectType, EventType>::EventPtr event)
-		{
-			// TODO: do stuff like switching between fire-ball and ice-ball
-			//std::shared_ptr<SkillActivationEvent> skillUpgradeEvent = std::static_pointer_cast<SkillActivationEvent>(event);
-			if (m_player == nullptr)
-			{
-				m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
-			}
-
-			ComponentDecorator<PlayerSkillComponent, GameObjectType> skillComponent;
-			m_parentWorld->Unpack(*m_player, skillComponent);
-			skillComponent->SwitchCurrentSkill();
-		}
-
-		void OnSkillUpgrade(EventQueue<GameObjectType, EventType>::EventPtr event)
-		{
-			// TODO: do stuff like updating the parameters of fireballs
-			// Event must have support skill and active skill information
-			APP_DEBUG("Skill Upgraded: {0}", event->m_type);
-			std::shared_ptr<SkillUpgradeEvent> skillUpgradeEvent = std::static_pointer_cast<SkillUpgradeEvent>(event);
-			if (m_player == nullptr)
-			{
-				m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
-			}
-			
-			ComponentDecorator<PlayerSkillComponent, GameObjectType> skillComponent;
-			m_parentWorld->Unpack(*m_player, skillComponent);
-			skillComponent->UpgradeSkill(skillUpgradeEvent->m_activeSkillType, skillUpgradeEvent->m_supportSkill);
 		}
 
 		void OnSkillUse(EventQueue<GameObjectType, EventType>::EventPtr event)
@@ -227,6 +162,69 @@ namespace gswy
 			}
 
 		}
+
+	void OnFork(EventQueue<GameObjectType, EventType>::EventPtr event)
+	{
+		auto forkEvent = std::static_pointer_cast<ForkEvent>(event);
+		ActiveSkillType type = forkEvent->m_skillType;
+		glm::vec2 position = forkEvent->m_position;
+		float rotation = forkEvent->m_rotation;
+
+		APP_DEBUG("Fork Event Received: {0}", forkEvent->m_type);
+
+		if (m_player == nullptr)
+		{
+			m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
+		}
+
+		SkillManager* manager = SkillManager::GetInstance();
+		std::shared_ptr<ActiveSkill> skill = manager->GetActiveSkill(forkEvent->m_skillType);
+		if (skill != nullptr)
+		{
+			if (auto fireballAttack = std::dynamic_pointer_cast<FireballAttack>(skill))
+			{
+				int num_spawn = fireballAttack->GetForkCount();
+ 				for (int i = 0; i < num_spawn; ++i)
+				{
+					{
+						auto pos = position;
+						auto rot = rotation;
+						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FORKED_FIREBALL);
+						auto active = ActiveCom();
+						weapon.AddComponent(active);
+						weapon.AddComponent(OwnershiptCom<GameObjectType>(*m_player));
+						auto weapon_rot = rot;
+						if (num_spawn > 1)
+						{
+							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
+						}
+						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
+						weapon.AddComponent(transform);
+						auto particle = ParticleCom();
+						particle.Init<ExplosionParticle>();
+						weapon.AddComponent(particle);
+						auto animCom = AnimationCom();
+						animCom.Add("fireBallAnim1", "Move");
+						animCom.SetCurrentAnimationState("Move");
+						weapon.AddComponent(animCom);
+						auto sprite = SpriteCom();
+						sprite.SetScale(vec2(0.15, 0.15));
+						weapon.AddComponent(sprite);
+						auto aabb = BodyCom();
+						aabb.SetPos(transform.GetPos());
+						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+						aabb.ChooseShape("Circle", 0.1);
+						weapon.AddComponent(aabb);
+						weapon.AddComponent(LifeTimeCom(1.0));
+						weapon.AddComponent(HitPreventionCom<GameObjectType>());
+					}
+				}
+			}
+		}
+
+		APP_DEBUG("Fork Event PROCESSED: {0}", forkEvent->m_type);
+	}
 
 	private:
 		std::shared_ptr<Entity<GameObjectType>> m_player;

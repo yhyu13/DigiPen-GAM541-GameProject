@@ -72,6 +72,45 @@ namespace gswy
 
 	public:
 
+		void SetAcceleration(float x, float y)
+		{
+			m_AccX = x;
+			m_AccY = y;
+		}
+
+		void SetTotalForce(float x, float y)
+		{
+			m_TotalForceX = x;
+			m_TotalForceY = y;
+		}
+
+		void SetTotalForceX(float x)
+		{
+			m_TotalForceX = x;
+		}
+
+		void SetTotalForceY(float y)
+		{
+			m_TotalForceY = y;
+		}
+
+		void AddTotalForce(float x, float y)
+		{
+			m_TotalForceX += x;
+			m_TotalForceY += y;
+		}
+
+		void AddTotalForceX(float x)
+		{
+			m_TotalForceX += x;
+		}
+
+		void AddTotalForceY(float y)
+		{
+			m_TotalForceX += y;
+		}
+
+
 		void ResetOtherEntity()
 		{
 			m_otherEntity.m_type = GameObjectType::EMPTY;
@@ -152,19 +191,17 @@ namespace gswy
 			m_PosY = v.y;
 		}
 
-		const vec2& GetPos() const
+		const vec2 GetPos() const
 		{
 			return vec2(m_PosX, m_PosY);
 		}
 
-		const vec2& GetVelocity() const
+		const vec2 GetVelocity() const
 		{
 			return vec2(m_VelX, m_VelY);
 		}
 
-		//void Serialize() {}
-
-		void Integrate(/*float Gravity, */float dt)
+		void Integrate(float dt)
 		{
 			//m_AccX = m_AccY = 0.0f;
 

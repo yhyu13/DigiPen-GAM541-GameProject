@@ -99,6 +99,9 @@ namespace gswy
 				bool isSwasp = false;
 				auto entityA = event->m_entityA;
 				auto entityB = event->m_entityB;
+				auto position = event->m_position;
+				auto rotation = event->m_rotation;
+
 				BEGIN:
 				switch (entityA.m_type)
 				{
@@ -106,7 +109,7 @@ namespace gswy
 					PLAYER(entityA, entityB);
 					return;
 				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:
-					ENEMY(entityA, entityB);
+					ENEMY(entityA, entityB, position, rotation);
 					return;
 				default:
 					break;
@@ -148,7 +151,7 @@ namespace gswy
 			}
 		}
 
-		void ENEMY(const Entity<GameObjectType>& entityA, const Entity<GameObjectType>& entityB)
+		void ENEMY(const Entity<GameObjectType>& entityA, const Entity<GameObjectType>& entityB, const glm::vec2& position, const float& rotation)
 		{
 			switch (entityB.m_type)
 			{
@@ -165,8 +168,32 @@ namespace gswy
 					HitPrevention->Add(entityA);
 					HitPoint->AddHitPoint(-10);
 				}
+
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto e = MemoryManager::Make_shared<GCEvent>(entityB);
+				queue->Publish(e);
+
+				auto forkEvent = MemoryManager::Make_shared<ForkEvent>(ActiveSkillType::FIRE_BALL, position, rotation);
+				queue->Publish(forkEvent);
 			}
 				break;
+
+			case GameObjectType::FORKED_FIREBALL:
+			{
+				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				ComponentDecorator<HitPreventionCom<GameObjectType>, GameObjectType> HitPrevention;
+				m_parentWorld->Unpack(entityA, HitPoint);
+				m_parentWorld->Unpack(entityB, HitPrevention);
+
+				// Note: Fireball has hit prevention that only applies one hit to enemy
+				if (!HitPrevention->IsIncluded(entityA))
+				{
+					HitPrevention->Add(entityA);
+					HitPoint->AddHitPoint(-5);
+				}
+			}
+			break;
+
 			case GameObjectType::ICEBALL:
 			{
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
