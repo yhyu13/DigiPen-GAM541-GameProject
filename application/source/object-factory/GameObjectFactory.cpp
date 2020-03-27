@@ -87,7 +87,15 @@ namespace gswy {
 						}
 						continue;
 					}
-
+					if (name._Equal("PlayerAnimation_Razer_Attack"))
+					{
+						auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
+						for (int k = 0; k < 3; ++k)
+						{
+							playerAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
+						}
+						continue;
+					}
 					if (name._Equal("PlayerAnimation_Moving")) {
 						auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
 						for (int k = 0; k < 4; ++k) {

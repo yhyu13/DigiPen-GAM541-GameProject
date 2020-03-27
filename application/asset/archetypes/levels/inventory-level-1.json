@@ -32,6 +32,19 @@
     },
     {
       "id": "2",
+      "type": "RAZER",
+      "category": "ACTIVE",
+      "tags": [
+      ],
+      "purchased": 0,
+      "installed": 0,
+      "text": [
+        "some useful information",
+        "some useful information"
+      ]
+    },
+    {
+      "id": "2",
       "type": "MULTIPLE-PROJECTILE",
       "category": "SUPPORT",
       "tags": [

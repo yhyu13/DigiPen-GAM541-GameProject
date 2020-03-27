@@ -16,6 +16,7 @@ Creation date	: 03/20/2020
 #include "skill-system/active-skills/IceballAttack.h"
 #include "skill-system/support-skills/MultipleProjectile.h"
 #include "skill-system/support-skills/Forking.h"
+#include "skill-system/active-skills/RazerAttack.h"
 #include "Skill.h"
 
 namespace gswy
@@ -71,6 +72,10 @@ namespace gswy
 			else if (item->m_type._Equal("ICE-BALL"))
 			{
 				newSkill = std::make_shared<IceballAttack>(ActiveSkillType::ICE_BALL);
+			}
+			else if (item->m_type._Equal("RAZER"))
+			{
+				newSkill = std::make_shared<RazerAttack>();
 			}
 			std::shared_ptr<ActiveSkill> currentSkill = m_skills[skill_];
 			if (currentSkill != nullptr)
@@ -240,6 +245,11 @@ namespace gswy
 		if (type == ActiveSkillType::ICE_BALL)
 		{
 			return "ICE-BALL";
+		}
+
+		if (type == ActiveSkillType::RAZER)
+		{
+			return "RAZER";
 		}
 
 		return "";

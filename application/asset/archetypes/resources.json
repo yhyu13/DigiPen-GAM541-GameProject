@@ -16,6 +16,10 @@
                "path":"./asset/Sprites/Player_Idle.png"
             },
 			{
+               "name":"Player_Razer",
+               "path":"./asset/Sprites/Razor.png"
+            },
+			{
                "name":"PlayerTwoHanded_Attack",
                "path":"./asset/Sprites/PlayerTwoHanded_Attack.png"
             },
@@ -226,6 +230,18 @@
                   "height": 64,
                   "delay": 1.0,
                   "frame-count": 15.0
+               }
+            },
+			{
+               "name":"PlayerAnimation_Razer_Attack",
+               "properties":{
+                  "texture-name":"Player_Razer",
+                  "x": 64,
+                  "y": 0,
+                  "width": 64,
+                  "height": 64,
+                  "delay": 1.0,
+                  "frame-count": 10.0
                }
             },
 			{

@@ -31,6 +31,7 @@ Creation date	: 03/15/2020
 #include "ecs/components/SpriteCom.h"
 #include "ecs/CustomEvents.h"
 #include "skill-manager/SkillManager.h"
+#include "skill-system/active-skills/RazerAttack.h"
 
 #include <sstream>
 
@@ -75,6 +76,7 @@ namespace gswy
 			auto skillUseEvent = std::static_pointer_cast<SkillUseEvent>(event);
 			auto fireballAttack = std::dynamic_pointer_cast<FireballAttack>(skillUseEvent->m_skill);
 			auto iceballAttack = std::dynamic_pointer_cast<IceballAttack>(skillUseEvent->m_skill);
+			auto razerAttack = std::dynamic_pointer_cast<RazerAttack>(skillUseEvent->m_skill);
 			ComponentDecorator<TransformCom, GameObjectType> transform;
 
 			if (m_player == nullptr)
@@ -159,6 +161,13 @@ namespace gswy
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
+			}
+			else if (razerAttack !=  nullptr)
+			{
+				ComponentDecorator<AnimationCom, GameObjectType> animation;
+				m_parentWorld->Unpack(*m_player, animation);
+
+				animation->SetCurrentAnimationState("RazerAttack");
 			}
 
 		}

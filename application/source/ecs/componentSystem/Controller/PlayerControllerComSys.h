@@ -87,7 +87,7 @@ namespace gswy
 
 			SkillManager* skillManager = SkillManager::GetInstance();
 
-			if (input->IsKeyTriggered(KEY_Q)) // FIRE-BALL
+			if (input->IsKeyTriggered(KEY_Q))
 			{
 				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(1);
 				if (skill != nullptr)
@@ -97,9 +97,19 @@ namespace gswy
 				}
 			}
 
-			if (input->IsKeyTriggered(KEY_W)) // ICE-BALL
+			if (input->IsKeyTriggered(KEY_W))
 			{
 				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(2);
+				if (skill != nullptr)
+				{
+					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
+					queue->Publish(e);
+				}
+			}
+
+			if (input->IsKeyPressed(KEY_E))
+			{
+				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(ActiveSkillType::RAZER);
 				if (skill != nullptr)
 				{
 					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
