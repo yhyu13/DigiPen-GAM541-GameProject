@@ -144,7 +144,8 @@ project "application"
 	location "application"
 	kind "ConsoleApp"
 	language "C++"
-
+	icon "example.ico"
+	targetname ("Light of Empyrion")
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-intermediate/" .. outputdir .. "/%{prj.name}")
 
@@ -187,7 +188,8 @@ project "application"
 		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
-
+		files { 'resources.rc', '**.ico' }
+		vpaths { ['/*'] = { '*.rc', '**.ico' } }
 		defines
 		{
 
