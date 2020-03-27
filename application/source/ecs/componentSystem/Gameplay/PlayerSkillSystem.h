@@ -166,7 +166,8 @@ namespace gswy
 			{
 				ComponentDecorator<AnimationCom, GameObjectType> animation;
 				m_parentWorld->Unpack(*m_player, animation);
-
+				auto animCom = AnimationCom();
+				animCom.Add("RazerAttack1", "RazerAttack");
 				animation->SetCurrentAnimationState("RazerAttack");
 			}
 
