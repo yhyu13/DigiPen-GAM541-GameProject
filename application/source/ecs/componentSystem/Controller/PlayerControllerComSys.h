@@ -43,7 +43,10 @@ namespace gswy
 		int m_pathFindingLookAhead = { 2 };
 		float m_noPathFindingThreshold = { 0.15f };
 		float m_advancePathFindingThreshold = { 0.1f };
-		float m_maxAngleRotation = { 0.8726646f};
+		float m_maxAngleRotation = { 0.8726646f };
+
+		double m_timeDisableMoveCommand = { 0 };
+		bool m_bDiableMoveCommand = { false };
 	public:
 		PlayerControllerComSys() {
 			m_systemSignature.AddComponent<PlayerSkillComponent>();
@@ -53,8 +56,7 @@ namespace gswy
 
 			auto input = InputManager::GetInstance();
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-
-			bool b_shoudMove = HandleMouseCondition_Move();
+			auto skillManager = SkillManager::GetInstance();
 
 			// Handle mouse action
 			if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
@@ -62,7 +64,9 @@ namespace gswy
 				HandleMouseAction_LeftTriggered();
 			}
 
-			if (b_shoudMove && input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			HandleMouseCondition_Move(dt);
+
+			if (input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				HandleMouseAction_LeftPressed();
 			}
@@ -85,7 +89,6 @@ namespace gswy
 			//	flash = !flash;
 			//}
 
-			SkillManager* skillManager = SkillManager::GetInstance();
 
 			if (input->IsKeyTriggered(KEY_Q))
 			{
@@ -117,7 +120,7 @@ namespace gswy
 				}
 			}
 
-			// (Demo) Spawn tower by pressing keys
+			// Start level by pressing space
 			if (input->IsKeyTriggered(KEY_SPACE))
 			{
 				PRINT("SPACE");
@@ -127,10 +130,21 @@ namespace gswy
 				}
 			}
 
+			// Handle UI toggling
 			if (GameLevelMapManager::GetInstance()->IsInGame())
 			{
-				if (input->IsKeyTriggered(KEY_I)) WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!WidgetManager::GetInstance()->GetInventoryMenu().GetVisible());
-				if (input->IsKeyTriggered(KEY_P)) WidgetManager::GetInstance()->GetShopMenu().SetVisible(!WidgetManager::GetInstance()->GetShopMenu().GetVisible());
+				if (input->IsKeyTriggered(KEY_I))
+				{
+					bool v = WidgetManager::GetInstance()->GetInventoryMenu().GetVisible();
+					WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!v);
+					m_bDiableMoveCommand = !v;
+				}
+				if (input->IsKeyTriggered(KEY_P)) 
+				{
+					bool v = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
+					WidgetManager::GetInstance()->GetShopMenu().SetVisible(!v);
+					m_bDiableMoveCommand = !v;
+				}
 				if (input->IsKeyTriggered(KEY_ESCAPE))
 				{
 					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
@@ -139,7 +153,7 @@ namespace gswy
 			}
 		}
 
-		bool HandleMouseCondition_Move()
+		bool HandleMouseCondition_Move(double dt)
 		{
 			auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
 			ComponentDecorator<BodyCom, GameObjectType> mouseBodyCom;
@@ -150,16 +164,25 @@ namespace gswy
 			{
 
 			case GameObjectType::TOWER_BUILD: case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
+				m_timeDisableMoveCommand = 0.1;
 				couldMove = false;
 				break;
 			default:
 				break;
 			}
+
+			m_timeDisableMoveCommand -= dt;
+
 			return couldMove;
 		}
 
 		void HandleMouseAction_LeftPressed()
 		{
+			if (m_timeDisableMoveCommand > 0 || m_bDiableMoveCommand)
+			{
+				return;
+			}
+
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 			auto pathGrid = tileMapObj->GetTileGrid("PlayerBlock");
