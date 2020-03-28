@@ -17,7 +17,7 @@
             },
 			{
                "name":"Player_Razer",
-               "path":"./asset/Sprites/Razor.png"
+               "path":"./asset/Sprites/PlayerTwoHanded_Cyclone.png"
             },
 			{
                "name":"PlayerTwoHanded_Attack",
@@ -241,7 +241,7 @@
                   "width": 64,
                   "height": 64,
                   "delay": 1.0,
-                  "frame-count": 10.0
+                  "frame-count": 9.0
                }
             },
 			{

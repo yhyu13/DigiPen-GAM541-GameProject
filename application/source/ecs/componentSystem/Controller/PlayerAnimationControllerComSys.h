@@ -22,7 +22,7 @@ Creation date: 02/04/2020
 namespace gswy
 {
 	class PlayerAnimationControllerComSys : public BaseComponentSystem<GameObjectType> {
-		std::string m_currentAnimationState = { "" };
+		std::string m_currentAnimationState = { "Idle" };
 		std::string m_pendingAnimationState = { "" };
 		bool m_bIsReady = { false };
 		double m_delay = { 0.0 };
@@ -39,6 +39,11 @@ namespace gswy
 		virtual void Init() override
 		{
 			// Initialize animation validation graph
+			std::vector<std::string> states = { "Idle", "Move", "RazerAttack" };
+			for (auto& states : states)
+			{
+				m_animationValidGraph[states][states] = true;
+			}
 			m_animationValidGraph["Idle"]["Move"] = true;
 			m_animationValidGraph["Move"]["Idle"] = true;
 			m_animationValidGraph["Idle"]["RazerAttack"] = true;
@@ -47,21 +52,21 @@ namespace gswy
 			m_animationValidGraph["RazerAttack"]["Move"] = true;
 
 			// Initialize animation delay graph
-			m_animationDelayGraph["RazerAttack"]["Idle"] = 1.0;
-			m_animationDelayGraph["RazerAttack"]["Move"] = 1.0;
+			m_animationDelayGraph["RazerAttack"]["RazerAttack"] = 0.5;
+			m_animationDelayGraph["RazerAttack"]["Idle"] = 0.5;
+			m_animationDelayGraph["RazerAttack"]["Move"] = 0.5;
 		}
 
 		virtual void Update(double dt) override {
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-		
-			if (m_delay -= dt < 0)
-			{
-				m_delay = 0;
-			}
 
+			// Reduce time delay
+			m_delay -= dt;
+
+			// Check condition on switching animation states
 			if (m_pendingAnimationState != "" && m_delay <= 0)
 			{
-				if (m_currentAnimationState == "" || m_animationValidGraph[m_currentAnimationState][m_pendingAnimationState])
+				if (m_animationValidGraph[m_currentAnimationState][m_pendingAnimationState])
 				{
 					auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 					auto anim = GetComponent<AnimationCom>(entity);
@@ -73,7 +78,7 @@ namespace gswy
 				else
 				{
 					// TODO : Engine exception
-					// throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Switch animation state from " + str2wstr(m_currentAnimationState) + L" to " + str2wstr(m_pendingAnimationState) + L" is not valid!");
+					throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Switch animation state from " + str2wstr(m_currentAnimationState) + L" to " + str2wstr(m_pendingAnimationState) + L" is not valid!");
 				}
 				
 			}
