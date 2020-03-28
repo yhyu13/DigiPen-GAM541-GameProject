@@ -73,6 +73,7 @@ namespace gswy
 
 			APP_DEBUG("Skill Used: {0}", event->m_type);
 
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto skillUseEvent = std::static_pointer_cast<SkillUseEvent>(event);
 			auto fireballAttack = std::dynamic_pointer_cast<FireballAttack>(skillUseEvent->m_skill);
 			auto iceballAttack = std::dynamic_pointer_cast<IceballAttack>(skillUseEvent->m_skill);
@@ -164,11 +165,12 @@ namespace gswy
 			}
 			else if (razerAttack !=  nullptr)
 			{
-				ComponentDecorator<AnimationCom, GameObjectType> animation;
+				/*ComponentDecorator<AnimationCom, GameObjectType> animation;
 				m_parentWorld->Unpack(*m_player, animation);
-				auto animCom = AnimationCom();
-				animCom.Add("RazerAttack1", "RazerAttack");
-				animation->SetCurrentAnimationState("RazerAttack");
+				
+				animation->SetCurrentAnimationState("RazerAttack");*/
+				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(*m_player,"RazerAttack", true);
+				queue->Publish(e);
 			}
 
 		}

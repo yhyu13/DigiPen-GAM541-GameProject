@@ -160,6 +160,7 @@ namespace gswy
 
 		void HandleMouseAction_LeftPressed()
 		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 			auto pathGrid = tileMapObj->GetTileGrid("PlayerBlock");
 			auto Astar = tileMapObj->GetPathFinder("PlayerBlock");
@@ -187,7 +188,9 @@ namespace gswy
 			{
 				//transform->SetVelocity(vec2(0));
 				body->SetVelocity(0,0);
-				animation->SetCurrentAnimationState("Idle");
+				/*animation->SetCurrentAnimationState("Idle");*/\
+				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Idle", false);
+				queue->Publish(e);
 				return;
 			}
 			auto _dest = tileMapObj->World2Grid(dest);
@@ -296,6 +299,7 @@ namespace gswy
 
 		void HandlePlayerMovement(double dt)
 		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			ComponentDecorator<TransformCom, GameObjectType> transform;
 			ComponentDecorator<AnimationCom, GameObjectType> animation;
@@ -307,11 +311,12 @@ namespace gswy
 			if (m_pathResult.empty())
 			{
 				body->SetVelocity(vec2(0));
-				animation->SetCurrentAnimationState("Idle");
+				//animation->SetCurrentAnimationState("Idle");
+				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Idle", false);
+				queue->Publish(e);
 				return;
 			}
 
-			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto audio = AudioManager::GetInstance();
 			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 			auto playerPos = transform->GetPos();
@@ -350,7 +355,9 @@ namespace gswy
 			}
 			// 2. Move
 			body->SetVelocity(glm::normalize(delta) * m_speed);
-			animation->SetCurrentAnimationState("Move");
+			//animation->SetCurrentAnimationState("Move");
+			auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Move", false);
+			queue->Publish(e);
 
 			// 3. Play sound
 			if (dt)

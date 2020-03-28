@@ -190,4 +190,34 @@ namespace gswy
 		{
 		}
 	};
+
+	struct PlayerSetPendingAnimationEvent : Event<GameObjectType, EventType> {
+
+		PlayerSetPendingAnimationEvent(const Entity<GameObjectType>& entity, const std::string& name, bool force)
+			:
+			Event(EventType::PLAYER_SET_PENDING_ANIMATION)
+		{
+			m_entity = entity;
+			m_name = name;
+			m_force = force;
+		}
+
+		Entity<GameObjectType> m_entity;
+		std::string m_name;
+		bool m_force;
+	};
+
+	struct PlayerSetReadyToChangeAnimationEvent : Event<GameObjectType, EventType> {
+
+		PlayerSetReadyToChangeAnimationEvent(const Entity<GameObjectType>& entity, bool b)
+			:
+			Event(EventType::PLAYER_READY_TO_CHANGE_ANIMATION)
+		{
+			m_entity = entity;
+			m_bIsReady = b;
+		}
+
+		Entity<GameObjectType> m_entity;
+		bool m_bIsReady;
+	};
 }
