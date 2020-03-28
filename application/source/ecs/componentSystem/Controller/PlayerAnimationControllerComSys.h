@@ -61,12 +61,21 @@ namespace gswy
 
 			if (m_pendingAnimationState != "" && m_delay <= 0)
 			{
-				auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
-				auto anim = GetComponent<AnimationCom>(entity);
-				anim->SetCurrentAnimationState(m_pendingAnimationState);
-				m_delay = m_animationDelayGraph[m_currentAnimationState][m_pendingAnimationState];
-				m_currentAnimationState = m_pendingAnimationState;
-				m_pendingAnimationState = "";
+				if (m_currentAnimationState == "" || m_animationValidGraph[m_currentAnimationState][m_pendingAnimationState])
+				{
+					auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+					auto anim = GetComponent<AnimationCom>(entity);
+					anim->SetCurrentAnimationState(m_pendingAnimationState);
+					m_delay = m_animationDelayGraph[m_currentAnimationState][m_pendingAnimationState];
+					m_currentAnimationState = m_pendingAnimationState;
+					m_pendingAnimationState = "";
+				}
+				else
+				{
+					// TODO : Engine exception
+					// throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Switch animation state from " + str2wstr(m_currentAnimationState) + L" to " + str2wstr(m_pendingAnimationState) + L" is not valid!");
+				}
+				
 			}
 		}
 
