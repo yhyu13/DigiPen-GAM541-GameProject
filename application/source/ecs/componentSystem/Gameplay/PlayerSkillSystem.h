@@ -65,6 +65,24 @@ namespace gswy
 			{
 				m_spawnZOrder = 5000;
 			}
+
+			{
+				// Update cool down of razer while active
+				auto razer_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::RAZER_SFX)[0];
+				auto razer_sfx_active = GetComponent<ActiveCom>(razer_sfx);
+				auto cooldown = GetComponent<CoolDownCom>(razer_sfx);
+				if (razer_sfx_active->IsActive())
+				{
+					cooldown->SetFreeze(false);
+					cooldown->Update(dt);
+				}
+				else
+				{
+					cooldown->SetFreeze(true);
+					cooldown->ResetCoolDown();
+				}
+			}
+
 		}
 
 		void OnSkillUse(EventQueue<GameObjectType, EventType>::EventPtr event)
@@ -172,7 +190,6 @@ namespace gswy
 				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(*m_player,"RazerAttack", true);
 				queue->Publish(e);
 			}
-
 		}
 
 	void OnFork(EventQueue<GameObjectType, EventType>::EventPtr event)

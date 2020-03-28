@@ -20,6 +20,10 @@
                "path":"./asset/Sprites/PlayerTwoHanded_Cyclone.png"
             },
 			{
+               "name":"Razer_SFX",
+               "path":"./asset/Sprites/Cyclone.png"
+            },
+			{
                "name":"PlayerTwoHanded_Attack",
                "path":"./asset/Sprites/PlayerTwoHanded_Attack.png"
             },
@@ -266,6 +270,18 @@
                   "height": 64,
                   "delay": 1.0,
                   "frame-count": 15.0
+               }
+            },
+			{
+               "name":"Razer_Attack_SFX",
+               "properties":{
+                  "texture-name":"Razer_SFX",
+                  "x": 64,
+                  "y": 0,
+                  "width": 64,
+                  "height": 64,
+                  "delay": 1.0,
+                  "frame-count": 9.0
                }
             },
 			{

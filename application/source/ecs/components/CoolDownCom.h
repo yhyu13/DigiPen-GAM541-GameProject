@@ -29,10 +29,15 @@ namespace gswy
 		{
 		}
 
+		void ResetCoolDown()
+		{
+			m_timer = 0;
+		}
+
 		void Update(double dt)
 		{
 			m_timer += dt;
-			if (m_timer > m_period)
+			if (m_timer >= m_period)
 			{
 				m_timer = 0;
 			}
@@ -40,7 +45,7 @@ namespace gswy
 		
 		bool IsCoolDown()
 		{
-			return m_timer != 0;
+			return m_timer > 0;
 		}
 
 		void SetFreeze(bool b)

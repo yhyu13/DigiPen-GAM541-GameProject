@@ -60,6 +60,13 @@ namespace gswy
 		virtual void Update(double dt) override {
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 
+			{
+				// Turn on or off the razer sfx
+				auto razer_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::RAZER_SFX)[0];
+				auto razer_sfx_active = GetComponent<ActiveCom>(razer_sfx);
+				razer_sfx_active->SetActive(m_currentAnimationState == "RazerAttack");
+			}
+
 			// Reduce time delay
 			m_delay -= dt;
 

@@ -297,7 +297,10 @@ namespace gswy
 		virtual void PostRenderUpdate(double ts)
 		{
 			{
+				Renderer2D::BeginScene(m_CameraController.GetCamera());
+				// m_world render
 				m_world->PostRenderUpdate(ts);
+				Renderer2D::EndScene();
 			}
 		}
 

@@ -155,6 +155,18 @@ namespace gswy
 		{
 			switch (entityB.m_type)
 			{
+			case GameObjectType::RAZER_SFX:
+			{
+				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				ComponentDecorator<CoolDownCom, GameObjectType> cooldown;
+				m_parentWorld->Unpack(entityA, HitPoint);
+				m_parentWorld->Unpack(entityB, cooldown);
+				if (!cooldown->IsFreezed() && !cooldown->IsCoolDown())
+				{
+					HitPoint->AddHitPoint(-8);
+				}
+			}
+			break;
 			case GameObjectType::FIREBALL:
 			{
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
