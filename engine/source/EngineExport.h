@@ -25,7 +25,7 @@ Creation date	: 01/26/2020
 #include "engine/input/InputManager.h"
 
 ///// Entry point /////
-#include "engine/Main.h"
+//#include "engine/Main.h"
 
 ///// Memory point /////
 #include "engine/allocator/MemoryManager.h"

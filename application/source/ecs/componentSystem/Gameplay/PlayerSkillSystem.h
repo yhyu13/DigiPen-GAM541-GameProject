@@ -32,6 +32,7 @@ Creation date	: 03/15/2020
 #include "ecs/CustomEvents.h"
 #include "skill-manager/SkillManager.h"
 #include "skill-system/active-skills/RazerAttack.h"
+#include "ecs/components/TargetEntityComponent.h"
 
 #include <sstream>
 
@@ -169,8 +170,37 @@ namespace gswy
 				m_parentWorld->Unpack(*m_player, animation);
 				
 				animation->SetCurrentAnimationState("RazerAttack");*/
-				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(*m_player,"RazerAttack", true);
-				queue->Publish(e);
+				/*auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(*m_player,"RazerAttack", true);
+				queue->Publish(e);*/
+
+				auto pos = transform->GetPos();
+				auto rot = transform->GetRotation();
+				auto weapon = m_parentWorld->GenerateEntity(GameObjectType::RAZER);
+				auto active = ActiveCom();
+				weapon.AddComponent(active);
+				weapon.AddComponent(OwnershiptCom<GameObjectType>(*m_player));
+				auto weapon_rot = rot;
+				auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+				//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
+				weapon.AddComponent(transform);
+				auto animation = AnimationCom();
+				animation.Add("PlayerAnimation_Razer_Attack", "Move");
+				animation.SetCurrentAnimationState("Move");
+				weapon.AddComponent(animation);
+				auto sprite = SpriteCom();
+				sprite.SetScale(vec2(0.25, 0.25));
+				weapon.AddComponent(sprite);
+
+				auto aabb = BodyCom();
+				aabb.SetPos(transform.GetPos());
+				aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+				aabb.ChooseShape("Circle", 0.1);
+				weapon.AddComponent(aabb);
+				//weapon.AddComponent(LifeTimeCom(1.0));
+				weapon.AddComponent(HitPreventionCom<GameObjectType>());
+
+				auto targetEntityComponent = TargetEntityComponent();
+				weapon.AddComponent(targetEntityComponent);
 			}
 
 		}

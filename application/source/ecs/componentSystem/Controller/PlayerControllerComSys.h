@@ -107,7 +107,7 @@ namespace gswy
 				}
 			}
 
-			if (input->IsKeyPressed(KEY_E))
+			if (input->IsKeyTriggered(KEY_E))
 			{
 				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(ActiveSkillType::RAZER);
 				if (skill != nullptr)

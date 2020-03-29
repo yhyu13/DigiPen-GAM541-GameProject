@@ -36,6 +36,7 @@ namespace gswy
 		BOLT,
 		ICEBALL,
 		ENEMY_PROJECTILE,
+		RAZER,
 
 		NUM
 	};

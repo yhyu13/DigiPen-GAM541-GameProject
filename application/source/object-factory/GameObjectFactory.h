@@ -14,6 +14,7 @@ Creation date: 02/19/2020
 #include "engine/object-factory/ObjectFactory.h"
 #include "engine/ecs/GameWorld.h"
 #include "json/json.h"
+#include "ecs/componentSystem/Gameplay/TargetEntityComponentSystem.h"
 
 namespace gswy {
 
@@ -126,6 +127,11 @@ namespace gswy {
 				if (system._Equal("skill"))
 				{
 					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerSkillSystem>());
+					continue;
+				}
+				if (system._Equal("target-entity-component"))
+				{
+					m_world->RegisterSystem(MemoryManager::Make_shared<TargetEntityComponentSystem>());
 					continue;
 				}
 			}
