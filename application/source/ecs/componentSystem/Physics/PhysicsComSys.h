@@ -50,7 +50,7 @@ namespace gswy
 			// Collision disable list (self-self, mutal)
 			GameObjectType disableCollisionList[] = { 
 				GameObjectType::PLAYER ,GameObjectType::FIREBALL ,
-				GameObjectType::ICEBALL ,GameObjectType::BOLT,
+				GameObjectType::ICEBALL ,GameObjectType::BOLT_STRIKE,
 				GameObjectType::TOWER_BUILD, GameObjectType::TOWER_FIRE,
 				GameObjectType::TOWER_ICE, GameObjectType::TOWER_LIGHTNING,
 				GameObjectType::FORKED_FIREBALL
