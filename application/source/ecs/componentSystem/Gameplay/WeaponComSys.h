@@ -179,6 +179,7 @@ namespace gswy
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+							weapon.AddComponent(transform);
 							auto attach = AttachedMovementCom();
 							attach.followPos = true;
 							attach.rPos = ToVec(weapon_rot) * .5f;
