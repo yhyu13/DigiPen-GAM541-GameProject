@@ -74,6 +74,11 @@ namespace gswy
 
 			InventoryManager* inventoryManager = InventoryManager::GetInstance();
 			inventoryManager->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
+
+			GameLevelMapManager::GetInstance()->ResetLevelData();
+			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel1");
+			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel2");
+			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel3");
 		}
 
 		void InitFramework()
@@ -140,6 +145,7 @@ namespace gswy
 			// Publish start events
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_MAIN_MENU, &GameLayer::OnLoadMainMenuWorld);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_WORLD, &GameLayer::OnLoadGameWorld);
 
 			// Fading logo
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, 0.f, 1.f, EventType::GC);
@@ -163,6 +169,10 @@ namespace gswy
 			{
 				m_world->RemoveAllEntities();
 			}
+			// Clear level data
+			{
+				GameLevelMapManager::GetInstance()->ResetLevelData();
+			}
 			// Set widget
 			{
 				WidgetManager::GetInstance()->GetHUD().SetVisible(false);
@@ -185,6 +195,14 @@ namespace gswy
 			}
 			m_CameraController.SetPosition(vec3(0));
 			m_miniMapCameraController.SetPosition(vec3(0));
+		}
+
+		void OnLoadGameWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = dynamic_pointer_cast<LoadGameWorldEvent>(e))
+			{
+				LoadGameWorld(event->m_level);
+			}
 		}
 
 		void LoadGameWorld(int level)
@@ -248,10 +266,6 @@ namespace gswy
 				miniMap.AddComponent(sprite);
 			}
 
-			GameLevelMapManager::GetInstance()->ResetLevelData();
-			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel1");
-			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel2");
-			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel3");
 			GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel" + sampleID);
 			GameLevelMapManager::GetInstance()->LoadCurrentTileMap(m_world);
 
@@ -298,7 +312,10 @@ namespace gswy
 		virtual void PostRenderUpdate(double ts)
 		{
 			{
+				Renderer2D::BeginScene(m_CameraController.GetCamera());
+				// m_world render
 				m_world->PostRenderUpdate(ts);
+				Renderer2D::EndScene();
 			}
 		}
 

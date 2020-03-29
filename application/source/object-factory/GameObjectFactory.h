@@ -223,6 +223,33 @@ namespace gswy {
 							continue;
 						}
 					}
+
+					// Create the razer sfx that is attached to the player but is initizied to be inactive.
+					{
+						auto razer_sfx = world->GenerateEntity(GameObjectType::CYCLONE_SFX);
+						auto active = ActiveCom(false);
+						razer_sfx.AddComponent(active);
+						razer_sfx.AddComponent(OwnershiptCom<GameObjectType>(player));
+						auto attach = AttachedMovementCom();
+						attach.followPos = true;
+						attach.rPos = vec2(0, 0);
+						razer_sfx.AddComponent(attach);
+						razer_sfx.AddComponent(TransformCom());
+						auto anim = AnimationCom();
+						anim.Add("Cyclone_Attack_SFX", "Move");
+						anim.SetCurrentAnimationState("Move");
+						razer_sfx.AddComponent(anim);
+						auto sprite = SpriteCom();
+						sprite.SetScale(vec2(0.5, 0.5));
+						razer_sfx.AddComponent(sprite);
+						auto body = BodyCom();
+						body.ChooseShape("Circle", 0.5);
+						razer_sfx.AddComponent(body);
+						auto cooldown = CoolDownCom(0.15);
+						razer_sfx.AddComponent(cooldown);
+					}
+
+
 					continue;
 				}
 

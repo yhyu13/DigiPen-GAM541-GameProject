@@ -216,6 +216,7 @@ namespace gswy
 				attach.followPos = true;
 				attach.rPos = vec2(0, 0.2);
 				hp_bar.AddComponent(attach);
+				hp_bar.AddComponent(BodyCom(event->m_pos.x, event->m_pos.y));
 				hp_bar.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
 				auto sprite = SpriteCom();
 				sprite.SetTexture("RedLayer");
@@ -262,6 +263,7 @@ namespace gswy
 				attach.followPos = true;
 				attach.rPos = vec2(0, 0.2);
 				hp_bar.AddComponent(attach);
+				hp_bar.AddComponent(BodyCom(event->m_pos.x, event->m_pos.y));
 				hp_bar.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
 				auto sprite = SpriteCom();
 				sprite.SetTexture("RedLayer");
@@ -308,6 +310,7 @@ namespace gswy
 				attach.followPos = true;
 				attach.rPos = vec2(0, 0.2);
 				hp_bar.AddComponent(attach);
+				hp_bar.AddComponent(BodyCom(event->m_pos.x, event->m_pos.y));
 				hp_bar.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
 				auto sprite = SpriteCom();
 				sprite.SetTexture("RedLayer");

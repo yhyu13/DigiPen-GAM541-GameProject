@@ -22,7 +22,7 @@ Creation date: 02/04/2020
 namespace gswy
 {
 	class PlayerAnimationControllerComSys : public BaseComponentSystem<GameObjectType> {
-		std::string m_currentAnimationState = { "" };
+		std::string m_currentAnimationState = { "Idle" };
 		std::string m_pendingAnimationState = { "" };
 		bool m_bIsReady = { false };
 		double m_delay = { 0.0 };
@@ -39,29 +39,41 @@ namespace gswy
 		virtual void Init() override
 		{
 			// Initialize animation validation graph
+			std::vector<std::string> states = { "Idle", "Move", "CycloneAttack" };
+			for (auto& states : states)
+			{
+				m_animationValidGraph[states][states] = true;
+			}
 			m_animationValidGraph["Idle"]["Move"] = true;
 			m_animationValidGraph["Move"]["Idle"] = true;
-			m_animationValidGraph["Idle"]["RazerAttack"] = true;
-			m_animationValidGraph["RazerAttack"]["Idle"] = true;
-			m_animationValidGraph["Move"]["RazerAttack"] = true;
-			m_animationValidGraph["RazerAttack"]["Move"] = true;
+			m_animationValidGraph["Idle"]["CycloneAttack"] = true;
+			m_animationValidGraph["CycloneAttack"]["Idle"] = true;
+			m_animationValidGraph["Move"]["CycloneAttack"] = true;
+			m_animationValidGraph["CycloneAttack"]["Move"] = true;
 
 			// Initialize animation delay graph
-			m_animationDelayGraph["RazerAttack"]["Idle"] = 1.0;
-			m_animationDelayGraph["RazerAttack"]["Move"] = 1.0;
+			m_animationDelayGraph["CycloneAttack"]["CycloneAttack"] = 0.5;
+			m_animationDelayGraph["CycloneAttack"]["Idle"] = 0.5;
+			m_animationDelayGraph["CycloneAttack"]["Move"] = 0.5;
 		}
 
 		virtual void Update(double dt) override {
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-		
-			if (m_delay -= dt < 0)
+
 			{
-				m_delay = 0;
+				// Turn on or off the razer sfx
+				auto razer_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];
+				auto razer_sfx_active = GetComponent<ActiveCom>(razer_sfx);
+				razer_sfx_active->SetActive(m_currentAnimationState == "CycloneAttack");
 			}
 
+			// Reduce time delay
+			m_delay -= dt;
+
+			// Check condition on switching animation states
 			if (m_pendingAnimationState != "" && m_delay <= 0)
 			{
-				if (m_currentAnimationState == "" || m_animationValidGraph[m_currentAnimationState][m_pendingAnimationState])
+				if (m_animationValidGraph[m_currentAnimationState][m_pendingAnimationState])
 				{
 					auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 					auto anim = GetComponent<AnimationCom>(entity);
@@ -73,7 +85,7 @@ namespace gswy
 				else
 				{
 					// TODO : Engine exception
-					// throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Switch animation state from " + str2wstr(m_currentAnimationState) + L" to " + str2wstr(m_pendingAnimationState) + L" is not valid!");
+					throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Switch animation state from " + str2wstr(m_currentAnimationState) + L" to " + str2wstr(m_pendingAnimationState) + L" is not valid!");
 				}
 				
 			}

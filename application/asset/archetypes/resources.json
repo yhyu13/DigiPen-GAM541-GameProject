@@ -1,395 +1,427 @@
 {
-   "resources":[
-      {
-         "type":"textures",
-         "textures":[
-		 	{
-               "name":"Logo",
-               "path":"./asset/DigiPen_WHITE_1024px.png"
-            },
-		 	{
-               "name":"Portal_0",
-               "path":"./asset/Sprites/Portal_0.png"
-            },
-			{
-               "name":"Player_Idle",
-               "path":"./asset/Sprites/Player_Idle.png"
-            },
-			{
-               "name":"Player_Razer",
-               "path":"./asset/Sprites/Razor.png"
-            },
-			{
-               "name":"PlayerTwoHanded_Attack",
-               "path":"./asset/Sprites/PlayerTwoHanded_Attack.png"
-            },
-			{
-               "name":"Mob1_Unarmed_Moving",
-               "path":"./asset/Sprites/Mob1_Unarmed_Moving.png"
-            },
-			{
-               "name":"Mob1_Unarmed_Attack",
-               "path":"./asset/Sprites/Mob1_Unarmed_Attack.png"
-            },
-			{
-               "name":"Mob2_Unarmed_Attack",
-               "path":"./asset/Sprites/Mob2_Unarmed_Attack.png"
-            },
-			{
-               "name":"Mob1_Boss_Moving",
-               "path":"./asset/Sprites/Mob1_Boss_Moving.png"
-            },
-			{
-               "name":"Mob1_Boss_Attack",
-               "path":"./asset/Sprites/Mob1_Boss_Attack.png"
-            },
-			{
-               "name":"RedLayer",
-               "path":"./asset/Sprites/RedLayer.png"
-            },
-			{
-               "name":"BlueLayer",
-               "path":"./asset/Sprites/BlueLayer.png"
-            },
-			{
-               "name":"GreenLayer",
-               "path":"./asset/Sprites/GreenLayer.png"
-            },
-			{
-               "name":"BaseIdle",
-               "path":"./asset/Sprites/Base_Idle.png"
-            },
-			{
-               "name":"BaseAnimation",
-               "path":"./asset/Sprites/Base_Animation.png"
-            },
-			{
-               "name":"TowerHammer_On",
-               "path":"./asset/Sprites/TowerHammer_On.png"
-            },
-			{
-               "name":"TowerHammer_Off",
-               "path":"./asset/Sprites/TowerHammer_Off.png"
-            },
-			{
-               "name":"TowerFire",
-               "path":"./asset/Sprites/TowerFire.png"
-            },
-			{
-               "name":"TowerIce",
-               "path":"./asset/Sprites/TowerIce.png"
-            },
-			{
-               "name":"TowerLightning",
-               "path":"./asset/Sprites/TowerLightning.png"
-            },
-            {
-               "name":"ffireball_0001",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0001.png"
-            },
-            {
-               "name":"ffireball_0002",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0002.png"
-            },
-            {
-               "name":"ffireball_0003",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0003.png"
-            },
-            {
-               "name":"ffireball_0004",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0004.png"
-            },
-            {
-               "name":"ffireball_0005",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0005.png"
-            },
-            {
-               "name":"ffireball_0006",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0006.png"
-            },
-			{
-               "name":"bolt_tesla_0001",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0001.png"
-            },
-			{
-               "name":"bolt_tesla_0002",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0002.png"
-            },
-			{
-               "name":"bolt_tesla_0003",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0003.png"
-            },
-			{
-               "name":"bolt_tesla_0004",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0004.png"
-            },
-			{
-               "name":"bolt_tesla_0005",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0005.png"
-            },
-			{
-               "name":"bolt_tesla_0006",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0006.png"
-            },
-			{
-               "name":"bolt_tesla_0007",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0007.png"
-            },
-			{
-               "name":"bolt_tesla_0008",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0008.png"
-            },
-			{
-               "name":"bolt_tesla_0009",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0009.png"
-            },
-			{
-               "name":"iceball_0001",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0001.png"
-            },
-			{
-               "name":"iceball_0002",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0002.png"
-            },
-			{
-               "name":"iceball_0003",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0003.png"
-            },
-			{
-               "name":"iceball_0004",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0004.png"
-            },
-			{
-               "name":"iceball_0005",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0005.png"
-            },
-			{
-               "name":"iceball_0006",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0006.png"
-            },
-			{
-               "name":"iceball_0007",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0007.png"
-            },
-			{
-               "name":"iceball_0008",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0008.png"
-            },
-			{
-               "name":"iceball_0009",
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0009.png"
-            }
-         ]
-      },
-      {
-         "type":"animation",
-         "animations":[
-		 	{
-               "name":"PortalAnimation_0",
-               "properties":{
-                  "texture-name":"Portal_0",
-                  "x": 128,
-                  "y": 0,
-                  "width": 128,
-                  "height": 128,
-                  "delay": 1.0,
-                  "frame-count": 10.0
-               }
-            },
-		 	{
-               "name":"BaseIdle",
-               "properties":{
-                  "texture-name":"BaseIdle",
-                  "x": 0,
-                  "y": 0,
-                  "width": 128,
-                  "height": 128,
-                  "delay": 1.0,
-                  "frame-count": 10.0
-               }
-            },
-			{
-               "name":"BaseAnimation",
-               "properties":{
-                  "texture-name":"BaseAnimation",
-                  "x": 128,
-                  "y": 0,
-                  "width": 128,
-                  "height": 128,
-                  "delay": 1.0,
-                  "frame-count": 10.0
-               }
-            },
-			{
-               "name":"PlayerAnimation_Idle",
-               "properties":{
-                  "texture-name":"Player_Idle",
-                  "x": 64,
-                  "y": 0,
-                  "width": 64,
-                  "height": 64,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-			{
-               "name":"PlayerAnimation_Razer_Attack",
-               "properties":{
-                  "texture-name":"Player_Razer",
-                  "x": 64,
-                  "y": 0,
-                  "width": 64,
-                  "height": 64,
-                  "delay": 1.0,
-                  "frame-count": 10.0
-               }
-            },
-			{
-               "name":"PlayerAnimation_Moving",
-               "properties":{
-                  "texture-name":"Player_Idle",
-                  "x": 64,
-                  "y": 0,
-                  "width": 64,
-                  "height": 64,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-            {
-               "name":"PlayerAnimation_Attack",
-               "properties":{
-                  "texture-name":"PlayerTwoHanded_Attack",
-                  "x": 64,
-                  "y": 0,
-                  "width": 64,
-                  "height": 64,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-			{
-               "name":"Mob1Animation_Moving",
-               "properties":{
-                  "texture-name":"Mob1_Unarmed_Moving",
-                  "x": 140,
-                  "y": 0,
-                  "width": 140,
-                  "height": 100,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-			{
-               "name":"Mob1Animation_Attack",
-               "properties":{
-                  "texture-name":"Mob1_Unarmed_Attack",
-                  "x": 140,
-                  "y": 0,
-                  "width": 140,
-                  "height": 100,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-			{
-               "name":"Mob2Animation_Moving",
-               "properties":{
-                  "texture-name":"Mob2_Unarmed_Attack",
-                  "x": 140,
-                  "y": 0,
-                  "width": 140,
-                  "height": 100,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-			{
-               "name":"Mob2Animation_Attack",
-               "properties":{
-                  "texture-name":"Mob2_Unarmed_Attack",
-                  "x": 140,
-                  "y": 0,
-                  "width": 140,
-                  "height": 100,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-			{
-               "name":"Mob1_BossAnimation_Moving",
-               "properties":{
-                  "texture-name":"Mob1_Boss_Moving",
-                  "x": 128,
-                  "y": 0,
-                  "width": 128,
-                  "height": 128,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-			{
-               "name":"Mob1_BossAnimation_Attack",
-               "properties":{
-                  "texture-name":"Mob1_Boss_Attack",
-                  "x": 128,
-                  "y": 0,
-                  "width": 128,
-                  "height": 128,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-            {
-               "name":"fireBallAnim1",
-               "properties":{
-                  "texture-name":"ffireball_000",
-                  "x": 0,
-                  "y": 0,
-                  "width": 64,
-                  "height": 64,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            },
-			{
-               "name":"boltAnim1",
-               "properties":{
-                  "texture-name":"bolt_tesla_000",
-                  "x": 0,
-                  "y": 0,
-                  "width": 512,
-                  "height": 512,
-                  "delay": 1.0,
-                  "frame-count": 30.0
-               }
-            },
-			{
-               "name":"iceBallAnim1",
-               "properties":{
-                  "texture-name":"iceball_000",
-                  "x": 0,
-                  "y": 0,
-                  "width": 64,
-                  "height": 64,
-                  "delay": 1.0,
-                  "frame-count": 15.0
-               }
-            }
-         ]
-      },
-      {
-         "type":"audio",
-         "sounds":[
-            {
-               "path":"./asset/breakout.mp3",
-               "stream":true
-            },
-            {
-               "path":"./asset/TopDownGunPack/TopDownGunPack/Audio/FootSteps/footstep02.ogg",
-               "stream":false
-            }
-         ]
-      }
-   ]
+  "resources": [
+    {
+      "type": "textures",
+      "textures": [
+        {
+          "name": "Logo",
+          "path": "./asset/DigiPen_WHITE_1024px.png"
+        },
+        {
+          "name": "Portal_0",
+          "path": "./asset/Sprites/Portal_0.png"
+        },
+        {
+          "name": "Player_Idle",
+          "path": "./asset/Sprites/Player_Idle.png"
+        },
+        {
+          "name": "Player_Cyclone",
+          "path": "./asset/Sprites/PlayerTwoHanded_Cyclone.png"
+        },
+        {
+          "name": "Razor",
+          "path": "./asset/Sprites/Razor.png"
+        },
+        {
+          "name": "Cyclone_SFX",
+          "path": "./asset/Sprites/Cyclone.png"
+        },
+        {
+          "name": "PlayerTwoHanded_Attack",
+          "path": "./asset/Sprites/PlayerTwoHanded_Attack.png"
+        },
+        {
+          "name": "Mob1_Unarmed_Moving",
+          "path": "./asset/Sprites/Mob1_Unarmed_Moving.png"
+        },
+        {
+          "name": "Mob1_Unarmed_Attack",
+          "path": "./asset/Sprites/Mob1_Unarmed_Attack.png"
+        },
+        {
+          "name": "Mob2_Unarmed_Attack",
+          "path": "./asset/Sprites/Mob2_Unarmed_Attack.png"
+        },
+        {
+          "name": "Mob1_Boss_Moving",
+          "path": "./asset/Sprites/Mob1_Boss_Moving.png"
+        },
+        {
+          "name": "Mob1_Boss_Attack",
+          "path": "./asset/Sprites/Mob1_Boss_Attack.png"
+        },
+        {
+          "name": "RedLayer",
+          "path": "./asset/Sprites/RedLayer.png"
+        },
+        {
+          "name": "BlueLayer",
+          "path": "./asset/Sprites/BlueLayer.png"
+        },
+        {
+          "name": "GreenLayer",
+          "path": "./asset/Sprites/GreenLayer.png"
+        },
+        {
+          "name": "BaseIdle",
+          "path": "./asset/Sprites/Base_Idle.png"
+        },
+        {
+          "name": "BaseAnimation",
+          "path": "./asset/Sprites/Base_Animation.png"
+        },
+        {
+          "name": "TowerHammer_On",
+          "path": "./asset/Sprites/TowerHammer_On.png"
+        },
+        {
+          "name": "TowerHammer_Off",
+          "path": "./asset/Sprites/TowerHammer_Off.png"
+        },
+        {
+          "name": "TowerFire",
+          "path": "./asset/Sprites/TowerFire.png"
+        },
+        {
+          "name": "TowerIce",
+          "path": "./asset/Sprites/TowerIce.png"
+        },
+        {
+          "name": "TowerLightning",
+          "path": "./asset/Sprites/TowerLightning.png"
+        },
+        {
+          "name": "ffireball_0001",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0001.png"
+        },
+        {
+          "name": "ffireball_0002",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0002.png"
+        },
+        {
+          "name": "ffireball_0003",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0003.png"
+        },
+        {
+          "name": "ffireball_0004",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0004.png"
+        },
+        {
+          "name": "ffireball_0005",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0005.png"
+        },
+        {
+          "name": "ffireball_0006",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0006.png"
+        },
+        {
+          "name": "bolt_tesla_0001",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0001.png"
+        },
+        {
+          "name": "bolt_tesla_0002",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0002.png"
+        },
+        {
+          "name": "bolt_tesla_0003",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0003.png"
+        },
+        {
+          "name": "bolt_tesla_0004",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0004.png"
+        },
+        {
+          "name": "bolt_tesla_0005",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0005.png"
+        },
+        {
+          "name": "bolt_tesla_0006",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0006.png"
+        },
+        {
+          "name": "bolt_tesla_0007",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0007.png"
+        },
+        {
+          "name": "bolt_tesla_0008",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0008.png"
+        },
+        {
+          "name": "bolt_tesla_0009",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0009.png"
+        },
+        {
+          "name": "iceball_0001",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0001.png"
+        },
+        {
+          "name": "iceball_0002",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0002.png"
+        },
+        {
+          "name": "iceball_0003",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0003.png"
+        },
+        {
+          "name": "iceball_0004",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0004.png"
+        },
+        {
+          "name": "iceball_0005",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0005.png"
+        },
+        {
+          "name": "iceball_0006",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0006.png"
+        },
+        {
+          "name": "iceball_0007",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0007.png"
+        },
+        {
+          "name": "iceball_0008",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0008.png"
+        },
+        {
+          "name": "iceball_0009",
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0009.png"
+        }
+      ]
+    },
+    {
+      "type": "animation",
+      "animations": [
+        {
+          "name": "PortalAnimation_0",
+          "properties": {
+            "texture-name": "Portal_0",
+            "x": 128,
+            "y": 0,
+            "width": 128,
+            "height": 128,
+            "delay": 1.0,
+            "frame-count": 10.0
+          }
+        },
+        {
+          "name": "BaseIdle",
+          "properties": {
+            "texture-name": "BaseIdle",
+            "x": 0,
+            "y": 0,
+            "width": 128,
+            "height": 128,
+            "delay": 1.0,
+            "frame-count": 10.0
+          }
+        },
+        {
+          "name": "BaseAnimation",
+          "properties": {
+            "texture-name": "BaseAnimation",
+            "x": 128,
+            "y": 0,
+            "width": 128,
+            "height": 128,
+            "delay": 1.0,
+            "frame-count": 10.0
+          }
+        },
+        {
+          "name": "PlayerAnimation_Idle",
+          "properties": {
+            "texture-name": "Player_Idle",
+            "x": 64,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "Animation_Razor_Attack",
+          "properties": {
+            "texture-name": "Razor",
+            "x": 64,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "delay": 1.0,
+            "frame-count": 9.0
+          }
+        },
+        {
+          "name": "PlayerAnimation_Cyclone_Attack",
+          "properties": {
+            "texture-name": "Player_Cyclone",
+            "x": 64,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "delay": 1.0,
+            "frame-count": 9.0
+          }
+        },
+        {
+          "name": "PlayerAnimation_Moving",
+          "properties": {
+            "texture-name": "Player_Idle",
+            "x": 64,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "PlayerAnimation_Attack",
+          "properties": {
+            "texture-name": "PlayerTwoHanded_Attack",
+            "x": 64,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "Cyclone_Attack_SFX",
+          "properties": {
+            "texture-name": "Cyclone_SFX",
+            "x": 64,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "delay": 1.0,
+            "frame-count": 9.0
+          }
+        },
+        {
+          "name": "Mob1Animation_Moving",
+          "properties": {
+            "texture-name": "Mob1_Unarmed_Moving",
+            "x": 140,
+            "y": 0,
+            "width": 140,
+            "height": 100,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "Mob1Animation_Attack",
+          "properties": {
+            "texture-name": "Mob1_Unarmed_Attack",
+            "x": 140,
+            "y": 0,
+            "width": 140,
+            "height": 100,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "Mob2Animation_Moving",
+          "properties": {
+            "texture-name": "Mob2_Unarmed_Attack",
+            "x": 140,
+            "y": 0,
+            "width": 140,
+            "height": 100,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "Mob2Animation_Attack",
+          "properties": {
+            "texture-name": "Mob2_Unarmed_Attack",
+            "x": 140,
+            "y": 0,
+            "width": 140,
+            "height": 100,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "Mob1_BossAnimation_Moving",
+          "properties": {
+            "texture-name": "Mob1_Boss_Moving",
+            "x": 128,
+            "y": 0,
+            "width": 128,
+            "height": 128,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "Mob1_BossAnimation_Attack",
+          "properties": {
+            "texture-name": "Mob1_Boss_Attack",
+            "x": 128,
+            "y": 0,
+            "width": 128,
+            "height": 128,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "fireBallAnim1",
+          "properties": {
+            "texture-name": "ffireball_000",
+            "x": 0,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "boltAnim1",
+          "properties": {
+            "texture-name": "bolt_tesla_000",
+            "x": 0,
+            "y": 0,
+            "width": 512,
+            "height": 512,
+            "delay": 1.0,
+            "frame-count": 30.0
+          }
+        },
+        {
+          "name": "iceBallAnim1",
+          "properties": {
+            "texture-name": "iceball_000",
+            "x": 0,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        }
+      ]
+    },
+    {
+      "type": "audio",
+      "sounds": [
+        {
+          "path": "./asset/breakout.mp3",
+          "stream": true
+        },
+        {
+          "path": "./asset/TopDownGunPack/TopDownGunPack/Audio/FootSteps/footstep02.ogg",
+          "stream": false
+        }
+      ]
+    }
+  ]
 }

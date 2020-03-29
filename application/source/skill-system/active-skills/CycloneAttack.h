@@ -5,20 +5,23 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 Language		: C++ 11
 Platform		: Windows 10 (X64)
 Project			: GAM541
-Filename		: RazerAttack.cpp
+Filename		: CycloneAttack.h
 Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
 Creation date	: 03/26/2020
 - End Header ----------------------------*/
 
-#include "RazerAttack.h"
+#pragma once
+
+#include "ActiveSkill.h"
 
 namespace gswy
 {
-	RazerAttack::RazerAttack(): ActiveSkill(ActiveSkillType::RAZER)
+	class CycloneAttack : public ActiveSkill
 	{
-	}
 
-	RazerAttack::~RazerAttack()
-	{
-	}
+	public:
+
+		CycloneAttack();
+		~CycloneAttack();
+	};
 }

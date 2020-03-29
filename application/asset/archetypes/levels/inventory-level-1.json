@@ -32,7 +32,20 @@
     },
     {
       "id": "2",
-      "type": "RAZER",
+      "type": "RAZOR",
+      "category": "ACTIVE",
+      "tags": [
+      ],
+      "purchased": 0,
+      "installed": 0,
+      "text": [
+        "some useful information",
+        "some useful information"
+      ]
+    },
+    {
+      "id": "2",
+      "type": "CYCLONE",
       "category": "ACTIVE",
       "tags": [
       ],

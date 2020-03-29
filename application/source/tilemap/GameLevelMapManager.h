@@ -19,6 +19,7 @@ Creation date: 03/02/2020
 #include "engine/math/MathHelper.h"
 #include "engine/renderer/Texture.h"
 #include "ecs/CustomEvents.h"
+#include "ui/GameWidgetManager.h"
 
 #define IS_INGAME (GameLevelMapManager::GetInstance()->IsInGame())
 
@@ -300,19 +301,19 @@ namespace gswy {
 		/*
 			Start the level (start the count down, mainly)
 		*/
-		void StartLevel()
+		void StartWave()
 		{
-			PRINT("Start level!");
-			m_levelStart = true;
+			PRINT("Start Wave " + Str(m_currentWave));
+			m_waveStart = true;
 			m_timeOut = false;
 		}
 
 		/*
 			Check if the level is started
 		*/
-		bool IsLevelStarted()
+		bool IsWaveStarted()
 		{
-			return m_levelStart;
+			return m_waveStart;
 		}
 
 		/*
@@ -331,14 +332,33 @@ namespace gswy {
 			return m_isAnyLevelLoaded;
 		}
 
+		/*
+			Add coins
+		*/
+		void AddCoins(int c)
+		{
+			m_coins += c;
+			if (m_coins < 0) m_coins = 0;
+		}
+
 		void Update(double dt)
 		{
 			if (!m_isAnyLevelLoaded)
 			{
 				return;
 			}
+
+			auto& hud = WidgetManager::GetInstance()->GetHUD();
+			int min = (int)m_timeRemaining / 60;
+			int sec = (int)m_timeRemaining - min * 60;
+			hud.SetTimeMinute(min);
+			hud.SetTimeSecond(sec);
+			hud.SetCoinNum(m_coins);
+			hud.SetWave(m_currentWave);
+			hud.SetLevel(m_currentLevel);
+
 			// Check level is running and do count down
-			if (m_levelStart && !m_timeOut)
+			if (m_waveStart && !m_timeOut)
 			{
 				m_timeRemaining -= dt;
 				if (m_timeRemaining < 0)
@@ -349,20 +369,34 @@ namespace gswy {
 				}
 			}
 			// Check if a level is finished
-			else if (IsLevelFinsihed())
+			else if (IsWaveFinsihed())
 			{
 				// Check level remains started
-				if (m_levelStart)
+				if (m_waveStart)
 				{
-					// Stop level and 
-					if (AdvanceLevel())
+					m_waveStart = false;
+					// Stop wave and advance wave
+					if (AdvanceWave())
 					{
-						PRINT("Load new level");
-						LoadLevel(m_world, m_currentLevel);
+						PRINT("Load new wave");
+						LoadLevel(m_world, m_currentWave);
 					}
 					else
 					{
-						PRINT("You have beat the game!");
+						// TODO: load new level
+						PRINT("You have beat this level!");
+						if (++m_currentLevel <= m_maxLevel)
+						{
+							PRINT("Load new level in 2 sec!");
+							auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+							auto e = MemoryManager::Make_shared<LoadGameWorldEvent>(m_currentLevel);
+							queue->Publish(e, 2);
+						}
+						else
+						{
+							// TODO : proper handle beating the game
+							PRINT("You have beat the game!");
+						}
 					}
 				}
 			}
@@ -373,9 +407,17 @@ namespace gswy {
 			PRINT("Reset level!");
 			m_isAnyLevelLoaded = false;
 			m_timeOut = false;
-			m_levelStart = false;
+			m_waveStart = false;
 			m_coins = 0;
+			
+			// Start with 1
+			m_currentWave = 1;
+			// End with 4
+			m_maxWave = 4;
+
+			// Start with 1
 			m_currentLevel = 1;
+			// End with 3
 			m_maxLevel = 3;
 
 			m_timePerLevel = 2;
@@ -386,19 +428,20 @@ namespace gswy {
 		/*
 			A level is finished when there is no remaining enemy, this level remains started, and time is out.
 		*/
-		bool IsLevelFinsihed()
+		bool IsWaveFinsihed()
 		{
-			return m_world->GetAllEntityWithType(GameObjectType::ENEMY_1).empty() && IsLevelStarted() && m_timeOut;
+			return m_world->GetAllEntityWithType(GameObjectType::ENEMY_1).empty()
+				&& m_world->GetAllEntityWithType(GameObjectType::ENEMY_2).empty()
+				&& m_world->GetAllEntityWithType(GameObjectType::ENEMY_BOSS_1).empty()
+				&& IsWaveStarted() && m_timeOut;
 		}
 		/*
 			Advance level if is possible
 		*/
-		bool AdvanceLevel()
+		bool AdvanceWave()
 		{
-			if (m_currentLevel <= m_maxLevel)
+			if (++m_currentWave <= m_maxWave)
 			{
-				m_levelStart = false;
-				m_currentLevel++;
 				return true;
 			}
 			else
@@ -416,9 +459,13 @@ namespace gswy {
 		std::shared_ptr<GameWorld<GameObjectType>> m_world;
 
 		bool m_isAnyLevelLoaded;
-		bool m_levelStart;
+		bool m_waveStart;
 		bool m_timeOut;
 		int m_coins;
+
+		int m_currentWave;
+		int m_maxWave;
+
 		int m_currentLevel;
 		int m_maxLevel;
 

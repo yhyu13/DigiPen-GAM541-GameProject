@@ -35,8 +35,9 @@ namespace gswy
 		FORKED_FIREBALL,
 		BOLT,
 		ICEBALL,
+		CYCLONE_SFX,
 		ENEMY_PROJECTILE,
-		RAZER,
+		RAZOR,
 
 		NUM
 	};

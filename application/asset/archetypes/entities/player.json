@@ -17,7 +17,7 @@
       "width": 64,
       "height": 64
     },
-	{
+    {
       "component": "miniMapSprite",
       "texture": "GreenLayer",
       "scale": 0.1,
@@ -28,16 +28,16 @@
       "component": "animation",
       "animation": {
         "name": [
-		  "PlayerAnimation_Idle",
-		  "PlayerAnimation_Moving",
-		  "PlayerAnimation_Attack",
-		  "PlayerAnimation_Razer_Attack"
-		],
+          "PlayerAnimation_Idle",
+          "PlayerAnimation_Moving",
+          "PlayerAnimation_Attack",
+          "PlayerAnimation_Cyclone_Attack"
+        ],
         "states": [
-		  "Idle",
+          "Idle",
           "Move",
-		  "Attack",
-		  "RazerAttack"
+          "Attack",
+          "CycloneAttack"
         ],
         "current-state": "Idle"
       }
@@ -54,7 +54,7 @@
     {
       "component": "hit-point"
     },
-	  {
+    {
       "component": "skill"
     }
   ]

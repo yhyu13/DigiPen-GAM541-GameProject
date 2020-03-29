@@ -53,7 +53,7 @@ namespace gswy
 				GameObjectType::ICEBALL ,GameObjectType::BOLT,
 				GameObjectType::TOWER_BUILD, GameObjectType::TOWER_FIRE,
 				GameObjectType::TOWER_ICE, GameObjectType::TOWER_LIGHTNING,
-				GameObjectType::FORKED_FIREBALL
+				GameObjectType::FORKED_FIREBALL, GameObjectType::RAZOR
 			};
 
 			for (auto& item1 : disableCollisionList)
@@ -101,7 +101,7 @@ namespace gswy
 					}
 					else if (auto circle = dynamic_pointer_cast<Circle>(s))
 					{
-						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0), 
+						Renderer2D::DrawDebugQuad(glm::vec3(body->m_PosX, body->m_PosY, 0),
 							glm::vec2(circle->GetRadius(), circle->GetRadius()), 
 							transform->GetRotation(), glm::vec4(1.0f));
 					}
@@ -126,7 +126,7 @@ namespace gswy
 
 				//After Initialising, Setting Transform of each -
 				//entity back from manipulated body positions for rendering
-				transform->SetPos3D(vec3(body->m_PosX, body->m_PosY, body->m_PosZ));
+				transform->SetPos(body->GetPos());
 				transform->SetVelocity(body->GetVelocity());
 			}
 
@@ -181,18 +181,21 @@ namespace gswy
 					// Reset colliding entity
 					body2->ResetOtherEntity();
 
-					bool collides = collision->CheckCollisionAndGenerateDetection
-						(body1->shape.get(), body1->m_PosX, body1->m_PosY, 
-							body2->shape.get(), body2->m_PosX, body2->m_PosY);		
-
-					if (collides)
+					if (body1->shape && body2->shape)
 					{
-						// Set colliding entity
-						body1->SetOtherEntity(*second_Entity);
-						body2->SetOtherEntity(*first_Entity);
-						DEBUG_PRINT("Collisions Detected " + Str(*first_Entity) + Str(*second_Entity));
-						auto e = MemoryManager::Make_shared<CollisionEvent>(*first_Entity, *second_Entity, body2->GetPos(), transform->GetRotation());
-						queue->Publish(e);
+						bool collides = collision->CheckCollisionAndGenerateDetection
+						(body1->shape.get(), body1->m_PosX, body1->m_PosY,
+							body2->shape.get(), body2->m_PosX, body2->m_PosY);
+
+						if (collides)
+						{
+							// Set colliding entity
+							body1->SetOtherEntity(*second_Entity);
+							body2->SetOtherEntity(*first_Entity);
+							DEBUG_PRINT("Collisions Detected " + Str(*first_Entity) + Str(*second_Entity));
+							auto e = MemoryManager::Make_shared<CollisionEvent>(*first_Entity, *second_Entity, body2->GetPos(), transform->GetRotation());
+							queue->Publish(e);
+						}
 					}
 				}
 			}

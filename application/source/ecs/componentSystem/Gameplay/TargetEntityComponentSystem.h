@@ -33,7 +33,6 @@ namespace gswy
 
 		virtual void Init() override
 		{
-
 		}
 
 		virtual void Update(double dt) override
@@ -82,36 +81,6 @@ namespace gswy
 				rotationMatrix = glm::mat4(1.0f);
 				rotationMatrix = glm::rotate(rotationMatrix, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 				entityBody->SetVelocity(glm::vec2(rotationMatrix * glm::vec4(entityBody->GetVelocity(), 0.0f, 0.0f)));
-
-				/*float dot = glm::dot(entityBody->GetVelocity(), edgeVector);
-				float denominator = glm::length(entityBody->GetVelocity()) * glm::length(edgeVector);
-				float cosOfAngle = dot / denominator;
-				float angle = acosf(cosOfAngle);
-
-				glm::vec2 normalToEntity = glm::vec2(-entityBody->GetVelocity().y, entityBody->GetVelocity().x);
-				if (glm::dot(normalToEntity, edgeVector) < 0)
-				{
-					angle = -angle;
-				}
-
-				float angleOfRotation = (3.1415926f / 2.0f) * dt;
-				if (angle > angleOfRotation)
-				{
-					angle = angleOfRotation;
-				}
-				else if (angle < -angleOfRotation)
-				{
-					angle = -angleOfRotation;
-				}
-
-				entityTransform->SetRotation(entityTransform->GetRotation() + angle);
-				glm::mat4 rotationMatrix;
-				rotationMatrix = glm::mat4(1.0f);
-				rotationMatrix = glm::rotate(rotationMatrix, entityTransform->GetRotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-				entityBody->SetVelocity(glm::vec2(rotationMatrix * glm::vec4(entityBody->GetVelocity(), 0.0f, 0.0f)));
-
-				APP_CRITICAL("velocity: {0} {1}", entityBody->GetVelocity().x, entityBody->GetVelocity().y);*/
 			}
 
 		}

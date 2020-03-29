@@ -80,6 +80,15 @@ namespace gswy {
 						}
 						continue;
 					}
+					if (name._Equal("Animation_Razor_Attack"))
+					{
+						auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
+						for (int k = 0; k < 3; ++k)
+						{
+							playerAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
+						}
+						continue;
+					}
 					if (name._Equal("PlayerAnimation_Idle")) {
 						auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
 						for (int k = 0; k < 4; ++k) {
@@ -87,7 +96,7 @@ namespace gswy {
 						}
 						continue;
 					}
-					if (name._Equal("PlayerAnimation_Razer_Attack"))
+					if (name._Equal("PlayerAnimation_Cyclone_Attack"))
 					{
 						auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
 						for (int k = 0; k < 3; ++k)
@@ -107,6 +116,14 @@ namespace gswy {
 					if (name._Equal("PlayerAnimation_Attack")) {
 						auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
 						for (int k = 0; k < 8; ++k) {
+							playerAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
+						}
+						continue;
+					}
+
+					if (name._Equal("Cyclone_Attack_SFX")) {
+						auto playerAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
+						for (int k = 0; k < 4; ++k) {
 							playerAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
 						}
 						continue;

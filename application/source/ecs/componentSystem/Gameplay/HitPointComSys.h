@@ -155,6 +155,18 @@ namespace gswy
 		{
 			switch (entityB.m_type)
 			{
+			case GameObjectType::CYCLONE_SFX:
+			{
+				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				ComponentDecorator<CoolDownCom, GameObjectType> cooldown;
+				m_parentWorld->Unpack(entityA, HitPoint);
+				m_parentWorld->Unpack(entityB, cooldown);
+				if (!cooldown->IsFreezed() && !cooldown->IsCoolDown())
+				{
+					HitPoint->AddHitPoint(-8);
+				}
+			}
+			break;
 			case GameObjectType::FIREBALL:
 			{
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
@@ -207,6 +219,25 @@ namespace gswy
 					HitPrevention->Add(entityA);
 					HitPoint->AddHitPoint(-5);
 				}
+			}
+			break;
+
+			case GameObjectType::RAZOR:
+			{
+				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				ComponentDecorator<HitPreventionCom<GameObjectType>, GameObjectType> HitPrevention;
+				m_parentWorld->Unpack(entityA, HitPoint);
+				m_parentWorld->Unpack(entityB, HitPrevention);
+
+				auto razorHitPoint = GetComponent<HitPointCom>(entityB);
+
+				if (!HitPrevention->IsIncluded(entityA))
+				{
+					HitPrevention->Add(entityA);
+					HitPoint->AddHitPoint(-10);
+					razorHitPoint->AddHitPoint(-5);
+				}
+
 			}
 			break;
 

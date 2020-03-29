@@ -36,7 +36,15 @@ namespace gswy
 		virtual void Update(double dt) override {
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			auto allEnemies = m_parentWorld->GetAllEntityWithType(enemyTypes[RAND_I(0, enemyTypes.size())]);
+			std::vector<Entity<GameObjectType>> allEnemies;
+			int trails = 5;
+
+			while (allEnemies.empty() && (--trails > 0))
+			{
+				allEnemies = m_parentWorld->GetAllEntityWithType(enemyTypes[RAND_I(0, enemyTypes.size())]);
+			}
+			
+			
 			for (auto& towerType : towerTypes)
 			{
 				m_registeredEntities = m_parentWorld->GetAllEntityWithType(towerType);
