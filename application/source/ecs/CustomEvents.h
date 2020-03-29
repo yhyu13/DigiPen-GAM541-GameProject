@@ -191,6 +191,15 @@ namespace gswy
 		}
 	};
 
+	struct LoadGameWorldEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadGameWorldEvent(int lvl) : Event(EventType::LOAD_GAME_WORLD)
+		{
+			m_level = lvl;
+		}
+		int m_level;
+	};
+
 	struct PlayerSetPendingAnimationEvent : Event<GameObjectType, EventType> {
 
 		PlayerSetPendingAnimationEvent(const Entity<GameObjectType>& entity, const std::string& name, bool force)

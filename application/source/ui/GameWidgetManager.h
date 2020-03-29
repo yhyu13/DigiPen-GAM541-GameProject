@@ -33,12 +33,13 @@ namespace gswy {
 		void  SetTimeSecond(int timeSec) { m_TimerSec = timeSec; }
 		void  SetWave(int wave) { m_Wave = wave; }
 		void  SetCoinNum(int coinNum) { m_Coins = coinNum; }
-		void  SetProgress(float wave) { m_Wave = wave; }
+		void  SetLevel(float lvl) { m_Level = lvl; }
 
 	private:
 		int m_TimerMin;
 		int m_TimerSec;
 		int m_Wave;
+		int m_Level;
 		int m_Coins;
 		float m_Progress;
 		float m_Mana;

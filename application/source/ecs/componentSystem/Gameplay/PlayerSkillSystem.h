@@ -98,11 +98,9 @@ namespace gswy
 			auto razerAttack = std::dynamic_pointer_cast<RazerAttack>(skillUseEvent->m_skill);
 			ComponentDecorator<TransformCom, GameObjectType> transform;
 
-			if (m_player == nullptr)
-			{
-				m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
-			}
-			m_parentWorld->Unpack(*m_player, transform);
+			auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+
+			m_parentWorld->Unpack(player, transform);
 
 			if (fireballAttack != nullptr) {
 				int num_spawn = fireballAttack->GetCount();
@@ -114,7 +112,7 @@ namespace gswy
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
 						auto active = ActiveCom();
 						weapon.AddComponent(active);
-						weapon.AddComponent(OwnershiptCom<GameObjectType>(*m_player));
+						weapon.AddComponent(OwnershiptCom<GameObjectType>(player));
 						auto weapon_rot = rot;
 						if (num_spawn > 1)
 						{
@@ -154,7 +152,7 @@ namespace gswy
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
 						auto active = ActiveCom();
 						weapon.AddComponent(active);
-						weapon.AddComponent(OwnershiptCom<GameObjectType>(*m_player));
+						weapon.AddComponent(OwnershiptCom<GameObjectType>(player));
 						auto weapon_rot = rot;
 						if (num_spawn > 1)
 						{
@@ -184,10 +182,10 @@ namespace gswy
 			else if (razerAttack !=  nullptr)
 			{
 				/*ComponentDecorator<AnimationCom, GameObjectType> animation;
-				m_parentWorld->Unpack(*m_player, animation);
+				m_parentWorld->Unpack(player, animation);
 				
 				animation->SetCurrentAnimationState("RazerAttack");*/
-				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(*m_player,"RazerAttack", true);
+				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(player,"RazerAttack", true);
 				queue->Publish(e);
 			}
 		}
@@ -201,10 +199,7 @@ namespace gswy
 
 		APP_DEBUG("Fork Event Received: {0}", forkEvent->m_type);
 
-		if (m_player == nullptr)
-		{
-			m_player = MemoryManager::Make_shared<Entity<GameObjectType>>(m_registeredEntities.at(0));
-		}
+		auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 
 		SkillManager* manager = SkillManager::GetInstance();
 		std::shared_ptr<ActiveSkill> skill = manager->GetActiveSkill(forkEvent->m_skillType);
@@ -221,7 +216,7 @@ namespace gswy
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FORKED_FIREBALL);
 						auto active = ActiveCom();
 						weapon.AddComponent(active);
-						weapon.AddComponent(OwnershiptCom<GameObjectType>(*m_player));
+						weapon.AddComponent(OwnershiptCom<GameObjectType>(player));
 						auto weapon_rot = rot;
 						if (num_spawn > 1)
 						{
@@ -256,7 +251,6 @@ namespace gswy
 	}
 
 	private:
-		std::shared_ptr<Entity<GameObjectType>> m_player;
 		int m_spawnZOrder;
 	};
 }

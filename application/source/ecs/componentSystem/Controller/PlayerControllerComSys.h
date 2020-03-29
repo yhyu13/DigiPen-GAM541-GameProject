@@ -124,9 +124,9 @@ namespace gswy
 			if (input->IsKeyTriggered(KEY_SPACE))
 			{
 				PRINT("SPACE");
-				if (!GameLevelMapManager::GetInstance()->IsLevelStarted())
+				if (!GameLevelMapManager::GetInstance()->IsWaveStarted())
 				{
-					GameLevelMapManager::GetInstance()->StartLevel();
+					GameLevelMapManager::GetInstance()->StartWave();
 				}
 			}
 

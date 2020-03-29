@@ -37,7 +37,7 @@ namespace gswy
 			auto allPortals = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY_PORTAL);
 
 			// if exist portal, level is started and is not time out, then spawning enemies
-			if (!(!allPortals.empty() && GameLevelMapManager::GetInstance()->IsLevelStarted() && !GameLevelMapManager::GetInstance()->IsTimeOut()))
+			if (!(!allPortals.empty() && GameLevelMapManager::GetInstance()->IsWaveStarted() && !GameLevelMapManager::GetInstance()->IsTimeOut()))
 			{
 				return;
 			}

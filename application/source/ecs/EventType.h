@@ -42,6 +42,7 @@ namespace gswy
 		FORK,
 
 		LOAD_MAIN_MENU,
+		LOAD_GAME_WORLD,
 
 		NUM
 	};

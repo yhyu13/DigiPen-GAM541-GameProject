@@ -40,7 +40,7 @@ namespace gswy
 				{
 				case GameObjectType::PLAYER:
 					// TODO : Need proper handle of player death
-					throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Player has died");
+					//throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Player has died");
 					break;
 				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:
 				{
@@ -50,7 +50,7 @@ namespace gswy
 					queue->Publish(_e);
 
 					// Add coins to player on enemy destruction
-					GameLevelMapManager::GetInstance()->m_coins += 10;
+					GameLevelMapManager::GetInstance()->AddCoins(10);
 
 					// Test code : Instead of calling GC on death, making enemies fade out in 1 sec
 					/*auto _e = MemoryManager::Make_shared<FadeEvent>(event->m_entity, 1.f, 0.f, 1.f, EventType::GC);
