@@ -81,7 +81,8 @@ namespace gswy {
 		IsVisible = false; 
 		m_TimerMin = 0; 
 		m_TimerSec = 0; 
-		m_Wave = 0; 
+		m_Wave = 1; 
+		m_Level = 1;
 		m_Coins = 0;
 		m_Progress = 0.5f;
 		m_Mana = 0.5f;

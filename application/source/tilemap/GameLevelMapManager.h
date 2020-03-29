@@ -348,7 +348,7 @@ namespace gswy {
 				return;
 			}
 
-			auto hud = WidgetManager::GetInstance()->GetHUD();
+			auto& hud = WidgetManager::GetInstance()->GetHUD();
 			int min = (int)m_timeRemaining / 60;
 			int sec = (int)m_timeRemaining - min * 60;
 			hud.SetTimeMinute(min);
