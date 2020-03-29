@@ -93,7 +93,7 @@ namespace gswy {
 	void HUD::Render()
 	{	
 		//Text : Timer
-		ImVec2 nextWindowSize = ImVec2(60, 20);
+		ImVec2 nextWindowSize = ImVec2(80, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0], nextWindowSize[1]));
 		ImGui::Begin("Timer", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
@@ -101,7 +101,7 @@ namespace gswy {
 		ImGui::End();
 		
 		//Text : Wave
-		nextWindowSize = ImVec2(60, 20);
+		nextWindowSize = ImVec2(80, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 65));
 		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
@@ -109,7 +109,7 @@ namespace gswy {
 		ImGui::End();
 		
 		//Text : Coin
-		nextWindowSize = ImVec2(60, 20);
+		nextWindowSize = ImVec2(100, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 135));
 		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
