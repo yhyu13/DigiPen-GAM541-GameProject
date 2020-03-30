@@ -52,7 +52,7 @@ namespace gswy {
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
 
-		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		float f = 0.0;
 		ImGui::SetWindowFontScale(1.0);
 
@@ -96,7 +96,7 @@ namespace gswy {
 		ImVec2 nextWindowSize = ImVec2(80, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0], nextWindowSize[1]));
-		ImGui::Begin("Timer", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Timer", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::Text("%i : %i", m_TimerMin, m_TimerSec);
 		ImGui::End();
 		
@@ -104,7 +104,7 @@ namespace gswy {
 		nextWindowSize = ImVec2(80, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 65));
-		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::Text("Wave : %i", m_Wave);
 		ImGui::End();
 		
@@ -112,7 +112,7 @@ namespace gswy {
 		nextWindowSize = ImVec2(100, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 135));
-		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::Text("Coin : %i", m_Coins);
 		ImGui::End();
 		
@@ -120,7 +120,7 @@ namespace gswy {
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::Begin("Base Life", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Base Life", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::ProgressBar(m_Progress);
 		ImGui::End();
 		
@@ -128,7 +128,7 @@ namespace gswy {
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - nextWindowSize[0] - 100, m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::Begin("Mana", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Mana", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::ProgressBar(m_Mana);
 		ImGui::End();
 		
@@ -136,7 +136,7 @@ namespace gswy {
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(100, m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::Begin("Sanity", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Sanity", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::ProgressBar(m_Sanity);
 		ImGui::End();
 	}
@@ -148,7 +148,7 @@ namespace gswy {
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
 
-		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::SetWindowFontScale(1.0);
 		if (ImGui::Button("Resume", ImVec2(500, 100)))
 		{
@@ -164,10 +164,12 @@ namespace gswy {
 
 	void ShopMenu::Render()
 	{
+	
 		ImVec2 shopWindowSize = ImVec2(500, 400);
 		ImGui::SetNextWindowSize(shopWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(0, 0));
-		ImGui::Begin("Shop", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Shop", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+
 		if (ImGui::BeginTabBar("ShopTabBar"))
 		{
 			if (ImGui::BeginTabItem("ACTIVE"))
@@ -325,7 +327,7 @@ namespace gswy {
 		ImVec2 InventoryWindowSize = ImVec2(500, 400);
 		ImGui::SetNextWindowSize(InventoryWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - InventoryWindowSize.x, 0));
-		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 
 		if (ImGui::BeginTabBar("InventoryTabBar"))
 		{
