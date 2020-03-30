@@ -12,8 +12,7 @@ Creation date: 02/04/2020
 #pragma once
 
 #include "engine/ecs/BaseComponent.h"
-#include <GLFW/glfw3.h>
-
+#include <glm/glm.hpp>
 using namespace glm;
 
 namespace gswy

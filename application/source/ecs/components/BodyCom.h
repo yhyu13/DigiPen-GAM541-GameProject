@@ -12,9 +12,11 @@ Creation date	: 02/12/2020
 - End Header ----------------------------*/
 
 #pragma once
+#include <memory>
 #include "engine/ecs/BaseComponent.h"
 #include "TransformCom.h"
-#include "EngineExport.h"
+#include "engine/ecs/Entity.h"
+#include "engine/physics/Collisions.h"
 
 namespace gswy
 {
@@ -132,8 +134,8 @@ namespace gswy
 			if (0 == name.compare("AABB"))
 			{
 				shape = std::make_shared<AABB>();
-				static_pointer_cast<AABB>(shape)->SetWidth(width);
-				static_pointer_cast<AABB>(shape)->SetHeight(height);
+				std::static_pointer_cast<AABB>(shape)->SetWidth(width);
+				std::static_pointer_cast<AABB>(shape)->SetHeight(height);
 			}
 			else
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Incorrect Shape Type, should be: AABB, instead: " + str2wstr(name) + L", Try Again!");
@@ -145,7 +147,7 @@ namespace gswy
 			if (0 == name.compare("Circle"))
 			{
 				shape = std::make_shared<Circle>();
-				static_pointer_cast<Circle>(shape)->SetRadius(radius);
+				std::static_pointer_cast<Circle>(shape)->SetRadius(radius);
 			}
 			else
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Incorrect Shape Type, should be: Circle, instead: " + str2wstr(name) + L", Try Again!");

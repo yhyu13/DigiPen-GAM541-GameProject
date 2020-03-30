@@ -111,6 +111,10 @@ namespace gswy {
 					m_world->RegisterSystem(MemoryManager::Make_shared<FadeComSys>());
 					continue;
 				}
+				if (system._Equal("buff")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<BuffComSys>());
+					continue;
+				}
 				if (system._Equal("gc")) {
 					m_world->RegisterSystem(MemoryManager::Make_shared<GCComSys>());
 					continue;
@@ -146,8 +150,12 @@ namespace gswy {
 
 				if (type._Equal("player")) {
 					auto player = world->GenerateEntity(GameObjectType::PLAYER);
-					auto active = ActiveCom();
-					player.AddComponent(active);
+					player.AddComponent(ActiveCom());
+					auto buffCom = BuffCom();
+					auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.2, -1);
+					buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
+					player.AddComponent(buffCom);
+
 					Json::Value components = archetypeRoot["components"];
 					for (int j = 0; j < components.size(); ++j) {
 						Json::Value component = components[j];

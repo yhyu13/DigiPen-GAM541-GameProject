@@ -12,6 +12,7 @@ Creation date: 02/17/2020
 #pragma once
 #include "ecs/EntityType.h"
 #include "ecs/EventType.h"
+#include "buff-system/BaseBuff.h"
 #include "engine/events/EventQueue.h"
 #include "skill-system/support-skills/SupportSkill.h"
 #include "skill-system/active-skills/ActiveSkill.h"
@@ -228,5 +229,35 @@ namespace gswy
 
 		Entity<GameObjectType> m_entity;
 		bool m_bIsReady;
+	};
+
+	struct AddBuffEvent : Event<GameObjectType, EventType> {
+
+		AddBuffEvent(Entity<GameObjectType> entity,std::shared_ptr<BaseBuff> buff, bool replace)
+			:
+			Event(EventType::ADD_BUFF)
+		{
+			m_entity = entity;
+			m_buff = buff;
+			m_bReplace = replace;
+		}
+
+		Entity<GameObjectType> m_entity;
+		std::shared_ptr<BaseBuff> m_buff;
+		bool m_bReplace;
+	};
+
+	struct RemoveBuffEvent : Event<GameObjectType, EventType> {
+
+		RemoveBuffEvent(Entity<GameObjectType> entity, GameBuffType buff)
+			:
+			Event(EventType::REMOVE_BUFF)
+		{
+			m_entity = entity;
+			m_buff = buff;
+		}
+
+		Entity<GameObjectType> m_entity;
+		GameBuffType m_buff;
 	};
 }

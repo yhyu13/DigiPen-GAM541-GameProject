@@ -20,6 +20,7 @@ Creation date: 02/17/2020
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/AttachedMovementCom.h"
 #include "ecs/components/BodyCom.h"
+#include "ecs/components/BuffCom.h"
 #include "ecs/components/ChildrenCom.h"
 #include "ecs/components/CoolDownCom.h"
 #include "ecs/components/HitPointCom.h"
@@ -64,12 +65,14 @@ namespace gswy
 
 				// Instead of removing the entity from ActiveCom manager like we do for all other component,
 				// we set activeCom to false
-				auto active = GetComponent<ActiveCom>(e);
-				active->SetActive(false);
+				/*auto active = GetComponent<ActiveCom>(e);
+				active->SetActive(false);*/
+				m_parentWorld->RemoveComponent<ActiveCom>(e);
 
 				m_parentWorld->RemoveComponent<AnimationCom>(e);
 				m_parentWorld->RemoveComponent<AttachedMovementCom>(e);
 				m_parentWorld->RemoveComponent<BodyCom>(e);
+				m_parentWorld->RemoveComponent<BuffCom>(e);
 				m_parentWorld->RemoveComponent<ChildrenCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<CoolDownCom>(e);
 				m_parentWorld->RemoveComponent<HitPointCom>(e);
