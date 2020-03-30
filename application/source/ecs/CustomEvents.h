@@ -40,7 +40,7 @@ namespace gswy
 
 	struct FireWeaponEvent : Event<GameObjectType, EventType> {
 
-		explicit FireWeaponEvent(const Entity<GameObjectType>& entity, const vec2& pos = vec2(0), float rot = 0)
+		explicit FireWeaponEvent(const Entity<GameObjectType>& entity, const glm::vec2& pos = glm::vec2(0), float rot = 0)
 			:
 			m_pos(pos),
 			m_rot(rot),
@@ -48,7 +48,7 @@ namespace gswy
 		{
 			m_entity = entity;
 		}
-		vec2 m_pos;
+		glm::vec2 m_pos;
 		float m_rot;
 		Entity<GameObjectType> m_entity;
 	};
@@ -102,7 +102,7 @@ namespace gswy
 
 	struct SpawnEvent : Event<GameObjectType, EventType> {
 
-		explicit SpawnEvent(GameObjectType type, const vec3& pos)
+		explicit SpawnEvent(GameObjectType type, const glm::vec3& pos)
 			:
 			Event(EventType::SPAWN),
 			m_type(type),
@@ -110,7 +110,7 @@ namespace gswy
 		{
 		}
 
-		vec3 m_pos;
+		glm::vec3 m_pos;
 		GameObjectType m_type;
 	};
 
@@ -247,7 +247,8 @@ namespace gswy
 		bool m_bReplace;
 	};
 
-	struct RemoveBuffEvent : Event<GameObjectType, EventType> {
+	struct RemoveBuffEvent : Event<GameObjectType, EventType>
+	{
 
 		RemoveBuffEvent(Entity<GameObjectType> entity, GameBuffType buff)
 			:
@@ -259,5 +260,20 @@ namespace gswy
 
 		Entity<GameObjectType> m_entity;
 		GameBuffType m_buff;
+	};
+
+	struct KeyBindEvent : Event<GameObjectType, EventType>
+	{
+
+		KeyBindEvent(const int& skillNumber, const std::string& keyEventType)
+			: Event(EventType::KEY_BIND_EVENT),
+			m_skillNumber(skillNumber),
+			m_keyEventType(keyEventType)
+		{
+		}
+
+		int m_skillNumber;
+		std::string m_keyEventType;
+
 	};
 }

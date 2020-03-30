@@ -13,7 +13,8 @@
       "text": [
         "some useful information",
         "some useful information"
-      ]
+      ],
+      "key-event" :  "TRIGGER"
     },
     {
       "id": "1",
@@ -28,7 +29,8 @@
       "text": [
         "something",
         "something"
-      ]
+      ],
+      "key-event": "TRIGGER"
     },
     {
       "id": "2",
@@ -41,7 +43,8 @@
       "text": [
         "some useful information",
         "some useful information"
-      ]
+      ],
+      "key-event": "TRIGGER"
     },
     {
       "id": "2",
@@ -54,7 +57,8 @@
       "text": [
         "some useful information",
         "some useful information"
-      ]
+      ],
+      "key-event": "PRESS"
     },
     {
       "id": "2",

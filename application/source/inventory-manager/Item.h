@@ -17,5 +17,6 @@ namespace gswy
 		bool m_purchased;
 		bool m_installed;
 		std::vector<std::string> m_text;
+		std::string m_keyEventType;
 	};
 }
