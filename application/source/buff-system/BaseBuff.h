@@ -28,7 +28,7 @@ namespace gswy {
 	public:
 		explicit BaseBuff(GameBuffType type, double duration) : m_type(type), m_duration(duration){};
 		virtual ~BaseBuff() {};
-		virtual void ApplyBuff(GameWorld<GameObjectType>* world,Entity<GameObjectType>& entity, double timeRemaning) = 0;
+		virtual void ApplyBuff(GameWorld<GameObjectType>* world,Entity<GameObjectType>& entity, double timeRemaning, double dt) = 0;
 
 	public:
 		GameBuffType m_type;
@@ -44,7 +44,7 @@ namespace gswy {
 			m_value(value)
 		{};
 		virtual ~ModifySpeedPercentBuff() {};
-		virtual void ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning) override;
+		virtual void ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning, double dt) override;
 	public:
 		float m_value;
 	};
@@ -58,7 +58,7 @@ namespace gswy {
 			m_value(value)
 		{};
 		virtual ~ModifySpeedPointBuff() {};
-		virtual void ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning) override;
+		virtual void ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning, double dt) override;
 	public:
 		float m_value;
 	};
@@ -72,7 +72,7 @@ namespace gswy {
 			m_value(value)
 		{};
 		virtual ~ModifyHPPercentBuff() {};
-		virtual void ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning) override;
+		virtual void ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning, double dt) override;
 	public:
 		float m_value;
 	};
@@ -86,7 +86,7 @@ namespace gswy {
 			m_value(value)
 		{};
 		virtual ~ModifyHPPointBuff() {};
-		virtual void ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning) override;
+		virtual void ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning, double dt) override;
 	public:
 		float m_value;
 	};

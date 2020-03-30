@@ -15,32 +15,32 @@ Creation date: 03/29/2020
 #include "ecs/components/BodyCom.h"
 #include "ecs/components/HitPointCom.h"
 
-void gswy::ModifySpeedPercentBuff::ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning)
+void gswy::ModifySpeedPercentBuff::ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning, double dt)
 {
 	ComponentDecorator<BodyCom, GameObjectType> body;
 	world->Unpack(entity, body);
 	body->SetVelocity(body->GetVelocity() * m_value);
 }
 
-void gswy::ModifySpeedPointBuff::ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning)
+void gswy::ModifySpeedPointBuff::ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning, double dt)
 {
 	ComponentDecorator<BodyCom, GameObjectType> body;
 	world->Unpack(entity, body);
 	body->SetVelocity(body->GetVelocity() + m_value);
 }
 
-void gswy::ModifyHPPercentBuff::ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning)
+void gswy::ModifyHPPercentBuff::ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning, double dt)
 {
 	ComponentDecorator<HitPointCom, GameObjectType> hp;
 	world->Unpack(entity, hp);
-	hp->AddHitPoint(hp->GetMaxHP() * m_value);
+	hp->AddHitPoint(hp->GetMaxHP() * m_value * dt);
 }
 
-void gswy::ModifyHPPointBuff::ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning)
+void gswy::ModifyHPPointBuff::ApplyBuff(GameWorld<GameObjectType>* world, Entity<GameObjectType>& entity, double timeRemaning, double dt)
 {
 	ComponentDecorator<HitPointCom, GameObjectType> hp;
 	world->Unpack(entity, hp);
-	hp->AddHitPoint(m_value);
+	hp->AddHitPoint(m_value * dt);
 }
 
 

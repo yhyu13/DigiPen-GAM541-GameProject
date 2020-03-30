@@ -41,7 +41,7 @@ namespace gswy
 				buffCom->UpdateCurrentBuffs(ts);
 				for (auto it = buffCom->GetCurrentBuffs().begin(); it != buffCom->GetCurrentBuffs().end(); ++it)
 				{
-					it->first->ApplyBuff(m_parentWorld, entity, it->second);
+					it->first->ApplyBuff(m_parentWorld, entity, it->second, ts);
 				}
 			}
 		}
