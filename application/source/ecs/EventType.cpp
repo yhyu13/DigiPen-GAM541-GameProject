@@ -27,6 +27,9 @@ std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 
 	case gswy::EventType::DEATH: return o << "DEATH";
 
+	case gswy::EventType::ADD_BUFF: return o << "ADD_BUFF";
+	case gswy::EventType::REMOVE_BUFF: return o << "REMOVE_BUFF";
+
 	case gswy::EventType::FADE: return o << "FADEIN";
 	case gswy::EventType::_FADE_ING: return o << "_FADEIN_ING";
 	case gswy::EventType::_FADE_END: return o << "_FADEIN_END";

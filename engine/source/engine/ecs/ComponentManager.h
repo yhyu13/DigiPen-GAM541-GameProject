@@ -12,7 +12,7 @@ Creation date	: 02/03/2020
 - End Header ----------------------------*/
 
 #pragma once
-
+#include <map>
 #include "Entity.h"
 #include "engine/allocator/MemoryManager.h"
 
@@ -20,9 +20,12 @@ Creation date	: 02/03/2020
 
 namespace gswy {
 
+	template<typename EntityType>
+	struct Entity;
+
 	template<typename ComponentType>
 	struct ComponentData {
-		unsigned int m_size = 0;
+		uint32_t m_size = 0;
 		MyVector(ComponentType) m_data;
 
 		ComponentData() {
@@ -60,8 +63,8 @@ namespace gswy {
 		~ComponentManager() {
 		}
 
-		unsigned int AddComponentToEntity(Entity<EntityType> entity, ComponentType& component) {
-			unsigned int index = m_components.m_size++;
+		uint32_t AddComponentToEntity(Entity<EntityType> entity, ComponentType& component) {
+			uint32_t index = m_components.m_size++;
 			m_components.m_data.push_back(component);
 			m_entitiesAndComponentIndexes[entity] = index;
 			m_entities.push_back(entity);
@@ -90,8 +93,8 @@ namespace gswy {
 			if (m_entitiesAndComponentIndexes.find(entity) == m_entitiesAndComponentIndexes.end())
 				return;
 
-			unsigned int index = m_entitiesAndComponentIndexes[entity];
-			unsigned int lastIndex = --m_components.m_size;
+			uint32_t index = m_entitiesAndComponentIndexes[entity];
+			uint32_t lastIndex = --m_components.m_size;
 			
 			// move the component data from last index to the index of the component data just removed
 			std::swap(m_components.m_data[index], m_components.m_data[lastIndex]);
@@ -115,7 +118,7 @@ namespace gswy {
 		/*
 			Maps the entity to the index of the component instance in the m_components
 		*/
-		std::map<Entity<EntityType>, unsigned int> m_entitiesAndComponentIndexes;
+		std::map<Entity<EntityType>, uint32_t> m_entitiesAndComponentIndexes;
 
 		/*
 			Stores all entities indexed by the index of the component instance in m_components

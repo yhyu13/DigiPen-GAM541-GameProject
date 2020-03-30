@@ -12,12 +12,15 @@ Creation date	: 02/02/2020
 - End Header ----------------------------*/
 
 #pragma once
+#include <memory>
+#include <vector>
+#include <map>
 
+#include "EntityManager.h"
 #include "ComponentManager.h"
 #include "BaseComponentSystem.h"
-#include "BitMaskSignature.h"
-#include "EntityManager.h"
 #include "ComponentDecorator.h"
+#include "BitMaskSignature.h"
 
 namespace gswy {
 

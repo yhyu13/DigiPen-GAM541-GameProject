@@ -11,15 +11,16 @@
 	  
       "weapon",
       
-	  "attached-movement",
-      "physics",
-      
       "spawn",
       "sound",
       "hitpoint",
       "death",
 	  "lifetime",
 	  "fade",
+	  "buff",
+	  
+	  "attached-movement",
+      "physics",
 	  
 	  "animation",
 	  "minimap",

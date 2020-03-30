@@ -11,7 +11,7 @@ Creation date: 02/16/2020
 
 #pragma once
 #include <iostream>
-#include "engine/events/Event.h"
+
 namespace gswy
 {
 	enum class EventType {
@@ -34,6 +34,9 @@ namespace gswy
 		PLAYERSKILL2,
 		PLAYERSKILL3,
 
+		ADD_BUFF,
+		REMOVE_BUFF,
+
 		FADE,
 		_FADE_ING,
 		_FADE_END,
@@ -43,6 +46,8 @@ namespace gswy
 
 		LOAD_MAIN_MENU,
 		LOAD_GAME_WORLD,
+
+		KEY_BIND_EVENT,
 
 		NUM
 	};

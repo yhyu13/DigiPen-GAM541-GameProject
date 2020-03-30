@@ -306,6 +306,7 @@ namespace gswy {
 			PRINT("Start Wave " + Str(m_currentWave));
 			m_waveStart = true;
 			m_timeOut = false;
+			m_timeRemaining = m_timePerLevel;
 		}
 
 		/*
@@ -364,7 +365,7 @@ namespace gswy {
 				if (m_timeRemaining < 0)
 				{
 					m_timeOut = true;
-					m_timeRemaining = m_timePerLevel;
+					m_timeRemaining = 0;
 					PRINT("Time's up, kill all reminaing monsters to finish the level!");
 				}
 			}
@@ -420,7 +421,8 @@ namespace gswy {
 			// End with 3
 			m_maxLevel = 3;
 
-			m_timePerLevel = 2;
+			// Each wave is 30s long
+			m_timePerLevel = 30;
 			m_timeRemaining = m_timePerLevel;
 		}
 

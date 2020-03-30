@@ -18,6 +18,7 @@ Creation date: 03/12/2020
 #include "ecs/components/LifeTimeCom.h"
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/BodyCom.h"
+#include "ecs/components/BuffCom.h"
 #include "ecs/components/OwnershiptCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/components/TransformCom.h"
@@ -104,7 +105,7 @@ namespace gswy
 				sprite.SetTexture("TowerFire");
 				sprite.SetScale(vec2(0.25, 0.25));
 				_tower.AddComponent(sprite);
-				auto coolDownController = CoolDownCom(1.0);
+				auto coolDownController = CoolDownCom(0.5);
 				coolDownController.SetFreeze(true);
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
@@ -149,7 +150,7 @@ namespace gswy
 				sprite.SetTexture("TowerLightning");
 				sprite.SetScale(vec2(0.25, 0.25));
 				_tower.AddComponent(sprite);
-				auto coolDownController = CoolDownCom(1.0);
+				auto coolDownController = CoolDownCom(0.5);
 				_tower.AddComponent(coolDownController);
 				auto body = BodyCom();
 				body.SetMass(0);
@@ -167,7 +168,7 @@ namespace gswy
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_PORTAL);
 			obj.AddComponent(ActiveCom());
 			obj.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
-			auto cooldown = CoolDownCom(RAND_F(0.5,1.0));
+			auto cooldown = CoolDownCom(RAND_F(0.75,1.25));
 			obj.AddComponent(cooldown);
 			auto animCom = AnimationCom();
 			animCom.Add("PortalAnimation_0", "Move");
@@ -183,6 +184,7 @@ namespace gswy
 			auto event = static_pointer_cast<SpawnEvent>(e);
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_1);
 			obj.AddComponent(ActiveCom());
+			obj.AddComponent(BuffCom());
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
 			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
 			obj.AddComponent(transform);
@@ -230,6 +232,7 @@ namespace gswy
 			auto event = static_pointer_cast<SpawnEvent>(e);
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_2);
 			obj.AddComponent(ActiveCom());
+			obj.AddComponent(BuffCom());
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
 			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
 			obj.AddComponent(transform);
@@ -277,6 +280,7 @@ namespace gswy
 			auto event = static_pointer_cast<SpawnEvent>(e);
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_BOSS_1);
 			obj.AddComponent(ActiveCom());
+			obj.AddComponent(BuffCom());
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
 			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
 			obj.AddComponent(transform);

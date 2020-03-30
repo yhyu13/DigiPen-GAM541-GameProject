@@ -12,6 +12,7 @@ Creation date: 02/14/2020
 #include <stddef.h>
 #include <stdint.h>
 #include <mutex>
+#include <atomic>
 
 namespace gswy {
 

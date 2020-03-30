@@ -14,6 +14,7 @@ Creation date	: 02/09/2020
 #pragma once
 
 #include "engine-precompiled-header.h"
+#include "engine/EngineCore.h"
 #include "EventHandler.h"
 
 #include <GLFW/glfw3.h>
@@ -77,7 +78,7 @@ namespace gswy {
 			DEBUG_PRINT("Publish " + Str(*e));
 			for (auto& handler : *eventHandlers) {
 				if (handler != nullptr) {
-					handler->Execute(static_pointer_cast<BaseEvent>(e));
+					handler->Execute(std::static_pointer_cast<BaseEvent>(e));
 				}
 			}
 		}

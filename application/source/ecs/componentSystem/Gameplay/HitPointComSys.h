@@ -107,10 +107,10 @@ namespace gswy
 				{
 				case GameObjectType::PLAYER:
 					PLAYER(entityA, entityB);
-					return;
+					goto END;
 				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:
 					ENEMY(entityA, entityB, position, rotation);
-					return;
+					goto END;
 				default:
 					break;
 				}
@@ -121,12 +121,14 @@ namespace gswy
 					isSwasp = true;
 					goto BEGIN;
 				}
+				END:
 				return;
 			}
 		}
 
 		void PLAYER(const Entity<GameObjectType>& entityA, const Entity<GameObjectType>& entityB)
 		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			switch (entityB.m_type)
 			{
 			case GameObjectType::ENEMY_PROJECTILE:
@@ -140,9 +142,13 @@ namespace gswy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-10);
+					HitPoint->AddHitPoint(-5);
 
 					PRINT("Player is hit! HP: " + Str(HitPoint->GetPercentageHP()*100) + "%");
+
+					auto speedDownBuff = MemoryManager::Make_shared<ModifySpeedPercentBuff>(0.33, 0.5);
+					auto e = MemoryManager::Make_shared<AddBuffEvent>(entityA, speedDownBuff, true);
+					queue->Publish(e);
 				}
 			}	
 				break;
@@ -153,14 +159,24 @@ namespace gswy
 
 		void ENEMY(const Entity<GameObjectType>& entityA, const Entity<GameObjectType>& entityB, const glm::vec2& position, const float& rotation)
 		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			switch (entityB.m_type)
 			{
 			case GameObjectType::CYCLONE_SFX:
 			{
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
 				ComponentDecorator<CoolDownCom, GameObjectType> cooldown;
+				ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner;
 				m_parentWorld->Unpack(entityA, HitPoint);
 				m_parentWorld->Unpack(entityB, cooldown);
+				m_parentWorld->Unpack(entityB, owner);
+
+				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkill;
+				m_parentWorld->Unpack(owner->GetEntity(), playerSkill);
+
+				// Skill support effect
+				// playerSkill->GetCurrentSkill()->HasSupportSkill();
+
 				if (!cooldown->IsFreezed() && !cooldown->IsCoolDown())
 				{
 					HitPoint->AddHitPoint(-8);
@@ -179,14 +195,13 @@ namespace gswy
 				{
 					HitPrevention->Add(entityA);
 					HitPoint->AddHitPoint(-15);
+
+					auto e = MemoryManager::Make_shared<GCEvent>(entityB);
+					queue->Publish(e);
+
+					auto forkEvent = MemoryManager::Make_shared<ForkEvent>(ActiveSkillType::FIRE_BALL, position, rotation);
+					queue->Publish(forkEvent);
 				}
-
-				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-				auto e = MemoryManager::Make_shared<GCEvent>(entityB);
-				queue->Publish(e);
-
-				auto forkEvent = MemoryManager::Make_shared<ForkEvent>(ActiveSkillType::FIRE_BALL, position, rotation);
-				queue->Publish(forkEvent);
 			}
 				break;
 
@@ -218,6 +233,11 @@ namespace gswy
 				{
 					HitPrevention->Add(entityA);
 					HitPoint->AddHitPoint(-10);
+
+					// Iceball makes target it hit slow down
+					auto speedDownBuff = MemoryManager::Make_shared<ModifySpeedPercentBuff>(0.5, 1);
+					auto e = MemoryManager::Make_shared<AddBuffEvent>(entityA, speedDownBuff, true);
+					queue->Publish(e);
 				}
 			}
 			break;
