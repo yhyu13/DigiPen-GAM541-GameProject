@@ -141,6 +141,19 @@ namespace gswy {
 			return result;
 		}
 
+		std::vector<Entity<EntityType>> GetAllEntityWithType(std::vector<EntityType> types)
+		{
+			std::vector<Entity<EntityType>> result;
+			for (auto type : types)
+			{
+				for (auto& id : m_entityManager->GetAllEntityIDWithType(type))
+				{
+					result.push_back(Entity<EntityType>(id, type));
+				}
+			}
+			return result;
+		}
+
 		/*
 			
 		*/

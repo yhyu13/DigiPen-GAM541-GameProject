@@ -14,6 +14,7 @@ Creation date: 02/19/2020
 #include "engine/object-factory/ObjectFactory.h"
 #include "engine/ecs/GameWorld.h"
 #include "json/json.h"
+#include "ecs/componentSystem/Gameplay/TargetEntityComponentSystem.h"
 
 namespace gswy {
 
@@ -132,6 +133,11 @@ namespace gswy {
 					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerSkillSystem>());
 					continue;
 				}
+				if (system._Equal("target-entity-component"))
+				{
+					m_world->RegisterSystem(MemoryManager::Make_shared<TargetEntityComponentSystem>());
+					continue;
+				}
 			}
 		}
 
@@ -228,7 +234,7 @@ namespace gswy {
 
 					// Create the razer sfx that is attached to the player but is initizied to be inactive.
 					{
-						auto razer_sfx = world->GenerateEntity(GameObjectType::RAZER_SFX);
+						auto razer_sfx = world->GenerateEntity(GameObjectType::CYCLONE_SFX);
 						auto active = ActiveCom(false);
 						razer_sfx.AddComponent(active);
 						razer_sfx.AddComponent(OwnershiptCom<GameObjectType>(player));
@@ -238,7 +244,7 @@ namespace gswy {
 						razer_sfx.AddComponent(attach);
 						razer_sfx.AddComponent(TransformCom());
 						auto anim = AnimationCom();
-						anim.Add("Razer_Attack_SFX", "Move");
+						anim.Add("Cyclone_Attack_SFX", "Move");
 						anim.SetCurrentAnimationState("Move");
 						razer_sfx.AddComponent(anim);
 						auto sprite = SpriteCom();

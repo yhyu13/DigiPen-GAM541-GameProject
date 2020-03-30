@@ -27,7 +27,8 @@
 	  "particle",
 	  "sprite",
 	  "scene",
-	  "skill",
+    "skill",
+    "target-entity-component",
 	  
 	  "gc"
    ]

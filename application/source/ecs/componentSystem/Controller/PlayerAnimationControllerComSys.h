@@ -39,22 +39,22 @@ namespace gswy
 		virtual void Init() override
 		{
 			// Initialize animation validation graph
-			std::vector<std::string> states = { "Idle", "Move", "RazerAttack" };
+			std::vector<std::string> states = { "Idle", "Move", "CycloneAttack" };
 			for (auto& states : states)
 			{
 				m_animationValidGraph[states][states] = true;
 			}
 			m_animationValidGraph["Idle"]["Move"] = true;
 			m_animationValidGraph["Move"]["Idle"] = true;
-			m_animationValidGraph["Idle"]["RazerAttack"] = true;
-			m_animationValidGraph["RazerAttack"]["Idle"] = true;
-			m_animationValidGraph["Move"]["RazerAttack"] = true;
-			m_animationValidGraph["RazerAttack"]["Move"] = true;
+			m_animationValidGraph["Idle"]["CycloneAttack"] = true;
+			m_animationValidGraph["CycloneAttack"]["Idle"] = true;
+			m_animationValidGraph["Move"]["CycloneAttack"] = true;
+			m_animationValidGraph["CycloneAttack"]["Move"] = true;
 
 			// Initialize animation delay graph
-			m_animationDelayGraph["RazerAttack"]["RazerAttack"] = 0.5;
-			m_animationDelayGraph["RazerAttack"]["Idle"] = 0.5;
-			m_animationDelayGraph["RazerAttack"]["Move"] = 0.5;
+			m_animationDelayGraph["CycloneAttack"]["CycloneAttack"] = 0.5;
+			m_animationDelayGraph["CycloneAttack"]["Idle"] = 0.5;
+			m_animationDelayGraph["CycloneAttack"]["Move"] = 0.5;
 		}
 
 		virtual void Update(double dt) override {
@@ -62,9 +62,9 @@ namespace gswy
 
 			{
 				// Turn on or off the razer sfx
-				auto razer_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::RAZER_SFX)[0];
+				auto razer_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];
 				auto razer_sfx_active = GetComponent<ActiveCom>(razer_sfx);
-				razer_sfx_active->SetActive(m_currentAnimationState == "RazerAttack");
+				razer_sfx_active->SetActive(m_currentAnimationState == "CycloneAttack");
 			}
 
 			// Reduce time delay

@@ -112,7 +112,17 @@ namespace gswy
 
 			if (input->IsKeyPressed(KEY_E))
 			{
-				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(ActiveSkillType::RAZER);
+				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(ActiveSkillType::CYCLONE);
+				if (skill != nullptr)
+				{
+					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
+					queue->Publish(e);
+				}
+			}
+
+			if (input->IsKeyTriggered(KEY_R))
+			{
+				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(4);
 				if (skill != nullptr)
 				{
 					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);

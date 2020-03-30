@@ -69,6 +69,10 @@ namespace gswy
 		{
 			return m_MaxHP;
 		}
+		double GetHP()
+		{
+			return m_HP;
+		}
 
 	private:
 		double m_HP;

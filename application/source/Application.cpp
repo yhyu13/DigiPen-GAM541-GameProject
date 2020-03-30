@@ -16,6 +16,7 @@ Creation date	: 01/26/2020
 
 #include "EngineExport.h"
 #include "Import.h"
+#include "engine/Main.h"
 
 using namespace gswy;
 

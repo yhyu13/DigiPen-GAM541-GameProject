@@ -162,7 +162,7 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			switch (entityB.m_type)
 			{
-			case GameObjectType::RAZER_SFX:
+			case GameObjectType::CYCLONE_SFX:
 			{
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
 				ComponentDecorator<CoolDownCom, GameObjectType> cooldown;
@@ -254,6 +254,14 @@ namespace gswy
 					HitPrevention->Add(entityA);
 					HitPoint->AddHitPoint(-25);
 				}
+			}
+			break;
+
+			case GameObjectType::RAZOR:
+			{
+				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				m_parentWorld->Unpack(entityA, HitPoint);
+				HitPoint->AddHitPoint(-0.5);
 			}
 			break;
 

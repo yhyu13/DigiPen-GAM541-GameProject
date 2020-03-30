@@ -25,7 +25,7 @@ Creation date	: 01/26/2020
 #include "engine/input/InputManager.h"
 
 ///// Entry point /////
-#include "engine/Main.h"
+//#include "engine/Main.h"
 
 ///// Memory point /////
 #include "engine/allocator/MemoryManager.h"
@@ -34,6 +34,7 @@ Creation date	: 01/26/2020
 #include "engine/input/InputManager.h"
 
 ///// rendering /////
+#include "engine/renderer/Animation.h"
 #include "engine/renderer/Renderer2D.h"
 #include "engine/renderer/Shader.h"
 #include "engine/renderer/Sprite.h"

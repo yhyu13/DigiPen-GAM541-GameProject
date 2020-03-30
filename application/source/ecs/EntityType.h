@@ -36,8 +36,9 @@ namespace gswy
 		BOLT_STRIKE,
 		BOLT_CHANNEL,
 		ICEBALL,
-		RAZER_SFX,
+		CYCLONE_SFX,
 		ENEMY_PROJECTILE,
+		RAZOR,
 
 		NUM
 	};
