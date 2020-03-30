@@ -225,19 +225,8 @@ namespace gswy
 			case GameObjectType::RAZOR:
 			{
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
-				ComponentDecorator<HitPreventionCom<GameObjectType>, GameObjectType> HitPrevention;
 				m_parentWorld->Unpack(entityA, HitPoint);
-				m_parentWorld->Unpack(entityB, HitPrevention);
-
-				auto razorHitPoint = GetComponent<HitPointCom>(entityB);
-
-				if (!HitPrevention->IsIncluded(entityA))
-				{
-					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-10);
-					razorHitPoint->AddHitPoint(-5);
-				}
-
+				HitPoint->AddHitPoint(-0.5);
 			}
 			break;
 

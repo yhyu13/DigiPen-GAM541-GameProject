@@ -89,9 +89,6 @@ namespace gswy
 
 		void OnSkillUse(EventQueue<GameObjectType, EventType>::EventPtr event)
 		{
-			// TODO: handle things like fire-weapon
-
-			APP_DEBUG("Skill Used: {0}", event->m_type);
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto skillUseEvent = std::static_pointer_cast<SkillUseEvent>(event);
@@ -123,7 +120,6 @@ namespace gswy
 							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
 						}
 						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 						weapon.AddComponent(transform);
 						auto particle = ParticleCom();
 						particle.Init<ExplosionParticle>();
@@ -163,7 +159,6 @@ namespace gswy
 							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
 						}
 						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 						weapon.AddComponent(transform);
 						auto animCom = AnimationCom();
 						animCom.Add("iceBallAnim1", "Move");
@@ -220,9 +215,7 @@ namespace gswy
 				aabb.ChooseShape("Circle", 0.1);
 				weapon.AddComponent(aabb);
 
-				weapon.AddComponent(LifeTimeCom(5.0));
-				weapon.AddComponent(HitPointCom());
-				weapon.AddComponent(HitPreventionCom<GameObjectType>());
+				weapon.AddComponent(LifeTimeCom(3.0));
 
 				auto targetEntityComponent = TargetEntityComponent();
 				weapon.AddComponent(targetEntityComponent);
@@ -235,8 +228,6 @@ namespace gswy
 			ActiveSkillType type = forkEvent->m_skillType;
 			glm::vec2 position = forkEvent->m_position;
 			float rotation = forkEvent->m_rotation;
-
-			APP_DEBUG("Fork Event Received: {0}", forkEvent->m_type);
 
 			auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 
@@ -262,7 +253,6 @@ namespace gswy
 								weapon_rot += RAND_F(-45, 45) * DEG2RAD;
 							}
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-							//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 							weapon.AddComponent(transform);
 							auto particle = ParticleCom();
 							particle.Init<ExplosionParticle>();
@@ -285,8 +275,6 @@ namespace gswy
 					}
 				}
 			}
-
-			APP_DEBUG("Fork Event PROCESSED: {0}", forkEvent->m_type);
 		}
 
 	private:
