@@ -92,100 +92,20 @@
           "path": "./asset/Sprites/TowerLightning.png"
         },
         {
-          "name": "ffireball_0001",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0001.png"
+          "name": "Fireball",
+          "path": "./asset/Sprites/Fireball.png"
         },
         {
-          "name": "ffireball_0002",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0002.png"
+          "name": "Iceball",
+          "path": "./asset/Sprites/Iceball.png"
         },
         {
-          "name": "ffireball_0003",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0003.png"
+          "name": "Lightningbolt_strike",
+          "path": "./asset/Sprites/Lightningbolt_strike.png"
         },
         {
-          "name": "ffireball_0004",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0004.png"
-        },
-        {
-          "name": "ffireball_0005",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0005.png"
-        },
-        {
-          "name": "ffireball_0006",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Flames/Fireball 2/ffireball_0006.png"
-        },
-        {
-          "name": "bolt_tesla_0001",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0001.png"
-        },
-        {
-          "name": "bolt_tesla_0002",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0002.png"
-        },
-        {
-          "name": "bolt_tesla_0003",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0003.png"
-        },
-        {
-          "name": "bolt_tesla_0004",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0004.png"
-        },
-        {
-          "name": "bolt_tesla_0005",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0005.png"
-        },
-        {
-          "name": "bolt_tesla_0006",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0006.png"
-        },
-        {
-          "name": "bolt_tesla_0007",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0007.png"
-        },
-        {
-          "name": "bolt_tesla_0008",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0008.png"
-        },
-        {
-          "name": "bolt_tesla_0009",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Lightning/bolt/bolt_tesla_0009.png"
-        },
-        {
-          "name": "iceball_0001",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0001.png"
-        },
-        {
-          "name": "iceball_0002",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0002.png"
-        },
-        {
-          "name": "iceball_0003",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0003.png"
-        },
-        {
-          "name": "iceball_0004",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0004.png"
-        },
-        {
-          "name": "iceball_0005",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0005.png"
-        },
-        {
-          "name": "iceball_0006",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0006.png"
-        },
-        {
-          "name": "iceball_0007",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0007.png"
-        },
-        {
-          "name": "iceball_0008",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0008.png"
-        },
-        {
-          "name": "iceball_0009",
-          "path": "./asset/TopDownGunPack/TopDownGunPack/Sprites/Ice/Ice Ball/iceball_0009.png"
+          "name": "Lightningbolt_channel",
+          "path": "./asset/Sprites/Lightningbolt_channel.png"
         }
       ]
     },
@@ -375,8 +295,8 @@
         {
           "name": "fireBallAnim1",
           "properties": {
-            "texture-name": "ffireball_000",
-            "x": 0,
+            "texture-name": "Fireball",
+            "x": 64,
             "y": 0,
             "width": 64,
             "height": 64,
@@ -387,8 +307,20 @@
         {
           "name": "boltAnim1",
           "properties": {
-            "texture-name": "bolt_tesla_000",
-            "x": 0,
+            "texture-name": "Lightningbolt_strike",
+            "x": 512,
+            "y": 0,
+            "width": 512,
+            "height": 512,
+            "delay": 1.0,
+            "frame-count": 30.0
+          }
+        },
+        {
+          "name": "boltAnim2",
+          "properties": {
+            "texture-name": "Lightningbolt_channel",
+            "x": 512,
             "y": 0,
             "width": 512,
             "height": 512,
@@ -399,8 +331,8 @@
         {
           "name": "iceBallAnim1",
           "properties": {
-            "texture-name": "iceball_000",
-            "x": 0,
+            "texture-name": "Iceball",
+            "x": 64,
             "y": 0,
             "width": 64,
             "height": 64,

@@ -173,12 +173,13 @@ namespace gswy
 						{
 							auto pos = event->m_pos;
 							auto rot = event->m_rot;
-							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT);
+							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT_STRIKE);
 							auto active = ActiveCom();
 							weapon.AddComponent(active);
 							weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));
 							auto weapon_rot = rot;//+ RAND_F(-90, 90) * DEG2RAD;
 							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+							weapon.AddComponent(transform);
 							auto attach = AttachedMovementCom();
 							attach.followPos = true;
 							attach.rPos = ToVec(weapon_rot) * .5f;
@@ -194,7 +195,7 @@ namespace gswy
 							aabb.SetPos3D(transform.GetPos3D());
 							aabb.ChooseShape("AABB", 0.25, 1.0);
 							weapon.AddComponent(aabb);
-							weapon.AddComponent(LifeTimeCom(3));
+							weapon.AddComponent(LifeTimeCom(0.5));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
 						}
 					}
@@ -262,7 +263,7 @@ namespace gswy
 					//num_spawn+=1;
 					//std::cerr << 2*num_spawn << '\n';
 					/*{
-						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT);
+						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::BOLT_STRIKE);
 						auto active = ActiveCom();
 						weapon.AddComponent(active);
 						weapon.AddComponent(OwnershiptCom<GameObjectType>(event->m_entity));

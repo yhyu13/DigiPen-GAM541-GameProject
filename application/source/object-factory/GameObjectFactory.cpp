@@ -179,23 +179,30 @@ namespace gswy {
 
 					if (name._Equal("fireBallAnim1")) {
 						auto fireBallAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
-						for (int k = 1; k <= 6; ++k) {
-							fireBallAnim1->AddFrame(textureName + Str(k), x, y, width, height, delay / frameCount);
+						for (int k = 0; k < 6; ++k) {
+							fireBallAnim1->AddFrame(textureName, x*k, y, width, height, delay / frameCount);
 						}
 						continue;
 					}
 
 					if (name._Equal("boltAnim1")) {
 						auto boltAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
-						for (int k = 1; k <= 9; ++k) {
-							boltAnim1->AddFrame(textureName + Str(k), 0, 0, 512, 512, 1.0 / 30.0);
+						for (int k = 0; k < 10; ++k) {
+							boltAnim1->AddFrame(textureName, x*k, y, width, height, delay / frameCount);
+						}
+					}
+
+					if (name._Equal("boltAnim2")) {
+						auto boltAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
+						for (int k = 0; k < 10; ++k) {
+							boltAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
 						}
 					}
 
 					if (name._Equal("iceBallAnim1")) {
 						auto boltAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
-						for (int k = 1; k <= 9; ++k) {
-							boltAnim1->AddFrame(textureName + Str(k), 0, 0, 64, 64, 1.0 / 15.0);
+						for (int k = 0; k < 11; ++k) {
+							boltAnim1->AddFrame(textureName, x*k, y, width, height, delay / frameCount);
 						}
 					}
 

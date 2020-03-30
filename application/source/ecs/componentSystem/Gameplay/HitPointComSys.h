@@ -178,7 +178,7 @@ namespace gswy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-10);
+					HitPoint->AddHitPoint(-15);
 				}
 
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
@@ -201,7 +201,7 @@ namespace gswy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-5);
+					HitPoint->AddHitPoint(-10);
 				}
 			}
 			break;
@@ -217,7 +217,22 @@ namespace gswy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-5);
+					HitPoint->AddHitPoint(-10);
+				}
+			}
+			break;
+			case GameObjectType::BOLT_STRIKE:
+			{
+				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				ComponentDecorator<HitPreventionCom<GameObjectType>, GameObjectType> HitPrevention;
+				m_parentWorld->Unpack(entityA, HitPoint);
+				m_parentWorld->Unpack(entityB, HitPrevention);
+
+				// Note: Fireball has hit prevention that only applies one hit to enemy
+				if (!HitPrevention->IsIncluded(entityA))
+				{
+					HitPrevention->Add(entityA);
+					HitPoint->AddHitPoint(-25);
 				}
 			}
 			break;

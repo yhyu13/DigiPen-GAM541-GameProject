@@ -30,7 +30,8 @@ std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
 	case gswy::GameObjectType::TOWER_ICE: return o << "TOWER_ICE";
 	case gswy::GameObjectType::TOWER_LIGHTNING: return o << "TOWER_LIGHTNING";
 	case gswy::GameObjectType::FIREBALL: return o << "FIREBALL";
-	case gswy::GameObjectType::BOLT: return o << "BOLT";
+	case gswy::GameObjectType::BOLT_STRIKE: return o << "BOLT_STRIKE";
+	case gswy::GameObjectType::BOLT_CHANNEL: return o << "BOLT_CHANNEL";
 	case gswy::GameObjectType::ICEBALL: return o << "ICEBALL";
 	case gswy::GameObjectType::CYCLONE_SFX: return o << "CYCLONE_SFX";
 	case gswy::GameObjectType::ENEMY_PROJECTILE: return o << "ENEMY_PROJECTILE";
