@@ -128,6 +128,7 @@ namespace gswy
 
 		void PLAYER(const Entity<GameObjectType>& entityA, const Entity<GameObjectType>& entityB)
 		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			switch (entityB.m_type)
 			{
 			case GameObjectType::ENEMY_PROJECTILE:
@@ -141,9 +142,13 @@ namespace gswy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-10);
+					HitPoint->AddHitPoint(-5);
 
 					PRINT("Player is hit! HP: " + Str(HitPoint->GetPercentageHP()*100) + "%");
+
+					auto speedDownBuff = MemoryManager::Make_shared<ModifySpeedPercentBuff>(0.33, 0.5);
+					auto e = MemoryManager::Make_shared<AddBuffEvent>(entityA, speedDownBuff, true);
+					queue->Publish(e);
 				}
 			}	
 				break;
@@ -229,6 +234,7 @@ namespace gswy
 					HitPrevention->Add(entityA);
 					HitPoint->AddHitPoint(-10);
 
+					// Iceball makes target it hit slow down
 					auto speedDownBuff = MemoryManager::Make_shared<ModifySpeedPercentBuff>(0.5, 1);
 					auto e = MemoryManager::Make_shared<AddBuffEvent>(entityA, speedDownBuff, true);
 					queue->Publish(e);

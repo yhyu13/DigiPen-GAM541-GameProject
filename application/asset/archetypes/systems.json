@@ -11,9 +11,6 @@
 	  
       "weapon",
       
-	  "attached-movement",
-      "physics",
-      
       "spawn",
       "sound",
       "hitpoint",
@@ -21,6 +18,9 @@
 	  "lifetime",
 	  "fade",
 	  "buff",
+	  
+	  "attached-movement",
+      "physics",
 	  
 	  "animation",
 	  "minimap",
