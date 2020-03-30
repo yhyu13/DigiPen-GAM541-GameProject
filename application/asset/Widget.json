@@ -1,0 +1,12 @@
+{
+  "Widget": [
+    {
+      "NewGame": "./asset/play1.png",
+      "HowToPlay": "./asset/howToPlay1.png",
+      "Option": "./asset/quit1.png",
+	  "Exit": "./asset/quit1.png",
+	  "Resume": "./asset/quit1.png",
+	  "MainMenu": "./asset/quit1.png"
+    }
+  ]
+}
