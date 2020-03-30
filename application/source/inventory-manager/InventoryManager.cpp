@@ -44,6 +44,7 @@ namespace gswy
 			{
 				item->m_text.push_back(text[j].asString());
 			}
+			item->m_keyEventType = itemData["key-event"].asString();
 			m_items->Add(item);
 		}
 	}

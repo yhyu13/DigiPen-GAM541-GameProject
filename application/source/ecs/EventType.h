@@ -47,6 +47,8 @@ namespace gswy
 		LOAD_MAIN_MENU,
 		LOAD_GAME_WORLD,
 
+		KEY_BIND_EVENT,
+
 		NUM
 	};
 }

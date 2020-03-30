@@ -18,7 +18,9 @@ Creation date	: 03/20/2020
 #include "skill-system/support-skills/Forking.h"
 #include "skill-system/active-skills/RazorAttack.h"
 #include "skill-system/active-skills/CycloneAttack.h"
+#include "ecs/CustomEvents.h"
 #include "Skill.h"
+#include "engine/allocator/MemoryManager.h"
 
 namespace gswy
 {
@@ -104,6 +106,11 @@ namespace gswy
 			{
 				m_skills[skill_] = newSkill; // new active skill
 			}
+
+			// add key binding
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto event = MemoryManager::Make_shared<KeyBindEvent>(skillNumber, item->m_keyEventType);
+			queue->Publish(event);
 		}
 		else if (slot_ > 0 && item->m_category._Equal("SUPPORT"))
 		{
