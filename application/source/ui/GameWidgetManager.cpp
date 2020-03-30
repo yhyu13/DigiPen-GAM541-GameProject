@@ -218,12 +218,23 @@ namespace gswy {
 						else
 						{
 							//Item has been purchased
-							unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
 							if (ImGui::BeginMenu("InstallPopup"))
 							{
-								if (ImGui::MenuItem("ACTIVE"))
+								if (ImGui::MenuItem("Bind to (Q)"))
 								{
-									InventoryManager::GetInstance()->Install(tabNum, 1, (*it));
+									InventoryManager::GetInstance()->Install(1, 1, (*it));
+								}
+								if (ImGui::MenuItem("Bind to (W)"))
+								{
+									InventoryManager::GetInstance()->Install(2, 1, (*it));
+								}
+								if (ImGui::MenuItem("Bind to (E)"))
+								{
+									InventoryManager::GetInstance()->Install(3, 1, (*it));
+								}
+								if (ImGui::MenuItem("Bind to (R)"))
+								{
+									InventoryManager::GetInstance()->Install(4, 1, (*it));
 								}
 								ImGui::EndMenu();
 							}
@@ -278,20 +289,65 @@ namespace gswy {
 						{
 							if (ImGui::BeginMenu("SupportInstall"))
 							{
-								if (ImGui::MenuItem("SUPPORT 1"))
+								if (ImGui::BeginMenu("SUPPORT 1"))
 								{
-									unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-									InventoryManager::GetInstance()->Install(tabNum, 2, (*it));
+									if (ImGui::MenuItem("Bind to (Q)"))
+									{
+										InventoryManager::GetInstance()->Install(1, 2, (*it));
+									}
+									if (ImGui::MenuItem("Bind to (W)"))
+									{
+										InventoryManager::GetInstance()->Install(2, 2, (*it));
+									}
+									if (ImGui::MenuItem("Bind to (E)"))
+									{
+										InventoryManager::GetInstance()->Install(3, 2, (*it));
+									}
+									if (ImGui::MenuItem("Bind to (R)"))
+									{
+										InventoryManager::GetInstance()->Install(4, 2, (*it));
+									}
+									ImGui::EndMenu();
 								}
-								if (ImGui::MenuItem("SUPPORT 2"))
+								if (ImGui::BeginMenu("SUPPORT 2"))
 								{
-									unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-									InventoryManager::GetInstance()->Install(tabNum, 3, (*it));
+									if (ImGui::MenuItem("Bind to (Q)"))
+									{
+										InventoryManager::GetInstance()->Install(1, 3, (*it));
+									}
+									if (ImGui::MenuItem("Bind to (W)"))
+									{
+										InventoryManager::GetInstance()->Install(2, 3, (*it));
+									}
+									if (ImGui::MenuItem("Bind to (E)"))
+									{
+										InventoryManager::GetInstance()->Install(3, 3, (*it));
+									}
+									if (ImGui::MenuItem("Bind to (R)"))
+									{
+										InventoryManager::GetInstance()->Install(4, 3, (*it));
+									}
+									ImGui::EndMenu();
 								}
-								if (ImGui::MenuItem("SUPPORT 3"))
+								if (ImGui::BeginMenu("SUPPORT 3"))
 								{
-									unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-									InventoryManager::GetInstance()->Install(tabNum, 4, (*it));
+									if (ImGui::MenuItem("Bind to (Q)"))
+									{
+										InventoryManager::GetInstance()->Install(1, 4, (*it));
+									}
+									if (ImGui::MenuItem("Bind to (W)"))
+									{
+										InventoryManager::GetInstance()->Install(2, 4, (*it));
+									}
+									if (ImGui::MenuItem("Bind to (E)"))
+									{
+										InventoryManager::GetInstance()->Install(3, 4, (*it));
+									}
+									if (ImGui::MenuItem("Bind to (R)"))
+									{
+										InventoryManager::GetInstance()->Install(4, 4, (*it));
+									}
+									ImGui::EndMenu();
 								}
 								ImGui::EndMenu();
 							}
@@ -331,7 +387,7 @@ namespace gswy {
 
 		if (ImGui::BeginTabBar("InventoryTabBar"))
 		{
-			if (ImGui::BeginTabItem("1"))
+			if (ImGui::BeginTabItem("Q"))
 			{
 				m_CurrentTab = 1;
 
@@ -351,7 +407,7 @@ namespace gswy {
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("2"))
+			if (ImGui::BeginTabItem("W"))
 			{
 				m_CurrentTab = 2;
 
@@ -371,7 +427,7 @@ namespace gswy {
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("3"))
+			if (ImGui::BeginTabItem("E"))
 			{
 				m_CurrentTab = 3;
 
@@ -391,7 +447,7 @@ namespace gswy {
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("4"))
+			if (ImGui::BeginTabItem("R"))
 			{
 				m_CurrentTab = 4;
 
