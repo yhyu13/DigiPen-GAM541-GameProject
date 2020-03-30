@@ -16,6 +16,7 @@ Creation date: 03/12/2020
 #include "../skill-manager/SkillManager.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <json/json.h>
 
 namespace gswy {
 
@@ -34,6 +35,10 @@ namespace gswy {
 		m_PauseMenu.manager = this;
 		m_ShopMenu.manager = this;
 		m_InventoryMenu.manager = this;
+
+		LoadWidget("./asset/Widget.json");
+		m_MainMenu.Init();
+		m_PauseMenu.Init();
 	}
 
 	void WidgetManager::RenderUI()
@@ -43,6 +48,24 @@ namespace gswy {
 		if (m_PauseMenu.GetVisible())        m_PauseMenu.Render();
 		if (m_ShopMenu.GetVisible())         m_ShopMenu.Render();
 		if (m_InventoryMenu.GetVisible())    m_InventoryMenu.Render();
+	}
+
+	void WidgetManager::LoadWidget(const std::string& filepath)
+	{
+		Json::Value root;
+		std::ifstream file(filepath, std::ifstream::binary);
+		file >> root;
+		Json::Value widgets = root["Widget"];
+		for (int i = 0; i < widgets.size(); ++i)
+		{
+			Json::Value widgetData = widgets[i];
+			GetMainMenu().m_TexturePath_NewGame = widgetData["NewGame"].asString();
+			GetMainMenu().m_TexturePath_HowToPlay = widgetData["HowToPlay"].asString();
+			GetMainMenu().m_TexturePath_Option = widgetData["Option"].asString();
+			GetMainMenu().m_TexturePath_Exit = widgetData["Exit"].asString();
+			GetPauseMenu().m_TexturePath_Resume = widgetData["Resume"].asString();
+			GetPauseMenu().m_TexturePath_MainMenu = widgetData["MainMenu"].asString();
+		}
 	}
 
 	void MainMenu::Render()
@@ -55,20 +78,19 @@ namespace gswy {
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		float f = 0.0;
 		ImGui::SetWindowFontScale(1.0);
-
-		if (ImGui::Button("New Game", ImVec2(500, 100)))
+		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), ImVec2(500, 100),ImVec2(0,1), ImVec2(1,0), -1, ImVec4(1.0f,1.0f,1.0f,1.0f)))
 		{
 			manager->InvokeButton("New Game");
 		}
-		if (ImGui::Button("How To Play", ImVec2(500, 100)))
+		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), ImVec2(500, 100)))
 		{
 			manager->InvokeButton("How To Play");
 		}
-		if (ImGui::Button("Option", ImVec2(500, 100)))
+		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), ImVec2(500, 100)))
 		{
 			manager->InvokeButton("Option");
 		}
-		if (ImGui::Button("Exit", ImVec2(500, 100)))
+		if (ImGui::ImageButton((void*)m_Texture_Exit->GetRendererID(), ImVec2(500, 100)))
 		{
 			manager->InvokeButton("Exit");
 		}
@@ -329,7 +351,7 @@ namespace gswy {
 
 		if (ImGui::BeginTabBar("InventoryTabBar"))
 		{
-			if (ImGui::BeginTabItem("1"))
+			if (ImGui::BeginTabItem("Q"))
 			{
 				m_CurrentTab = 1;
 
@@ -349,7 +371,7 @@ namespace gswy {
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("2"))
+			if (ImGui::BeginTabItem("W"))
 			{
 				m_CurrentTab = 2;
 
@@ -369,7 +391,7 @@ namespace gswy {
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("3"))
+			if (ImGui::BeginTabItem("E"))
 			{
 				m_CurrentTab = 3;
 
@@ -389,7 +411,7 @@ namespace gswy {
 				ImGui::Dummy(ImVec2(500, 25));
 				ImGui::EndTabItem();
 			}
-			if (ImGui::BeginTabItem("4"))
+			if (ImGui::BeginTabItem("R"))
 			{
 				m_CurrentTab = 4;
 

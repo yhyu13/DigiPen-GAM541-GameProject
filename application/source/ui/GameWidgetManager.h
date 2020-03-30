@@ -14,6 +14,7 @@ Creation date: 03/12/2020
 #include "engine/ui/Widget.h"
 #include "engine/renderer/Buffer.h"
 #include "inventory-manager/Item.h"
+#include "engine/renderer/Texture.h"
 
 namespace gswy {
 
@@ -46,16 +47,32 @@ namespace gswy {
 		float m_Sanity;
 
 		std::shared_ptr<FrameBuffer> m_FrameBuffer;
-		
 	};
 
 	//new game, continue, option, how to play, quit
 	class MainMenu : public Widget
 	{
 	public:
-		MainMenu() { IsVisible = false; };
+		MainMenu() { IsVisible = false; }
+		void Init() override
+		{
+			m_Texture_NewGame = Texture2D::Create(m_TexturePath_NewGame);
+			m_Texture_HowToPlay = Texture2D::Create(m_TexturePath_HowToPlay);
+			m_Texture_Option = Texture2D::Create(m_TexturePath_Option);
+			m_Texture_Exit = Texture2D::Create(m_TexturePath_Exit);
+		}
 		void Render() override;
 		WidgetManager* manager;
+
+		std::string m_TexturePath_NewGame;
+		std::string m_TexturePath_HowToPlay;
+		std::string m_TexturePath_Option;
+		std::string m_TexturePath_Exit;
+	private:
+		std::shared_ptr<Texture2D> m_Texture_NewGame;
+		std::shared_ptr<Texture2D> m_Texture_HowToPlay;
+		std::shared_ptr<Texture2D> m_Texture_Option;
+		std::shared_ptr<Texture2D> m_Texture_Exit;
 	};
 
 	//Resume, option, how to play, quit & save
@@ -63,8 +80,19 @@ namespace gswy {
 	{
 	public:
 		PauseMenu() { IsVisible = false; };
+		void Init() override 
+		{
+			m_Texture_Resume = Texture2D::Create(m_TexturePath_Resume);
+			m_Texture_MainMenu = Texture2D::Create(m_TexturePath_MainMenu);
+		}
 		void Render() override;
 		WidgetManager* manager;
+
+		std::string m_TexturePath_Resume;
+		std::string m_TexturePath_MainMenu;
+	private:
+		std::shared_ptr<Texture2D> m_Texture_Resume;
+		std::shared_ptr<Texture2D> m_Texture_MainMenu;
 	};
 
 	//Purchase tower upgrades, purchase player skill upgrades
@@ -101,6 +129,7 @@ namespace gswy {
 
 		static WidgetManager* GetInstance();
 
+		void LoadWidget(const std::string& filepath);
 		void RenderUI();
 		void SetVisible(Widget& widget, bool visible) { widget.SetVisible(visible); }
 		bool GetVisible(Widget& widget) { return widget.GetVisible(); }
