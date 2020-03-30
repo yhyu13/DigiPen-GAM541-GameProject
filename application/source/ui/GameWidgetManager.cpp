@@ -289,61 +289,65 @@ namespace gswy {
 						{
 							if (ImGui::BeginMenu("SupportInstall"))
 							{
-								if (ImGui::BeginMenu("SUPPORT 1"))
+								if (ImGui::BeginMenu("Bind to (Q)"))
 								{
-									if (ImGui::MenuItem("Bind to (Q)"))
+									if (ImGui::MenuItem("SUPPORT 1"))
 									{
 										InventoryManager::GetInstance()->Install(1, 2, (*it));
 									}
-									if (ImGui::MenuItem("Bind to (W)"))
-									{
-										InventoryManager::GetInstance()->Install(2, 2, (*it));
-									}
-									if (ImGui::MenuItem("Bind to (E)"))
-									{
-										InventoryManager::GetInstance()->Install(3, 2, (*it));
-									}
-									if (ImGui::MenuItem("Bind to (R)"))
-									{
-										InventoryManager::GetInstance()->Install(4, 2, (*it));
-									}
-									ImGui::EndMenu();
-								}
-								if (ImGui::BeginMenu("SUPPORT 2"))
-								{
-									if (ImGui::MenuItem("Bind to (Q)"))
+									if (ImGui::MenuItem("SUPPORT 2"))
 									{
 										InventoryManager::GetInstance()->Install(1, 3, (*it));
 									}
-									if (ImGui::MenuItem("Bind to (W)"))
-									{
-										InventoryManager::GetInstance()->Install(2, 3, (*it));
-									}
-									if (ImGui::MenuItem("Bind to (E)"))
-									{
-										InventoryManager::GetInstance()->Install(3, 3, (*it));
-									}
-									if (ImGui::MenuItem("Bind to (R)"))
-									{
-										InventoryManager::GetInstance()->Install(4, 3, (*it));
-									}
-									ImGui::EndMenu();
-								}
-								if (ImGui::BeginMenu("SUPPORT 3"))
-								{
-									if (ImGui::MenuItem("Bind to (Q)"))
+									if (ImGui::MenuItem("SUPPORT 3"))
 									{
 										InventoryManager::GetInstance()->Install(1, 4, (*it));
 									}
-									if (ImGui::MenuItem("Bind to (W)"))
+									ImGui::EndMenu();
+								}
+								if (ImGui::BeginMenu("Bind to (W)"))
+								{
+									if (ImGui::MenuItem("SUPPORT 1"))
+									{
+										InventoryManager::GetInstance()->Install(2, 2, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 2"))
+									{
+										InventoryManager::GetInstance()->Install(2, 3, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 3"))
 									{
 										InventoryManager::GetInstance()->Install(2, 4, (*it));
 									}
-									if (ImGui::MenuItem("Bind to (E)"))
+									ImGui::EndMenu();
+								}
+								if (ImGui::BeginMenu("Bind to (E)"))
+								{
+									if (ImGui::MenuItem("SUPPORT 1"))
+									{
+										InventoryManager::GetInstance()->Install(3, 2, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 2"))
+									{
+										InventoryManager::GetInstance()->Install(3, 3, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 3"))
 									{
 										InventoryManager::GetInstance()->Install(3, 4, (*it));
 									}
-									if (ImGui::MenuItem("Bind to (R)"))
+									ImGui::EndMenu();
+								}
+								if (ImGui::BeginMenu("Bind to (R)"))
+								{
+									if (ImGui::MenuItem("SUPPORT 1"))
+									{
+										InventoryManager::GetInstance()->Install(4, 2, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 2"))
+									{
+										InventoryManager::GetInstance()->Install(4, 3, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 3"))
 									{
 										InventoryManager::GetInstance()->Install(4, 4, (*it));
 									}

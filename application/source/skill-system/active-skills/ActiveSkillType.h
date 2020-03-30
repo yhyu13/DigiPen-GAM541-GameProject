@@ -16,11 +16,11 @@ namespace gswy
 {
 	enum class ActiveSkillType
 	{
+		UNKNOWN = 0,
 		FIRE_BALL,
 		ICE_BALL,
 		RAZOR,
 		CYCLONE,
-		UNKNOWN,
 		NUM
 	};
 }

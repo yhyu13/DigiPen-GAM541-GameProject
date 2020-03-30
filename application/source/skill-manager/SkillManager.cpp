@@ -16,6 +16,7 @@ Creation date	: 03/20/2020
 #include "skill-system/active-skills/IceballAttack.h"
 #include "skill-system/support-skills/MultipleProjectile.h"
 #include "skill-system/support-skills/Forking.h"
+#include "skill-system/support-skills/IncreaseAOE.h"
 #include "skill-system/active-skills/RazorAttack.h"
 #include "skill-system/active-skills/CycloneAttack.h"
 #include "ecs/CustomEvents.h"
@@ -39,14 +40,28 @@ namespace gswy
 	{
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	std::shared_ptr<SupportSkill> SkillManager::GetSupportingSkill(const std::string& type)
 	{
 		if (type._Equal("MULTIPLE-PROJECTILE"))
 		{
-			return std::make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
+			return std::make_shared<MultipleProjectile>();
+		}
+		if (type._Equal("FORK"))
+		{
+			return std::make_shared<Forking>();
+		}
+		if (type._Equal("INCREASE-AOE"))
+		{
+			return std::make_shared<IncreaseAOE>();
 		}
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	void SkillManager::AddSkill(const int& skillNumber, const int& slotNumber, std::shared_ptr<Item> item)
 	{
 		/*
@@ -127,12 +142,18 @@ namespace gswy
 
 				if (item->m_type._Equal("MULTIPLE-PROJECTILE"))
 				{
-					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
+					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<MultipleProjectile>();
 					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 				if (item->m_type._Equal("FORK"))
 				{
 					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<Forking>();
+					activeSkill->AddSupportSkill(slot_, supportSkill);
+				}
+
+				if (item->m_type._Equal("INCREASE-AOE"))
+				{
+					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<IncreaseAOE>();
 					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 			}
@@ -247,6 +268,9 @@ namespace gswy
 		return m_skills[skillNumber - 1];
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	std::string SkillManager::GetSkillType(ActiveSkillType type)
 	{
 		if (type == ActiveSkillType::FIRE_BALL)
@@ -272,6 +296,9 @@ namespace gswy
 		return "";
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	std::string SkillManager::GetSkillType(SupportSkillType type)
 	{
 		if (type == SupportSkillType::MULTIPLE_PROJECTILE)
@@ -284,9 +311,17 @@ namespace gswy
 			return "FORK";
 		}
 
+		if (type == SupportSkillType::INCREASE_AOE)
+		{
+			return "INCREASE-AOE";
+		}
+
 		return "";
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	std::set<std::string> SkillManager::GetSkillTags(std::shared_ptr<BaseSkill> skill)
 	{
 		std::set<std::string> result;

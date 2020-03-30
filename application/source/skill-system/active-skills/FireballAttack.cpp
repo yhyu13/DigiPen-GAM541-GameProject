@@ -43,16 +43,4 @@ namespace gswy
 	{
 		return BaseSkill::GetId();
 	}
-
-	void FireballAttack::AddSupportSkill(std::shared_ptr<SupportSkill> skill)
-	{
-		ActiveSkill::AddSupportSkill(skill);
-		skill->HandleSkill(this);
-	}
-
-	void FireballAttack::AddSupportSkill(const int& slot, std::shared_ptr<SupportSkill> skill)
-	{
-		ActiveSkill::AddSupportSkill(slot, skill);
-		skill->HandleSkill(this);
-	}
 }
