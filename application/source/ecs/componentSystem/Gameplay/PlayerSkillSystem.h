@@ -195,6 +195,9 @@ namespace gswy
 
 				weapon.AddComponent(OwnershiptCom<GameObjectType>(player));
 				
+				auto cooldown = CoolDownCom(0.25);
+				weapon.AddComponent(cooldown);
+
 				auto weapon_rot = rot;
 				auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
 				weapon.AddComponent(transform);

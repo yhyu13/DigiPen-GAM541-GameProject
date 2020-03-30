@@ -260,8 +260,22 @@ namespace gswy
 			case GameObjectType::RAZOR:
 			{
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				ComponentDecorator<CoolDownCom, GameObjectType> cooldown;
+				ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner;
 				m_parentWorld->Unpack(entityA, HitPoint);
-				HitPoint->AddHitPoint(-0.5);
+				m_parentWorld->Unpack(entityB, cooldown);
+				m_parentWorld->Unpack(entityB, owner);
+
+				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkill;
+				m_parentWorld->Unpack(owner->GetEntity(), playerSkill);
+
+				// Skill support effect
+				// playerSkill->GetCurrentSkill()->HasSupportSkill();
+
+				if (!cooldown->IsFreezed() && !cooldown->IsCoolDown())
+				{
+					HitPoint->AddHitPoint(-1);
+				}
 			}
 			break;
 
