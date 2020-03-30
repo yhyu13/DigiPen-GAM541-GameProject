@@ -238,12 +238,24 @@ namespace gswy {
 						else
 						{
 							//Item has been purchased
-							unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
+							//unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
 							if (ImGui::BeginMenu("InstallPopup"))
 							{
-								if (ImGui::MenuItem("ACTIVE"))
+								if (ImGui::MenuItem("Bind to Q"))
 								{
-									InventoryManager::GetInstance()->Install(tabNum, 1, (*it));
+									InventoryManager::GetInstance()->Install(1, 1, (*it));
+								}
+								if (ImGui::MenuItem("Bind to W"))
+								{
+									InventoryManager::GetInstance()->Install(2, 1, (*it));
+								}
+								if (ImGui::MenuItem("Bind to E"))
+								{
+									InventoryManager::GetInstance()->Install(3, 1, (*it));
+								}
+								if (ImGui::MenuItem("Bind to R"))
+								{
+									InventoryManager::GetInstance()->Install(4, 1, (*it));
 								}
 								ImGui::EndMenu();
 							}
