@@ -82,6 +82,8 @@ namespace gswy {
 		float dbToVolume(float db);
 		float VolumeTodb(float volume);
 		FMOD_VECTOR VectorToFmod(const AudioVector3& vPosition);
+		bool FadeIn(int fadetime);
+		bool FadeOut(int fadetime);
 	private:
 		FMODInstance* m_fmodInstance;
 	};

@@ -97,6 +97,18 @@ namespace gswy
 				{
 					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
 					queue->Publish(e);
+
+					if (skill->GetActiveSkillType() == ActiveSkillType::FIRE_BALL)
+					{
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr1");
+						queue->Publish(e1);
+					}
+					else
+					if (skill->GetActiveSkillType() == ActiveSkillType::ICE_BALL)
+					{
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot1");
+						queue->Publish(e1);
+					}
 				}
 			}
 
@@ -107,6 +119,18 @@ namespace gswy
 				{
 					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
 					queue->Publish(e);
+
+					if (skill->GetActiveSkillType() == ActiveSkillType::FIRE_BALL)
+					{
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr");
+						queue->Publish(e1);
+					}
+					else
+					if (skill->GetActiveSkillType() == ActiveSkillType::ICE_BALL)
+					{
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot");
+						queue->Publish(e1);
+					}
 				}
 			}
 
@@ -163,7 +187,8 @@ namespace gswy
 			switch (mouseBodyCom->GetOtherEntity().m_type)
 			{
 
-			case GameObjectType::TOWER_BUILD: case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
+			case GameObjectType::TOWER_BUILD: case GameObjectType::TOWER_FIRE: 
+			case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
 				m_timeDisableMoveCommand = 0.1;
 				couldMove = false;
 				break;

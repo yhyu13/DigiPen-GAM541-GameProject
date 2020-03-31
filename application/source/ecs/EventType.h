@@ -18,6 +18,7 @@ namespace gswy
 		EMPTY = 0,
 		COLLISION,
 		SOUND,
+		WEAPON_SOUND,
 		DEATH,
 		SPAWN,
 		GC,
