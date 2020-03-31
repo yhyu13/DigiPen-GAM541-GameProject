@@ -78,23 +78,22 @@ namespace gswy {
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		float f = 0.0;
 		ImGui::SetWindowFontScale(1.0);
-		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), ImVec2(480, 100),ImVec2(0,1), ImVec2(1,0), -1, ImVec4(0,0,0,1)))
+		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), ImVec2(480, 100),ImVec2(0,1), ImVec2(1,0), 0, ImVec4(0,0,0,1)))
 		{
 			manager->InvokeButton("New Game");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("How To Play");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("Option");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_Exit->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_Exit->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("Exit");
 		}
-		ImGui::Text("This is some useful text.");
 		ImGui::End();
 	}
 
@@ -172,15 +171,14 @@ namespace gswy {
 
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::SetWindowFontScale(1.0);
-		if (ImGui::ImageButton((void*)m_Texture_Resume->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_Resume->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("Resume");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("Main Menu");
 		}
-		ImGui::Text("This is some useful text.");
 		ImGui::End();
 	}
 
@@ -310,20 +308,69 @@ namespace gswy {
 						{
 							if (ImGui::BeginMenu("SupportInstall"))
 							{
-								if (ImGui::MenuItem("SUPPORT 1"))
+								if (ImGui::BeginMenu("Bind to Q"))
 								{
-									unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-									InventoryManager::GetInstance()->Install(tabNum, 2, (*it));
+									if (ImGui::MenuItem("SUPPORT 1"))
+									{
+										InventoryManager::GetInstance()->Install(1, 2, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 2"))
+									{
+										InventoryManager::GetInstance()->Install(1, 3, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 3"))
+									{
+										InventoryManager::GetInstance()->Install(1, 4, (*it));
+									}
+									ImGui::EndMenu();
 								}
-								if (ImGui::MenuItem("SUPPORT 2"))
+								if (ImGui::BeginMenu("Bind to W"))
 								{
-									unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-									InventoryManager::GetInstance()->Install(tabNum, 3, (*it));
+									if (ImGui::MenuItem("SUPPORT 1"))
+									{
+										InventoryManager::GetInstance()->Install(2, 2, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 2"))
+									{
+										InventoryManager::GetInstance()->Install(2, 3, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 3"))
+									{
+										InventoryManager::GetInstance()->Install(2, 4, (*it));
+									}
+									ImGui::EndMenu();
 								}
-								if (ImGui::MenuItem("SUPPORT 3"))
+								if (ImGui::BeginMenu("Bind to E"))
 								{
-									unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-									InventoryManager::GetInstance()->Install(tabNum, 4, (*it));
+									if (ImGui::MenuItem("SUPPORT 1"))
+									{
+										InventoryManager::GetInstance()->Install(3, 2, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 2"))
+									{
+										InventoryManager::GetInstance()->Install(3, 3, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 3"))
+									{
+										InventoryManager::GetInstance()->Install(3, 4, (*it));
+									}
+									ImGui::EndMenu();
+								}
+								if (ImGui::BeginMenu("Bind to R"))
+								{
+									if (ImGui::MenuItem("SUPPORT 1"))
+									{
+										InventoryManager::GetInstance()->Install(4, 2, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 2"))
+									{
+										InventoryManager::GetInstance()->Install(4, 3, (*it));
+									}
+									if (ImGui::MenuItem("SUPPORT 3"))
+									{
+										InventoryManager::GetInstance()->Install(4, 4, (*it));
+									}
+									ImGui::EndMenu();
 								}
 								ImGui::EndMenu();
 							}
