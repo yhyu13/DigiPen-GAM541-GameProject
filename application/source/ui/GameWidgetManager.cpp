@@ -36,7 +36,7 @@ namespace gswy {
 		m_ShopMenu.manager = this;
 		m_InventoryMenu.manager = this;
 
-		LoadWidget("./asset/Widget.json");
+		LoadWidget("./asset/archetypes/Widget.json");
 		m_MainMenu.Init();
 		m_PauseMenu.Init();
 	}
@@ -78,19 +78,19 @@ namespace gswy {
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		float f = 0.0;
 		ImGui::SetWindowFontScale(1.0);
-		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), ImVec2(500, 100),ImVec2(0,1), ImVec2(1,0), -1, ImVec4(1.0f,1.0f,1.0f,1.0f)))
+		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), ImVec2(480, 100),ImVec2(0,1), ImVec2(1,0), -1, ImVec4(0,0,0,1)))
 		{
 			manager->InvokeButton("New Game");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), ImVec2(500, 100)))
+		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("How To Play");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), ImVec2(500, 100)))
+		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("Option");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_Exit->GetRendererID(), ImVec2(500, 100)))
+		if (ImGui::ImageButton((void*)m_Texture_Exit->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("Exit");
 		}
@@ -172,11 +172,11 @@ namespace gswy {
 
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::SetWindowFontScale(1.0);
-		if (ImGui::Button("Resume", ImVec2(500, 100)))
+		if (ImGui::ImageButton((void*)m_Texture_Resume->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("Resume");
 		}
-		if (ImGui::Button("Main Menu", ImVec2(500, 100)))
+		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), -1, ImVec4(0, 0, 0, 1)))
 		{
 			manager->InvokeButton("Main Menu");
 		}
