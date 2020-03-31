@@ -17,6 +17,7 @@ Creation date	: 01/26/2020
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb_image.h>
 
 namespace gswy {
 
@@ -35,8 +36,8 @@ namespace gswy {
 	}
 
 	
-	Window* Window::InitializeWindow(const WindowProperties& properties) {
-		return new Window(properties);
+	Window* Window::InitializeWindow(const Json::Value& windowConfiguration) {
+		return new Window(windowConfiguration);
 	}
 
 	void Window::Update(double dt) {
@@ -60,29 +61,32 @@ namespace gswy {
 		return glfwWindowShouldClose(m_window);
 	}
 
-	Window::Window(const WindowProperties& properties) {
-		Init(properties);
+	Window::Window(const Json::Value& windowConfiguration) {
+		Init(windowConfiguration);
 	}
 
 	Window::~Window() {
 		Shutdown();
 	}
 
-	void Window::Init(const WindowProperties& properties) {
+	void Window::Init(const Json::Value& windowConfiguration) {
 
-		width = properties.m_width;
-		height = properties.m_height;
-		m_windowProperties.m_width = properties.m_width;
-		m_windowProperties.m_height = properties.m_height;
-		m_windowProperties.m_title = properties.m_title;
-		m_windowProperties.m_input = properties.m_input;
+		width = windowConfiguration["width"].asInt();
+		height = windowConfiguration["height"].asInt();
+		m_windowProperties.m_width = windowConfiguration["width"].asInt();
+		m_windowProperties.m_height = windowConfiguration["height"].asInt();
+		m_windowProperties.m_title = windowConfiguration["title"].asString();
+		m_windowProperties.IsFullScreen = windowConfiguration["full-screen"].asBool();
+
+		m_windowProperties.m_input = InputManager::GetInstance();
+		m_windowProperties.m_input->SetMouseMaxPositions(width, height);
 
 		int success = glfwInit();
 		ASSERT(success < 0, "Failed to initialize GLFW!");
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		if (properties.IsFullScreen)
+		if (m_windowProperties.IsFullScreen)
 		{
 			//Full Screen Settings
 			auto monitor = glfwGetPrimaryMonitor();
@@ -98,13 +102,13 @@ namespace gswy {
 			m_windowProperties.m_width = mode->width;
 			m_windowProperties.m_height = mode->height;
 
-			m_window = glfwCreateWindow(mode->width, mode->height, properties.m_title.c_str(), monitor, NULL);
-			properties.m_input->SetMouseMaxPositions(mode->width, mode->height);
+			m_window = glfwCreateWindow(mode->width, mode->height, m_windowProperties.m_title.c_str(), monitor, NULL);
+			m_windowProperties.m_input->SetMouseMaxPositions(mode->width, mode->height);
 		}
 		else
 		{
-			m_window = glfwCreateWindow(properties.m_width, properties.m_height, properties.m_title.c_str(), nullptr, nullptr);
-			properties.m_input->SetMouseMaxPositions(properties.m_width, properties.m_height);
+			m_window = glfwCreateWindow(m_windowProperties.m_width, m_windowProperties.m_height, m_windowProperties.m_title.c_str(), nullptr, nullptr);
+			m_windowProperties.m_input->SetMouseMaxPositions(m_windowProperties.m_width, m_windowProperties.m_height);
 		}
 		ASSERT(m_window == nullptr, "Failed to create window!");
 
@@ -116,7 +120,7 @@ namespace gswy {
 
 		//Put info to Log
 		ENGINE_INFO(" OpenGL Info:");
-		ENGINE_INFO(" Vender: {0}", glGetString(GL_VENDOR));
+		ENGINE_INFO(" Vendor: {0}", glGetString(GL_VENDOR));
 		ENGINE_INFO(" Renderer: {0}", glGetString(GL_RENDERER));
 		ENGINE_INFO(" Version: {0}", glGetString(GL_VERSION));
 

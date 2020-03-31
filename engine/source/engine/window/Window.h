@@ -16,6 +16,8 @@ Creation date	: 01/26/2020
 #include "engine/EngineCore.h"
 #include "engine/input/InputManager.h"
 
+#include <json/json.h>
+
 struct GLFWwindow;
 
 namespace gswy {
@@ -42,7 +44,7 @@ namespace gswy {
 
 		~Window();
 
-		static Window* InitializeWindow(const WindowProperties& properties = WindowProperties());
+		static Window* InitializeWindow(const Json::Value& engineConfiguration);
 
 		void Update(double dt);
 		void Render();
@@ -58,9 +60,9 @@ namespace gswy {
 
 	private:
 
-		Window(const WindowProperties& properties);
+		Window(const Json::Value& engineConfiguration);
 
-		void Init(const WindowProperties& properties);
+		void Init(const Json::Value& windowConfiguration);
 
 	public:
 		static int width;

@@ -22,6 +22,7 @@ Creation date	: 01/26/2020
 #include "engine/profiling/InstrumentorCore.h"
 
 #include <GLFW/glfw3.h>
+#include <json/json.h>
 
 namespace gswy {
 
@@ -38,7 +39,12 @@ namespace gswy {
 		APP_INFO("Initialized Application Log!");
 
 		s_instance = this;
-		window = std::unique_ptr<Window>(Window::InitializeWindow());
+
+		Json::Value engineConfiguration;
+		std::ifstream file("./asset/engine-configuration/engine-config.json", std::ifstream::binary);
+		file >> engineConfiguration;
+
+		window = std::unique_ptr<Window>(Window::InitializeWindow(engineConfiguration["window"]));
 		MemoryManager::GetInstance()->Init();
 		AudioManager::GetInstance()->Init();
 
