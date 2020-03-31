@@ -13,7 +13,14 @@ Creation date	: 01/26/2020
 - End Header ----------------------------*/
 
 #pragma once
+
 #include "engine/exception/EngineException.h"
+
+#ifndef _DEBUG
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#else
+#pragma comment(linker, "/SUBSYSTEM:console")
+#endif
 
 extern gswy::Engine* gswy::CreateEngineApplication();
 

@@ -142,7 +142,7 @@ project "engine"
 
 project "application"
 	location "application"
-	kind "ConsoleApp"
+	kind "WindowedApp"
 	language "C++"
 	icon "example.ico"
 	targetname ("Light of Empyrion")

@@ -43,6 +43,7 @@ namespace gswy {
 		Json::Value engineConfiguration;
 		std::ifstream file("./asset/engine-configuration/engine-config.json", std::ifstream::binary);
 		file >> engineConfiguration;
+		file.close();
 
 		window = std::unique_ptr<Window>(Window::InitializeWindow(engineConfiguration["window"]));
 		MemoryManager::GetInstance()->Init();
