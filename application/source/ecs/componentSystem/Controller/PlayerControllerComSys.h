@@ -161,17 +161,14 @@ namespace gswy
 			// Handle UI toggling
 			if (GameLevelMapManager::GetInstance()->IsInGame())
 			{
-				if (input->IsKeyTriggered(KEY_I))
+				if (input->IsKeyTriggered(KEY_TAB)) 
 				{
-					bool v = WidgetManager::GetInstance()->GetInventoryMenu().GetVisible();
-					WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!v);
-					m_bDiableMoveCommand = !v;
-				}
-				if (input->IsKeyTriggered(KEY_P)) 
-				{
-					bool v = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
-					WidgetManager::GetInstance()->GetShopMenu().SetVisible(!v);
-					m_bDiableMoveCommand = !v;
+					bool v1 = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
+					WidgetManager::GetInstance()->GetShopMenu().SetVisible(!v1);
+
+					bool v2 = WidgetManager::GetInstance()->GetInventoryMenu().GetVisible();
+					WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!v2);
+					m_bDiableMoveCommand = !v2;
 				}
 				if (input->IsKeyTriggered(KEY_ESCAPE))
 				{

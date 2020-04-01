@@ -113,13 +113,34 @@ namespace gswy {
 	class InventoryMenu : public Widget
 	{
 	public:
-		InventoryMenu() { IsVisible = false; m_CurrentTab = 1; };
+		InventoryMenu() {
+			IsVisible = false; 
+			m_CurrentTab = 1; 
+			m_TabItemSelect1 = ImGuiTabItemFlags_None;
+			m_TabItemSelect2 = ImGuiTabItemFlags_None;
+			m_TabItemSelect3 = ImGuiTabItemFlags_SetSelected;
+			m_TabItemSelect4 = ImGuiTabItemFlags_None;
+		};
 		void Render() override;
 		WidgetManager* manager;
 		unsigned int GetCurrentTab() const { return m_CurrentTab; }
+		void SetTabItemSelect(unsigned int n) {
+			m_TabItemSelect1 = ImGuiTabItemFlags_None;
+			m_TabItemSelect2 = ImGuiTabItemFlags_None;
+			m_TabItemSelect3 = ImGuiTabItemFlags_None;
+			m_TabItemSelect4 = ImGuiTabItemFlags_None;
 
+			if (n == 1) m_TabItemSelect1 = ImGuiTabItemFlags_SetSelected;
+			else if (n == 2) m_TabItemSelect2 = ImGuiTabItemFlags_SetSelected;
+			else if (n == 3) m_TabItemSelect3 = ImGuiTabItemFlags_SetSelected;
+			else if (n == 4) m_TabItemSelect4 = ImGuiTabItemFlags_SetSelected;
+		}
 	private:
 		unsigned int m_CurrentTab;
+		unsigned int m_TabItemSelect1;
+		unsigned int m_TabItemSelect2;
+		unsigned int m_TabItemSelect3;
+		unsigned int m_TabItemSelect4;
 	};
 
 	class WidgetManager
