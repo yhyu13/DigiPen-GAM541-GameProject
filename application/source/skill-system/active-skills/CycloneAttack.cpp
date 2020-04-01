@@ -5,22 +5,20 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 Language		: C++ 11
 Platform		: Windows 10 (X64)
 Project			: GAM541
-Filename		: ActiveSkillType.h
+Filename		: CycloneAttack.cpp
 Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
-Creation date	: 03/13/2020
+Creation date	: 03/26/2020
 - End Header ----------------------------*/
 
-#pragma once
+#include "CycloneAttack.h"
 
 namespace gswy
 {
-	enum class ActiveSkillType
+	CycloneAttack::CycloneAttack() : ActiveSkill(ActiveSkillType::CYCLONE)
 	{
-		UNKNOWN = 0,
-		FIRE_BALL,
-		ICE_BALL,
-		RAZOR,
-		CYCLONE,
-		NUM
-	};
+	}
+
+	CycloneAttack::~CycloneAttack()
+	{
+	}
 }

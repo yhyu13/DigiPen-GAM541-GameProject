@@ -31,7 +31,9 @@ Creation date	: 03/15/2020
 #include "ecs/components/SpriteCom.h"
 #include "ecs/CustomEvents.h"
 #include "skill-manager/SkillManager.h"
-#include "skill-system/active-skills/RazerAttack.h"
+#include "skill-system/active-skills/RazorAttack.h"
+#include "ecs/components/TargetEntityComponent.h"
+#include "skill-system/active-skills/CycloneAttack.h"
 
 #include <sstream>
 
@@ -68,10 +70,10 @@ namespace gswy
 
 			{
 				// Update cool down of razer while active
-				auto razer_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::RAZER_SFX)[0];
-				auto razer_sfx_active = GetComponent<ActiveCom>(razer_sfx);
-				auto cooldown = GetComponent<CoolDownCom>(razer_sfx);
-				if (razer_sfx_active->IsActive())
+				auto cyclone_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];
+				auto active = GetComponent<ActiveCom>(cyclone_sfx);
+				auto cooldown = GetComponent<CoolDownCom>(cyclone_sfx);
+				if (active->IsActive())
 				{
 					cooldown->SetFreeze(false);
 					cooldown->Update(dt);
@@ -87,26 +89,26 @@ namespace gswy
 
 		void OnSkillUse(EventQueue<GameObjectType, EventType>::EventPtr event)
 		{
-			// TODO: handle things like fire-weapon
-
-			APP_DEBUG("Skill Used: {0}", event->m_type);
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto skillUseEvent = std::static_pointer_cast<SkillUseEvent>(event);
 			auto fireballAttack = std::dynamic_pointer_cast<FireballAttack>(skillUseEvent->m_skill);
 			auto iceballAttack = std::dynamic_pointer_cast<IceballAttack>(skillUseEvent->m_skill);
-			auto razerAttack = std::dynamic_pointer_cast<RazerAttack>(skillUseEvent->m_skill);
+			auto cycloneAttack = std::dynamic_pointer_cast<CycloneAttack>(skillUseEvent->m_skill);
+			auto razorAttack = std::dynamic_pointer_cast<RazorAttack>(skillUseEvent->m_skill);
 			ComponentDecorator<TransformCom, GameObjectType> transform;
 
 			auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 
 			m_parentWorld->Unpack(player, transform);
 
-			if (fireballAttack != nullptr) {
+			if (fireballAttack != nullptr)
+			{
 				int num_spawn = fireballAttack->GetCount();
 				for (int i = 0; i < num_spawn; ++i)
 				{
 					{
+						auto aoe_multipler = fireballAttack->GetAOEMultipler();
 						auto pos = transform->GetPos();
 						auto rot = transform->GetRotation();
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
@@ -119,7 +121,6 @@ namespace gswy
 							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
 						}
 						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 						weapon.AddComponent(transform);
 						auto particle = ParticleCom();
 						particle.Init<ExplosionParticle>();
@@ -129,24 +130,25 @@ namespace gswy
 						animCom.SetCurrentAnimationState("Move");
 						weapon.AddComponent(animCom);
 						auto sprite = SpriteCom();
-						sprite.SetScale(vec2(0.25, 0.25));
+						sprite.SetScale(vec2(0.25* aoe_multipler, 0.25* aoe_multipler));
 						weapon.AddComponent(sprite);
 						auto aabb = BodyCom();
 						aabb.SetPos(transform.GetPos());
 						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
-						aabb.ChooseShape("Circle", 0.1);
+						aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
 			}
-			else if(iceballAttack != nullptr)
+			else if (iceballAttack != nullptr)
 			{
 				int num_spawn = iceballAttack->GetCount();
 				for (int i = 0; i < num_spawn; ++i)
 				{
 					{
+						auto aoe_multipler = iceballAttack->GetAOEMultipler();
 						auto pos = transform->GetPos();
 						auto rot = transform->GetRotation();
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
@@ -159,96 +161,138 @@ namespace gswy
 							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
 						}
 						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
 						weapon.AddComponent(transform);
 						auto animCom = AnimationCom();
 						animCom.Add("iceBallAnim1", "Move");
 						animCom.SetCurrentAnimationState("Move");
 						weapon.AddComponent(animCom);
 						auto sprite = SpriteCom();
-						sprite.SetScale(vec2(0.25, 0.25));
+						sprite.SetScale(vec2(0.25* aoe_multipler, 0.25* aoe_multipler));
 						weapon.AddComponent(sprite);
 
 						auto aabb = BodyCom();
 						aabb.SetPos(transform.GetPos());
 						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
-						aabb.ChooseShape("Circle", 0.1);
+						aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
 			}
-			else if (razerAttack !=  nullptr)
+			else if (cycloneAttack != nullptr)
 			{
-				/*ComponentDecorator<AnimationCom, GameObjectType> animation;
-				m_parentWorld->Unpack(player, animation);
-				
-				animation->SetCurrentAnimationState("RazerAttack");*/
-				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(player,"RazerAttack", true);
+				auto aoe_multipler = cycloneAttack->GetAOEMultipler();
+				auto cyclone_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];
+				auto sprite = GetComponent<SpriteCom>(cyclone_sfx);
+				sprite->SetScale(vec2(0.5 * aoe_multipler, 0.5 * aoe_multipler));
+				auto body = GetComponent<BodyCom>(cyclone_sfx);
+				body->ChooseShape("Circle", 0.5* aoe_multipler);
+
+				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(player, "CycloneAttack", true);
 				queue->Publish(e);
+
+				
+			}
+			else if (razorAttack != nullptr)
+			{
+				auto aoe_multipler = razorAttack->GetAOEMultipler();
+				auto pos = transform->GetPos();
+				auto rot = transform->GetRotation();
+
+				auto weapon = m_parentWorld->GenerateEntity(GameObjectType::RAZOR);
+
+				auto active = ActiveCom();
+				weapon.AddComponent(active);
+
+				weapon.AddComponent(OwnershiptCom<GameObjectType>(player));
+				
+				auto cooldown = CoolDownCom(0.25);
+				weapon.AddComponent(cooldown);
+
+				auto weapon_rot = rot;
+				auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+				weapon.AddComponent(transform);
+
+				auto animation = AnimationCom();
+				animation.Add("Animation_Razor_Attack", "Move");
+				animation.SetCurrentAnimationState("Move");
+				weapon.AddComponent(animation);
+
+				auto sprite = SpriteCom();
+				sprite.SetScale(vec2(0.25* aoe_multipler, 0.25* aoe_multipler));
+				weapon.AddComponent(sprite);
+
+				auto aabb = BodyCom();
+				aabb.m_overrideFriction = true;
+				aabb.SetPos(transform.GetPos());
+				aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+				aabb.ChooseShape("Circle", 0.1* aoe_multipler);
+				weapon.AddComponent(aabb);
+
+				weapon.AddComponent(LifeTimeCom(3.0));
+
+				auto targetEntityComponent = TargetEntityComponent();
+				weapon.AddComponent(targetEntityComponent);
 			}
 		}
 
-	void OnFork(EventQueue<GameObjectType, EventType>::EventPtr event)
-	{
-		auto forkEvent = std::static_pointer_cast<ForkEvent>(event);
-		ActiveSkillType type = forkEvent->m_skillType;
-		glm::vec2 position = forkEvent->m_position;
-		float rotation = forkEvent->m_rotation;
-
-		APP_DEBUG("Fork Event Received: {0}", forkEvent->m_type);
-
-		auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
-
-		SkillManager* manager = SkillManager::GetInstance();
-		std::shared_ptr<ActiveSkill> skill = manager->GetActiveSkill(forkEvent->m_skillType);
-		if (skill != nullptr)
+		void OnFork(EventQueue<GameObjectType, EventType>::EventPtr event)
 		{
-			if (auto fireballAttack = std::dynamic_pointer_cast<FireballAttack>(skill))
+			auto forkEvent = std::static_pointer_cast<ForkEvent>(event);
+			ActiveSkillType type = forkEvent->m_skillType;
+			glm::vec2 position = forkEvent->m_position;
+			float rotation = forkEvent->m_rotation;
+
+			auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+
+			SkillManager* manager = SkillManager::GetInstance();
+			std::shared_ptr<ActiveSkill> skill = manager->GetActiveSkill(forkEvent->m_skillType);
+			if (skill != nullptr)
 			{
-				int num_spawn = fireballAttack->GetForkCount();
- 				for (int i = 0; i < num_spawn; ++i)
+				if (auto fireballAttack = std::dynamic_pointer_cast<FireballAttack>(skill))
 				{
+					int num_spawn = fireballAttack->GetForkCount();
+					for (int i = 0; i < num_spawn; ++i)
 					{
-						auto pos = position;
-						auto rot = rotation;
-						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FORKED_FIREBALL);
-						auto active = ActiveCom();
-						weapon.AddComponent(active);
-						weapon.AddComponent(OwnershiptCom<GameObjectType>(player));
-						auto weapon_rot = rot;
-						if (num_spawn > 1)
 						{
-							weapon_rot += RAND_F(-45, 45) * DEG2RAD;
+							auto aoe_multipler = fireballAttack->GetAOEMultipler();
+							auto pos = position;
+							auto rot = rotation;
+							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FORKED_FIREBALL);
+							auto active = ActiveCom();
+							weapon.AddComponent(active);
+							weapon.AddComponent(OwnershiptCom<GameObjectType>(player));
+							auto weapon_rot = rot;
+							if (num_spawn > 1)
+							{
+								weapon_rot += RAND_F(-45, 45) * DEG2RAD;
+							}
+							auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
+							weapon.AddComponent(transform);
+							auto particle = ParticleCom();
+							particle.Init<ExplosionParticle>();
+							weapon.AddComponent(particle);
+							auto animCom = AnimationCom();
+							animCom.Add("fireBallAnim1", "Move");
+							animCom.SetCurrentAnimationState("Move");
+							weapon.AddComponent(animCom);
+							auto sprite = SpriteCom();
+							sprite.SetScale(vec2(0.15* aoe_multipler, 0.15* aoe_multipler));
+							weapon.AddComponent(sprite);
+							auto aabb = BodyCom();
+							aabb.SetPos(transform.GetPos());
+							aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+							aabb.ChooseShape("Circle", 0.1* aoe_multipler);
+							weapon.AddComponent(aabb);
+							weapon.AddComponent(LifeTimeCom(1.0));
+							weapon.AddComponent(HitPreventionCom<GameObjectType>());
 						}
-						auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
-						//transform.AddVelocity(ToVec(weapon_rot) * 2.0f);
-						weapon.AddComponent(transform);
-						auto particle = ParticleCom();
-						particle.Init<ExplosionParticle>();
-						weapon.AddComponent(particle);
-						auto animCom = AnimationCom();
-						animCom.Add("fireBallAnim1", "Move");
-						animCom.SetCurrentAnimationState("Move");
-						weapon.AddComponent(animCom);
-						auto sprite = SpriteCom();
-						sprite.SetScale(vec2(0.15, 0.15));
-						weapon.AddComponent(sprite);
-						auto aabb = BodyCom();
-						aabb.SetPos(transform.GetPos());
-						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
-						aabb.ChooseShape("Circle", 0.1);
-						weapon.AddComponent(aabb);
-						weapon.AddComponent(LifeTimeCom(1.0));
-						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
+				
 			}
 		}
-
-		APP_DEBUG("Fork Event PROCESSED: {0}", forkEvent->m_type);
-	}
 
 	private:
 		int m_spawnZOrder;

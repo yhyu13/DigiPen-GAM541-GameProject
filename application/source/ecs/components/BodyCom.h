@@ -12,9 +12,11 @@ Creation date	: 02/12/2020
 - End Header ----------------------------*/
 
 #pragma once
+#include <memory>
 #include "engine/ecs/BaseComponent.h"
 #include "TransformCom.h"
-#include "EngineExport.h"
+#include "engine/ecs/Entity.h"
+#include "engine/physics/Collisions.h"
 
 namespace gswy
 {
@@ -26,7 +28,7 @@ namespace gswy
 		BodyCom(float posx, float posy)
 			:m_PosX(posx), m_PosY(posy), m_Mass(0), m_AccX(0), m_AccY(0),
 			 m_VelX(0), m_VelY(0), m_PrevPosX(0), m_PrevPosY(0), m_InvMass(0),
-			 m_TotalForceX(0), m_TotalForceY(0),m_Restitution(0)
+			 m_TotalForceX(0), m_TotalForceY(0),m_Restitution(0), m_overrideFriction(false)
 		{
 		};
 
@@ -48,6 +50,7 @@ namespace gswy
 				m_TotalForceY = bodycom.m_TotalForceY;
 				m_Restitution = bodycom.m_Restitution;
 				shape = bodycom.shape;
+				m_overrideFriction = bodycom.m_overrideFriction;
 			}
 			return *this;
 		}
@@ -69,6 +72,7 @@ namespace gswy
 		float m_Restitution;
 		std::shared_ptr<Shape> shape;
 		Entity<GameObjectType> m_otherEntity;
+		bool m_overrideFriction;
 
 	public:
 
@@ -132,8 +136,8 @@ namespace gswy
 			if (0 == name.compare("AABB"))
 			{
 				shape = std::make_shared<AABB>();
-				static_pointer_cast<AABB>(shape)->SetWidth(width);
-				static_pointer_cast<AABB>(shape)->SetHeight(height);
+				std::static_pointer_cast<AABB>(shape)->SetWidth(width);
+				std::static_pointer_cast<AABB>(shape)->SetHeight(height);
 			}
 			else
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Incorrect Shape Type, should be: AABB, instead: " + str2wstr(name) + L", Try Again!");
@@ -145,7 +149,7 @@ namespace gswy
 			if (0 == name.compare("Circle"))
 			{
 				shape = std::make_shared<Circle>();
-				static_pointer_cast<Circle>(shape)->SetRadius(radius);
+				std::static_pointer_cast<Circle>(shape)->SetRadius(radius);
 			}
 			else
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Incorrect Shape Type, should be: Circle, instead: " + str2wstr(name) + L", Try Again!");
@@ -228,8 +232,11 @@ namespace gswy
 			m_PosY = m_VelY * dt + m_PrevPosY;
 
 			//Simulating Friction
-			m_VelX *= 0.99;
-			m_VelY *= 0.99;
+			if (!m_overrideFriction)
+			{
+				m_VelX *= 0.99;
+				m_VelY *= 0.99;
+			}
 
 			//Nullifying All Forces To Activate with Press of a button
 			//m_TotalForceX = m_TotalForceY = 0.0f;

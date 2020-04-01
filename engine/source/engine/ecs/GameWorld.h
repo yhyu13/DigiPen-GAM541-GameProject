@@ -12,12 +12,15 @@ Creation date	: 02/02/2020
 - End Header ----------------------------*/
 
 #pragma once
+#include <memory>
+#include <vector>
+#include <map>
 
+#include "EntityManager.h"
 #include "ComponentManager.h"
 #include "BaseComponentSystem.h"
-#include "BitMaskSignature.h"
-#include "EntityManager.h"
 #include "ComponentDecorator.h"
+#include "BitMaskSignature.h"
 
 namespace gswy {
 
@@ -134,6 +137,19 @@ namespace gswy {
 			for (auto& id : m_entityManager->GetAllEntityIDWithType(type))
 			{
 				result.push_back(Entity<EntityType>(id, type));
+			}
+			return result;
+		}
+
+		std::vector<Entity<EntityType>> GetAllEntityWithType(std::vector<EntityType> types)
+		{
+			std::vector<Entity<EntityType>> result;
+			for (auto type : types)
+			{
+				for (auto& id : m_entityManager->GetAllEntityIDWithType(type))
+				{
+					result.push_back(Entity<EntityType>(id, type));
+				}
 			}
 			return result;
 		}

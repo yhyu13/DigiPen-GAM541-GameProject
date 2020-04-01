@@ -5,22 +5,25 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 Language		: C++ 11
 Platform		: Windows 10 (X64)
 Project			: GAM541
-Filename		: ActiveSkillType.h
+Filename		: RazorAttack.h
 Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
-Creation date	: 03/13/2020
+Creation date	: 03/26/2020
 - End Header ----------------------------*/
 
 #pragma once
 
+#include "ActiveSkill.h"
+#include "skill-system/support-skills/SupportSkill.h"
+#include "skill-system/primitives/AOE.h"
+
 namespace gswy
 {
-	enum class ActiveSkillType
+	class RazorAttack : public ActiveSkill, public AOE
 	{
-		UNKNOWN = 0,
-		FIRE_BALL,
-		ICE_BALL,
-		RAZOR,
-		CYCLONE,
-		NUM
+
+	public:
+
+		RazorAttack();
+		~RazorAttack();
 	};
 }

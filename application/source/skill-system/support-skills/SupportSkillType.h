@@ -2,8 +2,9 @@
 
 enum class SupportSkillType
 {
+	UNKNOWN = 0,
 	MULTIPLE_PROJECTILE,
 	FORK,
-	UNKNOWN,
+	INCREASE_AOE,
 	NUM
 };

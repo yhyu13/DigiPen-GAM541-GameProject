@@ -11,22 +11,24 @@
 	  
       "weapon",
       
-	  "attached-movement",
-      "physics",
-      
       "spawn",
       "sound",
       "hitpoint",
       "death",
 	  "lifetime",
 	  "fade",
+	  "buff",
+	  
+	  "attached-movement",
+      "physics",
 	  
 	  "animation",
 	  "minimap",
 	  "particle",
 	  "sprite",
 	  "scene",
-	  "skill",
+    "skill",
+    "target-entity-component",
 	  
 	  "gc"
    ]

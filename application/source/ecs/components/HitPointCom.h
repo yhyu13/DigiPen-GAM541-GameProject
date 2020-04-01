@@ -12,10 +12,6 @@ Creation date: 02/18/2020
 #pragma once
 
 #include "engine/ecs/BaseComponent.h"
-#include "engine/allocator/ResouceAllocator.h"
-#include "engine/renderer/Animation.h"
-#include "engine/exception/EngineException.h"
-#include "engine/ecs/EntityDecorator.h"
 
 
 namespace gswy
@@ -67,6 +63,15 @@ namespace gswy
 		double GetPercentageHP()
 		{
 			return (m_HP > 0)? m_HP / m_MaxHP: 0;
+		}
+
+		double GetMaxHP()
+		{
+			return m_MaxHP;
+		}
+		double GetHP()
+		{
+			return m_HP;
 		}
 
 	private:

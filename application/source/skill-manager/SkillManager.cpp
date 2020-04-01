@@ -16,8 +16,12 @@ Creation date	: 03/20/2020
 #include "skill-system/active-skills/IceballAttack.h"
 #include "skill-system/support-skills/MultipleProjectile.h"
 #include "skill-system/support-skills/Forking.h"
-#include "skill-system/active-skills/RazerAttack.h"
+#include "skill-system/support-skills/IncreaseAOE.h"
+#include "skill-system/active-skills/RazorAttack.h"
+#include "skill-system/active-skills/CycloneAttack.h"
+#include "ecs/CustomEvents.h"
 #include "Skill.h"
+#include "engine/allocator/MemoryManager.h"
 
 namespace gswy
 {
@@ -36,14 +40,28 @@ namespace gswy
 	{
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	std::shared_ptr<SupportSkill> SkillManager::GetSupportingSkill(const std::string& type)
 	{
 		if (type._Equal("MULTIPLE-PROJECTILE"))
 		{
-			return std::make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
+			return std::make_shared<MultipleProjectile>();
+		}
+		if (type._Equal("FORK"))
+		{
+			return std::make_shared<Forking>();
+		}
+		if (type._Equal("INCREASE-AOE"))
+		{
+			return std::make_shared<IncreaseAOE>();
 		}
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	void SkillManager::AddSkill(const int& skillNumber, const int& slotNumber, std::shared_ptr<Item> item)
 	{
 		/*
@@ -73,9 +91,13 @@ namespace gswy
 			{
 				newSkill = std::make_shared<IceballAttack>(ActiveSkillType::ICE_BALL);
 			}
-			else if (item->m_type._Equal("RAZER"))
+			else if (item->m_type._Equal("RAZOR"))
 			{
-				newSkill = std::make_shared<RazerAttack>();
+				newSkill = std::make_shared<RazorAttack>();
+			}
+			else if (item->m_type._Equal("CYCLONE"))
+			{
+				newSkill = std::make_shared<CycloneAttack>();
 			}
 			std::shared_ptr<ActiveSkill> currentSkill = m_skills[skill_];
 			if (currentSkill != nullptr)
@@ -99,6 +121,11 @@ namespace gswy
 			{
 				m_skills[skill_] = newSkill; // new active skill
 			}
+
+			// add key binding
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto event = MemoryManager::Make_shared<KeyBindEvent>(skillNumber, item->m_keyEventType);
+			queue->Publish(event);
 		}
 		else if (slot_ > 0 && item->m_category._Equal("SUPPORT"))
 		{
@@ -115,12 +142,18 @@ namespace gswy
 
 				if (item->m_type._Equal("MULTIPLE-PROJECTILE"))
 				{
-					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<MultipleProjectile>(SupportSkillType::MULTIPLE_PROJECTILE);
+					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<MultipleProjectile>();
 					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 				if (item->m_type._Equal("FORK"))
 				{
 					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<Forking>();
+					activeSkill->AddSupportSkill(slot_, supportSkill);
+				}
+
+				if (item->m_type._Equal("INCREASE-AOE"))
+				{
+					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<IncreaseAOE>();
 					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 			}
@@ -235,6 +268,9 @@ namespace gswy
 		return m_skills[skillNumber - 1];
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	std::string SkillManager::GetSkillType(ActiveSkillType type)
 	{
 		if (type == ActiveSkillType::FIRE_BALL)
@@ -247,14 +283,22 @@ namespace gswy
 			return "ICE-BALL";
 		}
 
-		if (type == ActiveSkillType::RAZER)
+		if (type == ActiveSkillType::RAZOR)
 		{
-			return "RAZER";
+			return "RAZOR";
+		}
+
+		if (type == ActiveSkillType::CYCLONE)
+		{
+			return "CYCLONE";
 		}
 
 		return "";
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	std::string SkillManager::GetSkillType(SupportSkillType type)
 	{
 		if (type == SupportSkillType::MULTIPLE_PROJECTILE)
@@ -267,9 +311,17 @@ namespace gswy
 			return "FORK";
 		}
 
+		if (type == SupportSkillType::INCREASE_AOE)
+		{
+			return "INCREASE-AOE";
+		}
+
 		return "";
 	}
 
+	/*
+		(REQUIRED : ADDING NEW SKILL)
+	*/
 	std::set<std::string> SkillManager::GetSkillTags(std::shared_ptr<BaseSkill> skill)
 	{
 		std::set<std::string> result;

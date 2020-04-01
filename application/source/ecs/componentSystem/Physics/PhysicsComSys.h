@@ -53,7 +53,7 @@ namespace gswy
 				GameObjectType::ICEBALL ,GameObjectType::BOLT_STRIKE,
 				GameObjectType::TOWER_BUILD, GameObjectType::TOWER_FIRE,
 				GameObjectType::TOWER_ICE, GameObjectType::TOWER_LIGHTNING,
-				GameObjectType::FORKED_FIREBALL
+				GameObjectType::FORKED_FIREBALL, GameObjectType::RAZOR
 			};
 
 			for (auto& item1 : disableCollisionList)

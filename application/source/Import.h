@@ -33,6 +33,7 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/Graphics/ParticleComSys.h"
 #include "ecs/componentSystem/Physics/PhysicsComSys.h"
 #include "ecs/componentSystem/Physics/AttachedMovementComSys.h"
+#include "ecs/componentSystem/Gameplay/BuffComSys.h"
 #include "ecs/componentSystem/Gameplay/WeaponComSys.h"
 #include "ecs/componentSystem/Gameplay/LifeTimeComSys.h"
 #include "ecs/componentSystem/Gameplay/SpawningComSys.h"

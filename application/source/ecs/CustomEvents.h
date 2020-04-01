@@ -12,6 +12,7 @@ Creation date: 02/17/2020
 #pragma once
 #include "ecs/EntityType.h"
 #include "ecs/EventType.h"
+#include "buff-system/BaseBuff.h"
 #include "engine/events/EventQueue.h"
 #include "skill-system/support-skills/SupportSkill.h"
 #include "skill-system/active-skills/ActiveSkill.h"
@@ -39,7 +40,7 @@ namespace gswy
 
 	struct FireWeaponEvent : Event<GameObjectType, EventType> {
 
-		explicit FireWeaponEvent(const Entity<GameObjectType>& entity, const vec2& pos = vec2(0), float rot = 0)
+		explicit FireWeaponEvent(const Entity<GameObjectType>& entity, const glm::vec2& pos = glm::vec2(0), float rot = 0)
 			:
 			m_pos(pos),
 			m_rot(rot),
@@ -47,7 +48,7 @@ namespace gswy
 		{
 			m_entity = entity;
 		}
-		vec2 m_pos;
+		glm::vec2 m_pos;
 		float m_rot;
 		Entity<GameObjectType> m_entity;
 	};
@@ -113,7 +114,7 @@ namespace gswy
 
 	struct SpawnEvent : Event<GameObjectType, EventType> {
 
-		explicit SpawnEvent(GameObjectType type, const vec3& pos)
+		explicit SpawnEvent(GameObjectType type, const glm::vec3& pos)
 			:
 			Event(EventType::SPAWN),
 			m_type(type),
@@ -121,7 +122,7 @@ namespace gswy
 		{
 		}
 
-		vec3 m_pos;
+		glm::vec3 m_pos;
 		GameObjectType m_type;
 	};
 
@@ -240,5 +241,51 @@ namespace gswy
 
 		Entity<GameObjectType> m_entity;
 		bool m_bIsReady;
+	};
+
+	struct AddBuffEvent : Event<GameObjectType, EventType> {
+
+		AddBuffEvent(Entity<GameObjectType> entity,std::shared_ptr<BaseBuff> buff, bool replace)
+			:
+			Event(EventType::ADD_BUFF)
+		{
+			m_entity = entity;
+			m_buff = buff;
+			m_bReplace = replace;
+		}
+
+		Entity<GameObjectType> m_entity;
+		std::shared_ptr<BaseBuff> m_buff;
+		bool m_bReplace;
+	};
+
+	struct RemoveBuffEvent : Event<GameObjectType, EventType>
+	{
+
+		RemoveBuffEvent(Entity<GameObjectType> entity, GameBuffType buff)
+			:
+			Event(EventType::REMOVE_BUFF)
+		{
+			m_entity = entity;
+			m_buff = buff;
+		}
+
+		Entity<GameObjectType> m_entity;
+		GameBuffType m_buff;
+	};
+
+	struct KeyBindEvent : Event<GameObjectType, EventType>
+	{
+
+		KeyBindEvent(const int& skillNumber, const std::string& keyEventType)
+			: Event(EventType::KEY_BIND_EVENT),
+			m_skillNumber(skillNumber),
+			m_keyEventType(keyEventType)
+		{
+		}
+
+		int m_skillNumber;
+		std::string m_keyEventType;
+
 	};
 }

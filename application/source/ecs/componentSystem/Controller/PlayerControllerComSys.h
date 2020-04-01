@@ -33,8 +33,28 @@ Creation date: 02/04/2020
 #include "skill-system/active-skills/IceballAttack.h"
 #include "skill-manager/SkillManager.h"
 
+#include <map>
+#include <functional>
+
 namespace gswy
 {
+	struct SkillBinding
+	{
+
+		SkillBinding()
+		{
+		}
+
+		SkillBinding(int skillIndex, std::function<bool(const int&)> inputFunction)
+			: m_skillIndex(skillIndex),
+			m_inputFunction(inputFunction)
+		{
+		}
+
+		int m_skillIndex;
+		std::function<bool(const int&)> m_inputFunction;
+	};
+
 	class PlayerControllerComSys : public BaseComponentSystem<GameObjectType> {
 
 	private:
@@ -50,6 +70,47 @@ namespace gswy
 	public:
 		PlayerControllerComSys() {
 			m_systemSignature.AddComponent<PlayerSkillComponent>();
+		}
+
+		virtual void Init() override
+		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			queue->Subscribe<PlayerControllerComSys>(this, EventType::KEY_BIND_EVENT, &PlayerControllerComSys::OnKeyBindingEvent);
+		}
+
+		void OnKeyBindingEvent(EventQueue<GameObjectType, EventType>::EventPtr event)
+		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto keyBindEvent = std::static_pointer_cast<KeyBindEvent>(event);
+			InputManager* manager = InputManager::GetInstance();
+			std::function<bool(const int&)> callback;
+			if (keyBindEvent->m_keyEventType._Equal("TRIGGER"))
+			{
+				callback = std::bind(&InputManager::IsKeyTriggered, manager, std::placeholders::_1);
+			}
+			else
+			{
+				callback = std::bind(&InputManager::IsKeyPressed, manager, std::placeholders::_1);
+			}
+			SkillBinding skillBinding(keyBindEvent->m_skillNumber, callback);
+			int key;
+			switch (keyBindEvent->m_skillNumber)
+			{
+			case 1:
+				key = KEY_Q;
+				break;
+			case 2:
+				key = KEY_W;
+				break;
+			case 3:
+				key = KEY_E;
+				break;
+			case 4:
+				key = KEY_R;
+				break;
+			}
+
+			m_keyAndSkillBiding[key] = skillBinding;
 		}
 
 		virtual void Update(double dt) override {
@@ -73,74 +134,17 @@ namespace gswy
 
 			HandlePlayerMovement(dt);
 
-			//// TODO remove spawn enemies by triggering buttons
-			//if (input->IsKeyTriggered(KEY_T))
-			//{
-			//	auto e = MemoryManager::Make_shared<SpawnEvent>(GameObjectType::ENEMY_1, vec3(RAND_F(-1,1), RAND_F(-1, 1), 0));
-			//	queue->Publish(e);
-			//
-			//	static bool flash = true;
-			//	//auto enemy = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY)[0];
-			//	//auto enemy = m_registeredEntities.at(1);
-			//	ComponentDecorator<SpriteCom, GameObjectType> sprite;
-			//	m_parentWorld->Unpack(enemy, sprite);
-			//	auto s = sprite->Get();
-			//	(flash)? s->SetSpriteShader("White"): s->SetSpriteShader("Default");
-			//	flash = !flash;
-			//}
-
-
-			if (input->IsKeyTriggered(KEY_Q))
+			// CHECKING FOR SKILL KEY BINDINGS
+			for (const auto& keyBinding : m_keyAndSkillBiding)
 			{
-				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(1);
-				if (skill != nullptr)
+				if (keyBinding.second.m_inputFunction(keyBinding.first))
 				{
-					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
-					queue->Publish(e);
-
-					if (skill->GetActiveSkillType() == ActiveSkillType::FIRE_BALL)
+					std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(keyBinding.second.m_skillIndex);
+					if (skill != nullptr)
 					{
-						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr1");
-						queue->Publish(e1);
+						auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
+						queue->Publish(e);
 					}
-					else
-					if (skill->GetActiveSkillType() == ActiveSkillType::ICE_BALL)
-					{
-						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot1");
-						queue->Publish(e1);
-					}
-				}
-			}
-
-			if (input->IsKeyTriggered(KEY_W))
-			{
-				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(2);
-				if (skill != nullptr)
-				{
-					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
-					queue->Publish(e);
-
-					if (skill->GetActiveSkillType() == ActiveSkillType::FIRE_BALL)
-					{
-						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr");
-						queue->Publish(e1);
-					}
-					else
-					if (skill->GetActiveSkillType() == ActiveSkillType::ICE_BALL)
-					{
-						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot");
-						queue->Publish(e1);
-					}
-				}
-			}
-
-			if (input->IsKeyPressed(KEY_E))
-			{
-				std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(ActiveSkillType::RAZER);
-				if (skill != nullptr)
-				{
-					auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
-					queue->Publish(e);
 				}
 			}
 
@@ -414,5 +418,9 @@ namespace gswy
 				queue->Publish(e);
 			}
 		}
+
+		private:
+
+			std::map<int, SkillBinding> m_keyAndSkillBiding;
 	};
 }
