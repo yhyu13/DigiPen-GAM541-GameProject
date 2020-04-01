@@ -301,162 +301,54 @@ namespace gswy {
 		/*
 			Start the level (start the count down, mainly)
 		*/
-		void StartWave()
-		{
-			PRINT("Start Wave " + Str(m_currentWave));
-			m_waveStart = true;
-			m_timeOut = false;
-			m_timeRemaining = m_timePerLevel;
-		}
+		void StartWave();
 
 		/*
 			Check if the level is started
 		*/
-		bool IsWaveStarted()
-		{
-			return m_waveStart;
-		}
+		bool IsWaveStarted();
 
 		/*
 			Check time out
 		*/
-		bool IsTimeOut()
-		{
-			return m_timeOut;
-		}
+		bool IsTimeOut();
 
 		/*
 			Check if in game or not
 		*/
-		bool IsInGame()
-		{
-			return m_isAnyLevelLoaded;
-		}
+		bool IsInGame();
 
 		/*
 			Add coins
 		*/
-		void AddCoins(int c)
-		{
-			m_coins += c;
-			if (m_coins < 0) m_coins = 0;
-		}
+		void AddCoins(int c);
 
-		void Update(double dt)
-		{
-			if (!m_isAnyLevelLoaded)
-			{
-				return;
-			}
+		/*
+			Get coins
+		*/
+		int GetCoins();
 
-			auto& hud = WidgetManager::GetInstance()->GetHUD();
-			int min = (int)m_timeRemaining / 60;
-			int sec = (int)m_timeRemaining - min * 60;
-			hud.SetTimeMinute(min);
-			hud.SetTimeSecond(sec);
-			hud.SetCoinNum(m_coins);
-			hud.SetWave(m_currentWave);
-			hud.SetLevel(m_currentLevel);
+		/*
+			Try Spend Coins
+		*/
+		bool TrySpendCoins(int amount);
 
-			// Check level is running and do count down
-			if (m_waveStart && !m_timeOut)
-			{
-				m_timeRemaining -= dt;
-				if (m_timeRemaining < 0)
-				{
-					m_timeOut = true;
-					m_timeRemaining = 0;
-					PRINT("Time's up, kill all reminaing monsters to finish the level!");
-				}
-			}
-			// Check if a level is finished
-			else if (IsWaveFinsihed())
-			{
-				// Check level remains started
-				if (m_waveStart)
-				{
-					m_waveStart = false;
-					// Stop wave and advance wave
-					if (AdvanceWave())
-					{
-						PRINT("Load new wave");
-						LoadLevel(m_world, m_currentWave);
-					}
-					else
-					{
-						// TODO: load new level
-						PRINT("You have beat this level!");
-						if (++m_currentLevel <= m_maxLevel)
-						{
-							PRINT("Load new level in 2 sec!");
-							auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-							auto e = MemoryManager::Make_shared<LoadGameWorldEvent>(m_currentLevel);
-							queue->Publish(e, 2);
-						}
-						else
-						{
-							// TODO : proper handle beating the game
-							PRINT("You have beat the game!");
-						}
-					}
-				}
-			}
-		}
+		void Update(double dt);
 
-		void ResetLevelData()
-		{
-			PRINT("Reset level!");
-			m_isAnyLevelLoaded = false;
-			m_timeOut = false;
-			m_waveStart = false;
-			m_coins = 0;
-			
-			// Start with 1
-			m_currentWave = 1;
-			// End with 4
-			m_maxWave = 4;
-
-			// Start with 1
-			m_currentLevel = 1;
-			// End with 3
-			m_maxLevel = 3;
-
-			// Each wave is 30s long
-			m_timePerLevel = 30;
-			m_timeRemaining = m_timePerLevel;
-		}
+		void ResetLevelData();
 
 	private:
 		/*
 			A level is finished when there is no remaining enemy, this level remains started, and time is out.
 		*/
-		bool IsWaveFinsihed()
-		{
-			return m_world->GetAllEntityWithType(GameObjectType::ENEMY_1).empty()
-				&& m_world->GetAllEntityWithType(GameObjectType::ENEMY_2).empty()
-				&& m_world->GetAllEntityWithType(GameObjectType::ENEMY_BOSS_1).empty()
-				&& IsWaveStarted() && m_timeOut;
-		}
+		bool IsWaveFinsihed();
 		/*
 			Advance level if is possible
 		*/
-		bool AdvanceWave()
-		{
-			if (++m_currentWave <= m_maxWave)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+		bool AdvanceWave();
 
 	private:
-		GameLevelMapManager()
-		{
-			ResetLevelData();
-		}
+		GameLevelMapManager();
 	public:
 		std::shared_ptr<GameWorld<GameObjectType>> m_world;
 

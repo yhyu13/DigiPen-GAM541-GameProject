@@ -10,10 +10,11 @@ Author: Kyle Wang (kyle.wang@digipen.edu | 60000719)
 Creation date: 03/12/2020
 - End Header ----------------------------*/
 
-#include "engine-precompiled-header.h"
+//#include "engine-precompiled-header.h"
 #include "GameWidgetManager.h"
-#include "../inventory-manager/InventoryManager.h"
-#include "../skill-manager/SkillManager.h"
+#include "inventory-manager/InventoryManager.h"
+#include "tilemap/GameLevelMapManager.h"
+#include "skill-manager/SkillManager.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <json/json.h>
@@ -184,7 +185,9 @@ namespace gswy {
 
 	void ShopMenu::Render()
 	{
-	
+		// Insufficent coins pop up lambda function
+		static void(*ShowPopup)() = []() {};
+
 		ImVec2 shopWindowSize = ImVec2(500, 400);
 		ImGui::SetNextWindowSize(shopWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(0, 0));
@@ -202,6 +205,7 @@ namespace gswy {
 				{
 					//Query : have been purchased
 					bool bPurchased = (*it)->m_purchased;
+					int cost = (*it)->m_cost;
 					
 					//Query : color
 					ImGui::PushStyleColor(ImGuiCol_Button, bPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
@@ -232,7 +236,30 @@ namespace gswy {
 						{
 							if (ImGui::Selectable("Purchase"))
 							{
-								InventoryManager::GetInstance()->PurchaseActiveItem((*it));
+								if (GameLevelMapManager::GetInstance()->TrySpendCoins(cost))
+								{
+									InventoryManager::GetInstance()->PurchaseActiveItem((*it));
+								}
+								else
+								{
+									ShowPopup = []()
+									{
+										if (!ImGui::IsPopupOpen("popup"))
+											ImGui::OpenPopup("popup");
+
+										if (ImGui::BeginPopupModal("popup"))
+										{
+											ImGui::Text("Insufficient coins!");
+
+											if (ImGui::Button("Close", ImVec2(80, 0)))
+											{
+												ImGui::CloseCurrentPopup();
+												ShowPopup = []() {};
+											}
+											ImGui::EndPopup();
+										}
+									};
+								}
 							}
 						}
 						else
@@ -417,6 +444,8 @@ namespace gswy {
 			}
 			ImGui::EndTabBar();
 		}
+
+		ShowPopup();
 
 		ImGui::End();
 	}

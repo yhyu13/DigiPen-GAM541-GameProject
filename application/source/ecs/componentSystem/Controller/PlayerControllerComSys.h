@@ -259,91 +259,104 @@ namespace gswy
 
 		void HandleMouseAction_LeftTriggered()
 		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
 			ComponentDecorator<BodyCom, GameObjectType> mouseBodyCom;
 			m_parentWorld->Unpack(mouse, mouseBodyCom);
 
 			switch (mouseBodyCom->GetOtherEntity().m_type)
 			{
-			case GameObjectType::TOWER_BUILD:
+			case GameObjectType::TOWER_BUILD: case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
 			{
-				auto tower = mouseBodyCom->GetOtherEntity();
-				ComponentDecorator<SpriteCom, GameObjectType> towerSprite;
-				ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
-				m_parentWorld->Unpack(tower, towerSprite);
-				m_parentWorld->Unpack(tower, towerChildren);
-				if (towerSprite->GetTextureName().compare("TowerHammer_On") == 0)
-				{
-					towerSprite->SetTexture("TowerHammer_Off");
-					for (auto& _tower : towerChildren->GetEntities())
-					{
-						ComponentDecorator<ActiveCom, GameObjectType> active;
-						ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
-						m_parentWorld->Unpack(_tower, active);
-						m_parentWorld->Unpack(_tower, coolDownController);
-						active->SetActive(true);
-						coolDownController->SetFreeze(true);
-					}
-				}
-				else
-				{
-					towerSprite->SetTexture("TowerHammer_On");
-					for (auto& _tower : towerChildren->GetEntities())
-					{
-						ComponentDecorator<ActiveCom, GameObjectType> active;
-						m_parentWorld->Unpack(_tower, active);
-						active->SetActive(false);
-					}
-				}
+				auto e = MemoryManager::Make_shared<ClickOnTowerEvent>(mouseBodyCom->GetOtherEntity());
+				queue->Publish(e);
 			}
-			break;
-			case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
-			{
-				auto _tower = mouseBodyCom->GetOtherEntity();
-				ComponentDecorator<BodyCom, GameObjectType> transform;
-				ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
-				ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> ownership;
-				m_parentWorld->Unpack(_tower, transform);
-				m_parentWorld->Unpack(_tower, coolDownController);
-				m_parentWorld->Unpack(_tower, ownership);
-
-				// Unfreeze tower as a way to show it has been enabled.
-				// Do not re-enabled unfreezed tower
-				if (!coolDownController->IsFreezed())
-				{
-					break;
-				}
-				coolDownController->SetFreeze(false);
-				auto tower = ownership->GetEntity();
-				ComponentDecorator<BodyCom, GameObjectType> towerBody;
-				ComponentDecorator<ActiveCom, GameObjectType> towerActive;
-				ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
-				m_parentWorld->Unpack(tower, towerBody);
-
-				// Simply swap the position of build tower and this tower
-				auto towerPos = towerBody->GetPos();
-				towerBody->SetPos(transform->GetPos());
-				transform->SetPos(towerPos);
-				m_parentWorld->Unpack(tower, towerActive);
-
-				// Deactivate other towers
-				towerActive->SetActive(false);
-				m_parentWorld->Unpack(tower, towerChildren);
-
-				for (auto& child : towerChildren->GetEntities())
-				{
-					if (child.m_type != _tower.m_type)
-					{
-						ComponentDecorator<ActiveCom, GameObjectType> active;
-						m_parentWorld->Unpack(child, active);
-						active->SetActive(false);
-					}
-				}
-			}
-			break;
+				break;
 			default:
 				break;
 			}
+
+			//switch (mouseBodyCom->GetOtherEntity().m_type)
+			//{
+			//case GameObjectType::TOWER_BUILD:
+			//{
+			//	auto tower = mouseBodyCom->GetOtherEntity();
+			//	ComponentDecorator<SpriteCom, GameObjectType> towerSprite;
+			//	ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
+			//	m_parentWorld->Unpack(tower, towerSprite);
+			//	m_parentWorld->Unpack(tower, towerChildren);
+			//	if (towerSprite->GetTextureName().compare("TowerHammer_On") == 0)
+			//	{
+			//		towerSprite->SetTexture("TowerHammer_Off");
+			//		for (auto& _tower : towerChildren->GetEntities())
+			//		{
+			//			ComponentDecorator<ActiveCom, GameObjectType> active;
+			//			ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
+			//			m_parentWorld->Unpack(_tower, active);
+			//			m_parentWorld->Unpack(_tower, coolDownController);
+			//			active->SetActive(true);
+			//			coolDownController->SetFreeze(true);
+			//		}
+			//	}
+			//	else
+			//	{
+			//		towerSprite->SetTexture("TowerHammer_On");
+			//		for (auto& _tower : towerChildren->GetEntities())
+			//		{
+			//			ComponentDecorator<ActiveCom, GameObjectType> active;
+			//			m_parentWorld->Unpack(_tower, active);
+			//			active->SetActive(false);
+			//		}
+			//	}
+			//}
+			//break;
+			//case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
+			//{
+			//	auto _tower = mouseBodyCom->GetOtherEntity();
+			//	ComponentDecorator<BodyCom, GameObjectType> transform;
+			//	ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
+			//	ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> ownership;
+			//	m_parentWorld->Unpack(_tower, transform);
+			//	m_parentWorld->Unpack(_tower, coolDownController);
+			//	m_parentWorld->Unpack(_tower, ownership);
+
+			//	// Unfreeze tower as a way to show it has been enabled.
+			//	// Do not re-enabled unfreezed tower
+			//	if (!coolDownController->IsFreezed())
+			//	{
+			//		break;
+			//	}
+			//	coolDownController->SetFreeze(false);
+			//	auto tower = ownership->GetEntity();
+			//	ComponentDecorator<BodyCom, GameObjectType> towerBody;
+			//	ComponentDecorator<ActiveCom, GameObjectType> towerActive;
+			//	ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
+			//	m_parentWorld->Unpack(tower, towerBody);
+
+			//	// Simply swap the position of build tower and this tower
+			//	auto towerPos = towerBody->GetPos();
+			//	towerBody->SetPos(transform->GetPos());
+			//	transform->SetPos(towerPos);
+			//	m_parentWorld->Unpack(tower, towerActive);
+
+			//	// Deactivate other towers
+			//	towerActive->SetActive(false);
+			//	m_parentWorld->Unpack(tower, towerChildren);
+
+			//	for (auto& child : towerChildren->GetEntities())
+			//	{
+			//		if (child.m_type != _tower.m_type)
+			//		{
+			//			ComponentDecorator<ActiveCom, GameObjectType> active;
+			//			m_parentWorld->Unpack(child, active);
+			//			active->SetActive(false);
+			//		}
+			//	}
+			//}
+			//break;
+			//default:
+			//	break;
+			//}
 		}
 
 		void HandlePlayerMovement(double dt)

@@ -14,6 +14,7 @@ namespace gswy
 		std::string m_type;
 		std::string m_category;
 		std::vector<std::string> m_tags;
+		int m_cost;
 		bool m_purchased;
 		bool m_installed;
 		std::vector<std::string> m_text;
