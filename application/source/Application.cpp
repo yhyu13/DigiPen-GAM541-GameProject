@@ -170,7 +170,7 @@ namespace gswy
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
 			m_sprite->SetSpriteTexture(logoTexture);
-			m_sprite->SetSpriteScale(vec2(1, 1.0f / 419 * 200));
+			m_sprite->SetSpriteScale(vec2(2, 2.0f / 419 * 200));
 			m_sprite->SetSpritePosition(vec3(0));
 			logo.AddComponent(sprite);
 			auto transform = TransformCom(0, 0, Z_ORDER(1000));
@@ -190,7 +190,7 @@ namespace gswy
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
 			m_sprite->SetSpriteTexture(logoTexture1);
-			m_sprite->SetSpriteScale(vec2(2, 2.0 / 608 * 200));
+			m_sprite->SetSpriteScale(vec2(3, 3.0 / 608 * 200));
 			m_sprite->SetSpritePosition(vec3(0));
 			logo.AddComponent(sprite);
 			auto transform = TransformCom(0, 0, Z_ORDER(2000));

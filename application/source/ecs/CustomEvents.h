@@ -126,6 +126,17 @@ namespace gswy
 		GameObjectType m_type;
 	};
 
+	struct ClickOnTowerEvent : Event<GameObjectType, EventType> {
+
+		explicit ClickOnTowerEvent(Entity<GameObjectType> entity)
+			:
+			Event(EventType::CLICK_ON_TOWER),
+			m_entity(entity)
+		{
+		}
+		Entity<GameObjectType> m_entity;
+	};
+
 	struct FadeEvent : Event<GameObjectType, EventType> {
 
 		explicit FadeEvent(const Entity<GameObjectType>& entity,float start, float end, float time, EventType _event = EventType::EMPTY)

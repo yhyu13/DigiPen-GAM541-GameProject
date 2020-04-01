@@ -6,5 +6,14 @@
       "components": [
       ]
     }
-  ]
+  ],
+  "data":
+  {
+	"wave_start": 1,
+	"wave_max":4,
+	"level_start":1,
+	"level_max":3,
+	"coins": 0,
+	"time_per_wave": 30
+  }
 }

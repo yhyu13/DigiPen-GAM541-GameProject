@@ -8,11 +8,12 @@
         "PROJECTILE",
 		"AOE"
       ],
+	  "cost": 500,
       "purchased": 0,
       "installed": 0,
       "text": [
         "some useful information",
-        "some useful information"
+        "Cost : 500"
       ],
       "key-event" :  "TRIGGER"
     },
@@ -24,11 +25,12 @@
         "PROJECTILE",
 		"AOE"
       ],
+	  "cost": 500,
       "purchased": 0,
       "installed": 0,
       "text": [
         "something",
-        "something"
+        "Cost : 500"
       ],
       "key-event": "TRIGGER"
     },
@@ -39,11 +41,12 @@
       "tags": [
 		"AOE"
       ],
+	  "cost": 500,
       "purchased": 0,
       "installed": 0,
       "text": [
         "some useful information",
-        "some useful information"
+        "Cost : 500"
       ],
       "key-event": "TRIGGER"
     },
@@ -54,11 +57,12 @@
       "tags": [
 		"AOE"
       ],
+	  "cost": 500,
       "purchased": 0,
       "installed": 0,
       "text": [
         "some useful information",
-        "some useful information"
+        "Cost : 500"
       ],
       "key-event": "PRESS"
     },
@@ -69,11 +73,12 @@
       "tags": [
         "PROJECTILE"
       ],
+	  "cost": 1000,
       "purchased": 0,
       "installed": 0,
       "text": [
         "something",
-        "something"
+        "Cost : 1000"
       ]
     },
     {
@@ -84,11 +89,12 @@
         "PROJECTILE",
         "NON-PENETRATING"
       ],
+	  "cost": 1000,
       "purchased": 0,
       "installed": 0,
       "text": [
         "something",
-        "something"
+        "Cost : 1000"
       ]
     },
     {
@@ -98,11 +104,12 @@
       "tags": [
 		"AOE"
       ],
+	  "cost": 1000,
       "purchased": 0,
       "installed": 0,
       "text": [
         "something",
-        "something"
+        "Cost : 1000"
       ]
     }
   ]

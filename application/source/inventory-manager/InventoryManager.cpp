@@ -35,6 +35,7 @@ namespace gswy
 			item->m_type = itemData["type"].asString();
 			item->m_category = itemData["category"].asString();
 			item->m_purchased = itemData["purchased"].asBool();
+			item->m_cost = itemData["cost"].asInt();
 			Json::Value tags = itemData["tags"];
 			for (int j = 0; j < tags.size(); ++j)
 			{

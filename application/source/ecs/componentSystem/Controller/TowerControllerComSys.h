@@ -27,23 +27,60 @@ namespace gswy
 	private:
 		std::vector<GameObjectType> towerTypes;
 		std::vector<GameObjectType> enemyTypes;
+		int m_towerBuildCost = {100};
+		bool m_bCanBuild = { false };
 	public:
 		TowerControllerComSys() {
 			towerTypes = { GameObjectType::TOWER_FIRE ,GameObjectType::TOWER_ICE ,GameObjectType::TOWER_LIGHTNING };
 			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
 		}
 
-		virtual void Update(double dt) override {
+		virtual void Init() override
+		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			queue->Subscribe<TowerControllerComSys>(this, EventType::CLICK_ON_TOWER, &TowerControllerComSys::OnClickOnTower);
+
+			Json::Value root;
+			std::ifstream file("./asset/archetypes/entities/tower-config.json", std::ifstream::binary);
+			file >> root;
+			file.close();
+			Json::Value items = root["data"];
+			m_towerBuildCost = items["cost"].asInt();
+		}
+
+		virtual void Update(double dt) override 
+		{
+			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::TOWER_BUILD);
+			m_bCanBuild = GameLevelMapManager::GetInstance()->GetCoins() >= m_towerBuildCost;
+			if (m_bCanBuild)
+			{
+				for (auto& tower : m_registeredEntities)
+				{
+					GetComponent<SpriteCom>(tower)->SetTexture("TowerHammer_On");
+				}
+			}
+			else
+			{
+				for (auto& tower : m_registeredEntities)
+				{
+					GetComponent<SpriteCom>(tower)->SetTexture("TowerHammer_Off");
+				}
+			}
+
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			std::vector<Entity<GameObjectType>> allEnemies;
 			int trails = 5;
 
+			// Get a specific type of enemy as targets
 			while (allEnemies.empty() && (--trails > 0))
 			{
 				allEnemies = m_parentWorld->GetAllEntityWithType(enemyTypes[RAND_I(0, enemyTypes.size())]);
 			}
-			
+			if (allEnemies.empty())
+			{
+				return;
+			}
 			
 			for (auto& towerType : towerTypes)
 			{
@@ -99,6 +136,111 @@ namespace gswy
 						auto e = MemoryManager::Make_shared<FireWeaponEvent>(tower, transform->GetPos(), LookAt(closest_enmey_delta));
 						queue->Publish(e);
 					}
+				}
+			}
+		}
+
+		void OnClickOnTower(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			if (auto event = static_pointer_cast<ClickOnTowerEvent>(e))
+			{
+				auto entity = event->m_entity;
+
+				switch (entity.m_type)
+				{
+				case GameObjectType::TOWER_BUILD:
+				{
+					// Proceed only when tower can be built
+					if (!m_bCanBuild)
+					{
+						break;
+					}
+
+					auto tower = entity;
+					ComponentDecorator<SpriteCom, GameObjectType> towerSprite;
+					ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
+					m_parentWorld->Unpack(tower, towerSprite);
+					m_parentWorld->Unpack(tower, towerChildren);
+
+					if (towerSprite->GetTextureName().compare("TowerHammer_On") == 0)
+					{
+						towerSprite->SetTexture("TowerHammer_Off");
+						for (auto& _tower : towerChildren->GetEntities())
+						{
+							ComponentDecorator<ActiveCom, GameObjectType> active;
+							ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
+							m_parentWorld->Unpack(_tower, active);
+							m_parentWorld->Unpack(_tower, coolDownController);
+							active->SetActive(true);
+							coolDownController->SetFreeze(true);
+						}
+					}
+					else
+					{
+						towerSprite->SetTexture("TowerHammer_On");
+						for (auto& _tower : towerChildren->GetEntities())
+						{
+							ComponentDecorator<ActiveCom, GameObjectType> active;
+							m_parentWorld->Unpack(_tower, active);
+							active->SetActive(false);
+						}
+					}
+				}
+				break;
+				case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
+				{
+					auto _tower = entity;
+					ComponentDecorator<BodyCom, GameObjectType> transform;
+					ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
+					ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> ownership;
+					m_parentWorld->Unpack(_tower, transform);
+					m_parentWorld->Unpack(_tower, coolDownController);
+					m_parentWorld->Unpack(_tower, ownership);
+
+					// Unfreeze tower as a way to show it has been enabled.
+					// Do not re-enabled unfreezed tower
+					if (!coolDownController->IsFreezed())
+					{
+						break;
+					}
+					// If tower is still in freezing stat, proceed
+					// Do not enable tower if insufficent coins
+					if (!GameLevelMapManager::GetInstance()->TrySpendCoins(m_towerBuildCost))
+					{
+						break;
+					}
+
+					coolDownController->SetFreeze(false);
+					auto tower = ownership->GetEntity();
+					ComponentDecorator<BodyCom, GameObjectType> towerBody;
+					ComponentDecorator<ActiveCom, GameObjectType> towerActive;
+					ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
+					m_parentWorld->Unpack(tower, towerBody);
+
+					// Simply swap the position of build tower and this tower
+					auto towerPos = towerBody->GetPos();
+					towerBody->SetPos(transform->GetPos());
+					transform->SetPos(towerPos);
+					m_parentWorld->Unpack(tower, towerActive);
+
+					// Deactivate other towers
+					towerActive->SetActive(false);
+					m_parentWorld->Unpack(tower, towerChildren);
+
+					for (auto& child : towerChildren->GetEntities())
+					{
+						if (child.m_type != _tower.m_type)
+						{
+							ComponentDecorator<ActiveCom, GameObjectType> active;
+							m_parentWorld->Unpack(child, active);
+							active->SetActive(false);
+						}
+					}
+				}
+				break;
+				default:
+					break;
 				}
 			}
 		}

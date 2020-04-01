@@ -16,27 +16,23 @@ namespace gswy
 {
 	enum class EventType {
 		EMPTY = 0,
-		COLLISION,
-		SOUND,
-		WEAPON_SOUND,
-		DEATH,
-		SPAWN,
-		GC,
-		FIREWEAPON,
+		COLLISION,								// Collision event
+		SOUND,									// Play sound event
+		WEAPON_SOUND,							// Play weapon sound event
+		DEATH,									// Death event
+		SPAWN,									// Spawning event
+		GC,										// Garbage collection event
+		FIREWEAPON,								// Use weapon event
 
-		ATTACKBASE,
+		CLICK_ON_TOWER,							// Click on tower event
 
-		PLAYER_SET_PENDING_ANIMATION,
-		PLAYER_READY_TO_CHANGE_ANIMATION,
-		PLAYERWEAPON1,
-		PLAYERWEAPON2,
-		PLAYERWEAPON3,
-		PLAYERSKILL1,
-		PLAYERSKILL2,
-		PLAYERSKILL3,
+		ATTACKBASE,								// ?
+			
+		PLAYER_SET_PENDING_ANIMATION,			// player animation controller event
+		PLAYER_READY_TO_CHANGE_ANIMATION,		// player animation controller event
 
-		ADD_BUFF,
-		REMOVE_BUFF,
+		ADD_BUFF,								// Add buff to entities
+		REMOVE_BUFF,							// Remove buff from entities
 
 		FADE,
 		_FADE_ING,
