@@ -47,6 +47,8 @@ namespace gswy
 
 		LOAD_MAIN_MENU,
 		LOAD_GAME_WORLD,
+		LOAD_TEAM_LOGO,
+		LOAD_GAME_LOGO,
 
 		KEY_BIND_EVENT,
 
