@@ -236,8 +236,7 @@ namespace gswy {
 						else
 						{
 							//Item has been purchased
-							//unsigned int tabNum = WidgetManager::GetInstance()->GetInventoryMenu().GetCurrentTab();
-							if (ImGui::BeginMenu("InstallPopup"))
+							if (ImGui::BeginMenu("Install"))
 							{
 								if (ImGui::MenuItem("Bind to Q"))
 								{
@@ -254,6 +253,26 @@ namespace gswy {
 								if (ImGui::MenuItem("Bind to R"))
 								{
 									InventoryManager::GetInstance()->Install(4, 1, (*it));
+								}
+								ImGui::EndMenu();
+							}
+							if (ImGui::BeginMenu("Remove"))
+							{
+								if (ImGui::MenuItem("Remove Q"))
+								{
+									SkillManager::GetInstance()->RemoveSkill(1, 1);
+								}
+								if (ImGui::MenuItem("Remove W"))
+								{
+									SkillManager::GetInstance()->RemoveSkill(2, 1);
+								}
+								if (ImGui::MenuItem("Remove E"))
+								{
+									SkillManager::GetInstance()->RemoveSkill(3, 1);
+								}
+								if (ImGui::MenuItem("Remove R"))
+								{
+									SkillManager::GetInstance()->RemoveSkill(4, 1);
 								}
 								ImGui::EndMenu();
 							}
