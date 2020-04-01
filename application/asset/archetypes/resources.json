@@ -358,7 +358,7 @@
           "stream": false
         },
         {
-          "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_hit.ogg",
+          "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_hit1.ogg",
           "stream": false
         },
         {
@@ -370,7 +370,7 @@
           "stream": false
         },
         {
-          "path": "./asset/Audio_Assets/Weapons_Sounds/ice_hit.ogg",
+          "path": "./asset/Audio_Assets/Weapons_Sounds/ice_hit1.ogg",
           "stream": false
         },
         {

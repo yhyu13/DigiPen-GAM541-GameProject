@@ -68,8 +68,10 @@ namespace gswy
 				(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
 				event->m_entityA.m_type == GameObjectType::FIREBALL))
 			{
-				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit");
-				queue->Publish(e1);
+				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit1");
+
+				if(!audio->IsPlaying(e1->soundName))
+					queue->Publish(e1);
 			}
 			else
 			if ((std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityA.m_type) != enemyTypes.end() &&
@@ -77,8 +79,10 @@ namespace gswy
 				(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
 				event->m_entityA.m_type == GameObjectType::ICEBALL))
 			{
-				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit");
-				queue->Publish(e1);
+				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1");
+
+				if (!audio->IsPlaying(e1->soundName))
+					queue->Publish(e1);
 			}
 		}
 	};
