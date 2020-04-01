@@ -146,12 +146,58 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_MAIN_MENU, &GameLayer::OnLoadMainMenuWorld);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_WORLD, &GameLayer::OnLoadGameWorld);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_TEAM_LOGO, &GameLayer::OnLoadTeamLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_LOGO, &GameLayer::OnLoadGameLogo);
 
 			// Fading logo
-			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, 0.f, 1.f, EventType::GC);
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 1.0f);
+			auto teamLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_TEAM_LOGO);
+			queue->Publish(teamLogoEvent, 2.0f);
+			auto gameLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_GAME_LOGO);
+			queue->Publish(gameLogoEvent, 4.0f);
 			auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-			queue->Publish(_e1, 3.0f);
+			queue->Publish(_e1, 7.0f);
+		}
+
+		void OnLoadTeamLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			// TEAM GSWY PRESENTS
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/team-logo3.png", "Team-Logo");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0f / 419 * 200));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, Z_ORDER(1000));
+			logo.AddComponent(transform);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 1.0f);
+		}
+
+		void OnLoadGameLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			// LIGHT OF EMPYRION
+			auto logoTexture1 = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/game-logo3.png", "Game-Logo");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture1);
+			m_sprite->SetSpriteScale(vec2(2, 2.0 / 608 * 200));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, Z_ORDER(2000));
+			logo.AddComponent(transform);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 1.0f);
 		}
 
 		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)

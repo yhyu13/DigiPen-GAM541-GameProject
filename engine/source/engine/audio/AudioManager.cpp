@@ -302,3 +302,49 @@ FMOD_VECTOR gswy::AudioManager::VectorToFmod(const AudioVector3& vPosition)
 	fVec.z = vPosition.z;
 	return fVec;
 }
+
+bool gswy::AudioManager::FadeIn(int fadetime)
+{
+	unsigned long long dspClock;
+	FMOD::System* sys;
+	FMOD::Channel* channel = nullptr;
+	int rate;
+
+	auto result = channel->getSystemObject(&sys);
+	ErrorCheck(result);
+	result = sys->getSoftwareFormat(&rate, 0, 0);
+	ErrorCheck(result);
+
+	result = channel->getDSPClock(0, &dspClock);
+	ErrorCheck(result);
+	result = channel->addFadePoint(dspClock, 0.0f);
+	ErrorCheck(result);
+	result = channel->addFadePoint(dspClock + (double)rate * fadetime, 1.0f);
+	ErrorCheck(result);
+
+	return true;
+}
+
+bool gswy::AudioManager::FadeOut(int fadetime)
+{
+	unsigned long long dspClock;
+	FMOD::System* sys;
+	FMOD::Channel* channel = nullptr;
+	int rate;
+
+	auto result = channel->getSystemObject(&sys);
+	ErrorCheck(result);
+	result = sys->getSoftwareFormat(&rate, 0, 0);
+	ErrorCheck(result);
+
+	result = channel->getDSPClock(0, &dspClock);
+	ErrorCheck(result);
+	result = channel->addFadePoint(dspClock, 0.0f);
+	ErrorCheck(result);
+	result = channel->addFadePoint(dspClock + (double)rate * fadetime, 1.0f);
+	ErrorCheck(result);
+	result = channel->setDelay(0, dspClock + (double)rate * fadetime, true);
+	ErrorCheck(result);
+
+	return true;
+}

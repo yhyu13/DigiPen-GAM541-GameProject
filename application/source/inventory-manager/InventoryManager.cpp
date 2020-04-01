@@ -26,6 +26,7 @@ namespace gswy
 		Json::Value root;
 		std::ifstream file(filepath, std::ifstream::binary);
 		file >> root;
+		file.close();
 		Json::Value items = root["items"];
 		for (int i = 0; i < items.size(); ++i)
 		{

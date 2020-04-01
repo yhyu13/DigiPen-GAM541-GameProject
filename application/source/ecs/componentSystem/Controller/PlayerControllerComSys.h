@@ -188,7 +188,8 @@ namespace gswy
 			switch (mouseBodyCom->GetOtherEntity().m_type)
 			{
 
-			case GameObjectType::TOWER_BUILD: case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
+			case GameObjectType::TOWER_BUILD: case GameObjectType::TOWER_FIRE: 
+			case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
 				m_timeDisableMoveCommand = 0.1;
 				couldMove = false;
 				break;

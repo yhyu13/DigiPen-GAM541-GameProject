@@ -17,7 +17,7 @@ Creation date	: 03/13/2020
 
 namespace gswy
 {
-	MultipleProjectile::MultipleProjectile(SupportSkillType type) : SupportSkill(type), m_multiplier(2)
+	MultipleProjectile::MultipleProjectile() : SupportSkill(SupportSkillType::MULTIPLE_PROJECTILE), m_multiplier(2)
 	{
 	}
 

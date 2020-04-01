@@ -13,10 +13,12 @@ Creation date	: 03/26/2020
 #pragma once
 
 #include "ActiveSkill.h"
+#include "skill-system/support-skills/SupportSkill.h"
+#include "skill-system/primitives/AOE.h"
 
 namespace gswy
 {
-	class CycloneAttack : public ActiveSkill
+	class CycloneAttack : public ActiveSkill, public AOE
 	{
 
 	public:

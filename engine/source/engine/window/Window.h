@@ -16,6 +16,8 @@ Creation date	: 01/26/2020
 #include "engine/EngineCore.h"
 #include "engine/input/InputManager.h"
 
+#include <json/json.h>
+
 struct GLFWwindow;
 
 namespace gswy {
@@ -25,7 +27,7 @@ namespace gswy {
 		unsigned int m_height;
 		std::string m_title;
 		InputManager* m_input = nullptr;
-		bool IsFullScreen = true;
+		bool IsFullScreen = false;
 
 		WindowProperties(unsigned int width = 1280, unsigned int height = 720, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title) {
 			m_input = InputManager::GetInstance();
@@ -42,7 +44,7 @@ namespace gswy {
 
 		~Window();
 
-		static Window* InitializeWindow(const WindowProperties& properties = WindowProperties());
+		static Window* InitializeWindow(const Json::Value& engineConfiguration);
 
 		void Update(double dt);
 		void Render();
@@ -58,9 +60,9 @@ namespace gswy {
 
 	private:
 
-		Window(const WindowProperties& properties);
+		Window(const Json::Value& engineConfiguration);
 
-		void Init(const WindowProperties& properties);
+		void Init(const Json::Value& windowConfiguration);
 
 	public:
 		static int width;

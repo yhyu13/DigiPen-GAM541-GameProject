@@ -70,10 +70,10 @@ namespace gswy
 
 			{
 				// Update cool down of razer while active
-				auto razer_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];
-				auto razer_sfx_active = GetComponent<ActiveCom>(razer_sfx);
-				auto cooldown = GetComponent<CoolDownCom>(razer_sfx);
-				if (razer_sfx_active->IsActive())
+				auto cyclone_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];
+				auto active = GetComponent<ActiveCom>(cyclone_sfx);
+				auto cooldown = GetComponent<CoolDownCom>(cyclone_sfx);
+				if (active->IsActive())
 				{
 					cooldown->SetFreeze(false);
 					cooldown->Update(dt);
@@ -108,6 +108,7 @@ namespace gswy
 				for (int i = 0; i < num_spawn; ++i)
 				{
 					{
+						auto aoe_multipler = fireballAttack->GetAOEMultipler();
 						auto pos = transform->GetPos();
 						auto rot = transform->GetRotation();
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
@@ -129,17 +130,19 @@ namespace gswy
 						animCom.SetCurrentAnimationState("Move");
 						weapon.AddComponent(animCom);
 						auto sprite = SpriteCom();
-						sprite.SetScale(vec2(0.25, 0.25));
+						sprite.SetScale(vec2(0.25* aoe_multipler, 0.25* aoe_multipler));
 						weapon.AddComponent(sprite);
 						auto aabb = BodyCom();
 						aabb.SetPos(transform.GetPos());
 						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
-						aabb.ChooseShape("Circle", 0.1);
+						aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
+				auto e = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr1");
+				queue->Publish(e);
 			}
 			else if (iceballAttack != nullptr)
 			{
@@ -147,6 +150,7 @@ namespace gswy
 				for (int i = 0; i < num_spawn; ++i)
 				{
 					{
+						auto aoe_multipler = iceballAttack->GetAOEMultipler();
 						auto pos = transform->GetPos();
 						auto rot = transform->GetRotation();
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
@@ -165,26 +169,38 @@ namespace gswy
 						animCom.SetCurrentAnimationState("Move");
 						weapon.AddComponent(animCom);
 						auto sprite = SpriteCom();
-						sprite.SetScale(vec2(0.25, 0.25));
+						sprite.SetScale(vec2(0.25* aoe_multipler, 0.25* aoe_multipler));
 						weapon.AddComponent(sprite);
 
 						auto aabb = BodyCom();
 						aabb.SetPos(transform.GetPos());
 						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
-						aabb.ChooseShape("Circle", 0.1);
+						aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
+				auto e = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot1");
+				queue->Publish(e);
 			}
 			else if (cycloneAttack != nullptr)
 			{
+				auto aoe_multipler = cycloneAttack->GetAOEMultipler();
+				auto cyclone_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];
+				auto sprite = GetComponent<SpriteCom>(cyclone_sfx);
+				sprite->SetScale(vec2(0.5 * aoe_multipler, 0.5 * aoe_multipler));
+				auto body = GetComponent<BodyCom>(cyclone_sfx);
+				body->ChooseShape("Circle", 0.5* aoe_multipler);
+
 				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(player, "CycloneAttack", true);
 				queue->Publish(e);
+
+				
 			}
 			else if (razorAttack != nullptr)
 			{
+				auto aoe_multipler = razorAttack->GetAOEMultipler();
 				auto pos = transform->GetPos();
 				auto rot = transform->GetRotation();
 
@@ -195,6 +211,9 @@ namespace gswy
 
 				weapon.AddComponent(OwnershiptCom<GameObjectType>(player));
 				
+				auto cooldown = CoolDownCom(0.25);
+				weapon.AddComponent(cooldown);
+
 				auto weapon_rot = rot;
 				auto transform = TransformCom(vec3(pos.x, pos.y, Z_ORDER(m_spawnZOrder++)), weapon_rot);
 				weapon.AddComponent(transform);
@@ -205,14 +224,14 @@ namespace gswy
 				weapon.AddComponent(animation);
 
 				auto sprite = SpriteCom();
-				sprite.SetScale(vec2(0.25, 0.25));
+				sprite.SetScale(vec2(0.25* aoe_multipler, 0.25* aoe_multipler));
 				weapon.AddComponent(sprite);
 
 				auto aabb = BodyCom();
 				aabb.m_overrideFriction = true;
 				aabb.SetPos(transform.GetPos());
 				aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
-				aabb.ChooseShape("Circle", 0.1);
+				aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 				weapon.AddComponent(aabb);
 
 				weapon.AddComponent(LifeTimeCom(3.0));
@@ -241,6 +260,7 @@ namespace gswy
 					for (int i = 0; i < num_spawn; ++i)
 					{
 						{
+							auto aoe_multipler = fireballAttack->GetAOEMultipler();
 							auto pos = position;
 							auto rot = rotation;
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FORKED_FIREBALL);
@@ -262,18 +282,19 @@ namespace gswy
 							animCom.SetCurrentAnimationState("Move");
 							weapon.AddComponent(animCom);
 							auto sprite = SpriteCom();
-							sprite.SetScale(vec2(0.15, 0.15));
+							sprite.SetScale(vec2(0.15* aoe_multipler, 0.15* aoe_multipler));
 							weapon.AddComponent(sprite);
 							auto aabb = BodyCom();
 							aabb.SetPos(transform.GetPos());
 							aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
-							aabb.ChooseShape("Circle", 0.1);
+							aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(1.0));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
 						}
 					}
 				}
+				
 			}
 		}
 

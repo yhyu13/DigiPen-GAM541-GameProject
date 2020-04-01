@@ -197,7 +197,7 @@ namespace gswy
 					HitPoint->AddHitPoint(-15);
 
 					auto e = MemoryManager::Make_shared<GCEvent>(entityB);
-					queue->Publish(e);
+					queue->Publish(e, 0.15);
 
 					auto forkEvent = MemoryManager::Make_shared<ForkEvent>(ActiveSkillType::FIRE_BALL, position, rotation);
 					queue->Publish(forkEvent);
@@ -228,7 +228,7 @@ namespace gswy
 				m_parentWorld->Unpack(entityA, HitPoint);
 				m_parentWorld->Unpack(entityB, HitPrevention);
 
-				// Note: Fireball has hit prevention that only applies one hit to enemy
+				// Note: Iceball has hit prevention that only applies one hit to enemy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
@@ -241,6 +241,28 @@ namespace gswy
 				}
 			}
 			break;
+
+			case GameObjectType::FORKED_ICEBALL:
+			{
+				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				ComponentDecorator<HitPreventionCom<GameObjectType>, GameObjectType> HitPrevention;
+				m_parentWorld->Unpack(entityA, HitPoint);
+				m_parentWorld->Unpack(entityB, HitPrevention);
+
+				// Note: Fireball has hit prevention that only applies one hit to enemy
+				if (!HitPrevention->IsIncluded(entityA))
+				{
+					HitPrevention->Add(entityA);
+					HitPoint->AddHitPoint(-10);
+
+					// Iceball makes target it hit slow down
+					auto speedDownBuff = MemoryManager::Make_shared<ModifySpeedPercentBuff>(0.8, 0.5);
+					auto e = MemoryManager::Make_shared<AddBuffEvent>(entityA, speedDownBuff, true);
+					queue->Publish(e);
+				}
+			}
+			break;
+
 			case GameObjectType::BOLT_STRIKE:
 			{
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
@@ -260,8 +282,22 @@ namespace gswy
 			case GameObjectType::RAZOR:
 			{
 				ComponentDecorator<HitPointCom, GameObjectType> HitPoint;
+				ComponentDecorator<CoolDownCom, GameObjectType> cooldown;
+				ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner;
 				m_parentWorld->Unpack(entityA, HitPoint);
-				HitPoint->AddHitPoint(-0.5);
+				m_parentWorld->Unpack(entityB, cooldown);
+				m_parentWorld->Unpack(entityB, owner);
+
+				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkill;
+				m_parentWorld->Unpack(owner->GetEntity(), playerSkill);
+
+				// Skill support effect
+				// playerSkill->GetCurrentSkill()->HasSupportSkill();
+
+				if (!cooldown->IsFreezed() && !cooldown->IsCoolDown())
+				{
+					HitPoint->AddHitPoint(-1);
+				}
 			}
 			break;
 

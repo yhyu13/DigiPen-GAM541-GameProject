@@ -76,6 +76,18 @@ namespace gswy
 		std::string soudName;
 	};
 
+	struct WeaponSoundEvent : Event<GameObjectType, EventType> {
+
+		WeaponSoundEvent(const std::string& name)
+			:
+			Event(EventType::WEAPON_SOUND)
+		{
+			soundName = name;
+		}
+
+		std::string soundName;
+	};
+
 	struct DeathEvent : Event<GameObjectType, EventType> {
 
 		DeathEvent(const Entity<GameObjectType>& entity)

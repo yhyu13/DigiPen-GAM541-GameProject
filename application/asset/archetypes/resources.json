@@ -352,6 +352,34 @@
         {
           "path": "./asset/TopDownGunPack/TopDownGunPack/Audio/FootSteps/footstep02.ogg",
           "stream": false
+        },
+        {
+          "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_shoot_lr1.ogg",
+          "stream": false
+        },
+        {
+          "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_hit1.ogg",
+          "stream": false
+        },
+        {
+          "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_shoot_rl.ogg",
+          "stream": false
+        },
+        {
+          "path": "./asset/Audio_Assets/Weapons_Sounds/ice_shoot1.ogg",
+          "stream": false
+        },
+        {
+          "path": "./asset/Audio_Assets/Weapons_Sounds/ice_hit1.ogg",
+          "stream": false
+        },
+        {
+          "path": "./asset/Audio_Assets/Weapons_Sounds/lightning_shoot.ogg",
+          "stream": false
+        },
+        {
+          "path": "./asset/Audio_Assets/Weapons_Sounds/fire_crackle.ogg",
+          "stream": false
         }
       ]
     }
