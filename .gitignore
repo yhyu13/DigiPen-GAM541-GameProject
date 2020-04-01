@@ -11,10 +11,15 @@
 *.user
 *.filters
 *.vcxproj
+*.exe
 /game-project.sln
 /engine/vendors/glfw/bin
 /engine/vendors/glfw/bin-int
+/engine/vendors/imgui/bin
+/engine/vendors/imgui/bin-int
 /engine/vendors/glm/glm/out/build/x64-Debug/.ninja_deps
 /engine/vendors/glm/glm/out/build/x64-Debug/.ninja_log
 /engine/vendors/glm/glm/out/build/x64-Debug/.cmake/api/v1/reply
 /default.config
+application/asset/TopDownGunPack
+application/imgui.ini
