@@ -75,7 +75,7 @@ namespace gswy {
 		ImVec2 nextWindowSize(500, 428);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
-
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255,137,20));
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		float f = 0.0;
 		ImGui::SetWindowFontScale(1.0);
@@ -96,6 +96,7 @@ namespace gswy {
 			manager->InvokeButton("Exit");
 		}
 		ImGui::End();
+		ImGui::PopStyleColor(1);
 	}
 
 	HUD::HUD() 
