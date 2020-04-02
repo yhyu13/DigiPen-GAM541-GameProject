@@ -96,6 +96,9 @@ namespace gswy {
 
 	void ImGuiLayer::OnImGuiRender()
 	{
+#ifdef _DEBUG
+		ImGui::ShowDemoWindow();
+#endif // _DEBUG
 	}
 }
 
