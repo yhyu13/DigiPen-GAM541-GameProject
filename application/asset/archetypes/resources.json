@@ -346,10 +346,6 @@
       "type": "audio",
       "sounds": [
         {
-          "path": "./asset/breakout.mp3",
-          "stream": true
-        },
-        {
           "path": "./asset/Audio_Assets/footstep02.ogg",
           "stream": false
         },
