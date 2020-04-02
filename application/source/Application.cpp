@@ -151,13 +151,13 @@ namespace gswy
 
 			// Fading logo
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
-			queue->Publish(_e, 1.0f);
+			queue->Publish(_e, 2.0f);
 			auto teamLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_TEAM_LOGO);
-			queue->Publish(teamLogoEvent, 2.0f);
+			queue->Publish(teamLogoEvent, 3.0f);
 			auto gameLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_GAME_LOGO);
-			queue->Publish(gameLogoEvent, 4.0f);
+			queue->Publish(gameLogoEvent, 5.0f);
 			auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-			queue->Publish(_e1, 7.0f);
+			queue->Publish(_e1, 9.0f);
 		}
 
 		void OnLoadTeamLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -170,7 +170,7 @@ namespace gswy
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
 			m_sprite->SetSpriteTexture(logoTexture);
-			m_sprite->SetSpriteScale(vec2(2, 2.0f / 419 * 200));
+			m_sprite->SetSpriteScale(vec2(1, 1.0f / 419 * 200));
 			m_sprite->SetSpritePosition(vec3(0));
 			logo.AddComponent(sprite);
 			auto transform = TransformCom(0, 0, Z_ORDER(1000));
@@ -190,14 +190,14 @@ namespace gswy
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
 			m_sprite->SetSpriteTexture(logoTexture1);
-			m_sprite->SetSpriteScale(vec2(3, 3.0 / 608 * 200));
+			m_sprite->SetSpriteScale(vec2(2, 2.0 / 608 * 200));
 			m_sprite->SetSpritePosition(vec3(0));
 			logo.AddComponent(sprite);
 			auto transform = TransformCom(0, 0, Z_ORDER(2000));
 			logo.AddComponent(transform);
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
-			queue->Publish(_e, 1.0f);
+			queue->Publish(_e, 2.0f);
 		}
 
 		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
