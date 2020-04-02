@@ -447,7 +447,7 @@ namespace gswy
 		void Render(double ts)
 		{
 			if(m_PP) m_PostProcessing.Bind();
-			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1 });
 			RenderCommand::Clear();
 			m_CameraController.OnUpdate(ts);
 			Renderer2D::BeginBatch(m_CameraController.GetCamera());
