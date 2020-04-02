@@ -72,7 +72,7 @@ namespace gswy {
 	void MainMenu::Render()
 	{
 		ImVec2 windowsize = ImVec2(m_WindowSize_X, m_WindowSize_Y);
-		ImVec2 nextWindowSize(500, 500);
+		ImVec2 nextWindowSize(500, 428);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
 
