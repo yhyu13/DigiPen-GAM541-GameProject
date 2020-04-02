@@ -127,37 +127,51 @@ namespace gswy
 
 		void StartUp()
 		{
-			// Load logo
-			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/DigiPen_RED_1024px.png", "Logo");
-			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-			auto active = ActiveCom();
-			logo.AddComponent(active);
-			auto sprite = SpriteCom();
-			auto m_sprite = sprite.Get();
-			m_sprite->SetSpriteTexture(logoTexture);
-			m_sprite->SetSpriteScale(vec2(2, 2.0 / 1024 * 237));
-			m_sprite->SetSpritePosition(vec3(0));
-			logo.AddComponent(sprite);
-
 			// Load all resources
 			LoadResources();
 
-			// Publish start events
-			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			queue->Subscribe<GameLayer>(this, EventType::LOAD_MAIN_MENU, &GameLayer::OnLoadMainMenuWorld);
-			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_WORLD, &GameLayer::OnLoadGameWorld);
-			queue->Subscribe<GameLayer>(this, EventType::LOAD_TEAM_LOGO, &GameLayer::OnLoadTeamLogo);
-			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_LOGO, &GameLayer::OnLoadGameLogo);
+			Json::Value engineConfiguration;
+			std::ifstream file("./asset/engine-configuration/engine-config.json", std::ifstream::binary);
+			file >> engineConfiguration;
+			file.close();
 
-			// Fading logo
-			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
-			queue->Publish(_e, 2.0f);
-			auto teamLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_TEAM_LOGO);
-			queue->Publish(teamLogoEvent, 3.0f);
-			auto gameLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_GAME_LOGO);
-			queue->Publish(gameLogoEvent, 5.0f);
-			auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-			queue->Publish(_e1, 9.0f);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			if (engineConfiguration["startup-screen"].asBool())
+			{
+				// Load logo
+				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/DigiPen_RED_1024px.png", "Logo");
+				auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+				auto active = ActiveCom();
+				logo.AddComponent(active);
+				auto sprite = SpriteCom();
+				auto m_sprite = sprite.Get();
+				m_sprite->SetSpriteTexture(logoTexture);
+				m_sprite->SetSpriteScale(vec2(2, 2.0 / 1024 * 237));
+				m_sprite->SetSpritePosition(vec3(0));
+				logo.AddComponent(sprite);
+
+				// Publish start events
+				
+				queue->Subscribe<GameLayer>(this, EventType::LOAD_MAIN_MENU, &GameLayer::OnLoadMainMenuWorld);
+				queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_WORLD, &GameLayer::OnLoadGameWorld);
+				queue->Subscribe<GameLayer>(this, EventType::LOAD_TEAM_LOGO, &GameLayer::OnLoadTeamLogo);
+				queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_LOGO, &GameLayer::OnLoadGameLogo);
+
+				// Fading logo
+				auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+				queue->Publish(_e, 2.0f);
+				auto teamLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_TEAM_LOGO);
+				queue->Publish(teamLogoEvent, 3.0f);
+				auto gameLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_GAME_LOGO);
+				queue->Publish(gameLogoEvent, 5.0f);
+				auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
+				queue->Publish(_e1, 9.0f);
+			}
+			else
+			{
+				LoadMainMenuWorld();
+			}
+			
 		}
 
 		void OnLoadTeamLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -495,11 +509,6 @@ namespace gswy
 					UpdateCursor(dt);
 					UpdateMiniMap(dt);
 				}
-				//std::future<void> update = std::async(std::launch::async, [this, ts]()
-				//{
-
-				//});
-				//update.wait();
 				if (IS_INGAME)
 				{
 					TIME("System Update");
