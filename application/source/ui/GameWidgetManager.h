@@ -44,7 +44,7 @@ namespace gswy {
 		int m_Coins;
 		float m_Progress;
 		float m_Mana;
-		float m_Sanity;
+		float m_PlayerHealth;
 
 		std::shared_ptr<FrameBuffer> m_FrameBuffer;
 	};

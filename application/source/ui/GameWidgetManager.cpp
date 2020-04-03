@@ -109,7 +109,7 @@ namespace gswy {
 		m_Coins = 0;
 		m_Progress = 0.5f;
 		m_Mana = 0.5f;
-		m_Sanity = 0.5f;
+		m_PlayerHealth = 1.0f;
 		m_FrameBuffer = FrameBuffer::Create(m_WindowSize_X, m_WindowSize_Y);
 	}
 
@@ -132,36 +132,35 @@ namespace gswy {
 		ImGui::End();
 		
 		//Text : Coin
-		nextWindowSize = ImVec2(100, 20);
-		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 135));
 		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Image(0.)
 		ImGui::Text("Coin : %i", m_Coins);
 		ImGui::End();
+		//nextWindowSize = ImVec2(100, 20);
+		//ImGui::SetNextWindowSize(nextWindowSize);
+		//ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 135));
+		//ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		//ImGui::Text("Coin : %i", m_Coins);
+		//ImGui::End();
 		
 		//Progress Bar : Base Life
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 100));
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, nextWindowSize[1] + 20));
 		ImGui::Begin("Base Life", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::ProgressBar(m_Progress);
 		ImGui::End();
 		
-		//Progress Bar : Mana
-		nextWindowSize = ImVec2(500, 20);
+		//Progress Bar : PlayerHealth
+		nextWindowSize = ImVec2(250, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - nextWindowSize[0] - 100, m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::Begin("Mana", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::ProgressBar(m_Mana);
+		ImGui::SetNextWindowPos(ImVec2(150, m_WindowSize_Y - nextWindowSize[1] - 100));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, { 255, 137, 20, 255 });
+		ImGui::PushStyleColor(ImGuiCol_PlotHistogram, { 255, 0, 0, 255 });
+		ImGui::Begin("PlayerHealth", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::ProgressBar(m_PlayerHealth);
 		ImGui::End();
-		
-		//Progress Bar : Sanity
-		nextWindowSize = ImVec2(500, 20);
-		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(100, m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::Begin("Sanity", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::ProgressBar(m_Sanity);
-		ImGui::End();
+		ImGui::PopStyleColor(2);
 	}
 
 	void PauseMenu::Render()
@@ -453,96 +452,141 @@ namespace gswy {
 
 	void InventoryMenu::Render()
 	{
-		//Inventory
-		ImVec2 InventoryWindowSize = ImVec2(500, 400);
+		//New Inventory
+		ImVec2 InventoryWindowSize = ImVec2(248, 77);
 		ImGui::SetNextWindowSize(InventoryWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - InventoryWindowSize.x, 0));
+		ImGui::SetNextWindowPos(ImVec2(150, m_WindowSize_Y - InventoryWindowSize[1] - 20));
 		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-
-		if (ImGui::BeginTabBar("InventoryTabBar"))
 		{
-			if (ImGui::BeginTabItem("Q"))
-			{
-				m_CurrentTab = 1;
-
-				ImGui::Dummy(ImVec2(500, 25));
-				//Query : replace name when ACTIVE 1 has been installed
-				std::string act1 = SkillManager::GetInstance()->GetSkill(1, 1) ? SkillManager::GetInstance()->GetSkill(1, 1)->m_type.c_str() : "ACTIVE 1";
-				ImGui::Button(act1.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup1 = SkillManager::GetInstance()->GetSkill(1, 2) ? SkillManager::GetInstance()->GetSkill(1, 2)->m_type.c_str() : "SUPPORT 1";
-				ImGui::Button(sup1.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup2 = SkillManager::GetInstance()->GetSkill(1, 3) ? SkillManager::GetInstance()->GetSkill(1, 3)->m_type.c_str() : "SUPPORT 2";
-				ImGui::Button(sup2.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup3 = SkillManager::GetInstance()->GetSkill(1, 4) ? SkillManager::GetInstance()->GetSkill(1, 4)->m_type.c_str() : "SUPPORT 3";
-				ImGui::Button(sup3.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("W"))
-			{
-				m_CurrentTab = 2;
-
-				ImGui::Dummy(ImVec2(500, 25));
-				//Query : replace name when ACTIVE 2 has been installed
-				std::string act1 = SkillManager::GetInstance()->GetSkill(2, 1) ? SkillManager::GetInstance()->GetSkill(2, 1)->m_type.c_str() : "ACTIVE 1";
-				ImGui::Button(act1.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup1 = SkillManager::GetInstance()->GetSkill(2, 2) ? SkillManager::GetInstance()->GetSkill(2, 2)->m_type.c_str() : "SUPPORT 1";
-				ImGui::Button(sup1.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup2 = SkillManager::GetInstance()->GetSkill(2, 3) ? SkillManager::GetInstance()->GetSkill(2, 3)->m_type.c_str() : "SUPPORT 2";
-				ImGui::Button(sup2.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup3 = SkillManager::GetInstance()->GetSkill(2, 4) ? SkillManager::GetInstance()->GetSkill(2, 4)->m_type.c_str() : "SUPPORT 3";
-				ImGui::Button(sup3.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("E"))
-			{
-				m_CurrentTab = 3;
-
-				ImGui::Dummy(ImVec2(500, 25));
-				//Query : replace name when ACTIVE 3 has been installed
-				std::string act1 = SkillManager::GetInstance()->GetSkill(3, 1) ? SkillManager::GetInstance()->GetSkill(3, 1)->m_type.c_str() : "ACTIVE 1";
-				ImGui::Button(act1.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup1 = SkillManager::GetInstance()->GetSkill(3, 2) ? SkillManager::GetInstance()->GetSkill(3, 2)->m_type.c_str() : "SUPPORT 1";
-				ImGui::Button(sup1.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup2 = SkillManager::GetInstance()->GetSkill(3, 3) ? SkillManager::GetInstance()->GetSkill(3, 3)->m_type.c_str() : "SUPPORT 2";
-				ImGui::Button(sup2.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup3 = SkillManager::GetInstance()->GetSkill(3, 4) ? SkillManager::GetInstance()->GetSkill(3, 4)->m_type.c_str() : "SUPPORT 3";
-				ImGui::Button(sup3.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("R"))
-			{
-				m_CurrentTab = 4;
-
-				ImGui::Dummy(ImVec2(500, 25));
-				//Query : replace name when ACTIVE 4 has been installed
-				std::string act1 = SkillManager::GetInstance()->GetSkill(4, 1) ? SkillManager::GetInstance()->GetSkill(4, 1)->m_type.c_str() : "ACTIVE 1";
-				ImGui::Button(act1.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup1 = SkillManager::GetInstance()->GetSkill(4, 2) ? SkillManager::GetInstance()->GetSkill(4, 2)->m_type.c_str() : "SUPPORT 1";
-				ImGui::Button(sup1.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup2 = SkillManager::GetInstance()->GetSkill(4, 3) ? SkillManager::GetInstance()->GetSkill(4, 3)->m_type.c_str() : "SUPPORT 2";
-				ImGui::Button(sup2.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				std::string sup3 = SkillManager::GetInstance()->GetSkill(4, 4) ? SkillManager::GetInstance()->GetSkill(4, 4)->m_type.c_str() : "SUPPORT 3";
-				ImGui::Button(sup3.c_str(), ImVec2(300, 50));
-				ImGui::Dummy(ImVec2(500, 25));
-				ImGui::EndTabItem();
-			}
-			ImGui::EndTabBar();
+			std::string act1 = SkillManager::GetInstance()->GetSkill(1, 1) ? SkillManager::GetInstance()->GetSkill(1, 1)->m_type.c_str() : "ACTIVE 1";
+			ImGui::Button(act1.c_str(), ImVec2(50, 50));
+		}
+		ImGui::SameLine();
+		{
+			std::string act1 = SkillManager::GetInstance()->GetSkill(2, 1) ? SkillManager::GetInstance()->GetSkill(2, 1)->m_type.c_str() : "ACTIVE 1";
+			ImGui::Button(act1.c_str(), ImVec2(50, 50));
+		}
+		ImGui::SameLine();
+		{
+			std::string act1 = SkillManager::GetInstance()->GetSkill(2, 1) ? SkillManager::GetInstance()->GetSkill(3, 1)->m_type.c_str() : "ACTIVE 1";
+			ImGui::Button(act1.c_str(), ImVec2(50, 50));
+		}
+		ImGui::SameLine();
+		{
+			std::string act1 = SkillManager::GetInstance()->GetSkill(2, 1) ? SkillManager::GetInstance()->GetSkill(4, 1)->m_type.c_str() : "ACTIVE 1";
+			ImGui::Button(act1.c_str(), ImVec2(50, 50));
+		}
+		{
+			ImGui::Image(0, ImVec2(15, 15));
+			ImGui::SameLine();
+			ImGui::Image(0, ImVec2(15, 15));
+			ImGui::SameLine();
+			ImGui::Image(0, ImVec2(15, 15));
+			ImGui::SameLine();
+			ImGui::Image(0, ImVec2(15, 15));
+			ImGui::SameLine();
+			ImGui::Image(0, ImVec2(15, 15));
+			ImGui::SameLine();
+			ImGui::Image(0, ImVec2(15, 15));
+			ImGui::SameLine();
+			ImGui::Image(0, ImVec2(15, 15));
+			ImGui::SameLine();
+			ImGui::Image(0, ImVec2(15, 15));
+			ImGui::SameLine();
+			ImGui::Image(0, ImVec2(15, 15));
+			ImGui::SameLine();
 		}
 		ImGui::End();
+		//Inventory
+		//ImVec2 InventoryWindowSize = ImVec2(500, 400);
+		//ImGui::SetNextWindowSize(InventoryWindowSize);
+		//ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - InventoryWindowSize.x, 0));
+		//ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		//
+		//if (ImGui::BeginTabBar("InventoryTabBar"))
+		//{
+		//	if (ImGui::BeginTabItem("Q"))
+		//	{
+		//		m_CurrentTab = 1;
+		//
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		//Query : replace name when ACTIVE 1 has been installed
+		//		std::string act1 = SkillManager::GetInstance()->GetSkill(1, 1) ? SkillManager::GetInstance()->GetSkill(1, 1)->m_type.c_str() : "ACTIVE 1";
+		//		ImGui::Button(act1.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup1 = SkillManager::GetInstance()->GetSkill(1, 2) ? SkillManager::GetInstance()->GetSkill(1, 2)->m_type.c_str() : "SUPPORT 1";
+		//		ImGui::Button(sup1.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup2 = SkillManager::GetInstance()->GetSkill(1, 3) ? SkillManager::GetInstance()->GetSkill(1, 3)->m_type.c_str() : "SUPPORT 2";
+		//		ImGui::Button(sup2.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup3 = SkillManager::GetInstance()->GetSkill(1, 4) ? SkillManager::GetInstance()->GetSkill(1, 4)->m_type.c_str() : "SUPPORT 3";
+		//		ImGui::Button(sup3.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		ImGui::EndTabItem();
+		//	}
+		//	if (ImGui::BeginTabItem("W"))
+		//	{
+		//		m_CurrentTab = 2;
+		//
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		//Query : replace name when ACTIVE 2 has been installed
+		//		std::string act1 = SkillManager::GetInstance()->GetSkill(2, 1) ? SkillManager::GetInstance()->GetSkill(2, 1)->m_type.c_str() : "ACTIVE 1";
+		//		ImGui::Button(act1.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup1 = SkillManager::GetInstance()->GetSkill(2, 2) ? SkillManager::GetInstance()->GetSkill(2, 2)->m_type.c_str() : "SUPPORT 1";
+		//		ImGui::Button(sup1.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup2 = SkillManager::GetInstance()->GetSkill(2, 3) ? SkillManager::GetInstance()->GetSkill(2, 3)->m_type.c_str() : "SUPPORT 2";
+		//		ImGui::Button(sup2.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup3 = SkillManager::GetInstance()->GetSkill(2, 4) ? SkillManager::GetInstance()->GetSkill(2, 4)->m_type.c_str() : "SUPPORT 3";
+		//		ImGui::Button(sup3.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		ImGui::EndTabItem();
+		//	}
+		//	if (ImGui::BeginTabItem("E"))
+		//	{
+		//		m_CurrentTab = 3;
+		//
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		//Query : replace name when ACTIVE 3 has been installed
+		//		std::string act1 = SkillManager::GetInstance()->GetSkill(3, 1) ? SkillManager::GetInstance()->GetSkill(3, 1)->m_type.c_str() : "ACTIVE 1";
+		//		ImGui::Button(act1.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup1 = SkillManager::GetInstance()->GetSkill(3, 2) ? SkillManager::GetInstance()->GetSkill(3, 2)->m_type.c_str() : "SUPPORT 1";
+		//		ImGui::Button(sup1.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup2 = SkillManager::GetInstance()->GetSkill(3, 3) ? SkillManager::GetInstance()->GetSkill(3, 3)->m_type.c_str() : "SUPPORT 2";
+		//		ImGui::Button(sup2.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup3 = SkillManager::GetInstance()->GetSkill(3, 4) ? SkillManager::GetInstance()->GetSkill(3, 4)->m_type.c_str() : "SUPPORT 3";
+		//		ImGui::Button(sup3.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		ImGui::EndTabItem();
+		//	}
+		//	if (ImGui::BeginTabItem("R"))
+		//	{
+		//		m_CurrentTab = 4;
+		//
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		//Query : replace name when ACTIVE 4 has been installed
+		//		std::string act1 = SkillManager::GetInstance()->GetSkill(4, 1) ? SkillManager::GetInstance()->GetSkill(4, 1)->m_type.c_str() : "ACTIVE 1";
+		//		ImGui::Button(act1.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup1 = SkillManager::GetInstance()->GetSkill(4, 2) ? SkillManager::GetInstance()->GetSkill(4, 2)->m_type.c_str() : "SUPPORT 1";
+		//		ImGui::Button(sup1.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup2 = SkillManager::GetInstance()->GetSkill(4, 3) ? SkillManager::GetInstance()->GetSkill(4, 3)->m_type.c_str() : "SUPPORT 2";
+		//		ImGui::Button(sup2.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		std::string sup3 = SkillManager::GetInstance()->GetSkill(4, 4) ? SkillManager::GetInstance()->GetSkill(4, 4)->m_type.c_str() : "SUPPORT 3";
+		//		ImGui::Button(sup3.c_str(), ImVec2(300, 50));
+		//		ImGui::Dummy(ImVec2(500, 25));
+		//		ImGui::EndTabItem();
+		//	}
+		//	ImGui::EndTabBar();
+		//}
+		//ImGui::End();
 	}
 }
