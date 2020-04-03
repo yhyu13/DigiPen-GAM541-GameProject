@@ -248,11 +248,6 @@ namespace gswy {
 		template<typename Enitity>
 		void UnloadCurrentTileMap(std::shared_ptr<GameWorld<Enitity>> world)
 		{
-			//if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
-			//{
-			//	// TODO : Engine exception
-			//	throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"TileMap with name " + str2wstr(m_currentMapName) + L" has not been managed!");
-			//}
 			if (!m_world) m_world = world;
 			m_isAnyLevelLoaded = false;
 		}
@@ -333,8 +328,14 @@ namespace gswy {
 		*/
 		bool TrySpendCoins(int amount);
 
+		/*
+			Update each frame
+		*/
 		void Update(double dt);
 
+		/*
+			Reset level on starting a new game
+		*/
 		void ResetLevelData();
 
 	private:

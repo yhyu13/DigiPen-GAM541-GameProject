@@ -108,8 +108,8 @@ namespace gswy {
 		m_Level = 1;
 		m_Coins = 0;
 		m_Progress = 0.5f;
-		m_Mana = 0.5f;
-		m_PlayerHealth = 1.0f;
+		m_BaseHP = 0.5f;
+		m_PlayerHP = 0.5f;
 		m_FrameBuffer = FrameBuffer::Create(m_WindowSize_X, m_WindowSize_Y);
 	}
 
@@ -132,33 +132,46 @@ namespace gswy {
 		ImGui::End();
 		
 		//Text : Coin
-		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::Image(0.)
-		ImGui::Text("Coin : %i", m_Coins);
-		ImGui::End();
+		//ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		//ImGui::Image(0.)
+		//ImGui::Text("Coin : %i", m_Coins);
+		//ImGui::End();
 		//nextWindowSize = ImVec2(100, 20);
 		//ImGui::SetNextWindowSize(nextWindowSize);
 		//ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 135));
 		//ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		//ImGui::Text("Coin : %i", m_Coins);
 		//ImGui::End();
+
+		////Progress Bar : Game progress
+		//nextWindowSize = ImVec2(500, 20);
+		//ImGui::SetNextWindowSize(nextWindowSize);
+		//ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 100));
+		//ImGui::Begin("Base Life", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		//ImGui::ProgressBar(m_Progress);
+		//ImGui::End();
 		
 		//Progress Bar : Base Life
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, nextWindowSize[1] + 20));
-		ImGui::Begin("Base Life", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::ProgressBar(m_Progress);
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - nextWindowSize[0] - 100, m_WindowSize_Y - nextWindowSize[1] - 100));
+		ImGui::Begin("Base HP", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::AlignFirstTextHeightToWidgets();
+		ImGui::Text("Base HP");
+		ImGui::SameLine();
+		ImGui::ProgressBarCustomColor(m_BaseHP, ImVec4((1.0f - m_BaseHP), m_BaseHP, 0, 1));
 		ImGui::End();
 		
-		//Progress Bar : PlayerHealth
+		//Progress Bar : Sanity
 		nextWindowSize = ImVec2(250, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(150, m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, { 255, 137, 20, 255 });
-		ImGui::PushStyleColor(ImGuiCol_PlotHistogram, { 255, 0, 0, 255 });
-		ImGui::Begin("PlayerHealth", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::ProgressBar(m_PlayerHealth);
+		
+		ImGui::Begin("Player HP", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::AlignFirstTextHeightToWidgets();
+		ImGui::Text("Player HP");
+		ImGui::SameLine();
+		ImGui::ProgressBarCustomColor(m_PlayerHP, ImVec4((1.0f-m_PlayerHP), m_PlayerHP,0,1));
 		ImGui::End();
 		ImGui::PopStyleColor(2);
 	}

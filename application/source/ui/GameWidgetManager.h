@@ -35,6 +35,9 @@ namespace gswy {
 		void  SetWave(int wave) { m_Wave = wave; }
 		void  SetCoinNum(int coinNum) { m_Coins = coinNum; }
 		void  SetLevel(float lvl) { m_Level = lvl; }
+		void  SetBaseHP(float val) { m_BaseHP = val; }
+		void  SetPlayerHP(float val) { m_PlayerHP = val; }
+		void  SetGameProgress(float val) { m_Progress = val; }
 
 	private:
 		int m_TimerMin;
@@ -43,8 +46,8 @@ namespace gswy {
 		int m_Level;
 		int m_Coins;
 		float m_Progress;
-		float m_Mana;
-		float m_PlayerHealth;
+		float m_BaseHP;
+		float m_PlayerHP;
 
 		std::shared_ptr<FrameBuffer> m_FrameBuffer;
 	};
