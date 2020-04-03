@@ -49,7 +49,7 @@ namespace gswy {
 		template<typename Enitity>
 		void LoadCurrentTileMap(std::shared_ptr<GameWorld<Enitity>> world)
 		{
-			if (!m_world) m_world = world;
+			m_world = world;
 
 			if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
 			{
@@ -248,14 +248,14 @@ namespace gswy {
 		template<typename Enitity>
 		void UnloadCurrentTileMap(std::shared_ptr<GameWorld<Enitity>> world)
 		{
-			if (!m_world) m_world = world;
+			m_world = world;
 			m_isAnyLevelLoaded = false;
 		}
 
 		template<typename Enitity>
 		void LoadLevel(std::shared_ptr<GameWorld<Enitity>> world, int level)
 		{
-			if (!m_world) m_world = world;
+			m_world = world;
 
 			if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
 			{
