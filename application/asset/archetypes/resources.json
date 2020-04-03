@@ -28,8 +28,8 @@
           "path": "./asset/UI/You_Died.png"
         },
 		{
-          "name": "You_Failed",
-          "path": "./asset/UI/You_Failed.png"
+          "name": "You_Lost",
+          "path": "./asset/UI/You_Lost.png"
         },
 		{
           "name": "Level_Clear",
