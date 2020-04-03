@@ -52,14 +52,7 @@ namespace gswy
 		{
 			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::TOWER_BUILD);
 			m_bCanBuild = GameLevelMapManager::GetInstance()->GetCoins() >= m_towerBuildCost;
-			if (m_bCanBuild)
-			{
-				for (auto& tower : m_registeredEntities)
-				{
-					GetComponent<SpriteCom>(tower)->SetTexture("TowerHammer_On");
-				}
-			}
-			else
+			if (!m_bCanBuild)
 			{
 				for (auto& tower : m_registeredEntities)
 				{
