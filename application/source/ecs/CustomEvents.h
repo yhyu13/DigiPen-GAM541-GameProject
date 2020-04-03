@@ -224,6 +224,33 @@ namespace gswy
 		int m_level;
 	};
 
+	struct LoadLevelLogoEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadLevelLogoEvent(int lvl) : Event(EventType::LOAD_LEVEL_LOGO)
+		{
+			m_level = lvl;
+		}
+		int m_level;
+	};
+
+	struct LoadWaveClearEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadWaveClearEvent(int wave) : Event(EventType::LOAD_WAVE_CLEAR_LOGO)
+		{
+			m_wave = wave;
+		}
+		int m_wave;
+	};
+
+	struct LoadLevelClearEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadLevelClearEvent(int lvl) : Event(EventType::LOAD_LEVEL_CLEAR_LOGO)
+		{
+			m_level = lvl;
+		}
+		int m_level;
+	};
+
 	struct PlayerSetPendingAnimationEvent : Event<GameObjectType, EventType> {
 
 		PlayerSetPendingAnimationEvent(const Entity<GameObjectType>& entity, const std::string& name, bool force)

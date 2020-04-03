@@ -143,6 +143,9 @@ void gswy::GameLevelMapManager::Update(double dt)
 			{
 				PRINT("Load new wave");
 				LoadLevel(m_world, m_currentWave);
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto e1 = MemoryManager::Make_shared<LoadWaveClearEvent>(m_currentWave);
+				queue->Publish(e1);
 			}
 			else
 			{
@@ -150,10 +153,12 @@ void gswy::GameLevelMapManager::Update(double dt)
 				PRINT("You have beat this level!");
 				if (++m_currentLevel <= m_maxLevel)
 				{
-					PRINT("Load new level in 2 sec!");
+					PRINT("Load new level in 5 sec!");
 					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-					auto e = MemoryManager::Make_shared<LoadGameWorldEvent>(m_currentLevel);
-					queue->Publish(e, 2);
+					auto e1 = MemoryManager::Make_shared<LoadLevelClearEvent>(m_currentLevel);
+					queue->Publish(e1);
+					auto e2 = MemoryManager::Make_shared<LoadGameWorldEvent>(m_currentLevel);
+					queue->Publish(e2, 5);
 				}
 				else
 				{
