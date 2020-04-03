@@ -372,7 +372,23 @@
         {
           "path": "./asset/Audio_Assets/Weapons_Sounds/fire_crackle.ogg",
           "stream": false
-        }
+        },
+		{
+          "path": "./asset/Audio_Assets/HUD_Sounds/bind_sound.ogg",
+          "stream": false
+        },
+		{
+          "path": "./asset/Audio_Assets/HUD_Sounds/click_sound.ogg",
+          "stream": false
+        },
+		{
+          "path": "./asset/Audio_Assets/HUD_Sounds/purchase_install_sound.ogg",
+          "stream": false
+        },
+		{
+          "path": "./asset/Audio_Assets/HUD_Sounds/purchase_sound.ogg",
+          "stream": false
+        },
       ]
     }
   ]
