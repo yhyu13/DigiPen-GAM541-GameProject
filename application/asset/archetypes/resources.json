@@ -3,6 +3,38 @@
     {
       "type": "textures",
       "textures": [
+		{
+          "name": "DigiPen-logo",
+          "path": "./asset/DigiPen_RED_1024px.png"
+        },
+		{
+          "name": "Team-Logo",
+          "path": "./asset/team-logo3.png"
+        },
+		{
+          "name": "Game-Logo",
+          "path": "./asset/game-logo3.png"
+        },
+		{
+          "name": "Team-Logo",
+          "path": "./asset/team-logo3.png"
+        },
+		{
+          "name": "You_Won",
+          "path": "./asset/You_Won.png"
+        },
+		{
+          "name": "You_Died",
+          "path": "./asset/You_Died.png"
+        },
+		{
+          "name": "You_Failed",
+          "path": "./asset/You_Failed.png"
+        },
+		{
+          "name": "Level_Clear",
+          "path": "./asset/Level_Clear.png"
+        },
         {
           "name": "Portal_0",
           "path": "./asset/Sprites/Portal_0.png"

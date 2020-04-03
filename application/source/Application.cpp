@@ -139,14 +139,14 @@ namespace gswy
 			if (engineConfiguration["startup-screen"].asBool())
 			{
 				// Load logo
-				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/DigiPen_RED_1024px.png", "Logo");
+				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("DigiPen-logo");
 				auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 				auto active = ActiveCom();
 				logo.AddComponent(active);
 				auto sprite = SpriteCom();
 				auto m_sprite = sprite.Get();
 				m_sprite->SetSpriteTexture(logoTexture);
-				m_sprite->SetSpriteScale(vec2(2, 2.0 / 1024 * 237));
+				m_sprite->SetSpriteScale(vec2(2, 2.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
 				m_sprite->SetSpritePosition(vec3(0));
 				logo.AddComponent(sprite);
 
@@ -177,14 +177,14 @@ namespace gswy
 		void OnLoadTeamLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			// TEAM GSWY PRESENTS
-			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/team-logo3.png", "Team-Logo");
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Team-Logo");
 			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 			auto active = ActiveCom();
 			logo.AddComponent(active);
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
 			m_sprite->SetSpriteTexture(logoTexture);
-			m_sprite->SetSpriteScale(vec2(1, 1.0f / 419 * 200));
+			m_sprite->SetSpriteScale(vec2(1, 1.0f / logoTexture->GetWidth() * logoTexture->GetHeight()));
 			m_sprite->SetSpritePosition(vec3(0));
 			logo.AddComponent(sprite);
 			auto transform = TransformCom(0, 0, Z_ORDER(1000));
@@ -197,14 +197,14 @@ namespace gswy
 		void OnLoadGameLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			// LIGHT OF EMPYRION
-			auto logoTexture1 = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/game-logo3.png", "Game-Logo");
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Game-Logo");
 			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 			auto active = ActiveCom();
 			logo.AddComponent(active);
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
-			m_sprite->SetSpriteTexture(logoTexture1);
-			m_sprite->SetSpriteScale(vec2(2, 2.0 / 608 * 200));
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(2, 2.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
 			m_sprite->SetSpritePosition(vec3(0));
 			logo.AddComponent(sprite);
 			auto transform = TransformCom(0, 0, Z_ORDER(2000));
