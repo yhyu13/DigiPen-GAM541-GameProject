@@ -10,6 +10,7 @@ Creation date: 03/02/2020
 - End Header ----------------------------*/
 
 #include "GameLevelMapManager.h"
+#include "ecs/components/HitPointCom.h"
 #include <json/json.h>
 #include <fstream>
 
@@ -92,6 +93,7 @@ void gswy::GameLevelMapManager::Update(double dt)
 		return;
 	}
 
+	// Set UI widgets with game data
 	auto& hud = WidgetManager::GetInstance()->GetHUD();
 	int min = (int)m_timeRemaining / 60;
 	int sec = (int)m_timeRemaining - min * 60;
@@ -100,6 +102,23 @@ void gswy::GameLevelMapManager::Update(double dt)
 	hud.SetCoinNum(m_coins);
 	hud.SetWave(m_currentWave);
 	hud.SetLevel(m_currentLevel);
+	if (m_world)
+	{
+		auto player = m_world->GetAllEntityWithType(GameObjectType::PLAYER);
+		if (!player.empty())
+		{
+			ComponentDecorator<HitPointCom, GameObjectType> hp;
+			m_world->Unpack(player[0], hp);
+			hud.SetPlayerHP(hp->GetPercentageHP());
+		}
+		auto base = m_world->GetAllEntityWithType(GameObjectType::BASE);
+		if (!base.empty())
+		{
+			ComponentDecorator<HitPointCom, GameObjectType> hp;
+			m_world->Unpack(base[0], hp);
+			hud.SetBaseHP(hp->GetPercentageHP());
+		}
+	}
 
 	// Check level is running and do count down
 	if (m_waveStart && !m_timeOut)
