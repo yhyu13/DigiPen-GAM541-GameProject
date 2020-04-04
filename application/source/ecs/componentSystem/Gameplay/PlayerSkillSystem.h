@@ -142,8 +142,8 @@ namespace gswy
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
-				/*auto e = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr1");
-				queue->Publish(e);*/
+				auto e = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr1");
+				queue->Publish(e);
 			}
 			else if (iceballAttack != nullptr)
 			{
@@ -182,8 +182,8 @@ namespace gswy
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
-				/*auto e = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot1");
-				queue->Publish(e);*/
+				auto e = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot1");
+				queue->Publish(e);
 			}
 			else if (cycloneAttack != nullptr)
 			{
