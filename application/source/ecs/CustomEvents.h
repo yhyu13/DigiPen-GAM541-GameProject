@@ -66,26 +66,56 @@ namespace gswy
 
 	struct SoundEvent : Event<GameObjectType, EventType> {
 
-		SoundEvent(const std::string& name)
+		explicit SoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)
 			:
 			Event(EventType::SOUND)
 		{
-			soudName = name;
+			soundName = name;
+			m_location = pos;
+			m_vol = vol;
+			m_freq = freq;
 		}
-
-		std::string soudName;
+		explicit SoundEvent(const std::string& name, glm::vec2& pos = glm::vec2(0), float vol = 1.0f, float freq = 1.0f)
+			:
+			Event(EventType::SOUND)
+		{
+			soundName = name;
+			m_location = glm::vec3(pos.x, pos.y, 0);
+			m_vol = vol;
+			m_freq = freq;
+		}
+		std::string soundName;
+		glm::vec3 m_location;
+		float m_vol;
+		float m_freq;
 	};
 
 	struct WeaponSoundEvent : Event<GameObjectType, EventType> {
 
-		WeaponSoundEvent(const std::string& name)
+		WeaponSoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)
 			:
 			Event(EventType::WEAPON_SOUND)
 		{
 			soundName = name;
+			m_location = pos;
+			m_vol = vol;
+			m_freq = freq;
+		}
+
+		WeaponSoundEvent(const std::string& name, glm::vec2& pos = glm::vec2(0), float vol = 1.0f, float freq = 1.0f)
+			:
+			Event(EventType::WEAPON_SOUND)
+		{
+			soundName = name;
+			m_location = glm::vec3(pos.x,pos.y,0);
+			m_vol = vol;
+			m_freq = freq;
 		}
 
 		std::string soundName;
+		glm::vec3 m_location;
+		float m_vol;
+		float m_freq;
 	};
 
 	struct DeathEvent : Event<GameObjectType, EventType> {
@@ -217,11 +247,70 @@ namespace gswy
 
 	struct LoadGameWorldEvent : Event<GameObjectType, EventType>
 	{
-		explicit LoadGameWorldEvent(int lvl) : Event(EventType::LOAD_GAME_WORLD)
+		explicit LoadGameWorldEvent(int lvl, bool reload = false) : Event(EventType::LOAD_GAME_WORLD)
+		{
+			m_level = lvl;
+			m_reload = reload;
+		}
+		int m_level;
+		bool m_reload;
+	};
+
+	struct LoadLevelLogoEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadLevelLogoEvent(int lvl) : Event(EventType::LOAD_LEVEL_LOGO)
 		{
 			m_level = lvl;
 		}
 		int m_level;
+	};
+
+	struct LoadWaveClearEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadWaveClearEvent(int wave) : Event(EventType::LOAD_WAVE_CLEAR_LOGO)
+		{
+			m_wave = wave;
+		}
+		int m_wave;
+	};
+
+	struct LoadFinalWaveEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadFinalWaveEvent(int wave) : Event(EventType::LOAD_FINAL_WAVE)
+		{
+			m_wave = wave;
+		}
+		int m_wave;
+	};
+
+	struct LoadLevelClearEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadLevelClearEvent(int lvl) : Event(EventType::LOAD_LEVEL_CLEAR_LOGO)
+		{
+			m_level = lvl;
+		}
+		int m_level;
+	};
+
+	struct LoadWonEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadWonEvent() : Event(EventType::LOAD_WON_LOGO)
+		{
+		}
+	};
+
+	struct LoadLostEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadLostEvent() : Event(EventType::LOAD_LOST_LOGO)
+		{
+		}
+	};
+
+	struct LoadDiedEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadDiedEvent() : Event(EventType::LOAD_DIED_LOG)
+		{
+		}
 	};
 
 	struct PlayerSetPendingAnimationEvent : Event<GameObjectType, EventType> {
@@ -298,5 +387,28 @@ namespace gswy
 		int m_skillNumber;
 		std::string m_keyEventType;
 
+	};
+
+	struct CanPlayerInputEvent : Event<GameObjectType, EventType>
+	{
+
+		CanPlayerInputEvent(bool b)
+			: Event(EventType::CAN_PLAYER_INPUT)
+		{
+			m_bInput = b;
+		}
+
+		bool m_bInput;
+	};
+
+	struct AddCoinEvent : Event<GameObjectType, EventType>
+	{
+		AddCoinEvent(glm::vec2 enemyPosition)
+			: Event(EventType::ADD_COIN),
+			m_enemyPosition(enemyPosition)
+		{
+		}
+
+		glm::vec2 m_enemyPosition;
 	};
 }

@@ -18,6 +18,7 @@ Creation date: 03/11/2020
 #include "ecs/components/ActiveCom.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/CoolDownCom.h"
+#include "ecs/components/MiniMapSprite.h"
 #include "ecs/EntityType.h"
 #include "ecs/CustomEvents.h"
 
@@ -210,17 +211,18 @@ namespace gswy
 					ComponentDecorator<ActiveCom, GameObjectType> towerActive;
 					ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
 					m_parentWorld->Unpack(tower, towerBody);
-
-					// Simply swap the position of build tower and this tower
-					auto towerPos = towerBody->GetPos();
-					towerBody->SetPos(transform->GetPos());
-					transform->SetPos(towerPos);
 					m_parentWorld->Unpack(tower, towerActive);
-
-					// Deactivate other towers
-					towerActive->SetActive(false);
 					m_parentWorld->Unpack(tower, towerChildren);
 
+					transform->SetPos(towerBody->GetPos());
+					
+					auto sprite0 = MiniMapSprite();
+					sprite0.SetScale(vec2(0.1, 0.1));
+					sprite0.SetTexture("BlueLayer");
+					m_parentWorld->AddComponent(_tower, sprite0);
+
+					towerActive->SetActive(false);
+					// Deactivate other towers
 					for (auto& child : towerChildren->GetEntities())
 					{
 						if (child.m_type != _tower.m_type)

@@ -18,6 +18,8 @@
 	  "lifetime",
 	  "fade",
 	  "buff",
+	  "skill",
+      "target-entity-component",
 	  
 	  "attached-movement",
       "physics",
@@ -27,8 +29,6 @@
 	  "particle",
 	  "sprite",
 	  "scene",
-    "skill",
-    "target-entity-component",
 	  
 	  "gc"
    ]

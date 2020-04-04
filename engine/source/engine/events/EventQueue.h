@@ -43,14 +43,20 @@ namespace gswy {
 		struct DelayedEvent : Event<EntityType, EventType> {
 
 			DelayedEvent() = default;
-			explicit DelayedEvent(EventPtr event, float delayTime) : m_event(event), m_triggerTime(delayTime + glfwGetTime()) {
+			explicit DelayedEvent(EventPtr event, double delayTime) : m_event(event), m_triggerTime(delayTime) {
 			}
 
 			virtual ~DelayedEvent() {
 			}
 
+			DelayedEvent(const DelayedEvent& rhs)
+			{
+				m_event = rhs.m_event;
+				m_triggerTime = rhs.m_triggerTime;
+			}
+
 			EventPtr m_event;
-			float m_triggerTime;
+			double m_triggerTime;
 		};
 
 		typedef std::shared_ptr<DelayedEvent<EntityType, EventType>> DelayedEventPtr;	// Define delayed event smart pointer type
@@ -85,42 +91,61 @@ namespace gswy {
 
 		void Publish(EventPtr event, const float& delay) {
 			DelayedEventPtr delayedEvent = MemoryManager::Make_shared<DelayedEvent<EntityType, EventType>>(event, delay);
-			m_events.emplace(delayedEvent);
+			m_events.push(delayedEvent);
 		}
 
-		void Update(float frameTime) {
-			double now = glfwGetTime();
+		void Clear()
+		{
+			// Reset with empty queue
 			while (!m_events.empty()) {
-				DelayedEventPtr delayedEvent = m_events.top();
+				m_events.pop();
+			}
+			m_subscribers.clear();
+			m_bDelayedEventShouldBeCleared = true;
+		}
+
+		void Update(double frameTime) {
+			auto m_events_temp = m_events;
+			while (!m_events.empty()) {
+				m_events.pop();
+			}
+
+			/*
+				A few delayed event might call Clear() function such that all remaning delayed event
+				should not be called. We will need to check if m_bDelayedEventShouldBeCleared has
+				been set to true during the while loop.
+			*/
+			m_bDelayedEventShouldBeCleared = false;
+			while (!m_events_temp.empty() && !m_bDelayedEventShouldBeCleared) {
+
+				DelayedEventPtr delayedEvent = m_events_temp.top();
+				m_events_temp.pop();
 				/*
 					Since the priority queue mimic min-heap, event at the top has the lowest trigger-time.
 					If the current system-time is not greater than the trigger-time of element at the top,
 					program counter will come out of the loop. Otherwise, the system will keep publishing
 					events.
 				*/
-				if (now > delayedEvent->m_triggerTime) {
+				if ((delayedEvent->m_triggerTime-=frameTime) <= 0) {
 					Publish(delayedEvent->m_event);
-					m_events.pop();
 				}
 				else {
-					break;
+					m_events.push(delayedEvent);
 				}
 			}
 		}
 
 	private:
 		std::map<EventType, EventHandlerList*> m_subscribers;
-
 		struct DelayedEventComparator {
 			bool operator() (const DelayedEventPtr& event1, const DelayedEventPtr& event2) {
 				return event1->m_triggerTime > event2->m_triggerTime;
 			}
 		};
-
 		/*
 			This queue simulates a min-heap.
 		*/
 		std::priority_queue<DelayedEventPtr, std::vector<DelayedEventPtr>, DelayedEventComparator> m_events;
-
+		bool m_bDelayedEventShouldBeCleared = { false };
 	};
 }

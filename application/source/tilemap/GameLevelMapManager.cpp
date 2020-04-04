@@ -11,6 +11,7 @@ Creation date: 03/02/2020
 
 #include "GameLevelMapManager.h"
 #include "ecs/components/HitPointCom.h"
+#include "ecs/components/ActiveCom.h"
 #include <json/json.h>
 #include <fstream>
 
@@ -18,12 +19,41 @@ Creation date: 03/02/2020
 Start the level (start the count down, mainly)
 */
 
+bool gswy::GameLevelMapManager::IsLoading()
+{
+	return m_bIsLoading;
+}
+
+void gswy::GameLevelMapManager::SetIsLoading(bool b)
+{
+	m_bIsLoading = b;
+}
+
 void gswy::GameLevelMapManager::StartWave()
 {
 	PRINT("Start Wave " + Str(m_currentWave));
 	m_waveStart = true;
 	m_timeOut = false;
 	m_timeRemaining = m_timePerLevel;
+
+	if (m_world)
+	{
+		auto indicator = m_world->GetAllEntityWithType(GameObjectType::START_WAVE_INDICATOR);
+		if (!indicator.empty())
+		{
+			ComponentDecorator<ActiveCom, GameObjectType> active;
+			m_world->Unpack(indicator[0], active);
+			active->SetActive(false);
+		}
+	}
+
+	// Show final wave indicator on the screen
+	if (m_currentWave == m_maxWave)
+	{
+		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+		auto e2 = MemoryManager::Make_shared<LoadFinalWaveEvent>(m_currentWave);
+		queue->Publish(e2);
+	}
 }
 
 /*
@@ -88,7 +118,7 @@ bool gswy::GameLevelMapManager::TrySpendCoins(int amount)
 
 void gswy::GameLevelMapManager::Update(double dt)
 {
-	if (!m_isAnyLevelLoaded)
+	if (!IsInGame())
 	{
 		return;
 	}
@@ -120,6 +150,21 @@ void gswy::GameLevelMapManager::Update(double dt)
 		}
 	}
 
+	if (!IsWaveStarted() && !IsLoading())
+	{
+		// Show wave start indicator
+		if (m_world)
+		{
+			auto indicator = m_world->GetAllEntityWithType(GameObjectType::START_WAVE_INDICATOR);
+			if (!indicator.empty())
+			{
+				ComponentDecorator<ActiveCom, GameObjectType> active;
+				m_world->Unpack(indicator[0], active);
+				active->SetActive(true);
+			}
+		}
+	}
+
 	// Check level is running and do count down
 	if (m_waveStart && !m_timeOut)
 	{
@@ -143,22 +188,38 @@ void gswy::GameLevelMapManager::Update(double dt)
 			{
 				PRINT("Load new wave");
 				LoadLevel(m_world, m_currentWave);
+
+				// Show wave clear indicator
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto e1 = MemoryManager::Make_shared<LoadWaveClearEvent>(m_currentWave);
+				queue->Publish(e1);
 			}
 			else
 			{
 				// TODO: load new level
 				PRINT("You have beat this level!");
-				if (++m_currentLevel <= m_maxLevel)
+				if (AdvanceLevel())
 				{
-					PRINT("Load new level in 2 sec!");
+					PRINT("Load new level in 5 sec!");
+					// Show new level indicator
 					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-					auto e = MemoryManager::Make_shared<LoadGameWorldEvent>(m_currentLevel);
-					queue->Publish(e, 2);
+					auto e1 = MemoryManager::Make_shared<LoadLevelClearEvent>(m_currentLevel);
+					queue->Publish(e1);
+					auto e2 = MemoryManager::Make_shared<LoadGameWorldEvent>(m_currentLevel, false);
+					queue->Publish(e2, 4);
+					SetIsLoading(true);
 				}
 				else
 				{
 					// TODO : proper handle beating the game
 					PRINT("You have beat the game!");
+					// Show won indicator
+					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+					auto e1 = MemoryManager::Make_shared<LoadWonEvent>();
+					queue->Publish(e1);
+					auto e2 = MemoryManager::Make_shared<LoadMainMenuEvent>();
+					queue->Publish(e2, 4);
+					SetIsLoading(true);
 				}
 			}
 		}
@@ -171,6 +232,7 @@ void gswy::GameLevelMapManager::ResetLevelData()
 	m_isAnyLevelLoaded = false;
 	m_timeOut = false;
 	m_waveStart = false;
+	m_bIsLoading = false;
 
 	Json::Value root;
 	std::ifstream file("./asset/archetypes/levels/sample-level.json", std::ifstream::binary);
@@ -210,6 +272,19 @@ bool gswy::GameLevelMapManager::AdvanceWave()
 {
 	if (++m_currentWave <= m_maxWave)
 	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool gswy::GameLevelMapManager::AdvanceLevel()
+{
+	if (++m_currentLevel <= m_maxLevel)
+	{
+		m_currentWave = 1;
 		return true;
 	}
 	else

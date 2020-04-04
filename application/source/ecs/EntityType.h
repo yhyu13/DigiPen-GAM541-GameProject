@@ -41,6 +41,9 @@ namespace gswy
 		ENEMY_PROJECTILE,
 		RAZOR,
 
+		START_WAVE_INDICATOR,
+		COIN,
+
 		NUM
 	};
 }

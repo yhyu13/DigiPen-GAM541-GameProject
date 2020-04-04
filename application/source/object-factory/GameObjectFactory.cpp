@@ -206,6 +206,15 @@ namespace gswy {
 						}
 					}
 
+					if (name._Equal("coinAnimation"))
+					{
+						auto coinImage = ResourceAllocator<Animation>::GetInstance()->Create("", name);
+						for (int k = 0; k < 4; ++k)
+						{
+							coinImage->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
+						}
+						continue;
+					}
 				}
 				continue;
 			}

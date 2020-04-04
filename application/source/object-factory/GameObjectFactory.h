@@ -32,6 +32,10 @@ namespace gswy {
 		void LoadSystem(const std::string& filepath, std::shared_ptr<GameWorld<EntityType>> m_world)
 		{
 			for (auto & system: GetSystems(filepath)) {
+				if (system._Equal("mainMenu-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<MainMenuControllerComSys>());
+					continue;
+				}
 				if (system._Equal("player-controller")) {
 					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
 					continue;
@@ -158,7 +162,7 @@ namespace gswy {
 					auto player = world->GenerateEntity(GameObjectType::PLAYER);
 					player.AddComponent(ActiveCom());
 					auto buffCom = BuffCom();
-					auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.2, -1);
+					auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.05, -1);
 					buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 					player.AddComponent(buffCom);
 

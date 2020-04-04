@@ -41,6 +41,9 @@ namespace gswy
 				if (!baseHPCom->IsDead())
 				{
 					// TODO: handle base death
+					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+					auto e1 = MemoryManager::Make_shared<DeathEvent>(base);
+					queue->Publish(e1);
 				}
 			}
 		}

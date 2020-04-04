@@ -42,6 +42,8 @@ namespace gswy
 	{
 
 		SkillBinding()
+			:
+			m_skillIndex(0)
 		{
 		}
 
@@ -66,7 +68,8 @@ namespace gswy
 		float m_maxAngleRotation = { 0.8726646f };
 
 		double m_timeDisableMoveCommand = { 0 };
-		bool m_bDiableMoveCommand = { false };
+		bool m_bDisableMoveCommand = { false };
+		bool m_bDisableInput = { false };
 	public:
 		PlayerControllerComSys() {
 			m_systemSignature.AddComponent<PlayerSkillComponent>();
@@ -76,12 +79,21 @@ namespace gswy
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<PlayerControllerComSys>(this, EventType::KEY_BIND_EVENT, &PlayerControllerComSys::OnKeyBindingEvent);
+			queue->Subscribe<PlayerControllerComSys>(this, EventType::CAN_PLAYER_INPUT, &PlayerControllerComSys::OnCanPlayerInputEvent);
 		}
 
-		void OnKeyBindingEvent(EventQueue<GameObjectType, EventType>::EventPtr event)
+		void OnCanPlayerInputEvent(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = static_pointer_cast<CanPlayerInputEvent>(e))
+			{
+				m_bDisableInput = !event->m_bInput;
+			}
+		}
+
+		void OnKeyBindingEvent(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			auto keyBindEvent = std::static_pointer_cast<KeyBindEvent>(event);
+			auto keyBindEvent = std::static_pointer_cast<KeyBindEvent>(e);
 			InputManager* manager = InputManager::GetInstance();
 			std::function<bool(const int&)> callback;
 			if (keyBindEvent->m_keyEventType._Equal("TRIGGER"))
@@ -119,6 +131,15 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto skillManager = SkillManager::GetInstance();
 
+			if (m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER).empty())
+			{
+				return;
+			}
+			if (m_bDisableInput)
+			{
+				return;
+			}
+
 			// Handle mouse action
 			if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 			{
@@ -152,7 +173,7 @@ namespace gswy
 			if (input->IsKeyTriggered(KEY_SPACE))
 			{
 				PRINT("SPACE");
-				if (!GameLevelMapManager::GetInstance()->IsWaveStarted())
+				if (!GameLevelMapManager::GetInstance()->IsWaveStarted() && !GameLevelMapManager::GetInstance()->IsLoading())
 				{
 					GameLevelMapManager::GetInstance()->StartWave();
 				}
@@ -161,19 +182,25 @@ namespace gswy
 			// Handle UI toggling
 			if (GameLevelMapManager::GetInstance()->IsInGame())
 			{
-				if (input->IsKeyTriggered(KEY_TAB)) 
+				if (input->IsKeyTriggered(KEY_I))
 				{
-					bool v1 = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
-					WidgetManager::GetInstance()->GetShopMenu().SetVisible(!v1);
-
-					bool v2 = WidgetManager::GetInstance()->GetInventoryMenu().GetVisible();
-					WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!v2);
-					m_bDiableMoveCommand = !v2;
+					auto& hud = WidgetManager::GetInstance()->GetInventoryMenu();
+					hud.SetVisible(!hud.GetVisible());
 				}
+				if (input->IsKeyTriggered(KEY_P))
+				{
+					auto& hud = WidgetManager::GetInstance()->GetShopMenu();
+					hud.SetVisible(!hud.GetVisible());
+				}
+
+				// Disable movement while either inventory or shop menu is active
+				m_bDisableMoveCommand = WidgetManager::GetInstance()->GetShopMenu().GetVisible() || WidgetManager::GetInstance()->GetInventoryMenu().GetVisible();
+
 				if (input->IsKeyTriggered(KEY_ESCAPE))
 				{
-					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-					m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+					auto& hud = WidgetManager::GetInstance()->GetPauseMenu();
+					hud.SetVisible(!hud.GetVisible());
+					m_parentWorld->SetPause(hud.GetVisible());
 				}
 			}
 		}
@@ -204,7 +231,7 @@ namespace gswy
 
 		void HandleMouseAction_LeftPressed()
 		{
-			if (m_timeDisableMoveCommand > 0 || m_bDiableMoveCommand)
+			if (m_timeDisableMoveCommand > 0 || m_bDisableMoveCommand)
 			{
 				return;
 			}
@@ -275,90 +302,9 @@ namespace gswy
 			default:
 				break;
 			}
-
-			//switch (mouseBodyCom->GetOtherEntity().m_type)
-			//{
-			//case GameObjectType::TOWER_BUILD:
-			//{
-			//	auto tower = mouseBodyCom->GetOtherEntity();
-			//	ComponentDecorator<SpriteCom, GameObjectType> towerSprite;
-			//	ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
-			//	m_parentWorld->Unpack(tower, towerSprite);
-			//	m_parentWorld->Unpack(tower, towerChildren);
-			//	if (towerSprite->GetTextureName().compare("TowerHammer_On") == 0)
-			//	{
-			//		towerSprite->SetTexture("TowerHammer_Off");
-			//		for (auto& _tower : towerChildren->GetEntities())
-			//		{
-			//			ComponentDecorator<ActiveCom, GameObjectType> active;
-			//			ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
-			//			m_parentWorld->Unpack(_tower, active);
-			//			m_parentWorld->Unpack(_tower, coolDownController);
-			//			active->SetActive(true);
-			//			coolDownController->SetFreeze(true);
-			//		}
-			//	}
-			//	else
-			//	{
-			//		towerSprite->SetTexture("TowerHammer_On");
-			//		for (auto& _tower : towerChildren->GetEntities())
-			//		{
-			//			ComponentDecorator<ActiveCom, GameObjectType> active;
-			//			m_parentWorld->Unpack(_tower, active);
-			//			active->SetActive(false);
-			//		}
-			//	}
-			//}
-			//break;
-			//case GameObjectType::TOWER_FIRE: case GameObjectType::TOWER_ICE: case GameObjectType::TOWER_LIGHTNING:
-			//{
-			//	auto _tower = mouseBodyCom->GetOtherEntity();
-			//	ComponentDecorator<BodyCom, GameObjectType> transform;
-			//	ComponentDecorator<CoolDownCom, GameObjectType> coolDownController;
-			//	ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> ownership;
-			//	m_parentWorld->Unpack(_tower, transform);
-			//	m_parentWorld->Unpack(_tower, coolDownController);
-			//	m_parentWorld->Unpack(_tower, ownership);
-
-			//	// Unfreeze tower as a way to show it has been enabled.
-			//	// Do not re-enabled unfreezed tower
-			//	if (!coolDownController->IsFreezed())
-			//	{
-			//		break;
-			//	}
-			//	coolDownController->SetFreeze(false);
-			//	auto tower = ownership->GetEntity();
-			//	ComponentDecorator<BodyCom, GameObjectType> towerBody;
-			//	ComponentDecorator<ActiveCom, GameObjectType> towerActive;
-			//	ComponentDecorator<ChildrenCom<GameObjectType>, GameObjectType> towerChildren;
-			//	m_parentWorld->Unpack(tower, towerBody);
-
-			//	// Simply swap the position of build tower and this tower
-			//	auto towerPos = towerBody->GetPos();
-			//	towerBody->SetPos(transform->GetPos());
-			//	transform->SetPos(towerPos);
-			//	m_parentWorld->Unpack(tower, towerActive);
-
-			//	// Deactivate other towers
-			//	towerActive->SetActive(false);
-			//	m_parentWorld->Unpack(tower, towerChildren);
-
-			//	for (auto& child : towerChildren->GetEntities())
-			//	{
-			//		if (child.m_type != _tower.m_type)
-			//		{
-			//			ComponentDecorator<ActiveCom, GameObjectType> active;
-			//			m_parentWorld->Unpack(child, active);
-			//			active->SetActive(false);
-			//		}
-			//	}
-			//}
-			//break;
-			//default:
-			//	break;
-			//}
 		}
 
+		// TODO : Optimize the path result by Cubic spline
 		void HandlePlayerMovement(double dt)
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
@@ -402,7 +348,7 @@ namespace gswy
 				//PRINT(m_pathResult.size());
 			}
 			auto angle = LookAt(delta);
-			// TODO: need fine tune
+			// TODO: need fine tune for smooth player turning
 			//if (angle > m_maxAngleRotation)
 			//{
 			//	angle = m_maxAngleRotation;
@@ -424,7 +370,7 @@ namespace gswy
 			// 3. Play sound
 			if (dt)
 			{
-				auto e = MemoryManager::Make_shared<SoundEvent>("footstep02");
+				auto e = MemoryManager::Make_shared<SoundEvent>("footsteps1", vec3(0), 1, 1.15);
 				queue->Publish(e);
 			}
 		}

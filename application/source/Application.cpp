@@ -38,7 +38,6 @@ namespace gswy
 		{
 			InitFramework();
 			InitGameWorld();
-			StartUp();
 		}
 
 		virtual ~GameLayer() 
@@ -72,8 +71,7 @@ namespace gswy
 			// TODO : consider to move the allocation of minimap texture elsewhere.
 			m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(),GSWY_GetWindowHeight());
 
-			InventoryManager* inventoryManager = InventoryManager::GetInstance();
-			inventoryManager->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
+			InventoryManager::GetInstance()->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
 
 			GameLevelMapManager::GetInstance()->ResetLevelData();
 			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel1");
@@ -97,67 +95,37 @@ namespace gswy
 			ResourceAllocator<Animation>::GetInstance()->Init();
 			// TileMap loader
 			ResourceAllocator<TileMap>::GetInstance()->Init();
-
-#ifdef _DEBUG
-			//TODO: Move to Component Init
-			m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
-			m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 0.0f };
-			m_Particle.SizeBegin = 0.01f, m_Particle.SizeVariation = 0.0f, m_Particle.SizeEnd = 0.0f;
-			m_Particle.LifeTime = 0.1f;
-			m_Particle.Velocity = { 0.0f, 0.0f, 0.0f };
-			m_Particle.VelocityVariation = { 0.0f, 0.0f, 0.0f };
-			m_Particle.Position = { 0.0f, 0.0f, 0.0f };
-			m_Particle.Speed = { 1.0f, 1.0f, 0.0f };
-#endif // _DEBUG
 		}
 
 		void InitGameWorld()
 		{
 			TIME("Initializing Game World");
 
-			///////// EXAMPLE SETUP FOR TESTING ECS /////////////
-			m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
-
-			GameObjectFactory* factory = GameObjectFactory::GetInstance();
-			factory->LoadSystem("./asset/archetypes/systems.json", m_world);
-			
-			// Initialize game
-			m_world->Init();
-		}
-
-		void StartUp()
-		{
 			// Load all resources
 			LoadResources();
-
+			LoadGameWorldAndInit("./asset/archetypes/systems-mainMenu.json");
+			
 			Json::Value engineConfiguration;
 			std::ifstream file("./asset/engine-configuration/engine-config.json", std::ifstream::binary);
 			file >> engineConfiguration;
 			file.close();
 
-			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			if (engineConfiguration["startup-screen"].asBool())
 			{
 				// Load logo
-				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/DigiPen_RED_1024px.png", "Logo");
+				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("DigiPen-logo");
 				auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 				auto active = ActiveCom();
 				logo.AddComponent(active);
 				auto sprite = SpriteCom();
 				auto m_sprite = sprite.Get();
 				m_sprite->SetSpriteTexture(logoTexture);
-				m_sprite->SetSpriteScale(vec2(2, 2.0 / 1024 * 237));
+				m_sprite->SetSpriteScale(vec2(2, 2.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
 				m_sprite->SetSpritePosition(vec3(0));
 				logo.AddComponent(sprite);
 
-				// Publish start events
-				
-				queue->Subscribe<GameLayer>(this, EventType::LOAD_MAIN_MENU, &GameLayer::OnLoadMainMenuWorld);
-				queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_WORLD, &GameLayer::OnLoadGameWorld);
-				queue->Subscribe<GameLayer>(this, EventType::LOAD_TEAM_LOGO, &GameLayer::OnLoadTeamLogo);
-				queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_LOGO, &GameLayer::OnLoadGameLogo);
-
 				// Fading logo
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 				auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 				queue->Publish(_e, 2.0f);
 				auto teamLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_TEAM_LOGO);
@@ -171,20 +139,54 @@ namespace gswy
 			{
 				LoadMainMenuWorld();
 			}
-			
 		}
 
+		void LoadGameWorldAndInit(const std::string& system_file)
+		{
+			// Event queue clearing and initialization must happen before game world initialization
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			queue->Clear();
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_MAIN_MENU, &GameLayer::OnLoadMainMenuWorld);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_WORLD, &GameLayer::OnLoadGameWorld);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_TEAM_LOGO, &GameLayer::OnLoadTeamLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_LOGO, &GameLayer::OnLoadGameLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_LEVEL_LOGO, &GameLayer::OnLoadLevelLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_WAVE_CLEAR_LOGO, &GameLayer::OnLoadWaveClearLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_LEVEL_CLEAR_LOGO, &GameLayer::OnLoadLevelClearLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_WON_LOGO, &GameLayer::OnLoadWonLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_LOST_LOGO, &GameLayer::OnLoadLostLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_DIED_LOG, &GameLayer::OnLoadDiedLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_FINAL_WAVE, &GameLayer::OnLoadFinalWaveLogo);
+			
+			
+			m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
+			GameObjectFactory::GetInstance()->LoadSystem(system_file, m_world);
+			// Initialize world and all system event subscribing
+			m_world->Init();
+		}
+
+		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			LoadMainMenuWorld();
+		}
+		void OnLoadGameWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = dynamic_pointer_cast<LoadGameWorldEvent>(e))
+			{
+				LoadGameWorld(event->m_level, event->m_reload);
+			}
+		}
 		void OnLoadTeamLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			// TEAM GSWY PRESENTS
-			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/team-logo3.png", "Team-Logo");
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Team-Logo");
 			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 			auto active = ActiveCom();
 			logo.AddComponent(active);
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
 			m_sprite->SetSpriteTexture(logoTexture);
-			m_sprite->SetSpriteScale(vec2(1, 1.0f / 419 * 200));
+			m_sprite->SetSpriteScale(vec2(1, 1.0f / logoTexture->GetWidth() * logoTexture->GetHeight()));
 			m_sprite->SetSpritePosition(vec3(0));
 			logo.AddComponent(sprite);
 			auto transform = TransformCom(0, 0, Z_ORDER(1000));
@@ -193,18 +195,17 @@ namespace gswy
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 1.0f);
 		}
-
 		void OnLoadGameLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			// LIGHT OF EMPYRION
-			auto logoTexture1 = ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/game-logo3.png", "Game-Logo");
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Game-Logo");
 			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 			auto active = ActiveCom();
 			logo.AddComponent(active);
 			auto sprite = SpriteCom();
 			auto m_sprite = sprite.Get();
-			m_sprite->SetSpriteTexture(logoTexture1);
-			m_sprite->SetSpriteScale(vec2(2, 2.0 / 608 * 200));
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(2, 2.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
 			m_sprite->SetSpritePosition(vec3(0));
 			logo.AddComponent(sprite);
 			auto transform = TransformCom(0, 0, Z_ORDER(2000));
@@ -213,24 +214,212 @@ namespace gswy
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 2.0f);
 		}
-
-		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		void OnLoadLevelLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			LoadMainMenuWorld();
+			if (auto event = dynamic_pointer_cast<LoadLevelLogoEvent>(e))
+			{
+				auto lvl = Str(event->m_level);
+				// Level Start logo
+				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Level_" + lvl);
+				auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+				auto active = ActiveCom();
+				logo.AddComponent(active);
+				auto sprite = SpriteCom();
+				auto m_sprite = sprite.Get();
+				m_sprite->SetSpriteTexture(logoTexture);
+				m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+				m_sprite->SetSpritePosition(vec3(0));
+				logo.AddComponent(sprite);
+				auto transform = TransformCom(0, 0, 1);
+				logo.AddComponent(transform);
+				auto body = BodyCom();
+				body.SetPos(transform.GetPos());
+				logo.AddComponent(body);
+				auto attch = AttachedMovementCom();
+				attch.followPos = true;
+				attch.rPos = vec2(0, 0.25);
+				logo.AddComponent(attch);
+				auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+				logo.AddComponent(owner);
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+				queue->Publish(_e, 2.0);
+			}
+		}
+		void OnLoadWaveClearLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			// Wave CLear logo
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Wave_Clear");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
+		}
+		void OnLoadLevelClearLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			// Level CLear logo
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Level_Clear");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
+		}
+		void OnLoadWonLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("You_Won");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
+		}
+		void OnLoadLostLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("You_Lost");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
+		}
+		void OnLoadDiedLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("You_Died");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
+		}
+		void OnLoadFinalWaveLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Final_Wave");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
 		}
 
 		void LoadMainMenuWorld()
 		{
-			// Unload current tilemap
+			// Re-load game world
 			{
-				GameLevelMapManager::GetInstance()->UnloadCurrentTileMap(m_world);
-			}
-			// Clear all entities
-			{
-				m_world->RemoveAllEntities();
+				LoadGameWorldAndInit("./asset/archetypes/systems-mainMenu.json");
 			}
 			// Clear level data
 			{
+				GameLevelMapManager::GetInstance()->UnloadCurrentTileMap(m_world);
 				GameLevelMapManager::GetInstance()->ResetLevelData();
 			}
 			// Set widget
@@ -253,28 +442,28 @@ namespace gswy
 				m_sprite->SetSpritePosition(vec3(0));
 				background.AddComponent(sprite);
 			}
-			m_CameraController.SetPosition(vec3(0));
-			m_miniMapCameraController.SetPosition(vec3(0));
-		}
-
-		void OnLoadGameWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
-		{
-			if (auto event = dynamic_pointer_cast<LoadGameWorldEvent>(e))
+			// Reset camera
 			{
-				LoadGameWorld(event->m_level);
+				m_CameraController.SetPosition(vec3(0));
+				m_miniMapCameraController.SetPosition(vec3(0));
 			}
 		}
 
-		void LoadGameWorld(int level)
+		void LoadGameWorld(int level, bool reloadGameWorld = false)
 		{
 			auto sampleID = Str(level);
 			PRINT("Loading map ID " + sampleID);
+			// Re-load game world
 			{
-				m_world->SetPause(false);
-			}
-			// Clear all entities
-			{
-				m_world->RemoveAllEntities();
+				if (reloadGameWorld)
+				{
+					LoadGameWorldAndInit("./asset/archetypes/systems-game.json");
+					InventoryManager::GetInstance()->ReLoadInventory("./asset/archetypes/levels/inventory-level-1.json");
+				}
+				else
+				{
+					m_world->RemoveAllEntities();
+				}
 			}
 			// Set widget
 			{
@@ -284,6 +473,7 @@ namespace gswy
 				WidgetManager::GetInstance()->GetShopMenu().SetVisible(false);
 				WidgetManager::GetInstance()->GetMainMenu().SetVisible(false);
 			}
+			// Set background
 			{
 				auto size = ResourceAllocator<TileMap>::GetInstance()->Get("SampleLevel"+ sampleID)->GetMap()->getSize();
 				auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
@@ -291,18 +481,48 @@ namespace gswy
 				background.AddComponent(active);
 				auto sprite = SpriteCom();
 				auto m_sprite = sprite.Get();
+				// 32.f is the tilewidth and tileheight of each tile in the tilemap
 				m_sprite->SetSpriteScale(vec2(size.x * 32.f / GSWY_GetPixel2WorldNumerator(), size.y * 32.f / GSWY_GetPixel2WorldNumerator()));
 				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"+ sampleID));
 				m_sprite->SetSpritePosition(vec3((size.x/2-0.5)* 32.f / GSWY_GetPixel2WorldNumerator(), -(size.y / 2 - 0.5) * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
 				background.AddComponent(sprite);
 			}
-
-			// call load level here
+			// Call load level here
 			// object factory must be an abstract class in the engine and must be implemented in application
-			GameObjectFactory* factory = GameObjectFactory::GetInstance();
-			factory->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
-
-			//MOUSE SETUP
+			{
+				GameObjectFactory::GetInstance()->LoadLevel("./asset/archetypes/levels/sample-level.json", m_world);
+			}
+			// Load level logo
+			{
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto e = MemoryManager::Make_shared<LoadLevelLogoEvent>(level);
+				queue->Publish(e);
+			}
+			// SPACE bar
+			{
+				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Press_Space");
+				auto logo = m_world->GenerateEntity(GameObjectType::START_WAVE_INDICATOR);
+				auto active = ActiveCom();
+				logo.AddComponent(active);
+				auto sprite = SpriteCom();
+				auto m_sprite = sprite.Get();
+				m_sprite->SetSpriteTexture(logoTexture);
+				m_sprite->SetSpriteScale(vec2(.5, .5 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+				m_sprite->SetSpritePosition(vec3(0));
+				logo.AddComponent(sprite);
+				auto transform = TransformCom(0, 0, 1);
+				logo.AddComponent(transform);
+				auto body = BodyCom();
+				body.SetPos(transform.GetPos());
+				logo.AddComponent(body);
+				auto attch = AttachedMovementCom();
+				attch.followPos = true;
+				attch.rPos = vec2(0, -0.5);
+				logo.AddComponent(attch);
+				auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+				logo.AddComponent(owner);
+			}
+			// Mouse
 			{
 				auto mouse = m_world->GenerateEntity(GameObjectType::MOUSE);
 				auto active = ActiveCom();
@@ -314,7 +534,7 @@ namespace gswy
 				mouse.AddComponent(mousebody);
 				mouse.AddComponent(OwnershiptCom<GameObjectType>());
 			}
-
+			// Minimap
 			{
 				auto miniMap = m_world->GenerateEntity(GameObjectType::MINIMAP);
 				auto active = ActiveCom();
@@ -325,20 +545,27 @@ namespace gswy
 				m_sprite->SetSpriteTexture(m_miniMapTexture);
 				miniMap.AddComponent(sprite);
 			}
-
-			GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel" + sampleID);
-			GameLevelMapManager::GetInstance()->LoadCurrentTileMap(m_world);
-
-			ComponentDecorator<TransformCom, GameObjectType> transform;
-			m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
-			m_CameraController.SetPosition(vec3(transform->GetPos(),0));
-			m_miniMapCameraController.SetPosition(vec3(transform->GetPos(), 0));
+			// Load content of this level
+			{
+				
+				GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel" + sampleID);
+				GameLevelMapManager::GetInstance()->LoadCurrentTileMap(m_world);
+				GameLevelMapManager::GetInstance()->SetIsLoading(false);
+			}
+			// Reset camera
+			{
+				
+				ComponentDecorator<TransformCom, GameObjectType> transform;
+				m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
+				m_CameraController.SetPosition(vec3(transform->GetPos(), 0));
+				m_miniMapCameraController.SetPosition(vec3(transform->GetPos(), 0));
+			}
 		}
 
 		void BeforeRun()
 		{
 			// Play BGM
-			//AudioManager::GetInstance()->PlaySound("breakout", AudioVector3{ 0, 0, 0 }, 1, 1);
+			//AudioManager::GetInstance()->PlaySound("BGM", AudioVector3{ 0, 0, 0 }, 1, 1);
 		}
 
 		void AfterRun()
@@ -401,7 +628,7 @@ namespace gswy
 				m_CameraController.SetZoomLevel(1);
 			}
 			// Set 3D sound
-			//AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
+			AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 		}
 
 		void UpdateCursor(double ts)
@@ -468,19 +695,7 @@ namespace gswy
 			//Renderer2D::BeginScene(m_CameraController.GetCamera());
 			// m_world render
 			m_world->Render(ts);
-	#ifdef _DEBUG
 
-			//TODO: Move to Component Update
-			//if (m_ParticleActive)
-			//{
-			//	for (int i = 0; i < 5; i++)
-			//		m_ParticleSystem.Emit(m_Particle);
-			//}
-			//
-			//m_ParticleSystem.Update(ts);
-			//m_ParticleSystem.Render();
-
-	#endif // _DEBUG
 			if (m_PP)
 			{
 				m_PostProcessing.Unbind();
@@ -509,7 +724,6 @@ namespace gswy
 					UpdateCursor(dt);
 					UpdateMiniMap(dt);
 				}
-				if (IS_INGAME)
 				{
 					TIME("System Update");
 					Update(dt);
@@ -530,6 +744,9 @@ namespace gswy
 				{
 					TIME("Manager Update");
 					EventQueue<GameObjectType, EventType>::GetInstance()->Update(dt);
+				}
+				if (IS_INGAME)
+				{
 					GameLevelMapManager::GetInstance()->Update(dt);
 				}
 				if (IS_INGAME)
@@ -563,20 +780,6 @@ namespace gswy
 			ImGui::End();
 			ImGui::PopStyleVar(1);
 			ImGui::PopStyleColor(3);
-
-			//TODO: Debug only
-			//ImGui::Begin("Settings");
-			//ImGui::Checkbox("ParticleActive", &m_ParticleActive);
-			//ImGui::SliderFloat("LifeTime", &m_Particle.LifeTime, 0.0f, 1.0f);
-			//ImGui::ColorEdit4("Birth Color", glm::value_ptr(m_Particle.ColorBegin));
-			//ImGui::ColorEdit4("End Color", glm::value_ptr(m_Particle.ColorEnd));
-			//ImGui::SliderFloat("SizeBegin", &m_Particle.SizeBegin, 0.0f, 1.0f);
-			//ImGui::SliderFloat("SizeEnd", &m_Particle.SizeEnd, 0.0f, 1.0f);
-			//ImGui::SliderFloat("SizeVariation", &m_Particle.SizeVariation, 0.0f, 1.0f);
-			//ImGui::SliderFloat3("Velocity", glm::value_ptr(m_Particle.Velocity), -1.0f, 1.0f);
-			//ImGui::SliderFloat3("VelocityVariation", glm::value_ptr(m_Particle.VelocityVariation), -1.0f, 1.0f);
-			//ImGui::SliderFloat2("Speed", glm::value_ptr(m_Particle.Speed), 0.0f, 1.0f);
-			//ImGui::End();
 	#endif // _DEBUG
 
 		}
@@ -591,14 +794,6 @@ namespace gswy
 		std::shared_ptr<GameWorld<GameObjectType>> m_world;
 		gswy::OpenGLPostProcessing m_PostProcessing;
 		bool m_PP = false;
-	#ifdef _DEBUG
-
-		//TODO Move to component
-		gswy::ExplosionParticle m_ParticleSystem;
-		gswy::Particle m_Particle;
-		bool m_ParticleActive = true;
-	#endif // _DEBUG
-
 
 	public:
 		void OnImGuiButtonClicke(const std::string& buttonName)
@@ -609,7 +804,7 @@ namespace gswy
 			if (buttonName.compare("New Game") == 0)
 			{
 				// TODO
-				LoadGameWorld(1);
+				LoadGameWorld(1, true);
 			}
 			if (buttonName.compare("How To Play") == 0)
 			{

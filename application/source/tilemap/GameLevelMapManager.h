@@ -49,7 +49,7 @@ namespace gswy {
 		template<typename Enitity>
 		void LoadCurrentTileMap(std::shared_ptr<GameWorld<Enitity>> world)
 		{
-			if (!m_world) m_world = world;
+			m_world = world;
 
 			if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
 			{
@@ -105,13 +105,17 @@ namespace gswy {
 							obj.AddComponent(sprite);
 							auto sprite0 = MiniMapSprite();
 							sprite0.SetScale(vec2(0.25, 0.25));
-							sprite0.SetTexture("BlueLayer");
+							sprite0.SetTexture("YellowLayer");
 							obj.AddComponent(sprite0);
 							auto aabb = BodyCom();
 							aabb.SetPos(transform.GetPos());
 							aabb.ChooseShape("AABB", 0.4, 0.4);
 							obj.AddComponent(aabb);
 							obj.AddComponent(HitPointCom(999));
+							auto buffCom = BuffCom();
+							auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.005, -1);
+							buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
+							obj.AddComponent(buffCom);
 						}
 						else if (objName.compare("MobSpawn1") == 0)
 						{
@@ -248,14 +252,14 @@ namespace gswy {
 		template<typename Enitity>
 		void UnloadCurrentTileMap(std::shared_ptr<GameWorld<Enitity>> world)
 		{
-			if (!m_world) m_world = world;
+			m_world = world;
 			m_isAnyLevelLoaded = false;
 		}
 
 		template<typename Enitity>
 		void LoadLevel(std::shared_ptr<GameWorld<Enitity>> world, int level)
 		{
-			if (!m_world) m_world = world;
+			m_world = world;
 
 			if (m_tileMaps.find(m_currentMapName) == m_tileMaps.end())
 			{
@@ -292,6 +296,15 @@ namespace gswy {
 				}
 			}
 		}
+
+		/*
+			Is loading
+		*/
+		bool IsLoading();
+		/*
+			Set Is loading
+		*/
+		void SetIsLoading(bool b);
 
 		/*
 			Start the level (start the count down, mainly)
@@ -344,9 +357,14 @@ namespace gswy {
 		*/
 		bool IsWaveFinsihed();
 		/*
-			Advance level if is possible
+			Advance wave if is possible
 		*/
 		bool AdvanceWave();
+
+		/*
+			Advance level if is possible
+		*/
+		bool AdvanceLevel();
 
 	private:
 		GameLevelMapManager();
@@ -356,6 +374,7 @@ namespace gswy {
 		bool m_isAnyLevelLoaded;
 		bool m_waveStart;
 		bool m_timeOut;
+		bool m_bIsLoading;
 		int m_coins;
 
 		int m_currentWave;
