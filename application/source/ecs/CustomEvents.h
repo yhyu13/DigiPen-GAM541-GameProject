@@ -258,6 +258,27 @@ namespace gswy
 		int m_level;
 	};
 
+	struct LoadWonEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadWonEvent() : Event(EventType::LOAD_WON_LOGO)
+		{
+		}
+	};
+
+	struct LoadLostEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadLostEvent() : Event(EventType::LOAD_LOST_LOGO)
+		{
+		}
+	};
+
+	struct LoadDiedEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadDiedEvent() : Event(EventType::LOAD_DIED_LOG)
+		{
+		}
+	};
+
 	struct PlayerSetPendingAnimationEvent : Event<GameObjectType, EventType> {
 
 		PlayerSetPendingAnimationEvent(const Entity<GameObjectType>& entity, const std::string& name, bool force)
@@ -332,5 +353,17 @@ namespace gswy
 		int m_skillNumber;
 		std::string m_keyEventType;
 
+	};
+
+	struct CanPlayerInputEvent : Event<GameObjectType, EventType>
+	{
+
+		CanPlayerInputEvent(bool b)
+			: Event(EventType::CAN_PLAYER_INPUT)
+		{
+			m_bInput = b;
+		}
+
+		bool m_bInput;
 	};
 }

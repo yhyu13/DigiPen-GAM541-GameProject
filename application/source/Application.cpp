@@ -71,8 +71,7 @@ namespace gswy
 			// TODO : consider to move the allocation of minimap texture elsewhere.
 			m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(),GSWY_GetWindowHeight());
 
-			InventoryManager* inventoryManager = InventoryManager::GetInstance();
-			inventoryManager->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
+			InventoryManager::GetInstance()->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
 
 			GameLevelMapManager::GetInstance()->ResetLevelData();
 			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel1");
@@ -154,6 +153,9 @@ namespace gswy
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_LEVEL_LOGO, &GameLayer::OnLoadLevelLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_WAVE_CLEAR_LOGO, &GameLayer::OnLoadWaveClearLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_LEVEL_CLEAR_LOGO, &GameLayer::OnLoadLevelClearLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_WON_LOGO, &GameLayer::OnLoadWonLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_LOST_LOGO, &GameLayer::OnLoadLostLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_DIED_LOG, &GameLayer::OnLoadDiedLogo);
 			
 			m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
 			GameObjectFactory::GetInstance()->LoadSystem(system_file, m_world);
@@ -161,6 +163,17 @@ namespace gswy
 			m_world->Init();
 		}
 
+		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			LoadMainMenuWorld();
+		}
+		void OnLoadGameWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = dynamic_pointer_cast<LoadGameWorldEvent>(e))
+			{
+				LoadGameWorld(event->m_level, event->m_reload);
+			}
+		}
 		void OnLoadTeamLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			// TEAM GSWY PRESENTS
@@ -287,18 +300,88 @@ namespace gswy
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 2.0f);
 		}
-		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		void OnLoadWonLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			LoadMainMenuWorld();
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("You_Won");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
 		}
-		void OnLoadGameWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		void OnLoadLostLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (auto event = dynamic_pointer_cast<LoadGameWorldEvent>(e))
-			{
-				LoadGameWorld(event->m_level, event->m_reload);
-			}
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("You_Lost");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
 		}
-
+		void OnLoadDiedLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("You_Died");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
+		}
+		
 		void LoadMainMenuWorld()
 		{
 			// Re-load game world
@@ -346,6 +429,7 @@ namespace gswy
 				if (reloadGameWorld)
 				{
 					LoadGameWorldAndInit("./asset/archetypes/systems-game.json");
+					InventoryManager::GetInstance()->ReLoadInventory("./asset/archetypes/levels/inventory-level-1.json");
 				}
 				else
 				{

@@ -158,12 +158,17 @@ void gswy::GameLevelMapManager::Update(double dt)
 					auto e1 = MemoryManager::Make_shared<LoadLevelClearEvent>(m_currentLevel);
 					queue->Publish(e1);
 					auto e2 = MemoryManager::Make_shared<LoadGameWorldEvent>(m_currentLevel, false);
-					queue->Publish(e2, 5);
+					queue->Publish(e2, 4);
 				}
 				else
 				{
 					// TODO : proper handle beating the game
 					PRINT("You have beat the game!");
+					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+					auto e1 = MemoryManager::Make_shared<LoadWonEvent>();
+					queue->Publish(e1);
+					auto e2 = MemoryManager::Make_shared<LoadMainMenuEvent>();
+					queue->Publish(e2, 4);
 				}
 			}
 		}

@@ -68,7 +68,8 @@ namespace gswy
 		float m_maxAngleRotation = { 0.8726646f };
 
 		double m_timeDisableMoveCommand = { 0 };
-		bool m_bDiableMoveCommand = { false };
+		bool m_bDisableMoveCommand = { false };
+		bool m_bDisableInput = { false };
 	public:
 		PlayerControllerComSys() {
 			m_systemSignature.AddComponent<PlayerSkillComponent>();
@@ -78,12 +79,21 @@ namespace gswy
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<PlayerControllerComSys>(this, EventType::KEY_BIND_EVENT, &PlayerControllerComSys::OnKeyBindingEvent);
+			queue->Subscribe<PlayerControllerComSys>(this, EventType::CAN_PLAYER_INPUT, &PlayerControllerComSys::OnCanPlayerInputEvent);
 		}
 
-		void OnKeyBindingEvent(EventQueue<GameObjectType, EventType>::EventPtr event)
+		void OnCanPlayerInputEvent(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = static_pointer_cast<CanPlayerInputEvent>(e))
+			{
+				m_bDisableInput = !event->m_bInput;
+			}
+		}
+
+		void OnKeyBindingEvent(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			auto keyBindEvent = std::static_pointer_cast<KeyBindEvent>(event);
+			auto keyBindEvent = std::static_pointer_cast<KeyBindEvent>(e);
 			InputManager* manager = InputManager::GetInstance();
 			std::function<bool(const int&)> callback;
 			if (keyBindEvent->m_keyEventType._Equal("TRIGGER"))
@@ -120,6 +130,15 @@ namespace gswy
 			auto input = InputManager::GetInstance();
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto skillManager = SkillManager::GetInstance();
+
+			if (m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER).empty())
+			{
+				return;
+			}
+			if (m_bDisableInput)
+			{
+				return;
+			}
 
 			// Handle mouse action
 			if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
@@ -175,7 +194,7 @@ namespace gswy
 				}
 
 				// Disable movement while either inventory or shop menu is active
-				m_bDiableMoveCommand = WidgetManager::GetInstance()->GetShopMenu().GetVisible() || WidgetManager::GetInstance()->GetInventoryMenu().GetVisible();
+				m_bDisableMoveCommand = WidgetManager::GetInstance()->GetShopMenu().GetVisible() || WidgetManager::GetInstance()->GetInventoryMenu().GetVisible();
 
 				if (input->IsKeyTriggered(KEY_ESCAPE))
 				{
@@ -212,7 +231,7 @@ namespace gswy
 
 		void HandleMouseAction_LeftPressed()
 		{
-			if (m_timeDisableMoveCommand > 0 || m_bDiableMoveCommand)
+			if (m_timeDisableMoveCommand > 0 || m_bDisableMoveCommand)
 			{
 				return;
 			}

@@ -112,6 +112,10 @@ namespace gswy {
 							aabb.ChooseShape("AABB", 0.4, 0.4);
 							obj.AddComponent(aabb);
 							obj.AddComponent(HitPointCom(999));
+							auto buffCom = BuffCom();
+							auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.005, -1);
+							buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
+							obj.AddComponent(buffCom);
 						}
 						else if (objName.compare("MobSpawn1") == 0)
 						{
