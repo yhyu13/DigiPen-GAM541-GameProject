@@ -279,7 +279,7 @@ namespace gswy
 			// Set widget
 			{
 				WidgetManager::GetInstance()->GetHUD().SetVisible(true);
-				WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(false);
+				WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(true);
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(false);
 				WidgetManager::GetInstance()->GetShopMenu().SetVisible(false);
 				WidgetManager::GetInstance()->GetMainMenu().SetVisible(false);

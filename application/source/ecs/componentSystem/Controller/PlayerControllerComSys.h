@@ -165,10 +165,7 @@ namespace gswy
 				{
 					bool v1 = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
 					WidgetManager::GetInstance()->GetShopMenu().SetVisible(!v1);
-
-					bool v2 = WidgetManager::GetInstance()->GetInventoryMenu().GetVisible();
-					WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(!v2);
-					m_bDiableMoveCommand = !v2;
+					m_bDiableMoveCommand = !v1;
 				}
 				if (input->IsKeyTriggered(KEY_ESCAPE))
 				{
