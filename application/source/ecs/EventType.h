@@ -48,6 +48,8 @@ namespace gswy
 
 		KEY_BIND_EVENT,
 
+		ADD_COIN,
+
 		NUM
 	};
 }

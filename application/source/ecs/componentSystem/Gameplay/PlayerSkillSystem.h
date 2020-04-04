@@ -56,9 +56,10 @@ namespace gswy
 		{
 			m_spawnZOrder = 5000;
 
-			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_USE, &PlayerSkillSystem::OnSkillUse);
-			queue->Subscribe<PlayerSkillSystem>(this, EventType::FORK, &PlayerSkillSystem::OnFork);
+			m_queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			m_queue->Subscribe<PlayerSkillSystem>(this, EventType::SKILL_USE, &PlayerSkillSystem::OnSkillUse);
+			m_queue->Subscribe<PlayerSkillSystem>(this, EventType::FORK, &PlayerSkillSystem::OnFork);
+			m_queue->Subscribe<PlayerSkillSystem>(this, EventType::ADD_COIN, &PlayerSkillSystem::OnAddCoin);
 		}
 
 		virtual void Update(double dt) override
@@ -141,8 +142,8 @@ namespace gswy
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
-				auto e = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr1");
-				queue->Publish(e);
+				/*auto e = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr1");
+				queue->Publish(e);*/
 			}
 			else if (iceballAttack != nullptr)
 			{
@@ -181,8 +182,8 @@ namespace gswy
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
 					}
 				}
-				auto e = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot1");
-				queue->Publish(e);
+				/*auto e = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot1");
+				queue->Publish(e);*/
 			}
 			else if (cycloneAttack != nullptr)
 			{
@@ -298,7 +299,50 @@ namespace gswy
 			}
 		}
 
+		void OnAddCoin(EventQueue<GameObjectType, EventType>::EventPtr event)
+		{
+			auto addCoinEvent = std::static_pointer_cast<AddCoinEvent>(event);
+
+			if (m_baseTower == nullptr)
+			{
+				m_baseTower = MemoryManager::Make_shared<Entity<GameObjectType>>(m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0]);
+			}
+
+			auto coin = m_parentWorld->GenerateEntity(GameObjectType::COIN);
+			auto active = ActiveCom();
+			coin.AddComponent(active);
+
+			auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+			coin.AddComponent(OwnershiptCom<GameObjectType>(player));
+
+			auto transform = TransformCom(addCoinEvent->m_enemyPosition.x, addCoinEvent->m_enemyPosition.y, Z_ORDER(m_spawnZOrder++));
+			coin.AddComponent(transform);
+
+			auto animCom = AnimationCom();
+			animCom.Add("coinAnimation", "Move");
+			animCom.SetCurrentAnimationState("Move");
+			coin.AddComponent(animCom);
+
+			auto sprite = SpriteCom();
+			sprite.SetScale(vec2(0.1, 0.1));
+			coin.AddComponent(sprite);
+
+			auto aabb = BodyCom();
+			aabb.SetPos(transform.GetPos());
+			aabb.m_overrideFriction = true;
+			aabb.ChooseShape("Circle", 0.1);
+
+			auto targetBody = GetComponent<BodyCom>(*m_baseTower);
+			glm::vec2 direction = targetBody->GetPos() - aabb.GetPos();
+			glm::vec2 unitDirection = glm::normalize(direction);
+			aabb.SetVelocity(unitDirection * 1.5f);
+
+			coin.AddComponent(aabb);
+		}
+
 	private:
 		int m_spawnZOrder;
+		std::shared_ptr<Entity<GameObjectType>> m_baseTower;
+		EventQueue<GameObjectType, EventType>* m_queue;
 	};
 }

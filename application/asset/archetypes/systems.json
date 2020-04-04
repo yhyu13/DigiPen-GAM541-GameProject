@@ -1,35 +1,36 @@
 {
-   "systems":[
-      "player-controller",
-	  "PlayerAnimationController",
-      "mob-1-controller",
-	  "mob-2-controller",
-	  "mob-1-Boss-controller",
-	  "MobPortalControllerComSys",
-	  "tower-controller",
-	  "base-controller",
-	  
-      "weapon",
-      
-      "spawn",
-      "sound",
-      "hitpoint",
-      "death",
-	  "lifetime",
-	  "fade",
-	  "buff",
-	  
-	  "attached-movement",
-      "physics",
-	  
-	  "animation",
-	  "minimap",
-	  "particle",
-	  "sprite",
-	  "scene",
+  "systems": [
+    "player-controller",
+    "PlayerAnimationController",
+    "mob-1-controller",
+    "mob-2-controller",
+    "mob-1-Boss-controller",
+    "MobPortalControllerComSys",
+    "tower-controller",
+    "base-controller",
+    "coin-collection",
+
+    "weapon",
+
+    "spawn",
+    "sound",
+    "hitpoint",
+    "death",
+    "lifetime",
+    "fade",
+    "buff",
+
+    "attached-movement",
+    "physics",
+
+    "animation",
+    "minimap",
+    "particle",
+    "sprite",
+    "scene",
     "skill",
     "target-entity-component",
-	  
-	  "gc"
-   ]
+
+    "gc"
+  ]
 }
