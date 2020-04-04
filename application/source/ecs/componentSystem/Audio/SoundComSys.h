@@ -42,9 +42,9 @@ namespace gswy
 			auto audio = AudioManager::GetInstance();
 			if (auto event = static_pointer_cast<SoundEvent>(e))
 			{
-				if (!audio->IsPlaying(event->soudName))
+				if (!audio->IsPlaying(event->soundName))
 				{
-					audio->PlaySound(event->soudName, AudioVector3{ 0, 0, 0 }, 1, 1.0);
+					audio->PlaySound(event->soundName, AudioVector3(event->m_location), event->m_vol, event->m_freq);
 				}	
 			}
 			

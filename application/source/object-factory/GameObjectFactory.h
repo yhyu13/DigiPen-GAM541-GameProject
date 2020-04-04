@@ -32,6 +32,10 @@ namespace gswy {
 		void LoadSystem(const std::string& filepath, std::shared_ptr<GameWorld<EntityType>> m_world)
 		{
 			for (auto & system: GetSystems(filepath)) {
+				if (system._Equal("mainMenu-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<MainMenuControllerComSys>());
+					continue;
+				}
 				if (system._Equal("player-controller")) {
 					m_world->RegisterSystem(MemoryManager::Make_shared<PlayerControllerComSys>());
 					continue;

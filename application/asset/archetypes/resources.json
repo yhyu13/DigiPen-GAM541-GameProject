@@ -103,6 +103,10 @@
           "name": "Mob1_Boss_Attack",
           "path": "./asset/Sprites/Mob1_Boss_Attack.png"
         },
+		{
+          "name": "YellowLayer",
+          "path": "./asset/Sprites/YellowLayer.png"
+        },
         {
           "name": "RedLayer",
           "path": "./asset/Sprites/RedLayer.png"

@@ -66,14 +66,19 @@ namespace gswy
 
 	struct SoundEvent : Event<GameObjectType, EventType> {
 
-		SoundEvent(const std::string& name)
+		explicit SoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)
 			:
 			Event(EventType::SOUND)
 		{
-			soudName = name;
+			soundName = name;
+			m_location = pos;
+			m_vol = vol;
+			m_freq = freq;
 		}
-
-		std::string soudName;
+		std::string soundName;
+		glm::vec3 m_location;
+		float m_vol;
+		float m_freq;
 	};
 
 	struct WeaponSoundEvent : Event<GameObjectType, EventType> {
@@ -217,11 +222,13 @@ namespace gswy
 
 	struct LoadGameWorldEvent : Event<GameObjectType, EventType>
 	{
-		explicit LoadGameWorldEvent(int lvl) : Event(EventType::LOAD_GAME_WORLD)
+		explicit LoadGameWorldEvent(int lvl, bool reload = false) : Event(EventType::LOAD_GAME_WORLD)
 		{
 			m_level = lvl;
+			m_reload = reload;
 		}
 		int m_level;
+		bool m_reload;
 	};
 
 	struct LoadLevelLogoEvent : Event<GameObjectType, EventType>

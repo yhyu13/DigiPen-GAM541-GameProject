@@ -34,6 +34,14 @@ std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 		PROCESS_VAL(gswy::EventType::_FADE_END);
 		PROCESS_VAL(gswy::EventType::SKILL_USE);
 		PROCESS_VAL(gswy::EventType::FORK);
+		PROCESS_VAL(gswy::EventType::LOAD_MAIN_MENU);
+		PROCESS_VAL(gswy::EventType::LOAD_GAME_WORLD);
+		PROCESS_VAL(gswy::EventType::LOAD_TEAM_LOGO);
+		PROCESS_VAL(gswy::EventType::LOAD_GAME_LOGO);
+		PROCESS_VAL(gswy::EventType::LOAD_LEVEL_LOGO);
+		PROCESS_VAL(gswy::EventType::LOAD_WAVE_CLEAR_LOGO);
+		PROCESS_VAL(gswy::EventType::LOAD_LEVEL_CLEAR_LOGO);
+		PROCESS_VAL(gswy::EventType::KEY_BIND_EVENT);
 	default: s = "(invalid value)"; break;
 	}
 #undef PROCESS_VAL

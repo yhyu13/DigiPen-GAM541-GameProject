@@ -105,7 +105,7 @@ namespace gswy {
 							obj.AddComponent(sprite);
 							auto sprite0 = MiniMapSprite();
 							sprite0.SetScale(vec2(0.25, 0.25));
-							sprite0.SetTexture("BlueLayer");
+							sprite0.SetTexture("YellowLayer");
 							obj.AddComponent(sprite0);
 							auto aabb = BodyCom();
 							aabb.SetPos(transform.GetPos());

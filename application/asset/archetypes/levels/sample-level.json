@@ -10,7 +10,7 @@
   "data":
   {
 	"wave_start": 1,
-	"wave_max":2,
+	"wave_max":1,
 	"level_start":1,
 	"level_max":2,
 	"coins": 1000,
