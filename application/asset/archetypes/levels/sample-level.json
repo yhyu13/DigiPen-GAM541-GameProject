@@ -10,10 +10,10 @@
   "data":
   {
 	"wave_start": 1,
-	"wave_max":1,
+	"wave_max":4,
 	"level_start":1,
-	"level_max":2,
+	"level_max":3,
 	"coins": 1000,
-	"time_per_wave": 2
+	"time_per_wave": 30
   }
 }
