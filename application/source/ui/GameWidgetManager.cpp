@@ -15,6 +15,7 @@ Creation date: 03/12/2020
 #include "inventory-manager/InventoryManager.h"
 #include "tilemap/GameLevelMapManager.h"
 #include "skill-manager/SkillManager.h"
+#include "engine/audio/AudioManager.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <json/json.h>
@@ -77,28 +78,33 @@ namespace gswy {
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255,137,20));
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		float f = 0.0;
 		ImGui::SetWindowFontScale(1.0);
 		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), ImVec2(480, 100),ImVec2(0,1), ImVec2(1,0), 0, ImVec4(0,0,0,1)))
 		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
 			manager->InvokeButton("New Game");
 		}
 		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
 			manager->InvokeButton("How To Play");
 		}
 		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
 			manager->InvokeButton("Option");
 		}
 		if (ImGui::ImageButton((void*)m_Texture_Exit->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
 			manager->InvokeButton("Exit");
 		}
 		ImGui::End();
 		ImGui::PopStyleColor(1);
-		ImGui::PopStyleVar(1);
+		ImGui::PopStyleVar(2);
 	}
 
 	void PauseMenu::Render()
@@ -113,10 +119,12 @@ namespace gswy {
 		ImGui::SetWindowFontScale(1.0);
 		if (ImGui::ImageButton((void*)m_Texture_Resume->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
 			manager->InvokeButton("Resume");
 		}
 		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
 			manager->InvokeButton("Main Menu");
 		}
 		ImGui::End();
@@ -268,6 +276,7 @@ namespace gswy {
 							{
 								if (GameLevelMapManager::GetInstance()->TrySpendCoins(cost))
 								{
+									AudioManager::GetInstance()->PlaySound("purchase_sound");
 									InventoryManager::GetInstance()->PurchaseActiveItem((*it));
 								}
 								else
@@ -299,18 +308,22 @@ namespace gswy {
 							{
 								if (ImGui::MenuItem("Bind to (Q)"))
 								{
+									AudioManager::GetInstance()->PlaySound("purchase_install_sound");
 									InventoryManager::GetInstance()->Install(1, 1, (*it));
 								}
 								if (ImGui::MenuItem("Bind to (W)"))
 								{
+									AudioManager::GetInstance()->PlaySound("purchase_install_sound");
 									InventoryManager::GetInstance()->Install(2, 1, (*it));
 								}
 								if (ImGui::MenuItem("Bind to (E)"))
 								{
+									AudioManager::GetInstance()->PlaySound("purchase_install_sound");
 									InventoryManager::GetInstance()->Install(3, 1, (*it));
 								}
 								if (ImGui::MenuItem("Bind to (R)"))
 								{
+									AudioManager::GetInstance()->PlaySound("purchase_install_sound");
 									InventoryManager::GetInstance()->Install(4, 1, (*it));
 								}
 								ImGui::EndMenu();
