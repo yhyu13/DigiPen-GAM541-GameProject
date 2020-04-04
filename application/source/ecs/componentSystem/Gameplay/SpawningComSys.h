@@ -91,6 +91,10 @@ namespace gswy
 			body.SetPos(transform.GetPos());
 			body.ChooseShape("AABB", 0.25, 0.25);
 			tower.AddComponent(body);
+			auto sprite0 = MiniMapSprite();
+			sprite0.SetScale(vec2(0.1, 0.1));
+			sprite0.SetTexture("BlueLayer");
+			tower.AddComponent(sprite0);
 			auto children = ChildrenCom<GameObjectType>();
 			{
 				auto _tower = m_parentWorld->GenerateEntity(GameObjectType::TOWER_FIRE);

@@ -53,6 +53,8 @@ namespace gswy {
 			for (auto&& system : m_systems) {
 				system->Init();
 			}
+			SetPause(false);
+			RemoveAllEntities();
 		}
 
 		bool IsPaused()

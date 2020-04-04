@@ -1,12 +1,12 @@
 {
   "Widget": [
     {
-      "NewGame": "./asset/New_Game1.png",
-      "HowToPlay": "./asset/How_To_Play1.png",
-      "Option": "./asset/Option1.png",
-	  "Exit": "./asset/quit1.png",
-	  "Resume": "./asset/Resume1.png",
-	  "MainMenu": "./asset/Main_Menu1.png"
+      "NewGame": "./asset/UI/New_Game1.png",
+      "HowToPlay": "./asset/UI/How_To_Play1.png",
+      "Option": "./asset/UI/Option1.png",
+	  "Exit": "./asset/UI/quit1.png",
+	  "Resume": "./asset/UI/Resume1.png",
+	  "MainMenu": "./asset/UI/Main_Menu1.png"
     }
   ]
 }

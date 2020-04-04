@@ -12,32 +12,38 @@ Creation date: 03/17/2020
 #include "EventType.h"
 
 std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
+	const char* s = 0;
+#define PROCESS_VAL(p) case(p): s = #p; break;
 	switch (n) {
-	case gswy::EventType::EMPTY: return o << "EMPTY";
-	case gswy::EventType::COLLISION: return o << "COLLISION";
-	case gswy::EventType::SOUND: return o << "SOUND";
-	case gswy::EventType::GC: return o << "GC";
-	case gswy::EventType::SPAWN: return o << "SPAWN";
-	case gswy::EventType::FIREWEAPON: return o << "FIREWEAPON";
-		
-	case gswy::EventType::CLICK_ON_TOWER: return o << "CLICK_ON_TOWER";
-	case gswy::EventType::ATTACKBASE: return o << "ATTACKBASE";
-
-	case gswy::EventType::PLAYER_SET_PENDING_ANIMATION: return o << "PLAYER_SET_PENDING_ANIMATION";
-	case gswy::EventType::PLAYER_READY_TO_CHANGE_ANIMATION: return o << "PLAYER_READY_TO_CHANGE_ANIMATION";
-
-	case gswy::EventType::DEATH: return o << "DEATH";
-
-	case gswy::EventType::ADD_BUFF: return o << "ADD_BUFF";
-	case gswy::EventType::REMOVE_BUFF: return o << "REMOVE_BUFF";
-
-	case gswy::EventType::FADE: return o << "FADEIN";
-	case gswy::EventType::_FADE_ING: return o << "_FADEIN_ING";
-	case gswy::EventType::_FADE_END: return o << "_FADEIN_END";
-
-	case gswy::EventType::SKILL_USE: return o << "USE SKILL";
-	case gswy::EventType::FORK: return o << "FORK";
-
-	default: return o << "(invalid value)";
+		PROCESS_VAL(gswy::EventType::EMPTY);
+		PROCESS_VAL(gswy::EventType::COLLISION);
+		PROCESS_VAL(gswy::EventType::SOUND);
+		PROCESS_VAL(gswy::EventType::WEAPON_SOUND);
+		PROCESS_VAL(gswy::EventType::DEATH);
+		PROCESS_VAL(gswy::EventType::SPAWN);
+		PROCESS_VAL(gswy::EventType::GC);
+		PROCESS_VAL(gswy::EventType::FIREWEAPON);
+		PROCESS_VAL(gswy::EventType::CLICK_ON_TOWER);
+		PROCESS_VAL(gswy::EventType::ATTACKBASE);
+		PROCESS_VAL(gswy::EventType::PLAYER_SET_PENDING_ANIMATION);
+		PROCESS_VAL(gswy::EventType::PLAYER_READY_TO_CHANGE_ANIMATION);
+		PROCESS_VAL(gswy::EventType::ADD_BUFF);
+		PROCESS_VAL(gswy::EventType::REMOVE_BUFF);
+		PROCESS_VAL(gswy::EventType::FADE);
+		PROCESS_VAL(gswy::EventType::_FADE_ING);
+		PROCESS_VAL(gswy::EventType::_FADE_END);
+		PROCESS_VAL(gswy::EventType::SKILL_USE);
+		PROCESS_VAL(gswy::EventType::FORK);
+		PROCESS_VAL(gswy::EventType::LOAD_MAIN_MENU);
+		PROCESS_VAL(gswy::EventType::LOAD_GAME_WORLD);
+		PROCESS_VAL(gswy::EventType::LOAD_TEAM_LOGO);
+		PROCESS_VAL(gswy::EventType::LOAD_GAME_LOGO);
+		PROCESS_VAL(gswy::EventType::LOAD_LEVEL_LOGO);
+		PROCESS_VAL(gswy::EventType::LOAD_WAVE_CLEAR_LOGO);
+		PROCESS_VAL(gswy::EventType::LOAD_LEVEL_CLEAR_LOGO);
+		PROCESS_VAL(gswy::EventType::KEY_BIND_EVENT);
+	default: s = "(invalid value)"; break;
 	}
+#undef PROCESS_VAL
+	return o << s;
 }

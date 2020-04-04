@@ -13,6 +13,7 @@ namespace gswy
 		static InventoryManager* GetInstance();
 		~InventoryManager();
 
+		void ReLoadInventory(const std::string& filepath);
 		void LoadInventory(const std::string& filepath);
 		void PurchaseItem(std::vector<std::shared_ptr<Item>> items, std::shared_ptr<Item> item);
 		void PurchaseActiveItem(std::shared_ptr<Item> item);

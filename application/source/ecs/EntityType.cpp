@@ -12,29 +12,35 @@ Creation date: 03/17/2020
 #include "EntityType.h"
 
 std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
+	const char* s = 0;
+#define PROCESS_VAL(p) case(p): s = #p; break;
 	switch (n) {
-	case gswy::GameObjectType::EMPTY: return o << "EMPTY";
-	case gswy::GameObjectType::MOUSE: return o << "MOUSE";
-	case gswy::GameObjectType::BACKGROUND: return o << "BACKGROUND";
-	case gswy::GameObjectType::MINIMAP: return o << "MINIMAP";
-	case gswy::GameObjectType::BASE: return o << "BASE";
-	case gswy::GameObjectType::PLAYER: return o << "PLAYER";
-	case gswy::GameObjectType::ENEMY_PORTAL: return o << "ENEMY_PORTAL";
-	case gswy::GameObjectType::ENEMY_1: return o << "ENEMY_1";
-	case gswy::GameObjectType::ENEMY_2: return o << "ENEMY_2";
-	case gswy::GameObjectType::ENEMY_BOSS_1: return o << "ENEMY_BOSS_1";
-
-	case gswy::GameObjectType::HP_BAR: return o << "HP_BAR";
-	case gswy::GameObjectType::TOWER_BUILD: return o << "TOWER_BUILD";
-	case gswy::GameObjectType::TOWER_FIRE: return o << "TOWER_FIRE";
-	case gswy::GameObjectType::TOWER_ICE: return o << "TOWER_ICE";
-	case gswy::GameObjectType::TOWER_LIGHTNING: return o << "TOWER_LIGHTNING";
-	case gswy::GameObjectType::FIREBALL: return o << "FIREBALL";
-	case gswy::GameObjectType::BOLT_STRIKE: return o << "BOLT_STRIKE";
-	case gswy::GameObjectType::BOLT_CHANNEL: return o << "BOLT_CHANNEL";
-	case gswy::GameObjectType::ICEBALL: return o << "ICEBALL";
-	case gswy::GameObjectType::CYCLONE_SFX: return o << "CYCLONE_SFX";
-	case gswy::GameObjectType::ENEMY_PROJECTILE: return o << "ENEMY_PROJECTILE";
-	default: return o << "(invalid value)";
+		PROCESS_VAL(gswy::GameObjectType::EMPTY);
+		PROCESS_VAL(gswy::GameObjectType::MOUSE);
+		PROCESS_VAL(gswy::GameObjectType::BACKGROUND);
+		PROCESS_VAL(gswy::GameObjectType::MINIMAP);
+		PROCESS_VAL(gswy::GameObjectType::BASE);
+		PROCESS_VAL(gswy::GameObjectType::PLAYER);
+		PROCESS_VAL(gswy::GameObjectType::ENEMY_PORTAL);
+		PROCESS_VAL(gswy::GameObjectType::ENEMY_1);
+		PROCESS_VAL(gswy::GameObjectType::ENEMY_2);
+		PROCESS_VAL(gswy::GameObjectType::ENEMY_BOSS_1);
+		PROCESS_VAL(gswy::GameObjectType::HP_BAR);
+		PROCESS_VAL(gswy::GameObjectType::TOWER_BUILD);
+		PROCESS_VAL(gswy::GameObjectType::TOWER_FIRE);
+		PROCESS_VAL(gswy::GameObjectType::TOWER_ICE);
+		PROCESS_VAL(gswy::GameObjectType::TOWER_LIGHTNING);
+		PROCESS_VAL(gswy::GameObjectType::FIREBALL);
+		PROCESS_VAL(gswy::GameObjectType::FORKED_FIREBALL);
+		PROCESS_VAL(gswy::GameObjectType::BOLT_STRIKE);
+		PROCESS_VAL(gswy::GameObjectType::BOLT_CHANNEL);
+		PROCESS_VAL(gswy::GameObjectType::ICEBALL);
+		PROCESS_VAL(gswy::GameObjectType::FORKED_ICEBALL);
+		PROCESS_VAL(gswy::GameObjectType::CYCLONE_SFX);
+		PROCESS_VAL(gswy::GameObjectType::ENEMY_PROJECTILE);
+		PROCESS_VAL(gswy::GameObjectType::RAZOR);
+	default: s = "(invalid value)"; break;
 	}
+#undef PROCESS_VAL
+	return o << s;
 }
