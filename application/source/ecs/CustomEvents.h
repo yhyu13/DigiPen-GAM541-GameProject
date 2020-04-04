@@ -375,4 +375,15 @@ namespace gswy
 
 		bool m_bInput;
 	};
+
+	struct AddCoinEvent : Event<GameObjectType, EventType>
+	{
+		AddCoinEvent(glm::vec2 enemyPosition)
+			: Event(EventType::ADD_COIN),
+			m_enemyPosition(enemyPosition)
+		{
+		}
+
+		glm::vec2 m_enemyPosition;
+	};
 }

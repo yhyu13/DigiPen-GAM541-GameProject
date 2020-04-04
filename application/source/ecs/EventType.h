@@ -56,6 +56,7 @@ namespace gswy
 		KEY_BIND_EVENT,
 
 		CAN_PLAYER_INPUT,
+		ADD_COIN,
 
 		NUM
 	};

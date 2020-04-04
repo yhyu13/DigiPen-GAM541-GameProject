@@ -42,6 +42,7 @@ namespace gswy
 		RAZOR,
 
 		START_WAVE_INDICATOR,
+		COIN,
 
 		NUM
 	};

@@ -162,6 +162,10 @@
         {
           "name": "Lightningbolt_channel",
           "path": "./asset/Sprites/Lightningbolt_channel.png"
+        },
+        {
+          "name": "coin_SFX",
+          "path": "./asset/Sprites/coin.png"
         }
       ]
     },
@@ -388,6 +392,18 @@
           "name": "iceBallAnim1",
           "properties": {
             "texture-name": "Iceball",
+            "x": 64,
+            "y": 0,
+            "width": 64,
+            "height": 64,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "coinAnimation",
+          "properties": {
+            "texture-name": "coin_SFX",
             "x": 64,
             "y": 0,
             "width": 64,
