@@ -370,7 +370,7 @@ namespace gswy
 			// 3. Play sound
 			if (dt)
 			{
-				auto e = MemoryManager::Make_shared<SoundEvent>("footstep02", vec3(0), 1, 0.65);
+				auto e = MemoryManager::Make_shared<SoundEvent>("footsteps1", vec3(0), 1, 1.15);
 				queue->Publish(e);
 			}
 		}

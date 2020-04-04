@@ -628,7 +628,7 @@ namespace gswy
 				m_CameraController.SetZoomLevel(1);
 			}
 			// Set 3D sound
-			//AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
+			AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 		}
 
 		void UpdateCursor(double ts)

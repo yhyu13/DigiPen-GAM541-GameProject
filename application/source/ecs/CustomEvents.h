@@ -75,6 +75,15 @@ namespace gswy
 			m_vol = vol;
 			m_freq = freq;
 		}
+		explicit SoundEvent(const std::string& name, glm::vec2& pos = glm::vec2(0), float vol = 1.0f, float freq = 1.0f)
+			:
+			Event(EventType::SOUND)
+		{
+			soundName = name;
+			m_location = glm::vec3(pos.x, pos.y, 0);
+			m_vol = vol;
+			m_freq = freq;
+		}
 		std::string soundName;
 		glm::vec3 m_location;
 		float m_vol;
@@ -83,14 +92,30 @@ namespace gswy
 
 	struct WeaponSoundEvent : Event<GameObjectType, EventType> {
 
-		WeaponSoundEvent(const std::string& name)
+		WeaponSoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)
 			:
 			Event(EventType::WEAPON_SOUND)
 		{
 			soundName = name;
+			m_location = pos;
+			m_vol = vol;
+			m_freq = freq;
+		}
+
+		WeaponSoundEvent(const std::string& name, glm::vec2& pos = glm::vec2(0), float vol = 1.0f, float freq = 1.0f)
+			:
+			Event(EventType::WEAPON_SOUND)
+		{
+			soundName = name;
+			m_location = glm::vec3(pos.x,pos.y,0);
+			m_vol = vol;
+			m_freq = freq;
 		}
 
 		std::string soundName;
+		glm::vec3 m_location;
+		float m_vol;
+		float m_freq;
 	};
 
 	struct DeathEvent : Event<GameObjectType, EventType> {
