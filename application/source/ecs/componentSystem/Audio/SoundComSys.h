@@ -15,6 +15,7 @@ Creation date: 02/17/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "engine/audio/AudioManager.h"
+#include "ecs/components/TransformCom.h"
 #include "ecs/CustomEvents.h"
 #include "ecs/EntityType.h"
 
@@ -54,7 +55,7 @@ namespace gswy
 		{
 			auto audio = AudioManager::GetInstance();
 			auto event = static_pointer_cast<WeaponSoundEvent>(e);
-			auto playing = audio->PlaySound(event->soundName, AudioVector3{ 0, 0, 0 }, 1, 1.0);
+			auto playing = audio->PlaySound(event->soundName, event->m_location, event->m_vol, event->m_freq);
 		}
 
 		void CollisionPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -68,7 +69,7 @@ namespace gswy
 				(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
 				event->m_entityA.m_type == GameObjectType::FIREBALL))
 			{
-				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit1");
+				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
 
 				if(!audio->IsPlaying(e1->soundName))
 					queue->Publish(e1);
@@ -79,7 +80,7 @@ namespace gswy
 				(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
 				event->m_entityA.m_type == GameObjectType::ICEBALL))
 			{
-				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1");
+				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
 
 				if (!audio->IsPlaying(e1->soundName))
 					queue->Publish(e1);
