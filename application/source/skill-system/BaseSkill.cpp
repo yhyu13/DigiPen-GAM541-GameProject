@@ -12,6 +12,8 @@ Creation date	: 03/13/2020
 
 #include "BaseSkill.h"
 
+#include <string>
+
 namespace gswy
 {
 	int BaseSkill::m_id = 0;
@@ -43,5 +45,15 @@ namespace gswy
 	std::set<SkillTag> BaseSkill::GetSkillTags()
 	{
 		return m_tags;
+	}
+
+	std::string& BaseSkill::GetIcon()
+	{
+		return m_icon;
+	}
+
+	void BaseSkill::SetIcon(std::string& m_icon)
+	{
+		m_icon = m_icon;
 	}
 }
