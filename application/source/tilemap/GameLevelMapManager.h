@@ -298,6 +298,15 @@ namespace gswy {
 		}
 
 		/*
+			Is loading
+		*/
+		bool IsLoading();
+		/*
+			Set Is loading
+		*/
+		void SetIsLoading(bool b);
+
+		/*
 			Start the level (start the count down, mainly)
 		*/
 		void StartWave();
@@ -348,9 +357,14 @@ namespace gswy {
 		*/
 		bool IsWaveFinsihed();
 		/*
-			Advance level if is possible
+			Advance wave if is possible
 		*/
 		bool AdvanceWave();
+
+		/*
+			Advance level if is possible
+		*/
+		bool AdvanceLevel();
 
 	private:
 		GameLevelMapManager();
@@ -360,6 +374,7 @@ namespace gswy {
 		bool m_isAnyLevelLoaded;
 		bool m_waveStart;
 		bool m_timeOut;
+		bool m_bIsLoading;
 		int m_coins;
 
 		int m_currentWave;

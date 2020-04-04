@@ -156,6 +156,8 @@ namespace gswy
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_WON_LOGO, &GameLayer::OnLoadWonLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_LOST_LOGO, &GameLayer::OnLoadLostLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_DIED_LOG, &GameLayer::OnLoadDiedLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_FINAL_WAVE, &GameLayer::OnLoadFinalWaveLogo);
+			
 			
 			m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
 			GameObjectFactory::GetInstance()->LoadSystem(system_file, m_world);
@@ -381,7 +383,34 @@ namespace gswy
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 2.0f);
 		}
-		
+		void OnLoadFinalWaveLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Final_Wave");
+			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+			auto active = ActiveCom();
+			logo.AddComponent(active);
+			auto sprite = SpriteCom();
+			auto m_sprite = sprite.Get();
+			m_sprite->SetSpriteTexture(logoTexture);
+			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+			m_sprite->SetSpritePosition(vec3(0));
+			logo.AddComponent(sprite);
+			auto transform = TransformCom(0, 0, 1);
+			logo.AddComponent(transform);
+			auto body = BodyCom();
+			body.SetPos(transform.GetPos());
+			logo.AddComponent(body);
+			auto attch = AttachedMovementCom();
+			attch.followPos = true;
+			attch.rPos = vec2(0, 0.25);
+			logo.AddComponent(attch);
+			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+			logo.AddComponent(owner);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(_e, 2.0f);
+		}
+
 		void LoadMainMenuWorld()
 		{
 			// Re-load game world
@@ -469,6 +498,30 @@ namespace gswy
 				auto e = MemoryManager::Make_shared<LoadLevelLogoEvent>(level);
 				queue->Publish(e);
 			}
+			// SPACE bar
+			{
+				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Press_Space");
+				auto logo = m_world->GenerateEntity(GameObjectType::START_WAVE_INDICATOR);
+				auto active = ActiveCom();
+				logo.AddComponent(active);
+				auto sprite = SpriteCom();
+				auto m_sprite = sprite.Get();
+				m_sprite->SetSpriteTexture(logoTexture);
+				m_sprite->SetSpriteScale(vec2(.5, .5 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+				m_sprite->SetSpritePosition(vec3(0));
+				logo.AddComponent(sprite);
+				auto transform = TransformCom(0, 0, 1);
+				logo.AddComponent(transform);
+				auto body = BodyCom();
+				body.SetPos(transform.GetPos());
+				logo.AddComponent(body);
+				auto attch = AttachedMovementCom();
+				attch.followPos = true;
+				attch.rPos = vec2(0, -0.5);
+				logo.AddComponent(attch);
+				auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+				logo.AddComponent(owner);
+			}
 			// Mouse
 			{
 				auto mouse = m_world->GenerateEntity(GameObjectType::MOUSE);
@@ -497,6 +550,7 @@ namespace gswy
 				
 				GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel" + sampleID);
 				GameLevelMapManager::GetInstance()->LoadCurrentTileMap(m_world);
+				GameLevelMapManager::GetInstance()->SetIsLoading(false);
 			}
 			// Reset camera
 			{

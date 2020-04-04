@@ -249,6 +249,15 @@ namespace gswy
 		int m_wave;
 	};
 
+	struct LoadFinalWaveEvent : Event<GameObjectType, EventType>
+	{
+		explicit LoadFinalWaveEvent(int wave) : Event(EventType::LOAD_FINAL_WAVE)
+		{
+			m_wave = wave;
+		}
+		int m_wave;
+	};
+
 	struct LoadLevelClearEvent : Event<GameObjectType, EventType>
 	{
 		explicit LoadLevelClearEvent(int lvl) : Event(EventType::LOAD_LEVEL_CLEAR_LOGO)

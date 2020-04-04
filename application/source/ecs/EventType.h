@@ -51,6 +51,7 @@ namespace gswy
 		LOAD_WON_LOGO,
 		LOAD_LOST_LOGO,
 		LOAD_DIED_LOG,
+		LOAD_FINAL_WAVE,
 
 		KEY_BIND_EVENT,
 
