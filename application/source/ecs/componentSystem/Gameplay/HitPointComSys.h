@@ -316,7 +316,7 @@ namespace gswy
 				queue->Publish(e, 0.10);
 
 				// Add coins to player
-				GameLevelMapManager::GetInstance()->AddCoins(10);
+				GameLevelMapManager::GetInstance()->AddCoins(2);
 			}
 
 		}

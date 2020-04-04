@@ -235,7 +235,7 @@ namespace gswy
 				aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 				weapon.AddComponent(aabb);
 
-				weapon.AddComponent(LifeTimeCom(3.0));
+				weapon.AddComponent(LifeTimeCom(1.5));
 
 				auto targetEntityComponent = TargetEntityComponent();
 				weapon.AddComponent(targetEntityComponent);
