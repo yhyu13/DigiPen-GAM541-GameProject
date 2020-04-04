@@ -421,6 +421,10 @@
           "path": "./asset/Audio_Assets/footstep02.ogg",
           "stream": false
         },
+		{
+          "path": "./asset/Audio_Assets/footsteps.ogg",
+          "stream": false
+        },
         {
           "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_shoot_lr1.ogg",
           "stream": false
