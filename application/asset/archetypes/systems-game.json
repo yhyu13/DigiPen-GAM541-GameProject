@@ -8,6 +8,7 @@
 	  "MobPortalControllerComSys",
 	  "tower-controller",
 	  "base-controller",
+	  "coin-controller",
 	  
       "weapon",
       

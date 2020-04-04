@@ -111,9 +111,6 @@ namespace gswy
 				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:
 					ENEMY(entityA, entityB, position, rotation);
 					goto END;
-				case GameObjectType::COIN:
-					COIN(entityA, entityB);
-					goto END;
 				default:
 					break;
 				}
@@ -304,21 +301,6 @@ namespace gswy
 			default:
 				break;
 			}
-		}
-
-		void COIN(const Entity<GameObjectType>& entityA, const Entity<GameObjectType>& entityB)
-		{
-			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-
-			if (entityB.m_type == GameObjectType::BASE)
-			{
-				auto e = MemoryManager::Make_shared<GCEvent>(entityA);
-				queue->Publish(e, 0.10);
-
-				// Add coins to player
-				GameLevelMapManager::GetInstance()->AddCoins(2);
-			}
-
 		}
 	};
 }
