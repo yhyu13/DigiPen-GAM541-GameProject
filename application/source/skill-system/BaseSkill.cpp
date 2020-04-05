@@ -52,8 +52,8 @@ namespace gswy
 		return m_icon;
 	}
 
-	void BaseSkill::SetIcon(std::string& m_icon)
+	void BaseSkill::SetIcon(std::string& icon)
 	{
-		m_icon = m_icon;
+		m_icon = icon;
 	}
 }

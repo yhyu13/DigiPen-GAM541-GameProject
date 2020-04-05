@@ -48,6 +48,7 @@ namespace gswy
 				item->m_text.push_back(text[j].asString());
 			}
 			item->m_keyEventType = itemData["key-event"].asString();
+			item->m_icon = itemData["icon"].asString();
 			m_items->Add(item);
 		}
 	}
@@ -78,6 +79,7 @@ namespace gswy
 				item->m_text.push_back(text[j].asString());
 			}
 			item->m_keyEventType = itemData["key-event"].asString();
+			item->m_icon = itemData["icon"].asString();
 			m_items->Add(item);
 		}
 	}
