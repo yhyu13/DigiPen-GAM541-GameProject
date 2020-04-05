@@ -507,23 +507,51 @@ namespace gswy {
 		ImGui::PushStyleColor(ImGuiCol_Button, { 90 ,90 ,90 ,255 });
 		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		{
-			std::string act1 = SkillManager::GetInstance()->GetSkill(1, 1) ? SkillManager::GetInstance()->GetSkill(1, 1)->m_type.c_str() : "ACTIVE 1";
-			ImGui::Button(act1.c_str(), ImVec2(94, 94));
+			if (SkillManager::GetInstance()->GetSkill(1, 1))
+			{
+				m_Texture_Acitve1 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 1)->m_icon);
+				ImGui::ImageButton((void*)m_Texture_Acitve1->GetRendererID(), ImVec2(94, 94));
+			}
+			else
+			{
+				ImGui::Button("ACTIVE 1", ImVec2(94, 94));
+			}
 		}
 		ImGui::SameLine();
 		{
-			std::string act2 = SkillManager::GetInstance()->GetSkill(2, 1) ? SkillManager::GetInstance()->GetSkill(2, 1)->m_type.c_str() : "ACTIVE 1";
-			ImGui::Button(act2.c_str(), ImVec2(94, 94));
+			if (SkillManager::GetInstance()->GetSkill(2, 1))
+			{
+				m_Texture_Acitve2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 1)->m_icon);
+				ImGui::ImageButton((void*)m_Texture_Acitve2->GetRendererID(), ImVec2(94, 94));
+			}
+			else
+			{
+				ImGui::Button("ACTIVE 2", ImVec2(94, 94));				
+			}
 		}
 		ImGui::SameLine();
 		{
-			std::string act3 = SkillManager::GetInstance()->GetSkill(3, 1) ? SkillManager::GetInstance()->GetSkill(3, 1)->m_type.c_str() : "ACTIVE 1";
-			ImGui::Button(act3.c_str(), ImVec2(94, 94));
+			if (SkillManager::GetInstance()->GetSkill(3, 1))
+			{
+				m_Texture_Acitve2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 1)->m_icon);
+				ImGui::ImageButton((void*)m_Texture_Acitve2->GetRendererID(), ImVec2(94, 94));
+			}
+			else
+			{
+				ImGui::Button("ACTIVE 3", ImVec2(94, 94));
+			}
 		}
 		ImGui::SameLine();
 		{
-			std::string act4 = SkillManager::GetInstance()->GetSkill(4, 1) ? SkillManager::GetInstance()->GetSkill(4, 1)->m_type.c_str() : "ACTIVE 1";
-			ImGui::Button(act4.c_str(), ImVec2(94, 94));
+			if (SkillManager::GetInstance()->GetSkill(4, 1))
+			{
+				m_Texture_Acitve2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 1)->m_icon);
+				ImGui::ImageButton((void*)m_Texture_Acitve2->GetRendererID(), ImVec2(94, 94));
+			}
+			else
+			{
+				ImGui::Button("ACTIVE 4", ImVec2(94, 94));
+			}
 		}
 		{
 			ImGui::Image(0, ImVec2(30, 30));
