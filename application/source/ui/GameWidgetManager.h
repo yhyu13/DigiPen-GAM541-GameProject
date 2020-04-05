@@ -127,18 +127,18 @@ namespace gswy {
 		std::shared_ptr<Texture2D> m_Texture_Acitve3;
 		std::shared_ptr<Texture2D> m_Texture_Acitve4;
 
-		std::shared_ptr<Texture2D> m_Texture_Support1_1;
 		std::shared_ptr<Texture2D> m_Texture_Support1_2;
 		std::shared_ptr<Texture2D> m_Texture_Support1_3;
-		std::shared_ptr<Texture2D> m_Texture_Support2_1;
+		std::shared_ptr<Texture2D> m_Texture_Support1_4;
 		std::shared_ptr<Texture2D> m_Texture_Support2_2;
 		std::shared_ptr<Texture2D> m_Texture_Support2_3;
-		std::shared_ptr<Texture2D> m_Texture_Support3_1;
+		std::shared_ptr<Texture2D> m_Texture_Support2_4;
 		std::shared_ptr<Texture2D> m_Texture_Support3_2;
 		std::shared_ptr<Texture2D> m_Texture_Support3_3;
-		std::shared_ptr<Texture2D> m_Texture_Support4_1;
+		std::shared_ptr<Texture2D> m_Texture_Support3_4;
 		std::shared_ptr<Texture2D> m_Texture_Support4_2;
 		std::shared_ptr<Texture2D> m_Texture_Support4_3;
+		std::shared_ptr<Texture2D> m_Texture_Support4_4;
 	};
 
 	class WidgetManager

@@ -510,7 +510,8 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(1, 1))
 			{
 				m_Texture_Acitve1 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 1)->m_icon);
-				ImGui::ImageButton((void*)m_Texture_Acitve1->GetRendererID(), ImVec2(94, 94));
+				//ImGui::ImageButton((void*)m_Texture_Acitve1->GetRendererID(), ImVec2(94, 94));
+				ImGui::Image((void*)m_Texture_Acitve1->GetRendererID(), ImVec2(90, 90));
 			}
 			else
 			{
@@ -522,7 +523,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(2, 1))
 			{
 				m_Texture_Acitve2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 1)->m_icon);
-				ImGui::ImageButton((void*)m_Texture_Acitve2->GetRendererID(), ImVec2(94, 94));
+				ImGui::Image((void*)m_Texture_Acitve2->GetRendererID(), ImVec2(90, 90));
 			}
 			else
 			{
@@ -533,8 +534,8 @@ namespace gswy {
 		{
 			if (SkillManager::GetInstance()->GetSkill(3, 1))
 			{
-				m_Texture_Acitve2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 1)->m_icon);
-				ImGui::ImageButton((void*)m_Texture_Acitve2->GetRendererID(), ImVec2(94, 94));
+				m_Texture_Acitve3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 1)->m_icon);
+				ImGui::Image((void*)m_Texture_Acitve3->GetRendererID(), ImVec2(90, 90));
 			}
 			else
 			{
@@ -545,8 +546,8 @@ namespace gswy {
 		{
 			if (SkillManager::GetInstance()->GetSkill(4, 1))
 			{
-				m_Texture_Acitve2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 1)->m_icon);
-				ImGui::ImageButton((void*)m_Texture_Acitve2->GetRendererID(), ImVec2(94, 94));
+				m_Texture_Acitve4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 1)->m_icon);
+				ImGui::Image((void*)m_Texture_Acitve4->GetRendererID(), ImVec2(90, 90));
 			}
 			else
 			{
@@ -554,29 +555,77 @@ namespace gswy {
 			}
 		}
 		{
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(1, 2))
+			{
+				m_Texture_Support1_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 2)->m_icon);
+				ImGui::Image((void*)m_Texture_Support1_2->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(1, 3))
+			{
+				m_Texture_Support1_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 3)->m_icon);
+				ImGui::Image((void*)m_Texture_Support1_3->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(1, 4))
+			{
+				m_Texture_Support1_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 4)->m_icon);
+				ImGui::Image((void*)m_Texture_Support1_4->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(2, 2))
+			{
+				m_Texture_Support2_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 2)->m_icon);
+				ImGui::Image((void*)m_Texture_Support2_2->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(2, 3))
+			{
+				m_Texture_Support2_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 3)->m_icon);
+				ImGui::Image((void*)m_Texture_Support2_3->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(2, 4))
+			{
+				m_Texture_Support2_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 4)->m_icon);
+				ImGui::Image((void*)m_Texture_Support2_4->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(3, 2))
+			{
+				m_Texture_Support3_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 2)->m_icon);
+				ImGui::Image((void*)m_Texture_Support3_2->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(3, 3))
+			{
+				m_Texture_Support3_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 3)->m_icon);
+				ImGui::Image((void*)m_Texture_Support3_3->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(3, 4))
+			{
+				m_Texture_Support3_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 4)->m_icon);
+				ImGui::Image((void*)m_Texture_Support3_4->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(4, 2))
+			{
+				m_Texture_Support4_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 2)->m_icon);
+				ImGui::Image((void*)m_Texture_Support4_2->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(4, 3))
+			{
+				m_Texture_Support4_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 3)->m_icon);
+				ImGui::Image((void*)m_Texture_Support4_3->GetRendererID(), ImVec2(30, 30));
+			}
 			ImGui::SameLine();
-			ImGui::Image(0, ImVec2(30, 30));
+			if (SkillManager::GetInstance()->GetSkill(4, 4))
+			{
+				m_Texture_Support4_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 4)->m_icon);
+				ImGui::Image((void*)m_Texture_Support4_4->GetRendererID(), ImVec2(30, 30));
+			}
 		}
 		ImGui::End();
 		ImGui::PopStyleVar(3);
