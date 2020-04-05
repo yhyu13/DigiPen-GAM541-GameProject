@@ -10,7 +10,6 @@ Author: Kyle Wang (kyle.wang@digipen.edu | 60000719)
 Creation date: 03/12/2020
 - End Header ----------------------------*/
 
-//#include "engine-precompiled-header.h"
 #include "GameWidgetManager.h"
 #include "inventory-manager/InventoryManager.h"
 #include "tilemap/GameLevelMapManager.h"
@@ -68,6 +67,14 @@ namespace gswy {
 			GetPauseMenu().m_TexturePath_Resume = widgetData["Resume"].asString();
 			GetPauseMenu().m_TexturePath_MainMenu = widgetData["MainMenu"].asString();
 		}
+		auto styles = root["styles"];
+		{
+			m_Hud.SetStyle(styles["HUD"][0].asInt(), styles["HUD"][1].asInt(), styles["HUD"][2].asInt(), styles["HUD"][3].asInt());
+			m_MainMenu.SetStyle(styles["MainMenu"][0].asInt(), styles["MainMenu"][1].asInt(), styles["MainMenu"][2].asInt(), styles["MainMenu"][3].asInt());
+			m_PauseMenu.SetStyle(styles["PauseMenu"][0].asInt(), styles["PauseMenu"][1].asInt(), styles["PauseMenu"][2].asInt(), styles["PauseMenu"][3].asInt());
+			m_ShopMenu.SetStyle(styles["ShopMenu"][0].asInt(), styles["ShopMenu"][1].asInt(), styles["ShopMenu"][2].asInt(), styles["ShopMenu"][3].asInt());
+			m_InventoryMenu.SetStyle(styles["InventoryMenu"][0].asInt(), styles["InventoryMenu"][1].asInt(), styles["InventoryMenu"][2].asInt(), styles["InventoryMenu"][3].asInt());
+		}
 	}
 
 	void MainMenu::Render()
@@ -76,7 +83,7 @@ namespace gswy {
 		ImVec2 nextWindowSize(500, 428);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255,137,20));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
@@ -113,7 +120,7 @@ namespace gswy {
 		ImVec2 nextWindowSize(500, 230);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255, 137, 20));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::SetWindowFontScale(1.0);
@@ -152,7 +159,7 @@ namespace gswy {
 		ImVec2 nextWindowSize = ImVec2(80, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 55));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255, 137, 20));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("Timer", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
@@ -165,7 +172,7 @@ namespace gswy {
 		nextWindowSize = ImVec2(80, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255, 137, 20));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
@@ -178,7 +185,7 @@ namespace gswy {
 		nextWindowSize = ImVec2(140, 140);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(0, m_WindowSize_Y - nextWindowSize[1] - 20));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255, 137, 20));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse);
 		ImGui::Text("Coin : %i", m_Coins);
@@ -191,7 +198,7 @@ namespace gswy {
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 20));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255, 137, 20));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("Base HP", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
@@ -207,7 +214,7 @@ namespace gswy {
 		nextWindowSize = ImVec2(250, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(600, m_WindowSize_Y - nextWindowSize[1] - 100));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255, 137, 20));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("Player HP", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
@@ -228,7 +235,7 @@ namespace gswy {
 		ImVec2 shopWindowSize = ImVec2(500, 400);
 		ImGui::SetNextWindowSize(shopWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(0, 0));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor::ImColor(255, 137, 20));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::Begin("Shop", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 
 		if (ImGui::BeginTabBar("ShopTabBar"))

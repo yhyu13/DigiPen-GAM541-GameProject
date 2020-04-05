@@ -22,9 +22,12 @@ namespace gswy {
 		virtual void Render() = 0;
 		inline void SetVisible(bool vis) { IsVisible = vis; }
 		inline bool GetVisible() const { return IsVisible; }
+		inline ImVec4 GetStyle() const { return m_styleColor; }
+		inline void SetStyle(int r, int g, int b, int a) { m_styleColor = (ImVec4)ImColor::ImColor(r, g, b, a); }
 	protected:
 		bool IsVisible = true;
 		unsigned int m_WindowSize_X = 1920;
 		unsigned int m_WindowSize_Y = 1080;
+		ImVec4 m_styleColor;
 	};
 }
