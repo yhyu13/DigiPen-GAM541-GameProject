@@ -179,23 +179,24 @@ namespace gswy
 				skill->m_type = GetSkillType(activeSkill->GetActiveSkillType());
 				skill->m_tags = GetSkillTags(activeSkill);
 				skill->m_icon = activeSkill->GetIcon();
+				skill->m_skillNumber = skillNumber;
+				skill->m_slotNumber = slotNumber;
 			}
 			else
 			{
 				slot_ -= 1;
-				skill = std::make_shared<Skill>();
 				std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(slot_);
 				if (supportSkill != nullptr)
 				{
+					skill = std::make_shared<Skill>();
 					skill->m_category = "SUPPORT";
 					skill->m_type = GetSkillType(supportSkill->GetSkillType());
 					skill->m_tags = GetSkillTags(supportSkill);
 					skill->m_icon = supportSkill->GetIcon();
+					skill->m_skillNumber = skillNumber;
+					skill->m_slotNumber = slotNumber;
 				}
 			}
-
-			skill->m_skillNumber = skillNumber;
-			skill->m_slotNumber = slotNumber;
 		}
 		return skill;
 	}
