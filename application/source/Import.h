@@ -43,6 +43,8 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/Gameplay/FadeComSys.h"
 #include "ecs/componentSystem/GC/GCComSys.h"
 #include "ecs/componentSystem/Gameplay/PlayerSkillSystem.h"
+#include "ecs/componentSystem/Gameplay/TargetEntityComponentSystem.h"
+#include "ecs/componentSystem/Controller/CoinControllerComSys.h"
 
 ///// Client application framework /////
 #include "object-factory/GameObjectFactory.h"

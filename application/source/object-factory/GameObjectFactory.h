@@ -14,7 +14,6 @@ Creation date: 02/19/2020
 #include "engine/object-factory/ObjectFactory.h"
 #include "engine/ecs/GameWorld.h"
 #include "json/json.h"
-#include "ecs/componentSystem/Gameplay/TargetEntityComponentSystem.h"
 
 namespace gswy {
 
@@ -66,6 +65,10 @@ namespace gswy {
 				}
 				if (system._Equal("base-controller")) {
 					m_world->RegisterSystem(MemoryManager::Make_shared<BaseControllerComSys>());
+					continue;
+				}
+				if (system._Equal("coin-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<CoinControllerComSys>());
 					continue;
 				}
 				if (system._Equal("scene")) {

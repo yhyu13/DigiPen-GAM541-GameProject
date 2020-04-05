@@ -92,7 +92,7 @@ namespace gswy
 
 	struct WeaponSoundEvent : Event<GameObjectType, EventType> {
 
-		WeaponSoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)
+		explicit WeaponSoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)
 			:
 			Event(EventType::WEAPON_SOUND)
 		{
@@ -102,7 +102,7 @@ namespace gswy
 			m_freq = freq;
 		}
 
-		WeaponSoundEvent(const std::string& name, glm::vec2& pos = glm::vec2(0), float vol = 1.0f, float freq = 1.0f)
+		explicit WeaponSoundEvent(const std::string& name, glm::vec2& pos = glm::vec2(0), float vol = 1.0f, float freq = 1.0f)
 			:
 			Event(EventType::WEAPON_SOUND)
 		{
