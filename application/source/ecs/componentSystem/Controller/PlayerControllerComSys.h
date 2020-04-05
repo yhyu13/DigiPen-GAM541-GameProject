@@ -421,7 +421,7 @@ namespace gswy
 			// 3. Play sound
 			if (dt)
 			{
-				auto e = MemoryManager::Make_shared<SoundEvent>("footstep02");
+				auto e = MemoryManager::Make_shared<SoundEvent>("footstep02", body->GetPos(), 1, 0.65);
 				queue->Publish(e);
 			}
 		}
