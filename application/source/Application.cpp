@@ -459,10 +459,12 @@ namespace gswy
 				{
 					LoadGameWorldAndInit("./asset/archetypes/systems-game.json");
 					InventoryManager::GetInstance()->ReLoadInventory("./asset/archetypes/levels/inventory-level-1.json");
+					SkillManager::GetInstance()->ResetSkills();
 				}
 				else
 				{
 					m_world->RemoveAllEntities();
+					SkillManager::GetInstance()->ResetSkills();
 				}
 			}
 			// Set widget

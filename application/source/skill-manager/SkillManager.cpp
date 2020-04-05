@@ -377,4 +377,25 @@ namespace gswy
 		}
 		return skill;
 	}
+
+	void SkillManager::ResetSkills()
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			std::shared_ptr<ActiveSkill>& activeSkill = m_skills[i];
+			if (activeSkill != nullptr)
+			{
+				for (int j = 0; j < 3; ++j)
+				{
+					std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(i);
+					if (supportSkill != nullptr)
+					{
+						supportSkill.reset();
+					}
+				}
+
+				activeSkill.reset();
+			}
+		}
+	}
 }
