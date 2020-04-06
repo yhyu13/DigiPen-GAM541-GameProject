@@ -88,7 +88,6 @@ namespace gswy {
 			}
 			return GridProxy(m_grid[i], m_y);
 		}
-
 		const GridProxy operator[](int i) const
 		{
 			if (i < 0 || i > m_x - 1)

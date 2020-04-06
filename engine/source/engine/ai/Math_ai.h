@@ -15,7 +15,33 @@ Creation date: 04/05/2020
 namespace gswy
 {
     /*
-    LU decomposition for squared matrix of size NxN
+    Get LU decomposition for a squared matrix of size NxN
+    */
+    Grid_float GetLU(const Grid_float& matrix, int n);
+    /*
+    Using NxN LU decomposed matrix to solve linear equation (matrix passed in is already a LU matrix)
+    */
+    Array_float SolveLU(const Grid_float& lu, const Array_float& b, int n);
+    /*
+    solve linear equation using LU decomposition for a squared matrix of size NxN
     */
     Array_float SolveUsingLU(const Grid_float& matrix, const Array_float& b, int n);
+
+
+
+    /*
+    Get the coefficients of a paramatric cubic spline interporlated curve
+    */
+    std::vector<vec2> GetCubicSplineCoeff(const std::vector<vec2>& pts);
+    /*
+    Get point on the paramatric cubic spline 
+    */
+    vec2 CubicSplineInterpolate(float t, const std::vector<vec2>& coeff);
+    /*
+    Get the cubic spline interporlated curve that is represented by points.
+    Return an empty vector is the input vector has size smaller than 2.
+     (argument alpha represent the step size for the paramerteric value t which is used internally, 
+     the smaller the smoother the curve, default is 0.05)
+    */
+    std::vector<vec2> GetCubicSpline(const std::vector<vec2>& pts, float alpha = 0.05f);
 }
