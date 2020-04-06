@@ -41,7 +41,7 @@ namespace gswy
     Get the cubic spline interporlated curve that is represented by points.
     Return an empty vector is the input vector has size smaller than 2.
      (argument alpha represent the step size for the paramerteric value t which is used internally, 
-     the smaller the smoother the curve, default is 0.05)
+     the smaller the smoother the curve, default is 1.f)
     */
-    std::vector<vec2> GetCubicSpline(const std::vector<vec2>& pts, float alpha = 0.05f);
+    std::vector<vec2> GetCubicSpline(const std::vector<vec2>& pts, float alpha = 1.f);
 }

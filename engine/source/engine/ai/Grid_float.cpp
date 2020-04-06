@@ -82,9 +82,10 @@ int gswy::Grid_float::Y()
 }
 
 gswy::Array_float::Array_float()
+	:
+	m_x(0),
+	m_grid(nullptr)
 {
-	m_x = 0;
-	m_grid = nullptr;
 }
 
 gswy::Array_float::Array_float(int x)
@@ -99,16 +100,12 @@ gswy::Array_float::Array_float(int x)
 
 gswy::Array_float::Array_float(const Array_float& rhs)
 {
-	if (this != &rhs)
+	auto x = rhs.m_x;
+	m_x = x;
+	m_grid = (float*)MemoryManager::Allocate(x * sizeof(float));
+	for (int i = 0; i < x; ++i)
 	{
-		this->~Array_float();
-		auto x = rhs.m_x;
-		m_x = x;
-		m_grid = (float*)MemoryManager::Allocate(x * sizeof(float));
-		for (int i = 0; i < x; ++i)
-		{
-			m_grid[i] = rhs.m_grid[i];
-		}
+		m_grid[i] = rhs.m_grid[i];
 	}
 }
 

@@ -14,6 +14,7 @@ Creation date: 03/04/2020
 #include <stack>
 #include <set>
 #include "Grid_float.h"
+#include "Math_ai.h"
 
 using namespace std;
 

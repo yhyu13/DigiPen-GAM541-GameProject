@@ -110,7 +110,6 @@ Array_float gswy::SolveUsingLU(const Grid_float& matrix, const Array_float& b, i
 	return x;
 }
 
-
 /*
 Get the coefficients of cubic spline interporlated curve
 */
@@ -181,9 +180,9 @@ std::vector<vec2> gswy::GetCubicSplineCoeff(const std::vector<vec2>& pts)
 	}
 
 	// Linear solver : LU decom
-	auto LU = GetLU(A, N);
-	auto result_x = SolveLU(LU, b_x, N);
-	auto result_y = SolveLU(LU, b_y, N);
+	Grid_float LU = GetLU(A, N);
+	Array_float result_x = SolveLU(LU, b_x, N);
+	Array_float result_y = SolveLU(LU, b_y, N);
 
 	// Assign results
 	for (int i = 0; i < N; ++i)
@@ -196,11 +195,7 @@ std::vector<vec2> gswy::GetCubicSplineCoeff(const std::vector<vec2>& pts)
 glm::vec2 gswy::CubicSplineInterpolate(float t, const std::vector<vec2>& coeff)
 {
 	int N = coeff.size();
-	vec2 result;
-
-	result.x += coeff[0].x;
-	result.y += coeff[0].y;
-
+	vec2 result(0,0);
 	result += coeff[0];
 	// Assign coefficients of the first four (standard polynomial degree 3) terms
 	for (int i = 1; i < 4; ++i)
@@ -222,7 +217,9 @@ glm::vec2 gswy::CubicSplineInterpolate(float t, const std::vector<vec2>& coeff)
 
 /*
 Get the cubic spline interporlated curve that is represented by points.
-Return an empty vector is the input vector has size smaller than 2.
+Return :
+	The cubic spline curve if the input vector has size greater than 1
+	Otherwise return an *empty vector*.
 (argument alpha represent the step size for the paramerteric value t which is used internally,
 the smaller the smoother the curve, default is 0.05)
 */

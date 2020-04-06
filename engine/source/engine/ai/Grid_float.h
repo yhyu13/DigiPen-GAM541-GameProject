@@ -58,32 +58,26 @@ namespace gswy {
 		int X();
 		int Y();
 
-		Grid_float& operator=(const Grid_float& rhs)
+		void operator=(const Grid_float& rhs)
 		{
-			if (this != &rhs)
+			auto x = rhs.m_x;
+			auto y = rhs.m_y;
+			m_x = x;
+			m_y = y;
+			m_grid = (float**)MemoryManager::Allocate(x * sizeof(float*));
+			for (int i = 0; i < x; ++i)
 			{
-				this->~Grid_float();
-				auto x = rhs.m_x;
-				auto y = rhs.m_y;
-				m_x = x;
-				m_y = y;
-				m_grid = (float**)MemoryManager::Allocate(x * sizeof(float*));
-				for (int i = 0; i < x; ++i)
+				m_grid[i] = (float*)MemoryManager::Allocate(y * sizeof(float));
+				for (int j = 0; j < y; ++j)
 				{
-					m_grid[i] = (float*)MemoryManager::Allocate(y * sizeof(float));
-					for (int j = 0; j < y; ++j)
-					{
-						m_grid[i][j] = rhs.m_grid[i][j];
-					}
+					m_grid[i][j] = rhs.m_grid[i][j];
 				}
 			}
-			return *this;
 		}
 		GridProxy operator[](int i)
 		{
 			if (i < 0 || i > m_x - 1)
 			{
-				// TODO : Engine exception
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Array " + str2wstr(Str(i)) + L" out of bound!");
 			}
 			return GridProxy(m_grid[i], m_y);
@@ -92,7 +86,6 @@ namespace gswy {
 		{
 			if (i < 0 || i > m_x - 1)
 			{
-				// TODO : Engine exception
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Array " + str2wstr(Str(i)) + L" out of bound!");
 			}
 			return GridProxy(m_grid[i], m_y);
@@ -117,7 +110,7 @@ namespace gswy {
 		~Array_float();
 		int X();
 
-		Array_float& operator=(const Array_float& rhs)
+		void operator=(const Array_float& rhs)
 		{
 			if (this != &rhs)
 			{
@@ -130,13 +123,11 @@ namespace gswy {
 					m_grid[i] = rhs.m_grid[i];
 				}
 			}
-			return *this;
 		}
 		float& operator[](int i)
 		{
 			if (i < 0 || i > m_x - 1)
 			{
-				// TODO : Engine exception
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Array " + str2wstr(Str(i)) + L" out of bound!");
 			}
 			return m_grid[i];
@@ -146,7 +137,6 @@ namespace gswy {
 		{
 			if (i < 0 || i > m_x - 1)
 			{
-				// TODO : Engine exception
 				throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Array " + str2wstr(Str(i)) + L" out of bound!");
 			}
 			return m_grid[i];
