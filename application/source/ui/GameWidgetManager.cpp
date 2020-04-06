@@ -151,6 +151,7 @@ namespace gswy {
 		m_BaseHP = 0.5f;
 		m_PlayerHP = 0.5f;
 		m_FrameBuffer = FrameBuffer::Create(m_WindowSize_X, m_WindowSize_Y);
+		m_Texture_Coin = Texture2D::Create("./asset/Sprites/coin_ui.png");
 	}
 
 	void HUD::Render()
@@ -158,7 +159,7 @@ namespace gswy {
 		//Text : Timer
 		ImVec2 nextWindowSize = ImVec2(80, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 55));
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 75));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
@@ -171,7 +172,7 @@ namespace gswy {
 		//Text : Wave
 		nextWindowSize = ImVec2(80, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, m_WindowSize_Y - nextWindowSize[1] - 100));
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 8));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
@@ -185,19 +186,22 @@ namespace gswy {
 		nextWindowSize = ImVec2(140, 140);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(0, m_WindowSize_Y - nextWindowSize[1] - 20));
+		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse);
-		ImGui::Text("Coin : %i", m_Coins);
-		ImGui::Image(0, ImVec2(130, 130));
+		ImGui::SetCursorPosX(25);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f),"Coin : %i", m_Coins);
+		ImGui::Image((void*)m_Texture_Coin->GetRendererID(), ImVec2(100, 100));
 		ImGui::End();
 		ImGui::PopStyleColor(1);
-		ImGui::PopStyleVar(1);
+		ImGui::PopStyleVar(2);
 
 		//Progress Bar : Base HP
 		nextWindowSize = ImVec2(500, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 20));
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 40));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
@@ -213,7 +217,7 @@ namespace gswy {
 		//Progress Bar : Player HP
 		nextWindowSize = ImVec2(250, 20);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(600, m_WindowSize_Y - nextWindowSize[1] - 100));
+		ImGui::SetNextWindowPos(ImVec2(150, m_WindowSize_Y - nextWindowSize[1] - 70));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
@@ -504,21 +508,21 @@ namespace gswy {
 	void InventoryMenu::Render()
 	{
 		//New Inventory
-		ImVec2 InventoryWindowSize = ImVec2(400, 140);
+		ImVec2 InventoryWindowSize = ImVec2(420, 160);
 		ImGui::SetNextWindowSize(InventoryWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(150, m_WindowSize_Y - InventoryWindowSize[1] - 20));
+		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - InventoryWindowSize[0] - 80, m_WindowSize_Y - InventoryWindowSize[1] - 20));
 		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 1));
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleColor(ImGuiCol_Button, { 90 ,90 ,90 ,255 });
 		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		{
 			if (SkillManager::GetInstance()->GetSkill(1, 1))
 			{
 				m_Texture_Acitve1 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 1)->m_icon);
-				//ImGui::ImageButton((void*)m_Texture_Acitve1->GetRendererID(), ImVec2(94, 94));
-				ImGui::Image((void*)m_Texture_Acitve1->GetRendererID(), ImVec2(90, 90));
+				ImGui::Image((void*)m_Texture_Acitve1->GetRendererID(), ImVec2(100, 100));
 			}
 			else
 			{
@@ -530,7 +534,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(2, 1))
 			{
 				m_Texture_Acitve2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 1)->m_icon);
-				ImGui::Image((void*)m_Texture_Acitve2->GetRendererID(), ImVec2(90, 90));
+				ImGui::Image((void*)m_Texture_Acitve2->GetRendererID(), ImVec2(100, 100));
 			}
 			else
 			{
@@ -542,7 +546,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(3, 1))
 			{
 				m_Texture_Acitve3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 1)->m_icon);
-				ImGui::Image((void*)m_Texture_Acitve3->GetRendererID(), ImVec2(90, 90));
+				ImGui::Image((void*)m_Texture_Acitve3->GetRendererID(), ImVec2(100, 100));
 			}
 			else
 			{
@@ -554,88 +558,101 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(4, 1))
 			{
 				m_Texture_Acitve4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 1)->m_icon);
-				ImGui::Image((void*)m_Texture_Acitve4->GetRendererID(), ImVec2(90, 90));
+				ImGui::Image((void*)m_Texture_Acitve4->GetRendererID(), ImVec2(100, 100));
 			}
 			else
 			{
 				ImGui::Button("ACTIVE 4", ImVec2(94, 94));
 			}
 		}
+		ImGui::NewLine();
 		{
 			if (SkillManager::GetInstance()->GetSkill(1, 2))
 			{
 				m_Texture_Support1_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 2)->m_icon);
+				ImGui::SetCursorPosX(15);
 				ImGui::Image((void*)m_Texture_Support1_2->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(1, 3))
 			{
 				m_Texture_Support1_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 3)->m_icon);
+				ImGui::SetCursorPosX(45);
 				ImGui::Image((void*)m_Texture_Support1_3->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(1, 4))
 			{
 				m_Texture_Support1_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 4)->m_icon);
+				ImGui::SetCursorPosX(75);
 				ImGui::Image((void*)m_Texture_Support1_4->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(2, 2))
 			{
 				m_Texture_Support2_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 2)->m_icon);
+				ImGui::SetCursorPosX(120);
 				ImGui::Image((void*)m_Texture_Support2_2->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(2, 3))
 			{
 				m_Texture_Support2_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 3)->m_icon);
+				ImGui::SetCursorPosX(150);
 				ImGui::Image((void*)m_Texture_Support2_3->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(2, 4))
 			{
 				m_Texture_Support2_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 4)->m_icon);
+				ImGui::SetCursorPosX(180);
 				ImGui::Image((void*)m_Texture_Support2_4->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(3, 2))
 			{
 				m_Texture_Support3_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 2)->m_icon);
+				ImGui::SetCursorPosX(225);
 				ImGui::Image((void*)m_Texture_Support3_2->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(3, 3))
 			{
 				m_Texture_Support3_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 3)->m_icon);
+				ImGui::SetCursorPosX(255);
 				ImGui::Image((void*)m_Texture_Support3_3->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(3, 4))
 			{
 				m_Texture_Support3_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 4)->m_icon);
+				ImGui::SetCursorPosX(285);
 				ImGui::Image((void*)m_Texture_Support3_4->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(4, 2))
 			{
 				m_Texture_Support4_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 2)->m_icon);
+				ImGui::SetCursorPosX(330);
 				ImGui::Image((void*)m_Texture_Support4_2->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(4, 3))
 			{
 				m_Texture_Support4_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 3)->m_icon);
+				ImGui::SetCursorPosX(360);
 				ImGui::Image((void*)m_Texture_Support4_3->GetRendererID(), ImVec2(30, 30));
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(4, 4))
 			{
 				m_Texture_Support4_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 4)->m_icon);
+				ImGui::SetCursorPosX(390);
 				ImGui::Image((void*)m_Texture_Support4_4->GetRendererID(), ImVec2(30, 30));
 			}
 		}
 		ImGui::End();
-		ImGui::PopStyleVar(3);
+		ImGui::PopStyleVar(4);
 		ImGui::PopStyleColor(1);
 	}
 }

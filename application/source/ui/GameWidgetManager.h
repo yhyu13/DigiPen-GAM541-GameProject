@@ -39,6 +39,8 @@ namespace gswy {
 		void  SetPlayerHP(float val) { m_PlayerHP = val; }
 		void  SetGameProgress(float val) { m_Progress = val; }
 
+		void SetCoinAnimation();
+		std::shared_ptr<Texture2D> m_Texture_Coin;
 	private:
 		int m_TimerMin;
 		int m_TimerSec;
