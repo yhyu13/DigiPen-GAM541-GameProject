@@ -104,6 +104,29 @@ namespace gswy {
 			m_bDelayedEventShouldBeCleared = true;
 		}
 
+		void RemoveDelayedEvent(EventType type)
+		{
+			//m_subscribers.erase(type);
+
+			std::vector<DelayedEventPtr> tempEvents;
+			tempEvents.reserve(m_events.size());
+
+			while (m_events.size() > 0)
+			{
+				DelayedEventPtr delayedEvent = m_events.top();
+				if (!(delayedEvent->m_event->m_type == type))
+				{
+					tempEvents.push_back(delayedEvent);
+				}
+				m_events.pop();
+			}
+
+			for (auto event : tempEvents)
+			{
+				m_events.push(event);
+			}
+		}
+
 		void Update(double frameTime) {
 			auto m_events_temp = m_events;
 			while (!m_events.empty()) {
@@ -111,7 +134,7 @@ namespace gswy {
 			}
 
 			/*
-				A few delayed event might call Clear() function such that all remaning delayed event
+				A few delayed event might call Clear() function such that all remaining delayed event
 				should not be called. We will need to check if m_bDelayedEventShouldBeCleared has
 				been set to true during the while loop.
 			*/
