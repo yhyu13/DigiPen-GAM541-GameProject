@@ -40,7 +40,7 @@ namespace gswy
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 
 				// Escape the start up screen by pressing ESC
-				if (input->IsKeyTriggered(KEY_ESCAPE))
+				if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_ENTER) || input->IsKeyTriggered(KEY_SPACE) || input->IsKeyTriggered(KEY_ESCAPE))
 				{
 					auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
 					queue->Publish(_e1,0.05);

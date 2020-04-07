@@ -39,6 +39,8 @@ std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
 		PROCESS_VAL(gswy::GameObjectType::CYCLONE_SFX);
 		PROCESS_VAL(gswy::GameObjectType::ENEMY_PROJECTILE);
 		PROCESS_VAL(gswy::GameObjectType::RAZOR);
+		PROCESS_VAL(gswy::GameObjectType::TEAM_LOGO);
+		PROCESS_VAL(gswy::GameObjectType::GAME_LOGO);
 	default: s = "(invalid value)"; break;
 	}
 #undef PROCESS_VAL

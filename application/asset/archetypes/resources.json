@@ -8,16 +8,12 @@
           "path": "./asset/Logo/DigiPen_RED_1024px.png"
         },
 		{
-          "name": "Team-Logo",
-          "path": "./asset/Logo/team-logo3.png"
-        },
-		{
           "name": "Game-Logo",
           "path": "./asset/Logo/game-logo3.png"
         },
-		{
+        {
           "name": "Team-Logo",
-          "path": "./asset/Logo/team-logo3.png"
+          "path": "./asset/Logo/team-logo3_new.png"
         },
 		{
           "name": "You_Won",

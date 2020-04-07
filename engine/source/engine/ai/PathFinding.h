@@ -14,6 +14,7 @@ Creation date: 03/04/2020
 #include <stack>
 #include <set>
 #include "Grid_float.h"
+#include "Math_ai.h"
 
 using namespace std;
 
@@ -47,7 +48,7 @@ namespace gswy
 		explicit PathFinding(int x, int y);
 		~PathFinding();
 
-		bool Search(Grid_float& grid, const ivec2& src, const ivec2& dest);
+		bool Search(const Grid_float& grid, const ivec2& src, const ivec2& dest);
 		const std::vector<ivec2>& GetResult();
 
 	private:
@@ -65,7 +66,7 @@ namespace gswy
 
 		// A Utility Function to check whether the given cell is 
 		// blocked or not 
-		bool isUnBlocked(Grid_float& grid, int row, int col);
+		bool isUnBlocked(const Grid_float& grid, int row, int col);
 
 		// A Utility Function to check whether destination cell has 
 		// been reached or not 
@@ -81,7 +82,7 @@ namespace gswy
 		// A Function to find the shortest path between 
 		// a given source cell to a destination cell according 
 		// to A* Search Algorithm 
-		bool aStarSearch(Grid_float& grid, Pair src, Pair dest);
+		bool aStarSearch(const Grid_float& grid, Pair src, Pair dest);
 	};
 }
 
