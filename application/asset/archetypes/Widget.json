@@ -4,7 +4,7 @@
       "NewGame": "./asset/UI/New_Game1.png",
       "HowToPlay": "./asset/UI/How_To_Play1.png",
       "Option": "./asset/UI/Option1.png",
-	  "Credits": "./asset/UI/Option1.png",
+	  "Credits": "./asset/UI/credits_button.png",
 	  "QuitGame": "./asset/UI/quit1.png",
 	  "ResumeGame": "./asset/UI/Resume1.png",
 	  "MainMenu": "./asset/UI/Main_Menu1.png"

@@ -28,6 +28,7 @@ namespace gswy
 		DIGIPEN_LOGO,
 		TEAM_LOGO,
 		GAME_LOGO,
+		CREDIT,
 		END
 	};
 
@@ -162,6 +163,19 @@ namespace gswy
 				auto gameLogoTransform = TransformCom(0, 0, Z_ORDER(2000));
 				m_gameLogo->AddComponent(gameLogoTransform);
 
+				//auto creditsTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("credits");
+				//m_Credits = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_world->GenerateEntity(GameObjectType::CREDITS));
+				//auto creditsActive = ActiveCom(false);
+				//m_Credits->AddComponent(creditsActive);
+				//auto creditsSpriteCom = SpriteCom();
+				//auto creditsSprite = creditsSpriteCom.Get();
+				//creditsSprite->SetSpriteTexture(creditsTexture);
+				//creditsSprite->SetSpriteScale(vec2(1, 1.0f / creditsTexture->GetWidth() * creditsTexture->GetHeight()));
+				//creditsSprite->SetSpritePosition(vec3(0));
+				//m_Credits->AddComponent(creditsSpriteCom);
+				//auto creditsTransform = TransformCom(0, 0, Z_ORDER(3000));
+				//m_Credits->AddComponent(creditsTransform);
+
 				// Fading logo
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 				auto _e = MemoryManager::Make_shared<FadeEvent>(m_DigipenLogo->GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
@@ -188,6 +202,7 @@ namespace gswy
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_WORLD, &GameLayer::OnLoadGameWorld);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_TEAM_LOGO, &GameLayer::OnLoadTeamLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_LOGO, &GameLayer::OnLoadGameLogo);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_CREDIT_SCREEN, &GameLayer::OnLoadCreditScreen);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_LEVEL_LOGO, &GameLayer::OnLoadLevelLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_WAVE_CLEAR_LOGO, &GameLayer::OnLoadWaveClearLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_LEVEL_CLEAR_LOGO, &GameLayer::OnLoadLevelClearLogo);
@@ -217,60 +232,57 @@ namespace gswy
 		}
 		void OnLoadTeamLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			// TEAM GSWY PRESENTS
-			//auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Team-Logo");
-			//auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-			//auto active = ActiveCom();
-			//logo.AddComponent(active);
-			//auto sprite = SpriteCom();
-			//auto m_sprite = sprite.Get();
-			//m_sprite->SetSpriteTexture(logoTexture);
-			//m_sprite->SetSpriteScale(vec2(1, 1.0f / logoTexture->GetWidth() * logoTexture->GetHeight()));
-			//m_sprite->SetSpritePosition(vec3(0));
-			//logo.AddComponent(sprite);
-			//auto transform = TransformCom(0, 0, Z_ORDER(1000));
-			//logo.AddComponent(transform);
-
 			m_loadState = SplashScreenState::TEAM_LOGO;
 			
 			ComponentDecorator<ActiveCom, GameObjectType> activeCom;
 			m_world->Unpack(m_teamLogo->GetEntity(), activeCom);
 			activeCom->SetActive(true);
-			//m_teamLogo->AddComponent(ActiveCom());
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto _e = MemoryManager::Make_shared<FadeEvent>(m_teamLogo->GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
-			//auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 1.0f);
 		}
+
 		void OnLoadGameLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			// LIGHT OF EMPYRION
-			//auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Game-Logo");
-			//auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-			//auto active = ActiveCom();
-			//logo.AddComponent(active);
-			//auto sprite = SpriteCom();
-			//auto m_sprite = sprite.Get();
-			//m_sprite->SetSpriteTexture(logoTexture);
-			//m_sprite->SetSpriteScale(vec2(2, 2.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
-			//m_sprite->SetSpritePosition(vec3(0));
-			//logo.AddComponent(sprite);
-			//auto transform = TransformCom(0, 0, Z_ORDER(2000));
-			//logo.AddComponent(transform);
-
 			m_loadState = SplashScreenState::GAME_LOGO;
 
 			ComponentDecorator<ActiveCom, GameObjectType> activeCom;
 			m_world->Unpack(m_gameLogo->GetEntity(), activeCom);
 			activeCom->SetActive(true);
-			//m_gameLogo->AddComponent(ActiveCom());
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto _e = MemoryManager::Make_shared<FadeEvent>(m_gameLogo->GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
-			//auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 2.0f);
 		}
+
+		void OnLoadCreditScreen(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			m_loadState = SplashScreenState::CREDIT;
+
+			//ComponentDecorator<ActiveCom, GameObjectType> activeCom;
+			//m_world->Unpack(m_Credits->GetEntity(), activeCom);
+			//activeCom->SetActive(true);
+
+			auto creditsTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("credits");
+			m_Credits = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_world->GenerateEntity(GameObjectType::CREDITS));
+			auto creditsActive = ActiveCom();
+			m_Credits->AddComponent(creditsActive);
+			auto creditsSpriteCom = SpriteCom();
+			auto creditsSprite = creditsSpriteCom.Get();
+			creditsSprite->SetSpriteTexture(creditsTexture);
+			creditsSprite->SetSpriteScale(vec2(3.6f, 3.6f / creditsTexture->GetWidth() * creditsTexture->GetHeight()));
+			creditsSprite->SetSpritePosition(vec3(0));
+			m_Credits->AddComponent(creditsSpriteCom);
+			auto creditsTransform = TransformCom(0, 0, Z_ORDER(5000));
+			m_Credits->AddComponent(creditsTransform);
+
+
+			//auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			//auto loadCreditsEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_CREDIT_SCREEN);
+			//queue->Publish(loadCreditsEvent);
+		}
+
 		void OnLoadLevelLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			if (auto event = dynamic_pointer_cast<LoadLevelLogoEvent>(e))
@@ -809,6 +821,7 @@ namespace gswy
 							queue->Publish(gameLogoEvent);
 						}
 						break;
+
 						case SplashScreenState::GAME_LOGO:
 						{
 							auto _e = MemoryManager::Make_shared<FadeEvent>(m_gameLogo->GetEntity(), 1.f, -0.5f, 0.1f, EventType::GC);
@@ -904,6 +917,7 @@ namespace gswy
 		std::shared_ptr<EntityDecorator<GameObjectType>> m_teamLogo;
 		std::shared_ptr<EntityDecorator<GameObjectType>> m_gameLogo;
 		std::shared_ptr<EntityDecorator<GameObjectType>> m_DigipenLogo;
+		std::shared_ptr<EntityDecorator<GameObjectType>> m_Credits;
 
 	public:
 		void OnImGuiButtonClicke(const std::string& buttonName)
@@ -943,6 +957,27 @@ namespace gswy
 				LoadMainMenuWorld();
 			}
 
+			if (buttonName.compare("Credits") == 0)
+			{
+
+				// Set widget
+				{
+					WidgetManager* manager = WidgetManager::GetInstance();
+					manager->GetHUD().SetVisible(false);
+					manager->GetInventoryMenu().SetVisible(false);
+					manager->GetPauseMenu().SetVisible(false);
+					manager->GetShopMenu().SetVisible(false);
+					manager->GetMainMenu().SetVisible(false);
+				}
+
+				APP_CRITICAL("Credits clicked");
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto creditScreenEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_CREDIT_SCREEN);
+				queue->Publish(creditScreenEvent);
+				//auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				//auto loadCreditsEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_CREDIT_SCREEN);
+				//queue->Publish(loadCreditsEvent);
+			}
 		}
 	};
 }

@@ -21,6 +21,7 @@ namespace gswy
 		DIGIPEN_LOGO,
 		TEAM_LOGO,
 		GAME_LOGO,
+		CREDITS,
 		MINIMAP,
 		BASE,
 		PLAYER,
