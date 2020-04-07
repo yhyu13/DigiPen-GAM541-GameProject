@@ -873,6 +873,23 @@ namespace gswy
 					TIME("PostRender Update");
 					PostRenderUpdate(dt);
 				}
+				if (!IS_INGAME)
+				{
+					InputManager* input = InputManager::GetInstance();
+					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+					if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+					{
+						if (m_loadState == SplashScreenState::CREDIT)
+						{
+							auto e = MemoryManager::Make_shared<GCEvent>(m_Credits->GetEntity());
+							queue->Publish(e);
+							m_Credits.reset();
+							m_Credits = nullptr;
+
+							m_loadState = SplashScreenState::END;
+						}
+					}
+				}
 			}
 			AfterFrame();
 		}
