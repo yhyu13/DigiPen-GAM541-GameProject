@@ -823,7 +823,7 @@ namespace gswy
 			}
 
 			// In game pause menu
-			if (buttonName.compare("Resume") == 0)
+			if (buttonName.compare("Resume Game") == 0)
 			{
 				// TODO
 				m_world->SetPause(!m_world->IsPaused());

@@ -63,8 +63,9 @@ namespace gswy {
 			GetMainMenu().m_TexturePath_NewGame = widgetData["NewGame"].asString();
 			GetMainMenu().m_TexturePath_HowToPlay = widgetData["HowToPlay"].asString();
 			GetMainMenu().m_TexturePath_Option = widgetData["Option"].asString();
-			GetMainMenu().m_TexturePath_Exit = widgetData["Exit"].asString();
-			GetPauseMenu().m_TexturePath_Resume = widgetData["Resume"].asString();
+			GetMainMenu().m_TexturePath_Credits = widgetData["Credits"].asString();
+			GetMainMenu().m_TexturePath_QuitGame = widgetData["QuitGame"].asString();
+			GetPauseMenu().m_TexturePath_ResumeGame = widgetData["ResumeGame"].asString();
 			GetPauseMenu().m_TexturePath_MainMenu = widgetData["MainMenu"].asString();
 		}
 		auto styles = root["styles"];
@@ -80,7 +81,7 @@ namespace gswy {
 	void MainMenu::Render()
 	{
 		ImVec2 windowsize = ImVec2(m_WindowSize_X, m_WindowSize_Y);
-		ImVec2 nextWindowSize(500, 428);
+		ImVec2 nextWindowSize(500, 535);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
@@ -104,10 +105,34 @@ namespace gswy {
 			AudioManager::GetInstance()->PlaySound("click_sound");
 			manager->InvokeButton("Option");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_Exit->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_Credits->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			AudioManager::GetInstance()->PlaySound("click_sound");
-			manager->InvokeButton("Exit");
+			manager->InvokeButton("Credits");
+		}
+		if (ImGui::ImageButton((void*)m_Texture_QuitGame->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
+			ImGui::OpenPopup("Quit?");
+		}
+		if (ImGui::BeginPopupModal("Quit?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Are you sure to quit game?\n");
+			ImGui::Separator();
+			if (ImGui::Button("Quit", ImVec2(120, 0))) 
+			{ 
+				AudioManager::GetInstance()->PlaySound("click_sound");
+				ImGui::CloseCurrentPopup(); 
+				manager->InvokeButton("Exit");
+			}
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0))) 
+			{ 
+				AudioManager::GetInstance()->PlaySound("click_sound");
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
 		}
 		ImGui::End();
 		ImGui::PopStyleColor(1);
@@ -117,22 +142,56 @@ namespace gswy {
 	void PauseMenu::Render()
 	{
 		ImVec2 windowsize = ImVec2(1920, 1080);
-		ImVec2 nextWindowSize(500, 230);
+		ImVec2 nextWindowSize(500, 535);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
 		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		ImGui::SetWindowFontScale(1.0);
-		if (ImGui::ImageButton((void*)m_Texture_Resume->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_ResumeGame->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			AudioManager::GetInstance()->PlaySound("click_sound");
-			manager->InvokeButton("Resume");
+			manager->InvokeButton("Resume Game");
+		}
+		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_HowToPlay->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
+			manager->InvokeButton("How To Play");
+		}
+		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
+			manager->InvokeButton("Credits");
 		}
 		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			AudioManager::GetInstance()->PlaySound("click_sound");
 			manager->InvokeButton("Main Menu");
+		}
+		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
+			ImGui::OpenPopup("QuitGame?");
+		}
+		if (ImGui::BeginPopupModal("QuitGame?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Are you sure to quit game?\n");
+			ImGui::Separator();
+			if (ImGui::Button("Quit", ImVec2(120, 0)))
+			{
+				AudioManager::GetInstance()->PlaySound("click_sound");
+				ImGui::CloseCurrentPopup();
+				manager->InvokeButton("Exit");
+			}
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				AudioManager::GetInstance()->PlaySound("click_sound");
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
 		}
 		ImGui::End();
 		ImGui::PopStyleColor(1);

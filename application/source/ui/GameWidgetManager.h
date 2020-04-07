@@ -64,7 +64,8 @@ namespace gswy {
 			m_Texture_NewGame = Texture2D::Create(m_TexturePath_NewGame);
 			m_Texture_HowToPlay = Texture2D::Create(m_TexturePath_HowToPlay);
 			m_Texture_Option = Texture2D::Create(m_TexturePath_Option);
-			m_Texture_Exit = Texture2D::Create(m_TexturePath_Exit);
+			m_Texture_Credits = Texture2D::Create(m_TexturePath_Credits);
+			m_Texture_QuitGame = Texture2D::Create(m_TexturePath_QuitGame);
 		}
 		void Render() override;
 		WidgetManager* manager;
@@ -72,12 +73,14 @@ namespace gswy {
 		std::string m_TexturePath_NewGame;
 		std::string m_TexturePath_HowToPlay;
 		std::string m_TexturePath_Option;
-		std::string m_TexturePath_Exit;
-	private:
+		std::string m_TexturePath_Credits;
+		std::string m_TexturePath_QuitGame;
+
 		std::shared_ptr<Texture2D> m_Texture_NewGame;
 		std::shared_ptr<Texture2D> m_Texture_HowToPlay;
 		std::shared_ptr<Texture2D> m_Texture_Option;
-		std::shared_ptr<Texture2D> m_Texture_Exit;
+		std::shared_ptr<Texture2D> m_Texture_Credits;
+		std::shared_ptr<Texture2D> m_Texture_QuitGame;
 	};
 
 	//Resume, option, how to play, quit & save
@@ -87,16 +90,16 @@ namespace gswy {
 		PauseMenu() { IsVisible = false; };
 		void Init() override 
 		{
-			m_Texture_Resume = Texture2D::Create(m_TexturePath_Resume);
+			m_Texture_ResumeGame = Texture2D::Create(m_TexturePath_ResumeGame);
 			m_Texture_MainMenu = Texture2D::Create(m_TexturePath_MainMenu);
 		}
 		void Render() override;
 		WidgetManager* manager;
 
-		std::string m_TexturePath_Resume;
+		std::string m_TexturePath_ResumeGame;
 		std::string m_TexturePath_MainMenu;
 	private:
-		std::shared_ptr<Texture2D> m_Texture_Resume;
+		std::shared_ptr<Texture2D> m_Texture_ResumeGame;
 		std::shared_ptr<Texture2D> m_Texture_MainMenu;
 	};
 
