@@ -19,6 +19,7 @@ namespace gswy
 		COLLISION,								// Collision event
 		SOUND,									// Play sound event
 		WEAPON_SOUND,							// Play weapon sound event
+		MUTE_SOUND,                             // Mute Sound Event
 		DEATH,									// Death event
 		SPAWN,									// Spawning event
 		GC,										// Garbage collection event

@@ -69,6 +69,8 @@ namespace gswy {
 		void UnLoadSound(const string& strSoundName);
 		void Set3dListenerAndOrientation(const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 1.0f);
 		int PlaySound(const string& strSoundName, const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 1.0f, float frequency = 1.0f);
+		int PauseSound(const string& strSoundName, const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 1.0f, float frequency = 1.0f);
+		int MuteSound(const string& strSoundName, const AudioVector3& vPos = AudioVector3{ 0, 0, 0 }, float fVolumedB = 0.0f, float frequency = 1.0f);
 		void SetSoundFreqency(const string& strSoundName, float frequency);
 		void PlayEvent(const string& strEventName);
 		void StopChannel(int nChannelId);

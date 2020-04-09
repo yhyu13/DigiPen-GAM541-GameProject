@@ -88,8 +88,38 @@ namespace gswy
 		glm::vec3 m_location;
 		float m_vol;
 		float m_freq;
+	}; 
+
+	struct OnMuteSoundEvent : Event<GameObjectType, EventType>
+	{
+		explicit OnMuteSoundEvent(const std::string& name, float vol = 0.0f, bool mute = true) : Event(EventType::SOUND)
+		{
+			soundName = name;
+			mute = !mute;
+			if (mute == true)
+			{
+				m_vol = vol;
+			}
+			else
+				m_vol = 1.0f;
+		}
+	
+		std::string soundName;
+		float m_vol;
+		bool mute;
 	};
 
+	struct OnMuteEvent : Event<GameObjectType, EventType>
+	{
+		explicit OnMuteEvent(bool m = true) : Event(EventType::MUTE_SOUND)
+		{
+			mute = m;
+		}
+
+		bool mute;
+	};
+
+ 
 	struct WeaponSoundEvent : Event<GameObjectType, EventType> {
 
 		explicit WeaponSoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)

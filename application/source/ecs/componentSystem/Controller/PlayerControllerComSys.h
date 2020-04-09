@@ -341,7 +341,7 @@ namespace gswy
 				// 2. Move
 				body->SetVelocity(glm::normalize(delta) * m_speed);
 				// 3. Play sound
-				auto e2 = MemoryManager::Make_shared<SoundEvent>("footstep02", body->GetPos(), 1, 0.65);
+				auto e2 = MemoryManager::Make_shared<SoundEvent>("footsteps1", body->GetPos(), 1, 1.15);
 				queue->Publish(e2);
 			}
 			{
