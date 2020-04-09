@@ -15,6 +15,7 @@ Creation date: 04/03/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "engine/input/InputManager.h"
+#include "ui/GameWidgetManager.h"
 #include "ecs/CustomEvents.h"
 
 namespace gswy
@@ -33,6 +34,12 @@ namespace gswy
 			queue->Subscribe<MainMenuControllerComSys>(this, EventType::LOAD_MAIN_MENU, &MainMenuControllerComSys::OnLoadMainMenuWorld);
 		}
 
+
+		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			m_bIsMainMenuLoaded = true;
+		}
+
 		virtual void Update(double dt) override {	
 			if (!m_bIsMainMenuLoaded)
 			{
@@ -46,11 +53,30 @@ namespace gswy
 					queue->Publish(_e1,0.05);
 				}
 			}
+			else
+			{
+				ProcessConstantInput();
+			}
 		}
 
-		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
+		void ProcessConstantInput()
 		{
-			m_bIsMainMenuLoaded = true;
+			auto credit_page = m_parentWorld->GetAllEntityWithType(GameObjectType::CREDITS);
+			if (!credit_page.empty())
+			{
+				auto input = InputManager::GetInstance();
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_SPACE))
+				{
+					auto e = MemoryManager::Make_shared<GCEvent>(credit_page[0]);
+					queue->Publish(e);
+					// Set widget
+					{
+						WidgetManager* manager = WidgetManager::GetInstance();
+						manager->GetMainMenu().SetVisible(true);
+					}
+				}
+			}
 		}
 	};
 }

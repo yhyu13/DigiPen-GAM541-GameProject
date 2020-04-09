@@ -64,7 +64,8 @@ namespace gswy
 		float m_noPathFindingThreshold_upper = { 3.f };
 		float m_advancePathFindingThreshold = { 0.15f };
 		double m_timeDisableMoveCommand = { 0 };
-		bool m_bDiableMoveCommand = { false };
+		bool m_bDisableMoveInput = { false };
+		bool m_bDisableInput = { false };
 
 		std::vector<glm::ivec2> m_pathResult;
 		float m_cubicSplineStepSize = { .5f };
@@ -122,11 +123,14 @@ namespace gswy
 		{
 			if (auto event = dynamic_pointer_cast<CanPlayerInputEvent>(e))
 			{
-				m_bDiableMoveCommand = !event->m_bInput;
+				m_bDisableMoveInput = !event->m_bInput;
+				m_bDisableInput = !event->m_bInput;
 			}
 		}
 
 		virtual void Update(double dt) override {
+
+			ProcessConstantInput();
 
 			// Do not update player while game is paused
 			if (!dt)
@@ -145,13 +149,14 @@ namespace gswy
 			}
 
 			HandleMouseCondition_Move(dt);
-
 			if (input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				HandleMouseAction_LeftPressed();
 			}
-
 			HandlePlayerMovement(dt);
+
+			// Handle UI input
+			ProcessUIInput();
 
 			// CHECKING FOR SKILL KEY BINDINGS
 			for (const auto& keyBinding : m_keyAndSkillBiding)
@@ -166,33 +171,62 @@ namespace gswy
 					}
 				}
 			}
+		}
 
-			// Start level by pressing space
-			if (input->IsKeyTriggered(KEY_SPACE))
+		void ProcessConstantInput()
+		{
+			auto credit_page = m_parentWorld->GetAllEntityWithType(GameObjectType::CREDITS);
+			if (!credit_page.empty())
 			{
-				PRINT("SPACE");
-				if (!GameLevelMapManager::GetInstance()->IsWaveStarted())
+				auto input = InputManager::GetInstance();
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_SPACE))
 				{
-					GameLevelMapManager::GetInstance()->StartWave();
-				}
-			}
-
-			// Handle UI toggling
-			if (GameLevelMapManager::GetInstance()->IsInGame())
-			{
-				if (input->IsKeyTriggered(KEY_TAB)) 
-				{
-					bool v1 = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
-					WidgetManager::GetInstance()->GetShopMenu().SetVisible(!v1);
-					m_bDiableMoveCommand = !v1;
-				}
-				if (input->IsKeyTriggered(KEY_ESCAPE))
-				{
-					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-					m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+					auto e = MemoryManager::Make_shared<GCEvent>(credit_page[0]);
+					queue->Publish(e);
+					// Set widget
+					{
+						WidgetManager* manager = WidgetManager::GetInstance();
+						manager->GetPauseMenu().SetVisible(true);
+					}
 				}
 			}
 		}
+
+		void ProcessUIInput()
+		{
+			// Handle UI inputs
+			if (!m_bDisableInput)
+			{
+				auto input = InputManager::GetInstance();
+				// Start level by pressing space
+				if (input->IsKeyTriggered(KEY_SPACE))
+				{
+					PRINT("SPACE");
+					if (!GameLevelMapManager::GetInstance()->IsWaveStarted())
+					{
+						GameLevelMapManager::GetInstance()->StartWave();
+					}
+				}
+
+				// Handle UI toggling
+				if (GameLevelMapManager::GetInstance()->IsInGame())
+				{
+					if (input->IsKeyTriggered(KEY_TAB))
+					{
+						bool v1 = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
+						WidgetManager::GetInstance()->GetShopMenu().SetVisible(!v1);
+						m_bDisableMoveInput = !v1;
+					}
+					if (input->IsKeyTriggered(KEY_ESCAPE))
+					{
+						WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+						m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+					}
+				}
+			}
+		}
+
 
 		bool HandleMouseCondition_Move(double dt)
 		{
@@ -220,7 +254,8 @@ namespace gswy
 
 		void HandleMouseAction_LeftPressed()
 		{
-			if (m_timeDisableMoveCommand > 0 || m_bDiableMoveCommand)
+			// Click to move conditions
+			if (m_timeDisableMoveCommand > 0 || m_bDisableMoveInput)
 			{
 				return;
 			}
