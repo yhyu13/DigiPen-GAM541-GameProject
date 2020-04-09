@@ -56,4 +56,14 @@ namespace gswy
 	{
 		m_icon = icon;
 	}
+
+	std::string& BaseSkill::GetIconGray()
+	{
+		return m_iconGray;
+	}
+
+	void BaseSkill::SetIconGray(std::string& icon)
+	{
+		m_iconGray = icon;
+	}
 }

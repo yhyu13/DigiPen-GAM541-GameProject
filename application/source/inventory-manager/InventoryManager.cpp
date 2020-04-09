@@ -61,6 +61,7 @@ namespace gswy
 			}
 			item->m_keyEventType = itemData["key-event"].asString();
 			item->m_icon = itemData["icon"].asString();
+			item->m_iconGray = itemData["inactive-icon"].asString();
 			m_items->Add(item);
 		}
 	}
@@ -92,6 +93,7 @@ namespace gswy
 			}
 			item->m_keyEventType = itemData["key-event"].asString();
 			item->m_icon = itemData["icon"].asString();
+			item->m_iconGray = itemData["inactive-icon"].asString();
 			m_items->Add(item);
 		}
 	}

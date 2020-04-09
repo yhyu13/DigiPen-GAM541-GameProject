@@ -17,7 +17,8 @@
         "Cost : 500"
       ],
       "key-event": "TRIGGER",
-      "icon": "./asset/Sprites/TowerIcon_Meteor_tower.png"
+      "icon": "./asset/Sprites/TowerIcon_Meteor_tower.png",
+      "inactive-icon": ""
     },
     {
       "id": "1",
@@ -36,7 +37,8 @@
         "Cost : 500"
       ],
       "key-event": "TRIGGER",
-      "icon": "./asset/Sprites/TowerIcon_Ice_Prison.png"
+      "icon": "./asset/Sprites/TowerIcon_Ice_Prison.png",
+      "inactive-icon": ""
     },
     {
       "id": "2",
@@ -54,7 +56,8 @@
         "Cost : 500"
       ],
       "key-event": "TRIGGER",
-      "icon": "./asset/Sprites/Razor_icon.png"
+      "icon": "./asset/Sprites/Razor_icon.png",
+      "inactive-icon": ""
     },
     {
       "id": "2",
@@ -72,7 +75,8 @@
         "Cost : 500"
       ],
       "key-event": "PRESS",
-      "icon": "./asset/Sprites/Cyclone_icon.png"
+      "icon": "./asset/Sprites/Cyclone_icon.png",
+      "inactive-icon": ""
     },
     {
       "id": "2",
@@ -89,7 +93,8 @@
         "Shoot multiple projectiles",
         "Cost : 1000"
       ],
-      "icon": "./asset/Sprites/TowerIcon_Ice_Prison.png"
+      "icon": "./asset/Sprites/multiple-projectile.png",
+      "inactive-icon": "./asset/Sprites/multiple-projectile-inactive.png"
     },
     {
       "id": "3",
@@ -107,7 +112,8 @@
         "Create copies of projectiles on hit",
         "Cost : 1000"
       ],
-      "icon": "./asset/Sprites/TowerIcon_Ice_Prison.png"
+      "icon": "./asset/Sprites/fork.png",
+      "inactive-icon": "./asset/Sprites/fork-inactive.png"
     },
     {
       "id": "4",
@@ -124,7 +130,8 @@
         "Increase Area of Effect",
         "Cost : 1000"
       ],
-      "icon": "./asset/Sprites/TowerIcon_Ice_Prison.png"
+      "icon": "./asset/Sprites/aoe.png",
+      "inactive-icon": "./asset/Sprites/aoe-inactive.png"
     }
   ]
 }
