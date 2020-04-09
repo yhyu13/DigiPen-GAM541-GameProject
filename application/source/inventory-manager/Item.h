@@ -20,5 +20,6 @@ namespace gswy
 		std::vector<std::string> m_text;
 		std::string m_keyEventType;
 		std::string m_icon;
+		std::string m_iconGray;
 	};
 }

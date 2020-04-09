@@ -11,12 +11,20 @@ Creation date: 02/26/2020
 - End Header ----------------------------*/
 #pragma once
 #include "imgui.h"
+#include "engine/Engine.h"
+#include "engine/window/Window.h"
  
 namespace gswy {
 
 	class Widget
 	{
 	public:
+		Widget() 
+		{
+			Engine& engine = Engine::Get();
+			m_WindowSize_X = engine.GetWindow().GetWidth();
+			m_WindowSize_Y = engine.GetWindow().GetHeight();
+		}
 		virtual ~Widget() {}
 		virtual void Init() {}
 		virtual void Render() = 0;

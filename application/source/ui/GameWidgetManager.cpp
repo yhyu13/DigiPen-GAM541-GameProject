@@ -141,7 +141,7 @@ namespace gswy {
 
 	void PauseMenu::Render()
 	{
-		ImVec2 windowsize = ImVec2(1920, 1080);
+		ImVec2 windowsize = ImVec2(m_WindowSize_X, m_WindowSize_Y);
 		ImVec2 nextWindowSize(500, 535);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
@@ -172,9 +172,9 @@ namespace gswy {
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			AudioManager::GetInstance()->PlaySound("click_sound");
-			ImGui::OpenPopup("QuitGame?");
+			ImGui::OpenPopup("Quit?");
 		}
-		if (ImGui::BeginPopupModal("QuitGame?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		if (ImGui::BeginPopupModal("Quit?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::Text("Are you sure to quit game?\n");
 			ImGui::Separator();
@@ -215,52 +215,31 @@ namespace gswy {
 
 	void HUD::Render()
 	{	
-		//Text : Timer
-		ImVec2 nextWindowSize = ImVec2(80, 20);
-		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 75));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Timer", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
-		ImGui::Text("%i : %i", m_TimerMin, m_TimerSec);
-		ImGui::End();
-		ImGui::PopStyleColor(1);
-		ImGui::PopStyleVar(2);
-		
 		//Text : Wave
-		nextWindowSize = ImVec2(80, 20);
-		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 8));
+		ImVec2 waveWindowSize = ImVec2(80, 20);
+		ImGui::SetNextWindowSize(waveWindowSize);
+		ImVec2 waveWindowPos = ImVec2(m_WindowSize_X / 2 - waveWindowSize[0] / 2, 8);
+		ImGui::SetNextWindowPos(waveWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		//ImFont* font = ImGui::GetFont();
+		//float origScale = font->Scale;
+		//font->Scale = 2.0f;
+		//ImGui::PushFont(font);
 		ImGui::Text("Wave : %i", m_Wave);
-		ImGui::End();
-		ImGui::PopStyleColor(1);
-		ImGui::PopStyleVar(2);
-		
-		//Text : Coin
-		nextWindowSize = ImVec2(140, 140);
-		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(0, m_WindowSize_Y - nextWindowSize[1] - 20));
-		ImGui::SetNextWindowBgAlpha(0.0f);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse);
-		ImGui::SetCursorPosX(25);
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f),"Coin : %i", m_Coins);
-		ImGui::Image((void*)m_Texture_Coin->GetRendererID(), ImVec2(100, 100));
+		//ImGui::PopFont();
+		//font->Scale = origScale;
 		ImGui::End();
 		ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(2);
 
 		//Progress Bar : Base HP
-		nextWindowSize = ImVec2(500, 20);
-		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X / 2 - nextWindowSize[0] / 2, 40));
+		ImVec2 progressWindowSize = ImVec2(500, 40);
+		ImGui::SetNextWindowSize(progressWindowSize);
+		ImVec2 progressWindowPos = ImVec2(m_WindowSize_X / 2 - progressWindowSize[0] / 2, waveWindowSize.y + waveWindowPos.y + 17);
+		ImGui::SetNextWindowPos(progressWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
@@ -272,11 +251,41 @@ namespace gswy {
 		ImGui::End();
 		ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(2);
+
+		//Text : Timer
+		ImVec2 timerWindowSize = ImVec2(60, 17);
+		ImGui::SetNextWindowSize(timerWindowSize);
+		ImVec2 timerWindowPos = ImVec2(m_WindowSize_X / 2 - timerWindowSize[0] / 2, progressWindowSize.y + progressWindowPos.y + 5);
+		ImGui::SetNextWindowPos(timerWindowPos);
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
+		ImGui::Begin("Timer", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Text("%i : %i", m_TimerMin, m_TimerSec);
+		ImGui::End();
+		ImGui::PopStyleColor(1);
+		ImGui::PopStyleVar(2);
+		
+		//Text : Coin
+		ImVec2 nextWindowSize = ImVec2(140, 70);
+		ImGui::SetNextWindowSize(nextWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(30, m_WindowSize_Y - nextWindowSize[1] - 65));
+		ImGui::SetNextWindowBgAlpha(0.0f);
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
+		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse);
+		ImGui::SetCursorPosX(15);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f),"%i", m_Coins);
+		ImGui::Image((void*)m_Texture_Coin->GetRendererID(), ImVec2(40, 40));
+		ImGui::End();
+		ImGui::PopStyleColor(1);
+		ImGui::PopStyleVar(2);
 		
 		//Progress Bar : Player HP
-		nextWindowSize = ImVec2(250, 20);
+		nextWindowSize = ImVec2(300, 40);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(150, m_WindowSize_Y - nextWindowSize[1] - 70));
+		ImGui::SetNextWindowPos(ImVec2(100, m_WindowSize_Y - nextWindowSize[1] - 70));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
@@ -298,6 +307,8 @@ namespace gswy {
 		ImVec2 shopWindowSize = ImVec2(500, 400);
 		ImGui::SetNextWindowSize(shopWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::Begin("Shop", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 
@@ -439,6 +450,7 @@ namespace gswy {
 
 			if (ImGui::BeginTabItem("SUPPORT"))
 			{
+				ImGui::Dummy(ImVec2(250, 15));
 				auto supportItems = InventoryManager::GetInstance()->GetSupportItems();
 				auto sbegin = supportItems.begin();
 				auto send = supportItems.end();
@@ -539,8 +551,6 @@ namespace gswy {
 						ImGui::EndPopup();
 					}
 
-					ImGui::SameLine();
-
 					//Support Skill Tooltip
 					if (ImGui::IsItemHovered())
 					{
@@ -562,6 +572,7 @@ namespace gswy {
 
 		ImGui::End();
 		ImGui::PopStyleColor(1);
+		ImGui::PopStyleVar(2);
 	}
 
 	void InventoryMenu::Render()
@@ -575,7 +586,6 @@ namespace gswy {
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 1));
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
-		ImGui::PushStyleColor(ImGuiCol_Button, { 90 ,90 ,90 ,255 });
 		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		{
 			if (SkillManager::GetInstance()->GetSkill(1, 1))
@@ -585,7 +595,10 @@ namespace gswy {
 			}
 			else
 			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::Button("ACTIVE 1", ImVec2(94, 94));
+				ImGui::PopStyleColor(2);
 			}
 		}
 		ImGui::SameLine();
@@ -597,7 +610,10 @@ namespace gswy {
 			}
 			else
 			{
-				ImGui::Button("ACTIVE 2", ImVec2(94, 94));				
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::Button("ACTIVE 2", ImVec2(94, 94));
+				ImGui::PopStyleColor(2);
 			}
 		}
 		ImGui::SameLine();
@@ -609,7 +625,10 @@ namespace gswy {
 			}
 			else
 			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::Button("ACTIVE 3", ImVec2(94, 94));
+				ImGui::PopStyleColor(2);
 			}
 		}
 		ImGui::SameLine();
@@ -621,7 +640,10 @@ namespace gswy {
 			}
 			else
 			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::Button("ACTIVE 4", ImVec2(94, 94));
+				ImGui::PopStyleColor(2);
 			}
 		}
 		ImGui::NewLine();
@@ -712,6 +734,5 @@ namespace gswy {
 		}
 		ImGui::End();
 		ImGui::PopStyleVar(4);
-		ImGui::PopStyleColor(1);
 	}
 }

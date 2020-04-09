@@ -40,6 +40,8 @@ namespace gswy {
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
+		io.Fonts->AddFontFromFileTTF("./asset/UI/ComicNeue-Bold.ttf", 20.0f);
+
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 		
@@ -79,7 +81,7 @@ namespace gswy {
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Engine& engine = Engine::Get();
-		io.DisplaySize = ImVec2((float)engine.GetWindow().GetWidth(), (float)engine.GetWindow().GetHeight());
+		io.DisplaySize = ImVec2((unsigned int)engine.GetWindow().GetWidth(), (unsigned int)engine.GetWindow().GetHeight());
 
 		//Rendering
 		ImGui::Render();

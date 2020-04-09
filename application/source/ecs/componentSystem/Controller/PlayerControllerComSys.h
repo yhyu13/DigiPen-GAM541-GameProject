@@ -374,8 +374,6 @@ namespace gswy
 				//auto e2 = MemoryManager::Make_shared<SoundEvent>("footstep02", body->GetPos(), 1, 0.65);
 				//queue->Publish(e2);
 			}
-
-			
 		}
 	};
 }

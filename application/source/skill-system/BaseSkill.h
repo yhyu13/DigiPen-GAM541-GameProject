@@ -30,7 +30,10 @@ namespace gswy
 		std::set<SkillTag> GetSkillTags();
 
 		std::string& GetIcon();
-		void SetIcon(std::string& m_icon);
+		void SetIcon(std::string& icon);
+
+		std::string& GetIconGray();
+		void SetIconGrey(std::string& icon);
 
 	protected:
 
@@ -41,6 +44,7 @@ namespace gswy
 
 	private:
 		std::string m_icon;
+		std::string m_iconGray;
 		std::set<SkillTag> m_tags;
 		static int m_id;
 	};
