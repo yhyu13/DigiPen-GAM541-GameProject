@@ -81,7 +81,7 @@ namespace gswy {
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Engine& engine = Engine::Get();
-		io.DisplaySize = ImVec2((float)engine.GetWindow().GetWidth(), (float)engine.GetWindow().GetHeight());
+		io.DisplaySize = ImVec2((unsigned int)engine.GetWindow().GetWidth(), (unsigned int)engine.GetWindow().GetHeight());
 
 		//Rendering
 		ImGui::Render();
