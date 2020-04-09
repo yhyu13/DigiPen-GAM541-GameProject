@@ -22,16 +22,6 @@ using namespace gswy;
 
 namespace gswy
 {
-
-	enum class SplashScreenState
-	{
-		DIGIPEN_LOGO,
-		TEAM_LOGO,
-		GAME_LOGO,
-		CREDIT,
-		END
-	};
-
 	float GSWY_GetPixel2WorldNumerator()
 	{
 		return GSWY_GetWindowHeight() * 0.75f;
@@ -48,7 +38,6 @@ namespace gswy
 		{
 			InitFramework();
 			InitGameWorld();
-			m_loadState = SplashScreenState::DIGIPEN_LOGO;
 		}
 
 		virtual ~GameLayer() 
@@ -134,7 +123,7 @@ namespace gswy
 			{
 				// Load logo
 				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("DigiPen-logo");
-				m_DigipenLogo = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_world->GenerateEntity(GameObjectType::DIGIPEN_LOGO));
+				auto m_DigipenLogo = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_world->GenerateEntity(GameObjectType::DIGIPEN_LOGO));
 				auto active = ActiveCom();
 				m_DigipenLogo->AddComponent(active);
 				auto sprite = SpriteCom();
@@ -147,7 +136,7 @@ namespace gswy
 				m_DigipenLogo->AddComponent(digipenLogoTransform);
 
 				auto teamLogoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Team-Logo");
-				m_teamLogo = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_world->GenerateEntity(GameObjectType::TEAM_LOGO));
+				auto m_teamLogo = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_world->GenerateEntity(GameObjectType::TEAM_LOGO));
 				auto teamLogoActive = ActiveCom(false);
 				m_teamLogo->AddComponent(teamLogoActive);
 				auto teamLogoSpriteCom = SpriteCom();
@@ -160,7 +149,7 @@ namespace gswy
 				m_teamLogo->AddComponent(teamLogoTransform);
 
 				auto gameLogoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Game-Logo");
-				m_gameLogo = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_world->GenerateEntity(GameObjectType::GAME_LOGO));
+				auto m_gameLogo = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_world->GenerateEntity(GameObjectType::GAME_LOGO));
 				auto gameLogoActive = ActiveCom(false);
 				m_gameLogo->AddComponent(gameLogoActive);
 				auto gameLogoSpriteCom = SpriteCom();
@@ -220,7 +209,9 @@ namespace gswy
 		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			LoadMainMenuWorld();
-			m_loadState = SplashScreenState::END;
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto e1 = MemoryManager::Make_shared<OnSplashStateChangeEvent>((unsigned int)SplashScreenState::END);
+			queue->Publish(e1);
 		}
 		void OnLoadGameWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
@@ -231,28 +222,30 @@ namespace gswy
 		}
 		void OnLoadTeamLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			m_loadState = SplashScreenState::TEAM_LOGO;
-			
 			ComponentDecorator<ActiveCom, GameObjectType> activeCom;
-			m_world->Unpack(m_teamLogo->GetEntity(), activeCom);
+			auto m_teamLogo = m_world->GetAllEntityWithType(GameObjectType::TEAM_LOGO)[0];
+			m_world->Unpack(m_teamLogo, activeCom);
 			activeCom->SetActive(true);
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			auto _e = MemoryManager::Make_shared<FadeEvent>(m_teamLogo->GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
-			queue->Publish(_e, 1.0f);
+			auto e1 = MemoryManager::Make_shared<OnSplashStateChangeEvent>((unsigned int)SplashScreenState::TEAM_LOGO);
+			queue->Publish(e1);
+			auto e2 = MemoryManager::Make_shared<FadeEvent>(m_teamLogo, 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(e2, 1.0f);
 		}
 
 		void OnLoadGameLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			m_loadState = SplashScreenState::GAME_LOGO;
-
 			ComponentDecorator<ActiveCom, GameObjectType> activeCom;
-			m_world->Unpack(m_gameLogo->GetEntity(), activeCom);
+			auto m_gameLogo = m_world->GetAllEntityWithType(GameObjectType::GAME_LOGO)[0];
+			m_world->Unpack(m_gameLogo, activeCom);
 			activeCom->SetActive(true);
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			auto _e = MemoryManager::Make_shared<FadeEvent>(m_gameLogo->GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
-			queue->Publish(_e, 2.0f);
+			auto e1 = MemoryManager::Make_shared<OnSplashStateChangeEvent>((unsigned int)SplashScreenState::GAME_LOGO);
+			queue->Publish(e1);
+			auto e2 = MemoryManager::Make_shared<FadeEvent>(m_gameLogo, 1.f, -0.5f, 1.f, EventType::GC);
+			queue->Publish(e2, 2.0f);
 		}
 
 		void OnLoadCreditScreen(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -597,7 +590,7 @@ namespace gswy
 				auto miniMap = m_world->GenerateEntity(GameObjectType::MINIMAP);
 				auto active = ActiveCom();
 				miniMap.AddComponent(active);
-				miniMap.AddComponent(TransformCom());
+				miniMap.AddComponent(TransformCom(0,0,1));
 				auto sprite = SpriteCom();
 				auto m_sprite = sprite.Get();
 				m_sprite->SetSpriteTexture(m_miniMapTexture);
@@ -776,7 +769,7 @@ namespace gswy
 					m_PP = !m_PP;
 				}
 
-				if (!IS_INGAME)
+				/*if (!IS_INGAME)
 				{
 					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 					InputManager* input = InputManager::GetInstance();
@@ -821,7 +814,7 @@ namespace gswy
 						break;
 						}
 					}
-				}
+				}*/
 
 
 				if (IS_INGAME)
@@ -901,11 +894,10 @@ namespace gswy
 		std::shared_ptr<GameWorld<GameObjectType>> m_world;
 		gswy::OpenGLPostProcessing m_PostProcessing;
 		bool m_PP = false;
-		SplashScreenState m_loadState;
-		std::shared_ptr<EntityDecorator<GameObjectType>> m_teamLogo;
-		std::shared_ptr<EntityDecorator<GameObjectType>> m_gameLogo;
-		std::shared_ptr<EntityDecorator<GameObjectType>> m_DigipenLogo;
 
+	/*
+	ImGui call back
+	*/
 	public:
 		void OnImGuiButtonClicke(const std::string& buttonName)
 		{

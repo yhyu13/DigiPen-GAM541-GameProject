@@ -267,6 +267,19 @@ namespace gswy
 		float m_rotation;
 	};
 
+
+	
+	struct OnSplashStateChangeEvent : Event<GameObjectType, EventType>
+	{
+		explicit OnSplashStateChangeEvent(unsigned int state)
+			: 
+			Event(EventType::ON_SPLASH_STATE_CHANGE),
+			m_state(state)
+		{
+		}
+		unsigned int m_state;
+	};
+
 	struct LoadMainMenuEvent : Event<GameObjectType, EventType>
 	{
 		explicit LoadMainMenuEvent() : Event(EventType::LOAD_MAIN_MENU)
