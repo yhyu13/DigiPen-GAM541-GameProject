@@ -33,7 +33,7 @@ namespace gswy
 		void SetIcon(std::string& icon);
 
 		std::string& GetIconGray();
-		void SetIconGrey(std::string& icon);
+		void SetIconGray(std::string& icon);
 
 	protected:
 
