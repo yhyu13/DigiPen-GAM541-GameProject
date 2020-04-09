@@ -40,6 +40,8 @@ namespace gswy {
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
+		io.Fonts->AddFontFromFileTTF("./asset/UI/ComicNeue-Bold.ttf", 20.0f);
+
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 		
