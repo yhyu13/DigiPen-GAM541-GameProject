@@ -23,9 +23,11 @@ Creation date: 02/17/2020
 namespace gswy
 {
 	class SoundComSys : public BaseComponentSystem<GameObjectType> {
+
 		std::vector<GameObjectType> enemyTypes;
 		std::vector<EventType> soundTypes;
 		bool mute;
+
 	public:
 		
 		SoundComSys() 

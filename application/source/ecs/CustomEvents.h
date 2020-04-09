@@ -118,7 +118,6 @@ namespace gswy
 
 		bool mute;
 	};
-
  
 	struct WeaponSoundEvent : Event<GameObjectType, EventType> {
 

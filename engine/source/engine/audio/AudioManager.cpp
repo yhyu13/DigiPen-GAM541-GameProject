@@ -245,6 +245,7 @@ int gswy::AudioManager::MuteSound(const string& strSoundName, const AudioVector3
 		m_fmodInstance->mChannels[nChannelId] = pChannel;
 		return nChannelId;
 	}
+
 	return -1;
 }
 

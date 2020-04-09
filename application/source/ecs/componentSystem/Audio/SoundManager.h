@@ -24,6 +24,7 @@ namespace gswy
 {
 	class SoundManager : public BaseComponentSystem<GameObjectType>
 	{
+
 	public:
 
 		SoundManager()

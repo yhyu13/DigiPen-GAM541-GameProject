@@ -343,6 +343,7 @@ namespace gswy
 				// 3. Play sound
 				auto e2 = MemoryManager::Make_shared<SoundEvent>("footsteps1", body->GetPos(), 1, 1.15);
 				queue->Publish(e2);
+
 			}
 			{
 				// Use cubic spline
