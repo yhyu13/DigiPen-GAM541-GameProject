@@ -48,8 +48,6 @@ namespace gswy
 				}
 				break;
 				case GameObjectType::PLAYER:
-					// TODO : Need proper handle of player death
-					//throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Player has died");
 				{
 					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 					auto e1 = MemoryManager::Make_shared<LoadDiedEvent>();

@@ -80,12 +80,13 @@ namespace gswy
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<PlayerControllerComSys>(this, EventType::KEY_BIND_EVENT, &PlayerControllerComSys::OnKeyBindingEvent);
+			queue->Subscribe<PlayerControllerComSys>(this, EventType::CAN_PLAYER_INPUT, &PlayerControllerComSys::OnCanPlayerInput);
 		}
 
-		void OnKeyBindingEvent(EventQueue<GameObjectType, EventType>::EventPtr event)
+		void OnKeyBindingEvent(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			auto keyBindEvent = std::static_pointer_cast<KeyBindEvent>(event);
+			auto keyBindEvent = std::static_pointer_cast<KeyBindEvent>(e);
 			InputManager* manager = InputManager::GetInstance();
 			std::function<bool(const int&)> callback;
 			if (keyBindEvent->m_keyEventType._Equal("TRIGGER"))
@@ -117,7 +118,21 @@ namespace gswy
 			m_keyAndSkillBiding[key] = skillBinding;
 		}
 
+		void OnCanPlayerInput(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = dynamic_pointer_cast<CanPlayerInputEvent>(e))
+			{
+				m_bDiableMoveCommand = !event->m_bInput;
+			}
+		}
+
 		virtual void Update(double dt) override {
+
+			// Do not update player while game is paused
+			if (!dt)
+			{
+				return;
+			}
 
 			auto input = InputManager::GetInstance();
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();

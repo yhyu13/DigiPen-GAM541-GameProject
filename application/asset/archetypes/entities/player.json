@@ -52,7 +52,8 @@
       }
     },
     {
-      "component": "hit-point"
+      "component": "hit-point",
+	  "value":100
     },
     {
       "component": "skill"
