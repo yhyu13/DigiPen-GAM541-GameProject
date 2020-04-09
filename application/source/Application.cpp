@@ -532,7 +532,6 @@ namespace gswy
 				else
 				{
 					m_world->RemoveAllEntities();
-					SkillManager::GetInstance()->ResetSkills();
 				}
 			}
 			// Set widget
