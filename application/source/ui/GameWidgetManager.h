@@ -149,7 +149,11 @@ namespace gswy {
 	{
 	public:
 		OptionMenu() {
-			IsVisible = false; 
+			IsVisible = false;  
+		}
+		void Init() override {
+			Engine& engine = Engine::Get();
+			m_FullScreen = engine.GetWindow().GetWindowProperties().IsFullScreen;
 		}
 		void Render() override;
 
