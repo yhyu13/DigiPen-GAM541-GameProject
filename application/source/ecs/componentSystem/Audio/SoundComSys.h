@@ -70,6 +70,8 @@ namespace gswy
 			{
 				mute = event->mute;
 			}
+			else
+				mute = false;
 		}
 
 		void WeaponPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
