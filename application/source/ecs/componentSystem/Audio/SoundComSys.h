@@ -66,10 +66,7 @@ namespace gswy
 		{
 			auto sound = SoundManager::GetInstance();
 			auto event = static_pointer_cast<OnMuteEvent>(e);
-			if (event->mute)
-			{
-				mute = event->mute;
-			}
+			mute = event->mute;			
 		}
 
 		void WeaponPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
