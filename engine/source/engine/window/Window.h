@@ -54,6 +54,7 @@ namespace gswy {
 		void ToggleFullScreen(bool on);
 
 		GLFWwindow* GetNativeWindow() const { return m_window; }
+		WindowProperties GetWindowProperties() const { return m_windowProperties; }
 		inline unsigned int GetWidth() const { return m_windowProperties.m_width; }
 		inline unsigned int GetHeight() const { return m_windowProperties.m_height; }
 

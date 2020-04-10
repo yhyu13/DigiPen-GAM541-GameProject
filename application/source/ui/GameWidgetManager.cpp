@@ -44,6 +44,7 @@ namespace gswy {
 		LoadWidget("./asset/archetypes/Widget.json");
 		m_MainMenu.Init();
 		m_PauseMenu.Init();
+		m_OptionMenu.Init();
 	}
 
 	void WidgetManager::RenderUI()
