@@ -119,7 +119,7 @@ namespace gswy {
 		{
 			ImGui::Text("Are you sure to quit game?\n");
 			ImGui::Separator();
-			if (ImGui::Button("Quit", ImVec2(120, 0))) 
+			if (ImGui::Button("Yes", ImVec2(120, 0))) 
 			{ 
 				AudioManager::GetInstance()->PlaySound("click_sound");
 				ImGui::CloseCurrentPopup(); 
@@ -127,7 +127,7 @@ namespace gswy {
 			}
 			ImGui::SetItemDefaultFocus();
 			ImGui::SameLine();
-			if (ImGui::Button("Cancel", ImVec2(120, 0))) 
+			if (ImGui::Button("No", ImVec2(120, 0))) 
 			{ 
 				AudioManager::GetInstance()->PlaySound("click_sound");
 				ImGui::CloseCurrentPopup();
@@ -167,7 +167,26 @@ namespace gswy {
 		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			AudioManager::GetInstance()->PlaySound("click_sound");
-			manager->InvokeButton("Main Menu");
+			ImGui::OpenPopup("Main menu?");
+		}
+		if (ImGui::BeginPopupModal("Main menu?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Are you sure to go back?\n");
+			ImGui::Separator();
+			if (ImGui::Button("Yes", ImVec2(120, 0)))
+			{
+				AudioManager::GetInstance()->PlaySound("click_sound");
+				ImGui::CloseCurrentPopup();
+				manager->InvokeButton("Main Menu");
+			}
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("No", ImVec2(120, 0)))
+			{
+				AudioManager::GetInstance()->PlaySound("click_sound");
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
 		}
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
@@ -178,7 +197,7 @@ namespace gswy {
 		{
 			ImGui::Text("Are you sure to quit game?\n");
 			ImGui::Separator();
-			if (ImGui::Button("Quit", ImVec2(120, 0)))
+			if (ImGui::Button("Yes", ImVec2(120, 0)))
 			{
 				AudioManager::GetInstance()->PlaySound("click_sound");
 				ImGui::CloseCurrentPopup();
@@ -186,7 +205,7 @@ namespace gswy {
 			}
 			ImGui::SetItemDefaultFocus();
 			ImGui::SameLine();
-			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			if (ImGui::Button("No", ImVec2(120, 0)))
 			{
 				AudioManager::GetInstance()->PlaySound("click_sound");
 				ImGui::CloseCurrentPopup();
