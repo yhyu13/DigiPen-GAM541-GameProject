@@ -146,11 +146,18 @@ namespace gswy {
 		std::shared_ptr<Texture2D> m_Texture_Support4_4;
 	};
 
-	class OptionMenu
+	class OptionMenu : public Widget
 	{
 	public:
-		OptionMenu() {}
-		
+		OptionMenu() {
+			IsVisible = false; 
+			m_CloseButton = &IsVisible;
+		}
+		void Render() override;
+		bool m_FullScreen = false;
+		bool m_MuteMusic = false;
+		bool m_MuteAllAudio = false;
+		bool* m_CloseButton;
 	};
 
 	class WidgetManager
@@ -171,6 +178,7 @@ namespace gswy {
 		HUD& GetHUD() { return m_Hud; }
 		MainMenu& GetMainMenu() { return m_MainMenu; }
 		PauseMenu& GetPauseMenu() { return m_PauseMenu; }
+		OptionMenu& GetOptionMenu() { return m_OptionMenu; }
 		ShopMenu& GetShopMenu() { return m_ShopMenu; }
 		InventoryMenu& GetInventoryMenu() { return m_InventoryMenu; }
 
@@ -182,6 +190,7 @@ namespace gswy {
 		HUD m_Hud;
 		MainMenu m_MainMenu;
 		PauseMenu m_PauseMenu;
+		OptionMenu m_OptionMenu;
 		ShopMenu m_ShopMenu;
 		InventoryMenu m_InventoryMenu;
 	};

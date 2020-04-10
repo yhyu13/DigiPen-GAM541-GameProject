@@ -15,6 +15,7 @@ Creation date: 03/12/2020
 #include "tilemap/GameLevelMapManager.h"
 #include "skill-manager/SkillManager.h"
 #include "engine/audio/AudioManager.h"
+#include "ecs/componentSystem/Audio/SoundComSys.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <json/json.h>
@@ -48,8 +49,11 @@ namespace gswy {
 	void WidgetManager::RenderUI()
 	{
 		if (m_Hud.GetVisible())              m_Hud.Render();
-		if (m_MainMenu.GetVisible())         m_MainMenu.Render();
-		if (m_PauseMenu.GetVisible())        m_PauseMenu.Render();
+		if (m_MainMenu.GetVisible() && !m_OptionMenu.GetVisible())
+			m_MainMenu.Render();
+		if (m_PauseMenu.GetVisible() && !m_OptionMenu.GetVisible())        
+			m_PauseMenu.Render();
+		if (m_OptionMenu.GetVisible())		 m_OptionMenu.Render();
 		if (m_ShopMenu.GetVisible())         m_ShopMenu.Render();
 		if (m_InventoryMenu.GetVisible())    m_InventoryMenu.Render();
 	}
@@ -106,7 +110,8 @@ namespace gswy {
 		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			AudioManager::GetInstance()->PlaySound("click_sound");
-			manager->InvokeButton("Option");
+			//manager->InvokeButton("Option");
+			manager->GetOptionMenu().SetVisible(true);
 		}
 		if (ImGui::ImageButton((void*)m_Texture_Credits->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
@@ -145,7 +150,7 @@ namespace gswy {
 	void PauseMenu::Render()
 	{
 		ImVec2 windowsize = ImVec2(m_WindowSize_X, m_WindowSize_Y);
-		ImVec2 nextWindowSize(500, 535);
+		ImVec2 nextWindowSize(500, 640);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
@@ -161,6 +166,12 @@ namespace gswy {
 		{
 			AudioManager::GetInstance()->PlaySound("click_sound");
 			manager->InvokeButton("How To Play");
+		}
+		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Option->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		{
+			AudioManager::GetInstance()->PlaySound("click_sound");
+			//manager->InvokeButton("Option");
+			manager->GetOptionMenu().SetVisible(true);
 		}
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
@@ -217,6 +228,41 @@ namespace gswy {
 		}
 		ImGui::End();
 		ImGui::PopStyleColor(1);
+		ImGui::PopStyleVar(1);
+	}
+
+	void OptionMenu::Render()
+	{
+		ImVec2 windowsize = ImVec2(m_WindowSize_X, m_WindowSize_Y);
+		ImVec2 OptionWindowSize(500, 535);
+		ImGui::SetNextWindowSize(OptionWindowSize);
+		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - OptionWindowSize[0] / 2, windowsize[1] / 2 - OptionWindowSize[1] / 2));
+		//ImGui::PushStyleColor(ImGuiCol_WindowBg, { 255,137,20,255 });
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
+
+		ImGui::Begin("Option", &IsVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
+		{
+			ImGui::Dummy({ OptionWindowSize.x, 30 });
+			ImGui::Checkbox("FullScreen", &m_FullScreen);
+			if (m_FullScreen)
+			{
+				
+			}
+			ImGui::NewLine();
+			ImGui::Dummy({ OptionWindowSize.x, 30 });
+			ImGui::Checkbox("Mute Music", &m_MuteMusic);
+			if (m_MuteMusic)
+			{
+				
+			}
+			ImGui::NewLine();
+			ImGui::Dummy({ OptionWindowSize.x, 30 });
+			ImGui::Checkbox("Mute All Audio", &m_MuteAllAudio);
+			SoundManager::GetInstance()->CallForMute(m_MuteAllAudio);
+		}
+
+		ImGui::End();
+		//ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(1);
 	}
 
