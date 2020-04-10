@@ -115,6 +115,19 @@ namespace gswy
 						queue->Publish(e1);
 					}
 				}
+				else
+				if ((std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityA.m_type) != enemyTypes.end() &&
+					event->m_entityB.m_type == GameObjectType::RAZOR) ||
+					(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
+						event->m_entityA.m_type == GameObjectType::RAZOR))
+				{
+					auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("razor_hit", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+
+					if (!audio->IsPlaying(e1->soundName))
+					{
+						queue->Publish(e1);
+					}
+				}
 			}
 		}
 	};

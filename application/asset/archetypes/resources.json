@@ -430,7 +430,7 @@
           "stream": false
         },
         {
-          "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_hit1.ogg",
+          "path": "./asset/Audio_Assets/Hit_Sounds/fireball_hit1.ogg",
           "stream": false
         },
         {
@@ -442,7 +442,7 @@
           "stream": false
         },
         {
-          "path": "./asset/Audio_Assets/Weapons_Sounds/ice_hit1.ogg",
+          "path": "./asset/Audio_Assets/Hit_Sounds/ice_hit1.ogg",
           "stream": false
         },
         {
@@ -451,6 +451,10 @@
         },
         {
           "path": "./asset/Audio_Assets/Weapons_Sounds/fire_crackle.ogg",
+          "stream": false
+        },
+		{
+          "path": "./asset/Audio_Assets/Weapons_Sounds/razor_shoot.ogg",
           "stream": false
         },
         {
@@ -463,6 +467,10 @@
         },
         {
           "path": "./asset/Audio_Assets/HUD_Sounds/purchase_install_sound.ogg",
+          "stream": false
+        },
+		{
+          "path": "./asset/Audio_Assets/Hit_Sounds/razor_hit.ogg",
           "stream": false
         },
         {
