@@ -167,7 +167,26 @@ namespace gswy {
 		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			AudioManager::GetInstance()->PlaySound("click_sound");
-			manager->InvokeButton("Main Menu");
+			ImGui::OpenPopup("ReturnMainMenu?");
+		}
+		if (ImGui::BeginPopupModal("ReturnMainMenu?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Are you sure to return main menu?\n");
+			ImGui::Separator();
+			if (ImGui::Button("Yes", ImVec2(120, 0)))
+			{
+				AudioManager::GetInstance()->PlaySound("click_sound");
+				ImGui::CloseCurrentPopup();
+				manager->InvokeButton("Main Menu");
+			}
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				AudioManager::GetInstance()->PlaySound("click_sound");
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
 		}
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
@@ -457,6 +476,8 @@ namespace gswy {
 				for (auto it = sbegin; it != send; ++it)
 				{
 					bool bSupportPurchased = (*it)->m_purchased;
+					int cost = (*it)->m_cost;
+
 					//Query : color
 					ImGui::PushStyleColor(ImGuiCol_Button, bSupportPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(1.0f, 0.0f, 0.0f));
@@ -474,7 +495,31 @@ namespace gswy {
 						{
 							if (ImGui::Selectable("SupportPurchase"))
 							{
-								InventoryManager::GetInstance()->PurchaseSupportItem((*it));
+								if (GameLevelMapManager::GetInstance()->TrySpendCoins(cost))
+								{
+									AudioManager::GetInstance()->PlaySound("purchase_sound");
+									InventoryManager::GetInstance()->PurchaseSupportItem((*it));
+								}
+								else
+								{
+									ShowPopup = []()
+									{
+										if (!ImGui::IsPopupOpen("popup"))
+											ImGui::OpenPopup("popup");
+
+										if (ImGui::BeginPopupModal("popup"))
+										{
+											ImGui::Text("Insufficient coins!");
+
+											if (ImGui::Button("Close", ImVec2(80, 0)))
+											{
+												ImGui::CloseCurrentPopup();
+												ShowPopup = []() {};
+											}
+											ImGui::EndPopup();
+										}
+									};
+								}
 							}
 						}
 						else
@@ -588,6 +633,7 @@ namespace gswy {
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
 		{
+			//Active Skills
 			if (SkillManager::GetInstance()->GetSkill(1, 1))
 			{
 				m_Texture_Acitve1 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 1)->m_icon);
@@ -648,11 +694,20 @@ namespace gswy {
 		}
 		ImGui::NewLine();
 		{
+			//Support Skills
 			if (SkillManager::GetInstance()->GetSkill(1, 2))
 			{
 				m_Texture_Support1_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 2)->m_icon);
 				ImGui::SetCursorPosX(15);
 				ImGui::Image((void*)m_Texture_Support1_2->GetRendererID(), ImVec2(30, 30));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				//ImGui::SetCursorPosX(15);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(1, 3))
@@ -661,12 +716,28 @@ namespace gswy {
 				ImGui::SetCursorPosX(45);
 				ImGui::Image((void*)m_Texture_Support1_3->GetRendererID(), ImVec2(30, 30));
 			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				//ImGui::SetCursorPosX(45);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
+			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(1, 4))
 			{
 				m_Texture_Support1_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 4)->m_icon);
 				ImGui::SetCursorPosX(75);
 				ImGui::Image((void*)m_Texture_Support1_4->GetRendererID(), ImVec2(30, 30));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				//ImGui::SetCursorPosX(75);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(2, 2))
@@ -675,12 +746,28 @@ namespace gswy {
 				ImGui::SetCursorPosX(120);
 				ImGui::Image((void*)m_Texture_Support2_2->GetRendererID(), ImVec2(30, 30));
 			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::SetCursorPosX(105);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
+			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(2, 3))
 			{
 				m_Texture_Support2_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 3)->m_icon);
 				ImGui::SetCursorPosX(150);
 				ImGui::Image((void*)m_Texture_Support2_3->GetRendererID(), ImVec2(30, 30));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				//ImGui::SetCursorPosX(150);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(2, 4))
@@ -689,12 +776,28 @@ namespace gswy {
 				ImGui::SetCursorPosX(180);
 				ImGui::Image((void*)m_Texture_Support2_4->GetRendererID(), ImVec2(30, 30));
 			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				//ImGui::SetCursorPosX(180);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
+			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(3, 2))
 			{
 				m_Texture_Support3_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 2)->m_icon);
 				ImGui::SetCursorPosX(225);
 				ImGui::Image((void*)m_Texture_Support3_2->GetRendererID(), ImVec2(30, 30));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::SetCursorPosX(202);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(3, 3))
@@ -703,12 +806,28 @@ namespace gswy {
 				ImGui::SetCursorPosX(255);
 				ImGui::Image((void*)m_Texture_Support3_3->GetRendererID(), ImVec2(30, 30));
 			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				//ImGui::SetCursorPosX(255);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
+			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(3, 4))
 			{
 				m_Texture_Support3_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 4)->m_icon);
 				ImGui::SetCursorPosX(285);
 				ImGui::Image((void*)m_Texture_Support3_4->GetRendererID(), ImVec2(30, 30));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				//ImGui::SetCursorPosX(285);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
 			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(4, 2))
@@ -717,6 +836,14 @@ namespace gswy {
 				ImGui::SetCursorPosX(330);
 				ImGui::Image((void*)m_Texture_Support4_2->GetRendererID(), ImVec2(30, 30));
 			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::SetCursorPosX(299);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
+			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(4, 3))
 			{
@@ -724,12 +851,28 @@ namespace gswy {
 				ImGui::SetCursorPosX(360);
 				ImGui::Image((void*)m_Texture_Support4_3->GetRendererID(), ImVec2(30, 30));
 			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				//ImGui::SetCursorPosX(360);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
+			}
 			ImGui::SameLine();
 			if (SkillManager::GetInstance()->GetSkill(4, 4))
 			{
 				m_Texture_Support4_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 4)->m_icon);
 				ImGui::SetCursorPosX(390);
 				ImGui::Image((void*)m_Texture_Support4_4->GetRendererID(), ImVec2(30, 30));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
+				//ImGui::SetCursorPosX(390);
+				ImGui::Button("", ImVec2(30, 30));
+				ImGui::PopStyleColor(2);
 			}
 		}
 		ImGui::End();

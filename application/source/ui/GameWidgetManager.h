@@ -146,6 +146,13 @@ namespace gswy {
 		std::shared_ptr<Texture2D> m_Texture_Support4_4;
 	};
 
+	class OptionMenu
+	{
+	public:
+		OptionMenu() {}
+		
+	};
+
 	class WidgetManager
 	{
 	public:
