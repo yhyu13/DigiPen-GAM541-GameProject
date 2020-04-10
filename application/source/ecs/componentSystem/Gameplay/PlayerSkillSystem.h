@@ -239,6 +239,8 @@ namespace gswy
 				auto targetEntityComponent = TargetEntityComponent();
 				weapon.AddComponent(targetEntityComponent);
 			}
+			auto e = MemoryManager::Make_shared<WeaponSoundEvent>("razor_shoot", transform->GetPos());
+			queue->Publish(e);
 		}
 
 		void OnFork(EventQueue<GameObjectType, EventType>::EventPtr event)

@@ -24,13 +24,17 @@ namespace gswy
 {
 	class SoundManager : public BaseComponentSystem<GameObjectType>
 	{
+		SoundManager() 
+		{
+		
+		}
+
+		void operator= (const SoundManager&) = delete;
+
+		SoundManager(const SoundManager&) = delete;
 
 	public:
 
-		SoundManager()
-		{
-			
-		}
 
 		~SoundManager()
 		{
