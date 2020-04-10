@@ -242,10 +242,12 @@ namespace gswy {
 		ImGui::Begin("Option", &IsVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
 		{
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
-			ImGui::Checkbox("FullScreen", &m_FullScreen);
-			if (m_FullScreen)
+			//ImGui::Checkbox("FullScreen", &m_FullScreen);
+			if (ImGui::Button("Toggle Full Screen"))
 			{
-				
+				m_FullScreen = !m_FullScreen;
+				Engine& engine = Engine::Get();
+				engine.GetWindow().ToggleFullScreen(m_FullScreen);
 			}
 			ImGui::NewLine();
 			ImGui::Dummy({ OptionWindowSize.x, 30 });

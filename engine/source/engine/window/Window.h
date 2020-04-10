@@ -51,6 +51,7 @@ namespace gswy {
 		void Shutdown();
 		bool ShouldExit();
 		void UpdateTitle(std::string title);
+		void ToggleFullScreen(bool on);
 
 		GLFWwindow* GetNativeWindow() const { return m_window; }
 		inline unsigned int GetWidth() const { return m_windowProperties.m_width; }
