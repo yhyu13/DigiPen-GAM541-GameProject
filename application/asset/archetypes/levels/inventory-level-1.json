@@ -8,13 +8,13 @@
         "PROJECTILE",
         "AOE"
       ],
-      "cost": 500,
+      "cost": 1000,
       "purchased": 0,
       "installed": 0,
       "text": [
         "Property : (Active, AOE, Projectile)",
         "Rapid damage",
-        "Cost : 500"
+        "Cost : 1000"
       ],
       "key-event": "TRIGGER",
       "icon": "./asset/Sprites/TowerIcon_Meteor_tower.png",
@@ -28,13 +28,13 @@
         "PROJECTILE",
         "AOE"
       ],
-      "cost": 500,
+      "cost": 1000,
       "purchased": 0,
       "installed": 0,
       "text": [
         "Property : (Active, AOE, Projectile)",
         "Slow down enemy effectively",
-        "Cost : 500"
+        "Cost : 1000"
       ],
       "key-event": "TRIGGER",
       "icon": "./asset/Sprites/TowerIcon_Ice_Prison.png",
@@ -47,88 +47,88 @@
       "tags": [
         "AOE"
       ],
-      "cost": 500,
+      "cost": 1000,
       "purchased": 0,
       "installed": 0,
       "text": [
         "Property : (Active, AOE)",
         "Seek and destory enemies with AOE damage",
-        "Cost : 500"
+        "Cost : 1000"
       ],
       "key-event": "TRIGGER",
       "icon": "./asset/Sprites/Razor_icon.png",
       "inactive-icon": ""
     },
     {
-      "id": "2",
+      "id": "3",
       "type": "CYCLONE",
       "category": "ACTIVE",
       "tags": [
         "AOE"
       ],
-      "cost": 500,
+      "cost": 1000,
       "purchased": 0,
       "installed": 0,
       "text": [
         "Property : (Active, AOE)",
         "Spin to vitory",
-        "Cost : 500"
+        "Cost : 1000"
       ],
       "key-event": "PRESS",
       "icon": "./asset/Sprites/Cyclone_icon.png",
       "inactive-icon": ""
     },
     {
-      "id": "2",
+      "id": "4",
       "type": "MULTIPLE-PROJECTILE",
       "category": "SUPPORT",
       "tags": [
         "PROJECTILE"
       ],
-      "cost": 1000,
+      "cost": 1500,
       "purchased": 0,
       "installed": 0,
       "text": [
         "Property : (Support, Projectile)",
         "Shoot multiple projectiles",
-        "Cost : 1000"
+        "Cost : 1500"
       ],
       "icon": "./asset/Sprites/multiple-projectile.png",
       "inactive-icon": "./asset/Sprites/multiple-projectile-inactive.png"
     },
     {
-      "id": "3",
+      "id": "5",
       "type": "FORK",
       "category": "SUPPORT",
       "tags": [
         "PROJECTILE",
         "NON-PENETRATING"
       ],
-      "cost": 1000,
+      "cost": 1500,
       "purchased": 0,
       "installed": 0,
       "text": [
         "Property : (Support, Projectile)",
         "Create copies of projectiles on hit",
-        "Cost : 1000"
+        "Cost : 1500"
       ],
       "icon": "./asset/Sprites/fork.png",
       "inactive-icon": "./asset/Sprites/fork-inactive.png"
     },
     {
-      "id": "4",
+      "id": "6",
       "type": "INCREASE-AOE",
       "category": "SUPPORT",
       "tags": [
         "AOE"
       ],
-      "cost": 1000,
+      "cost": 1500,
       "purchased": 0,
       "installed": 0,
       "text": [
         "Property : (Support, AOE)",
         "Increase Area of Effect",
-        "Cost : 1000"
+        "Cost : 1500"
       ],
       "icon": "./asset/Sprites/aoe.png",
       "inactive-icon": "./asset/Sprites/aoe-inactive.png"

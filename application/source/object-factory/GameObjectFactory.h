@@ -229,7 +229,8 @@ namespace gswy {
 							continue;
 						}
 						if (name._Equal("hit-point")) {
-							player.AddComponent(HitPointCom());
+							int hp = component["value"].asInt();
+							player.AddComponent(HitPointCom(hp));
 							continue;
 						}
 						if (name._Equal("skill"))
