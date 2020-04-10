@@ -80,6 +80,7 @@ namespace gswy {
 			m_Hud.SetStyle(styles["HUD"][0].asInt(), styles["HUD"][1].asInt(), styles["HUD"][2].asInt(), styles["HUD"][3].asInt());
 			m_MainMenu.SetStyle(styles["MainMenu"][0].asInt(), styles["MainMenu"][1].asInt(), styles["MainMenu"][2].asInt(), styles["MainMenu"][3].asInt());
 			m_PauseMenu.SetStyle(styles["PauseMenu"][0].asInt(), styles["PauseMenu"][1].asInt(), styles["PauseMenu"][2].asInt(), styles["PauseMenu"][3].asInt());
+			m_OptionMenu.SetStyle(styles["OptionMenu"][0].asInt(), styles["OptionMenu"][1].asInt(), styles["OptionMenu"][2].asInt(), styles["OptionMenu"][3].asInt());
 			m_ShopMenu.SetStyle(styles["ShopMenu"][0].asInt(), styles["ShopMenu"][1].asInt(), styles["ShopMenu"][2].asInt(), styles["ShopMenu"][3].asInt());
 			m_InventoryMenu.SetStyle(styles["InventoryMenu"][0].asInt(), styles["InventoryMenu"][1].asInt(), styles["InventoryMenu"][2].asInt(), styles["InventoryMenu"][3].asInt());
 		}
@@ -237,9 +238,7 @@ namespace gswy {
 		ImVec2 OptionWindowSize(500, 535);
 		ImGui::SetNextWindowSize(OptionWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - OptionWindowSize[0] / 2, windowsize[1] / 2 - OptionWindowSize[1] / 2));
-		//ImGui::PushStyleColor(ImGuiCol_WindowBg, { 255,137,20,255 });
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
-
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::Begin("Option", &IsVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
 		{
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
@@ -262,8 +261,7 @@ namespace gswy {
 		}
 
 		ImGui::End();
-		//ImGui::PopStyleColor(1);
-		ImGui::PopStyleVar(1);
+		ImGui::PopStyleColor(1);
 	}
 
 	HUD::HUD() 
