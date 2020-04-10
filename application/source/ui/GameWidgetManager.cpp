@@ -23,6 +23,9 @@ namespace gswy {
 
 	WidgetManager* WidgetManager::s_instance = 0;
 
+	ImGuiWindowFlags popupFlag = { ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize };
+	ImGuiWindowFlags menuFlag = { ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration };
+
 	WidgetManager* WidgetManager::GetInstance()
 	{
 		if (!s_instance) s_instance = new WidgetManager();
@@ -87,7 +90,7 @@ namespace gswy {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("A new world", false, menuFlag);
 		float f = 0.0;
 		ImGui::SetWindowFontScale(1.0);
 		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), ImVec2(480, 100),ImVec2(0,1), ImVec2(1,0), 0, ImVec4(0,0,0,1)))
@@ -115,7 +118,7 @@ namespace gswy {
 			AudioManager::GetInstance()->PlaySound("click_sound");
 			ImGui::OpenPopup("Quit?");
 		}
-		if (ImGui::BeginPopupModal("Quit?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		if (ImGui::BeginPopupModal("Quit?", NULL, popupFlag))
 		{
 			ImGui::Text("Are you sure to quit game?\n");
 			ImGui::Separator();
@@ -147,7 +150,7 @@ namespace gswy {
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
-		ImGui::Begin("A new world", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("A new world", false, menuFlag);
 		ImGui::SetWindowFontScale(1.0);
 		if (ImGui::ImageButton((void*)m_Texture_ResumeGame->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
@@ -169,7 +172,7 @@ namespace gswy {
 			AudioManager::GetInstance()->PlaySound("click_sound");
 			ImGui::OpenPopup("Main menu?");
 		}
-		if (ImGui::BeginPopupModal("Main menu?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		if (ImGui::BeginPopupModal("Main menu?", NULL, popupFlag))
 		{
 			ImGui::Text("Are you sure to go back?\n");
 			ImGui::Separator();
@@ -193,7 +196,7 @@ namespace gswy {
 			AudioManager::GetInstance()->PlaySound("click_sound");
 			ImGui::OpenPopup("Quit?");
 		}
-		if (ImGui::BeginPopupModal("Quit?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		if (ImGui::BeginPopupModal("Quit?", NULL, popupFlag))
 		{
 			ImGui::Text("Are you sure to quit game?\n");
 			ImGui::Separator();
@@ -242,7 +245,7 @@ namespace gswy {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Wave", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Wave", false, menuFlag);
 		//ImFont* font = ImGui::GetFont();
 		//float origScale = font->Scale;
 		//font->Scale = 2.0f;
@@ -262,7 +265,7 @@ namespace gswy {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Base HP", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Base HP", false, menuFlag);
 		ImGui::AlignFirstTextHeightToWidgets();
 		ImGui::Text("Base HP");
 		ImGui::SameLine();
@@ -279,7 +282,7 @@ namespace gswy {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Timer", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Timer", false, menuFlag);
 		ImGui::Text("%i : %i", m_TimerMin, m_TimerSec);
 		ImGui::End();
 		ImGui::PopStyleColor(1);
@@ -293,7 +296,7 @@ namespace gswy {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Coin", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse);
+		ImGui::Begin("Coin", false, menuFlag | ImGuiWindowFlags_NoScrollWithMouse);
 		ImGui::SetCursorPosX(15);
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f),"%i", m_Coins);
 		ImGui::Image((void*)m_Texture_Coin->GetRendererID(), ImVec2(40, 40));
@@ -308,7 +311,7 @@ namespace gswy {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Player HP", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Player HP", false, menuFlag);
 		ImGui::AlignFirstTextHeightToWidgets();
 		ImGui::Text("Player HP");
 		ImGui::SameLine();
@@ -329,7 +332,7 @@ namespace gswy {
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
-		ImGui::Begin("Shop", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Shop", false, menuFlag);
 
 		if (ImGui::BeginTabBar("ShopTabBar"))
 		{
@@ -386,7 +389,7 @@ namespace gswy {
 										if (!ImGui::IsPopupOpen("popup"))
 											ImGui::OpenPopup("popup");
 
-										if (ImGui::BeginPopupModal("popup"))
+										if (ImGui::BeginPopupModal("popup", NULL, popupFlag))
 										{
 											ImGui::Text("Insufficient coins!");
 
@@ -476,6 +479,7 @@ namespace gswy {
 				for (auto it = sbegin; it != send; ++it)
 				{
 					bool bSupportPurchased = (*it)->m_purchased;
+					int cost = (*it)->m_cost;
 					//Query : color
 					ImGui::PushStyleColor(ImGuiCol_Button, bSupportPurchased ? (ImVec4)ImColor::ImColor(0.0f, 1.0f, 0.0f) : (ImVec4)ImColor::ImColor(1.0f, 1.0f, 0.0f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(1.0f, 0.0f, 0.0f));
@@ -491,9 +495,33 @@ namespace gswy {
 						//Item has not been purchased
 						if (!bSupportPurchased)
 						{
-							if (ImGui::Selectable("SupportPurchase"))
+							if (ImGui::Selectable("Purchase"))
 							{
-								InventoryManager::GetInstance()->PurchaseSupportItem((*it));
+								if (GameLevelMapManager::GetInstance()->TrySpendCoins(cost))
+								{
+									AudioManager::GetInstance()->PlaySound("purchase_sound");
+									InventoryManager::GetInstance()->PurchaseSupportItem((*it));
+								}
+								else
+								{
+									ShowPopup = []()
+									{
+										if (!ImGui::IsPopupOpen("popup"))
+											ImGui::OpenPopup("popup");
+
+										if (ImGui::BeginPopupModal("popup", NULL, popupFlag))
+										{
+											ImGui::Text("Insufficient coins!");
+
+											if (ImGui::Button("Close", ImVec2(80, 0)))
+											{
+												ImGui::CloseCurrentPopup();
+												ShowPopup = []() {};
+											}
+											ImGui::EndPopup();
+										}
+									};
+								}
 							}
 						}
 						else
@@ -605,7 +633,7 @@ namespace gswy {
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 1));
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
-		ImGui::Begin("Inventory", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin("Inventory", false, menuFlag);
 		{
 			if (SkillManager::GetInstance()->GetSkill(1, 1))
 			{
