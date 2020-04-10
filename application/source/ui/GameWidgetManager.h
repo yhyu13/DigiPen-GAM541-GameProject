@@ -150,13 +150,15 @@ namespace gswy {
 	public:
 		OptionMenu() {
 			IsVisible = false; 
-			m_CloseButton = &IsVisible;
 		}
 		void Render() override;
+
+		void SetCallFromMainMenu(bool b) { m_CallFromMainMenu = b; }
+
 		bool m_FullScreen = false;
 		bool m_MuteMusic = false;
 		bool m_MuteAllAudio = false;
-		bool* m_CloseButton;
+		bool m_CallFromMainMenu = false;
 	};
 
 	class WidgetManager
