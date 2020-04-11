@@ -248,25 +248,60 @@ namespace gswy {
 		ImGui::Begin("Option", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
 		{
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
+
+
+			int selectBarWidth = 100;
+			//Full Screen
 			ImGui::SetCursorPosX(30);
-			if (ImGui::Button("Toggle Full Screen"))
+			ImGui::Text("Full Screen");
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(selectBarWidth);
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
+			static int fullScreen = m_FullScreen;
+			if (ImGui::Combo("##FullScreen", &fullScreen, "Off\0On\0"))
 			{
-				m_FullScreen = !m_FullScreen;
+				m_FullScreen = fullScreen;
 				Engine& engine = Engine::Get();
 				engine.GetWindow().ToggleFullScreen(m_FullScreen);
 			}
 			ImGui::NewLine();
+			ImGui::Separator();
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
-			ImGui::SetCursorPosX(30);
-			ImGui::Checkbox("Mute Music", &m_MuteMusic);
-			SoundManager::GetInstance()->CallForMusicMute(m_MuteMusic);
 
+			//Mute Music
+			ImGui::SetCursorPosX(30);
+			ImGui::Text("Mute Music");
+			ImGui::SameLine();
+			
+			ImGui::SetNextItemWidth(selectBarWidth);
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
+			static int muteMusic = m_MuteMusic;
+			if (ImGui::Combo("##Mute Music", &muteMusic, "Off\0On\0"))
+			{
+				m_MuteMusic = muteMusic;
+				SoundManager::GetInstance()->CallForMusicMute(m_MuteMusic);
+			}
 			ImGui::NewLine();
+			ImGui::Separator();
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
-			ImGui::SetCursorPosX(30);
-			ImGui::Checkbox("Mute All Audio", &m_MuteAllAudio);
-			SoundManager::GetInstance()->CallForMute(m_MuteAllAudio);
 
+			//Mute All Audio
+			ImGui::SetCursorPosX(30);
+			ImGui::Text("Mute All Audio");
+			ImGui::SameLine();
+
+			ImGui::SetNextItemWidth(selectBarWidth);
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
+			static int muteAllAudio = m_MuteAllAudio;
+			if (ImGui::Combo("##Mute All Audio", &muteAllAudio, "Off\0On\0"))
+			{
+				m_MuteAllAudio = muteAllAudio;
+				SoundManager::GetInstance()->CallForMute(m_MuteAllAudio);
+			}
+			ImGui::NewLine();
+			ImGui::Separator();
+
+			//Back Button
 			ImGui::SetCursorPos({ 30,450 });
 			if (ImGui::Button("Back", ImVec2(100,30)) || ImGui::IsKeyReleased(ImGui::GetKeyIndex(ImGuiKey_Escape)))
 			{
