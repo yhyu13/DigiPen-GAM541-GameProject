@@ -28,6 +28,7 @@ namespace gswy {
 		std::string m_title;
 		InputManager* m_input = nullptr;
 		bool IsFullScreen = false;
+		bool IsVSync = false;
 
 		//Pre-Calculate number for some reasons
 		int m_windowFrameSize_top = 38;
@@ -56,6 +57,7 @@ namespace gswy {
 		bool ShouldExit();
 		void UpdateTitle(std::string title);
 		void ToggleFullScreen(bool on);
+		void SetVSync(bool on);
 
 		GLFWwindow* GetNativeWindow() const { return m_window; }
 		WindowProperties GetWindowProperties() const { return m_windowProperties; }

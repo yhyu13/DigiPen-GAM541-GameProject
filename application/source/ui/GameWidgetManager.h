@@ -151,15 +151,12 @@ namespace gswy {
 		OptionMenu() {
 			IsVisible = false;  
 		}
-		void Init() override {
-			Engine& engine = Engine::Get();
-			m_FullScreen = engine.GetWindow().GetWindowProperties().IsFullScreen;
-		}
+		void Init() override {}
 		void Render() override;
 
 		void SetCallFromMainMenu(bool b) { m_CallFromMainMenu = b; }
 
-		bool m_FullScreen = false;
+		
 		bool m_MuteMusic = false;
 		bool m_MuteAllAudio = false;
 		bool m_CallFromMainMenu = false;

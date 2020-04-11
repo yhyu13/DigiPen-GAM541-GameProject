@@ -248,7 +248,7 @@ namespace gswy {
 		ImGui::Begin("Option", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
 		{
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
-
+			Engine& engine = Engine::Get();
 
 			int selectBarWidth = 100;
 			//Full Screen
@@ -257,12 +257,25 @@ namespace gswy {
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(selectBarWidth);
 			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
-			static int fullScreen = m_FullScreen;
+			static int fullScreen = engine.GetWindow().GetWindowProperties().IsFullScreen;
 			if (ImGui::Combo("##FullScreen", &fullScreen, "Off\0On\0"))
 			{
-				m_FullScreen = fullScreen;
-				Engine& engine = Engine::Get();
-				engine.GetWindow().ToggleFullScreen(m_FullScreen);
+				engine.GetWindow().ToggleFullScreen(fullScreen);
+			}
+			ImGui::NewLine();
+			ImGui::Separator();
+			ImGui::Dummy({ OptionWindowSize.x, 30 });
+
+			//V-Sync
+			ImGui::SetCursorPosX(30);
+			ImGui::Text("V-Sync");
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(selectBarWidth);
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
+			static int vsync = engine.GetWindow().GetWindowProperties().IsVSync;
+			if (ImGui::Combo("##V-Sync", &vsync, "Off\0On\0"))
+			{
+				engine.GetWindow().SetVSync(vsync);
 			}
 			ImGui::NewLine();
 			ImGui::Separator();
