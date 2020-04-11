@@ -103,8 +103,7 @@ namespace gswy
 			{
 				m_vol = 1.0f;
 				m_mute = false;
-			}
-			
+			}			
 		}
 	
 		float m_vol;
