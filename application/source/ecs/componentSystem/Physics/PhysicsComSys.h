@@ -113,6 +113,11 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
+			// Disable collision check if dt=0(game is paused)
+			if (!dt)
+			{
+				return;
+			}
 
 			//Updating Positions
 			for (auto& entity : m_registeredEntities)

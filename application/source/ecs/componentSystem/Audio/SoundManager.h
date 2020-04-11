@@ -47,16 +47,16 @@ namespace gswy
 			return &input;
 		}
 
-		void CallForMute(bool play)
+		void CallForMuteSFX(bool play)
 		{
-			auto e = MemoryManager::Make_shared<OnMuteEvent>(play);
+			auto e = MemoryManager::Make_shared<OnMuteSFXEvent>(play);
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Publish(e);
 		}
 
-		void CallForMusicMute(float vol = 0.0f, bool play = true)
+		void CallForMuteBGM(bool play)
 		{
-			auto e = MemoryManager::Make_shared<OnMuteMusicEvent>(play);
+			auto e = MemoryManager::Make_shared<OnMuteBGMEvent>(play);
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Publish(e);
 		}

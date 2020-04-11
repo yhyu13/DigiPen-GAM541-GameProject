@@ -65,6 +65,15 @@ namespace gswy {
 			glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &x, &y, &w, &h);
 			glfwSetWindowMonitor(m_window, nullptr, x, y, w, h, GLFW_DONT_CARE);
 		}
+		m_windowProperties.IsFullScreen = on;
+	}
+
+	void Window::SetVSync(bool on)
+	{
+		if (on)
+			glfwSwapInterval(1);
+		else
+			glfwSwapInterval(0);
 	}
 
 	void Window::Shutdown() {

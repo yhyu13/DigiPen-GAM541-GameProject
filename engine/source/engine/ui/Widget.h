@@ -22,6 +22,7 @@ namespace gswy {
 		Widget() {}
 		virtual ~Widget() {}
 		virtual void Init() {}
+		virtual void Update() {};
 		virtual void Render() = 0;
 		inline void SetVisible(bool vis) { IsVisible = vis; }
 		inline bool GetVisible() const { return IsVisible; }
