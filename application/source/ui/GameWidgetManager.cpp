@@ -49,14 +49,22 @@ namespace gswy {
 
 	void WidgetManager::RenderUI()
 	{
-		if (m_Hud.GetVisible())              m_Hud.Render();
-		if (m_MainMenu.GetVisible() && !m_OptionMenu.GetVisible())
-			m_MainMenu.Render();
-		if (m_PauseMenu.GetVisible() && !m_OptionMenu.GetVisible())        
-			m_PauseMenu.Render();
-		if (m_OptionMenu.GetVisible())		 m_OptionMenu.Render();
-		if (m_ShopMenu.GetVisible())         m_ShopMenu.Render();
-		if (m_InventoryMenu.GetVisible())    m_InventoryMenu.Render();
+		// Update widgets
+		{
+			m_OptionMenu.Update();
+		}
+		
+		// Render widgets
+		{
+			if (m_Hud.GetVisible())              m_Hud.Render();
+			if (m_MainMenu.GetVisible() && !m_OptionMenu.GetVisible())
+				m_MainMenu.Render();
+			if (m_PauseMenu.GetVisible() && !m_OptionMenu.GetVisible())
+				m_PauseMenu.Render();
+			if (m_OptionMenu.GetVisible())		 m_OptionMenu.Render();
+			if (m_ShopMenu.GetVisible())         m_ShopMenu.Render();
+			if (m_InventoryMenu.GetVisible())    m_InventoryMenu.Render();
+		}
 	}
 
 	void WidgetManager::PushPopModalStyle()
@@ -324,7 +332,6 @@ namespace gswy {
 			if (ImGui::Combo("##Mute BGM", &muteMusic, "Off\0On\0"))
 			{
 				m_MuteMusic = muteMusic;
-				SoundManager::GetInstance()->CallForMuteBGM(m_MuteMusic);
 			}
 			ImGui::NewLine();
 			ImGui::Separator();
@@ -337,11 +344,10 @@ namespace gswy {
 
 			ImGui::SetNextItemWidth(selectBarWidth);
 			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
-			static int muteAllAudio = m_MuteAllAudio;
-			if (ImGui::Combo("##Mute SFX", &muteAllAudio, "Off\0On\0"))
+			static int muteSFX = m_MuteSFX;
+			if (ImGui::Combo("##Mute SFX", &muteSFX, "Off\0On\0"))
 			{
-				m_MuteAllAudio = muteAllAudio;
-				SoundManager::GetInstance()->CallForMuteSFX(m_MuteAllAudio);
+				m_MuteSFX = muteSFX;
 			}
 			ImGui::NewLine();
 			ImGui::Separator();
@@ -361,6 +367,12 @@ namespace gswy {
 		ImGui::End();
 		ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(3);
+	}
+
+	void OptionMenu::Update()
+	{
+		SoundManager::GetInstance()->CallForMuteBGM(m_MuteMusic);
+		SoundManager::GetInstance()->CallForMuteSFX(m_MuteSFX);
 	}
 
 	HUD::HUD() 

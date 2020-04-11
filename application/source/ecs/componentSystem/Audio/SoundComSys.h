@@ -42,7 +42,15 @@ namespace gswy
 			queue->Subscribe<SoundComSys>(this, EventType::SOUND, &SoundComSys::OnPLAYSOUND);
 			queue->Subscribe<SoundComSys>(this, EventType::COLLISION, &SoundComSys::CollisionPLAYSOUND);
 			queue->Subscribe<SoundComSys>(this, EventType::WEAPON_SOUND, &SoundComSys::WeaponPLAYSOUND);
-			queue->Subscribe<SoundComSys>(this, EventType::MUTE_SFX, &SoundComSys::OnMute);
+			queue->Subscribe<SoundComSys>(this, EventType::MUTE_SFX, &SoundComSys::OnMuteSFX);
+		}
+
+		/*
+		Controll BGM volume here
+		*/
+		virtual void Update(double dt) override
+		{
+			// Get BGM and set its volume to -100 on mute
 		}
 
 		void OnPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -60,15 +68,15 @@ namespace gswy
 			}
 		}
 
-		void OnMusicMute(EventQueue<GameObjectType, EventType>::EventPtr e)
+		void OnMuteBGM(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			if (auto event = static_pointer_cast<OnMuteBGMEvent>(e))
 			{
-				m_muteSFX = event->m_mute;
+				m_muteBGM = event->m_mute;
 			}
 		}
 
-		void OnMute(EventQueue<GameObjectType, EventType>::EventPtr e)
+		void OnMuteSFX(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			if (auto event = static_pointer_cast<OnMuteSFXEvent>(e))
 			{

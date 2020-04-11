@@ -177,12 +177,12 @@ namespace gswy {
 		}
 		void Init() override {}
 		void Render() override;
+		void Update() override;
 
 		void SetCallFromMainMenu(bool b) { m_CallFromMainMenu = b; }
 
-		
 		bool m_MuteMusic = false;
-		bool m_MuteAllAudio = false;
+		bool m_MuteSFX = false;
 		bool m_CallFromMainMenu = false;
 	};
 
