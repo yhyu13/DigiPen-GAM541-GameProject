@@ -49,7 +49,7 @@ gswy::PathFinding::~PathFinding()
 	MemoryManager::Free(cellDetails, sizeof(cell*) * ROW);
 }
 
-bool gswy::PathFinding::Search(Grid_float & grid, const ivec2 & src, const ivec2 & dest)
+bool gswy::PathFinding::Search(const Grid_float & grid, const ivec2 & src, const ivec2 & dest)
 {
 	Pair _src = Pair(src.x, src.y);
 	Pair _dest = Pair(dest.x, dest.y);
@@ -72,7 +72,7 @@ bool gswy::PathFinding::isValid(int row, int col)
 // A Utility Function to check whether the given cell is 
 // blocked or not 
 
-bool gswy::PathFinding::isUnBlocked(Grid_float& grid, int row, int col)
+bool gswy::PathFinding::isUnBlocked(const Grid_float& grid, int row, int col)
 {
 	// Returns true if the cell is not blocked else false 
 	if (grid[row][col] != 1.0f)
@@ -140,7 +140,7 @@ void gswy::PathFinding::tracePath(cell** cellDetails, Pair dest)
 // a given source cell to a destination cell according 
 // to A* Search Algorithm 
 
-bool gswy::PathFinding::aStarSearch(Grid_float& grid, Pair src, Pair dest)
+bool gswy::PathFinding::aStarSearch(const Grid_float& grid, Pair src, Pair dest)
 {
 	// If the source is out of range 
 	if (isValid(src.first, src.second) == false)

@@ -19,6 +19,8 @@ namespace gswy
 		COLLISION,								// Collision event
 		SOUND,									// Play sound event
 		WEAPON_SOUND,							// Play weapon sound event
+		MUTE_SOUND,                             // Mute Sound Event
+		MUSIC_MUTE,                             // Mute music Event
 		DEATH,									// Death event
 		SPAWN,									// Spawning event
 		GC,										// Garbage collection event
@@ -45,6 +47,7 @@ namespace gswy
 		LOAD_GAME_WORLD,
 		LOAD_TEAM_LOGO,
 		LOAD_GAME_LOGO,
+		LOAD_CREDIT_SCREEN,
 		LOAD_LEVEL_LOGO,
 		LOAD_WAVE_CLEAR_LOGO,
 		LOAD_LEVEL_CLEAR_LOGO,
@@ -52,6 +55,8 @@ namespace gswy
 		LOAD_LOST_LOGO,
 		LOAD_DIED_LOG,
 		LOAD_FINAL_WAVE,
+
+		ON_SPLASH_STATE_CHANGE,
 
 		KEY_BIND_EVENT,
 

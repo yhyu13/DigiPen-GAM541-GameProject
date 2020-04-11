@@ -42,6 +42,7 @@ std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 		PROCESS_VAL(gswy::EventType::LOAD_WAVE_CLEAR_LOGO);
 		PROCESS_VAL(gswy::EventType::LOAD_LEVEL_CLEAR_LOGO);
 		PROCESS_VAL(gswy::EventType::KEY_BIND_EVENT);
+		PROCESS_VAL(gswy::EventType::LOAD_CREDIT_SCREEN);
 	default: s = "(invalid value)"; break;
 	}
 #undef PROCESS_VAL

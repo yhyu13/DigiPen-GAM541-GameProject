@@ -15,6 +15,7 @@ Creation date	: 03/13/2020
 #include "primitives/SkillTag.h"
 
 #include <set>
+#include <string>
 
 
 namespace gswy
@@ -28,6 +29,12 @@ namespace gswy
 
 		std::set<SkillTag> GetSkillTags();
 
+		std::string& GetIcon();
+		void SetIcon(std::string& icon);
+
+		std::string& GetIconGray();
+		void SetIconGray(std::string& icon);
+
 	protected:
 
 		virtual void AddSkillTag(const SkillTag& tag);
@@ -36,6 +43,8 @@ namespace gswy
 		const int& GetId();
 
 	private:
+		std::string m_icon;
+		std::string m_iconGray;
 		std::set<SkillTag> m_tags;
 		static int m_id;
 	};

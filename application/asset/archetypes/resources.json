@@ -3,59 +3,59 @@
     {
       "type": "textures",
       "textures": [
-		{
+        {
           "name": "DigiPen-logo",
-          "path": "./asset/Logo/DigiPen_RED_1024px.png"
+          "path": "./asset/Logo/digipen-logo.png"
         },
-		{
-          "name": "Team-Logo",
-          "path": "./asset/Logo/team-logo3.png"
-        },
-		{
+        {
           "name": "Game-Logo",
           "path": "./asset/Logo/game-logo3.png"
         },
-		{
+        {
           "name": "Team-Logo",
-          "path": "./asset/Logo/team-logo3.png"
+          "path": "./asset/Logo/team-logo3_new.png"
         },
-		{
+        {
+          "name": "credits",
+          "path": "./asset/Logo/credits.png"
+        },
+        {
           "name": "You_Won",
           "path": "./asset/UI/You_Won.png"
         },
-		{
+        {
           "name": "You_Died",
           "path": "./asset/UI/You_Died.png"
         },
-		{
+        {
           "name": "You_Lost",
           "path": "./asset/UI/You_Lost.png"
         },
-		{
+        {
           "name": "Level_1",
           "path": "./asset/UI/Level_1.png"
         },
-		{
+        {
           "name": "Level_2",
           "path": "./asset/UI/Level_2.png"
         },
-		{
+        {
           "name": "Level_3",
           "path": "./asset/UI/Level_Final.png"
         },
-		{
+        {
           "name": "Wave_Clear",
           "path": "./asset/UI/Wave_Clear.png"
         },
-		{
+        {
           "name": "Final_Wave",
           "path": "./asset/UI/Final_Wave.png"
         },
-		{
+        {
           "name": "Level_Clear",
           "path": "./asset/UI/Level_Clear.png"
         },
-		{
+        {
           "name": "Press_Space",
           "path": "./asset/UI/Press_Space.png"
         },
@@ -103,7 +103,7 @@
           "name": "Mob1_Boss_Attack",
           "path": "./asset/Sprites/Mob1_Boss_Attack.png"
         },
-		{
+        {
           "name": "YellowLayer",
           "path": "./asset/Sprites/YellowLayer.png"
         },
@@ -421,7 +421,7 @@
           "path": "./asset/Audio_Assets/footstep02.ogg",
           "stream": false
         },
-		{
+        {
           "path": "./asset/Audio_Assets/footsteps1.ogg",
           "stream": false
         },
@@ -430,7 +430,7 @@
           "stream": false
         },
         {
-          "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_hit1.ogg",
+          "path": "./asset/Audio_Assets/Hit_Sounds/fireball_hit1.ogg",
           "stream": false
         },
         {
@@ -442,7 +442,7 @@
           "stream": false
         },
         {
-          "path": "./asset/Audio_Assets/Weapons_Sounds/ice_hit1.ogg",
+          "path": "./asset/Audio_Assets/Hit_Sounds/ice_hit1.ogg",
           "stream": false
         },
         {
@@ -454,18 +454,26 @@
           "stream": false
         },
 		{
+          "path": "./asset/Audio_Assets/Weapons_Sounds/razor_shoot.ogg",
+          "stream": false
+        },
+        {
           "path": "./asset/Audio_Assets/HUD_Sounds/bind_sound.ogg",
           "stream": false
         },
-		{
+        {
           "path": "./asset/Audio_Assets/HUD_Sounds/click_sound.ogg",
           "stream": false
         },
-		{
+        {
           "path": "./asset/Audio_Assets/HUD_Sounds/purchase_install_sound.ogg",
           "stream": false
         },
 		{
+          "path": "./asset/Audio_Assets/Hit_Sounds/razor_hit.ogg",
+          "stream": false
+        },
+        {
           "path": "./asset/Audio_Assets/HUD_Sounds/purchase_sound.ogg",
           "stream": false
         },

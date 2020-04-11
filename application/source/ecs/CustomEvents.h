@@ -88,11 +88,41 @@ namespace gswy
 		glm::vec3 m_location;
 		float m_vol;
 		float m_freq;
+	}; 
+
+	struct OnMuteMusicEvent : Event<GameObjectType, EventType>
+	{
+		explicit OnMuteMusicEvent(float vol = 0.0f, bool m = true) : Event(EventType::MUSIC_MUTE)
+		{
+			if (m == true)
+			{
+				m_vol = vol;
+				m_mute = m;
+			}
+			else
+			{
+				m_vol = 1.0f;
+				m_mute = false;
+			}			
+		}
+	
+		float m_vol;
+		bool m_mute;
 	};
 
+	struct OnMuteEvent : Event<GameObjectType, EventType>
+	{
+		explicit OnMuteEvent(bool m = true) : Event(EventType::MUTE_SOUND)
+		{
+			mute = m;
+		}
+
+		bool mute;
+	};
+ 
 	struct WeaponSoundEvent : Event<GameObjectType, EventType> {
 
-		WeaponSoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)
+		explicit WeaponSoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)
 			:
 			Event(EventType::WEAPON_SOUND)
 		{
@@ -102,7 +132,7 @@ namespace gswy
 			m_freq = freq;
 		}
 
-		WeaponSoundEvent(const std::string& name, glm::vec2& pos = glm::vec2(0), float vol = 1.0f, float freq = 1.0f)
+		explicit WeaponSoundEvent(const std::string& name, glm::vec2& pos = glm::vec2(0), float vol = 1.0f, float freq = 1.0f)
 			:
 			Event(EventType::WEAPON_SOUND)
 		{
@@ -236,6 +266,19 @@ namespace gswy
 		ActiveSkillType m_skillType;
 		glm::vec2 m_position;
 		float m_rotation;
+	};
+
+
+	
+	struct OnSplashStateChangeEvent : Event<GameObjectType, EventType>
+	{
+		explicit OnSplashStateChangeEvent(unsigned int state)
+			: 
+			Event(EventType::ON_SPLASH_STATE_CHANGE),
+			m_state(state)
+		{
+		}
+		unsigned int m_state;
 	};
 
 	struct LoadMainMenuEvent : Event<GameObjectType, EventType>

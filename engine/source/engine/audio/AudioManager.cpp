@@ -19,7 +19,10 @@ gswy::FMODInstance::FMODInstance()
 {
 	mpStudioSystem = NULL;
 	AudioManager::ErrorCheck(FMOD::Studio::System::create(&mpStudioSystem));
-	AudioManager::ErrorCheck(mpStudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL));
+	// The init below will enable TCP/IP host for profiling.
+	// Since Digipen does not want offline game to use any form of networking, we will disable that.
+	//AudioManager::ErrorCheck(mpStudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL));
+	AudioManager::ErrorCheck(mpStudioSystem->initialize(32, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, NULL));
 
 	mpSystem = NULL;
 	AudioManager::ErrorCheck(mpStudioSystem->getCoreSystem(&mpSystem));
@@ -189,6 +192,63 @@ int gswy::AudioManager::PlaySound(const string& strSoundName, const AudioVector3
 		m_fmodInstance->mChannels[nChannelId] = pChannel;
 		return nChannelId;
 	}
+	return -1;
+}
+
+int gswy::AudioManager::PauseSound(const string& strSoundName, const AudioVector3& vPos, float fVolumedB , float frequency )
+{
+	auto tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
+	if (tFoundIt == m_fmodInstance->mSounds.end())
+	{
+		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has not been loaded!");
+	}
+	FMOD::Channel* pChannel = nullptr;
+	AudioManager::ErrorCheck(m_fmodInstance->mpSystem->playSound(tFoundIt->second, nullptr, true, &pChannel));
+	if (pChannel)
+	{
+		int nChannelId = m_fmodInstance->mnNextChannelId++;
+		FMOD_MODE currMode;
+		tFoundIt->second->getMode(&currMode);
+		if (currMode & FMOD_3D) {
+			FMOD_VECTOR position = VectorToFmod(vPos);
+			AudioManager::ErrorCheck(pChannel->set3DAttributes(&position, nullptr));
+		}
+		AudioManager::ErrorCheck(pChannel->setVolume(dbToVolume(fVolumedB)));
+		AudioManager::ErrorCheck(pChannel->setPaused(true));
+		AudioManager::ErrorCheck(pChannel->setPitch(frequency));
+		m_fmodInstance->mSound2Channels[strSoundName] = nChannelId;
+		m_fmodInstance->mChannels[nChannelId] = pChannel;
+		return nChannelId;
+	}
+	return -1;
+}
+
+int gswy::AudioManager::MuteSound(const string& strSoundName, const AudioVector3& vPos, float fVolumedB, float frequency)
+{
+	auto tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
+	if (tFoundIt == m_fmodInstance->mSounds.end())
+	{
+		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has not been loaded!");
+	}
+	FMOD::Channel* pChannel = nullptr;
+	AudioManager::ErrorCheck(m_fmodInstance->mpSystem->playSound(tFoundIt->second, nullptr, true, &pChannel));
+	if (pChannel)
+	{
+		int nChannelId = m_fmodInstance->mnNextChannelId++;
+		FMOD_MODE currMode;
+		tFoundIt->second->getMode(&currMode);
+		if (currMode & FMOD_3D) {
+			FMOD_VECTOR position = VectorToFmod(vPos);
+			AudioManager::ErrorCheck(pChannel->set3DAttributes(&position, nullptr));
+		}
+		AudioManager::ErrorCheck(pChannel->setVolume(dbToVolume(fVolumedB)));
+		AudioManager::ErrorCheck(pChannel->setPaused(false));
+		AudioManager::ErrorCheck(pChannel->setPitch(frequency));
+		m_fmodInstance->mSound2Channels[strSoundName] = nChannelId;
+		m_fmodInstance->mChannels[nChannelId] = pChannel;
+		return nChannelId;
+	}
+
 	return -1;
 }
 

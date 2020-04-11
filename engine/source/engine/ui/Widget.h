@@ -11,20 +11,31 @@ Creation date: 02/26/2020
 - End Header ----------------------------*/
 #pragma once
 #include "imgui.h"
+#include "engine/Engine.h"
+#include "engine/window/Window.h"
  
 namespace gswy {
 
 	class Widget
 	{
 	public:
+		Widget() 
+		{
+			Engine& engine = Engine::Get();
+			m_WindowSize_X = engine.GetWindow().GetWidth();
+			m_WindowSize_Y = engine.GetWindow().GetHeight();
+		}
 		virtual ~Widget() {}
 		virtual void Init() {}
 		virtual void Render() = 0;
 		inline void SetVisible(bool vis) { IsVisible = vis; }
 		inline bool GetVisible() const { return IsVisible; }
+		inline ImVec4 GetStyle() const { return m_styleColor; }
+		inline void SetStyle(int r, int g, int b, int a) { m_styleColor = (ImVec4)ImColor::ImColor(r, g, b, a); }
 	protected:
 		bool IsVisible = true;
 		unsigned int m_WindowSize_X = 1920;
 		unsigned int m_WindowSize_Y = 1080;
+		ImVec4 m_styleColor;
 	};
 }

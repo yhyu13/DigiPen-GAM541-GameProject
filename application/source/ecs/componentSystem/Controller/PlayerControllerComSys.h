@@ -42,8 +42,6 @@ namespace gswy
 	{
 
 		SkillBinding()
-			:
-			m_skillIndex(0)
 		{
 		}
 
@@ -60,16 +58,20 @@ namespace gswy
 	class PlayerControllerComSys : public BaseComponentSystem<GameObjectType> {
 
 	private:
-		std::vector<glm::ivec2> m_pathResult;
 		float m_speed = { 1.0f };
-		int m_pathFindingLookAhead = { 2 };
-		float m_noPathFindingThreshold = { 0.15f };
-		float m_advancePathFindingThreshold = { 0.1f };
-		float m_maxAngleRotation = { 0.8726646f };
-
+		int m_pathFindingLookAhead = { 4 };
+		float m_noPathFindingThreshold_lower = { 0.15f };
+		float m_noPathFindingThreshold_upper = { 3.f };
+		float m_advancePathFindingThreshold = { 0.15f };
 		double m_timeDisableMoveCommand = { 0 };
-		bool m_bDisableMoveCommand = { false };
+		bool m_bDisableMoveInput = { false };
 		bool m_bDisableInput = { false };
+
+		std::vector<glm::ivec2> m_pathResult;
+		float m_cubicSplineStepSize = { .5f };
+		std::vector<glm::vec2> m_pathResultCubicSplline;
+
+		std::map<int, SkillBinding> m_keyAndSkillBiding;
 	public:
 		PlayerControllerComSys() {
 			m_systemSignature.AddComponent<PlayerSkillComponent>();
@@ -79,15 +81,7 @@ namespace gswy
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<PlayerControllerComSys>(this, EventType::KEY_BIND_EVENT, &PlayerControllerComSys::OnKeyBindingEvent);
-			queue->Subscribe<PlayerControllerComSys>(this, EventType::CAN_PLAYER_INPUT, &PlayerControllerComSys::OnCanPlayerInputEvent);
-		}
-
-		void OnCanPlayerInputEvent(EventQueue<GameObjectType, EventType>::EventPtr e)
-		{
-			if (auto event = static_pointer_cast<CanPlayerInputEvent>(e))
-			{
-				m_bDisableInput = !event->m_bInput;
-			}
+			queue->Subscribe<PlayerControllerComSys>(this, EventType::CAN_PLAYER_INPUT, &PlayerControllerComSys::OnCanPlayerInput);
 		}
 
 		void OnKeyBindingEvent(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -125,20 +119,28 @@ namespace gswy
 			m_keyAndSkillBiding[key] = skillBinding;
 		}
 
+		void OnCanPlayerInput(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = dynamic_pointer_cast<CanPlayerInputEvent>(e))
+			{
+				m_bDisableMoveInput = !event->m_bInput;
+				m_bDisableInput = !event->m_bInput;
+			}
+		}
+
 		virtual void Update(double dt) override {
+
+			ProcessConstantInput();
+
+			// Do not update player while game is paused
+			if (!dt)
+			{
+				return;
+			}
 
 			auto input = InputManager::GetInstance();
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto skillManager = SkillManager::GetInstance();
-
-			if (m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER).empty())
-			{
-				return;
-			}
-			if (m_bDisableInput)
-			{
-				return;
-			}
 
 			// Handle mouse action
 			if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
@@ -147,13 +149,14 @@ namespace gswy
 			}
 
 			HandleMouseCondition_Move(dt);
-
 			if (input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				HandleMouseAction_LeftPressed();
 			}
-
 			HandlePlayerMovement(dt);
+
+			// Handle UI input
+			ProcessUIInput();
 
 			// CHECKING FOR SKILL KEY BINDINGS
 			for (const auto& keyBinding : m_keyAndSkillBiding)
@@ -168,42 +171,62 @@ namespace gswy
 					}
 				}
 			}
+		}
 
-			// Start level by pressing space
-			if (input->IsKeyTriggered(KEY_SPACE))
+		void ProcessConstantInput()
+		{
+			auto credit_page = m_parentWorld->GetAllEntityWithType(GameObjectType::CREDITS);
+			if (!credit_page.empty())
 			{
-				PRINT("SPACE");
-				if (!GameLevelMapManager::GetInstance()->IsWaveStarted() && !GameLevelMapManager::GetInstance()->IsLoading())
+				auto input = InputManager::GetInstance();
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_SPACE))
 				{
-					GameLevelMapManager::GetInstance()->StartWave();
-				}
-			}
-
-			// Handle UI toggling
-			if (GameLevelMapManager::GetInstance()->IsInGame())
-			{
-				if (input->IsKeyTriggered(KEY_I))
-				{
-					auto& hud = WidgetManager::GetInstance()->GetInventoryMenu();
-					hud.SetVisible(!hud.GetVisible());
-				}
-				if (input->IsKeyTriggered(KEY_P))
-				{
-					auto& hud = WidgetManager::GetInstance()->GetShopMenu();
-					hud.SetVisible(!hud.GetVisible());
-				}
-
-				// Disable movement while either inventory or shop menu is active
-				m_bDisableMoveCommand = WidgetManager::GetInstance()->GetShopMenu().GetVisible() || WidgetManager::GetInstance()->GetInventoryMenu().GetVisible();
-
-				if (input->IsKeyTriggered(KEY_ESCAPE))
-				{
-					auto& hud = WidgetManager::GetInstance()->GetPauseMenu();
-					hud.SetVisible(!hud.GetVisible());
-					m_parentWorld->SetPause(hud.GetVisible());
+					auto e = MemoryManager::Make_shared<GCEvent>(credit_page[0]);
+					queue->Publish(e);
+					// Set widget
+					{
+						WidgetManager* manager = WidgetManager::GetInstance();
+						manager->GetPauseMenu().SetVisible(true);
+					}
 				}
 			}
 		}
+
+		void ProcessUIInput()
+		{
+			// Handle UI inputs
+			if (!m_bDisableInput)
+			{
+				auto input = InputManager::GetInstance();
+				// Start level by pressing space
+				if (input->IsKeyTriggered(KEY_SPACE))
+				{
+					PRINT("SPACE");
+					if (!GameLevelMapManager::GetInstance()->IsWaveStarted())
+					{
+						GameLevelMapManager::GetInstance()->StartWave();
+					}
+				}
+
+				// Handle UI toggling
+				if (GameLevelMapManager::GetInstance()->IsInGame())
+				{
+					if (input->IsKeyTriggered(KEY_TAB))
+					{
+						bool v1 = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
+						WidgetManager::GetInstance()->GetShopMenu().SetVisible(!v1);
+						m_bDisableMoveInput = !v1;
+					}
+					if (input->IsKeyTriggered(KEY_ESCAPE))
+					{
+						WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+						m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+					}
+				}
+			}
+		}
+
 
 		bool HandleMouseCondition_Move(double dt)
 		{
@@ -231,7 +254,8 @@ namespace gswy
 
 		void HandleMouseAction_LeftPressed()
 		{
-			if (m_timeDisableMoveCommand > 0 || m_bDisableMoveCommand)
+			// Click to move conditions
+			if (m_timeDisableMoveCommand > 0 || m_bDisableMoveInput)
 			{
 				return;
 			}
@@ -260,11 +284,9 @@ namespace gswy
 			auto src = playerPos;
 			auto delta = dest - src;
 			// Stop when delta distance is small
-			if (glm::length(delta) < m_noPathFindingThreshold)
+			if (glm::length(delta) < m_noPathFindingThreshold_lower || glm::length(delta) > m_noPathFindingThreshold_upper)
 			{
-				//transform->SetVelocity(vec2(0));
 				body->SetVelocity(0,0);
-				/*animation->SetCurrentAnimationState("Idle");*/\
 				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Idle", false);
 				queue->Publish(e);
 				return;
@@ -272,15 +294,26 @@ namespace gswy
 			auto _dest = tileMapObj->World2Grid(dest);
 			auto _src = tileMapObj->World2Grid(src);
 
+			m_pathResult.clear();
+			m_pathResultCubicSplline.clear();
 			if (Astar->Search(*pathGrid, _src, _dest))
 			{
 				m_pathResult = Astar->GetResult();
+				int step = 1;
+				for (int i = 0; i < m_pathResult.size()-step; i+=step)
+				{
+					m_pathResultCubicSplline.push_back(tileMapObj->Grid2World(m_pathResult[i]));
+				}
+				m_pathResultCubicSplline.push_back(tileMapObj->Grid2World(m_pathResult.back()));
+				m_pathResultCubicSplline = GetCubicSpline(m_pathResultCubicSplline, m_cubicSplineStepSize);
+
+				// Reverse path finding result from (start to dest) to (dest to start) for faster deletion in later step
+				std::reverse(m_pathResultCubicSplline.begin(), m_pathResultCubicSplline.end());
 				std::reverse(m_pathResult.begin(), m_pathResult.end());
 			}
 			else
 			{
-				PRINT(Str(entity) + " not found");
-				m_pathResult.clear();
+				PRINT(Str(entity) + " path not found");
 			}
 		}
 
@@ -304,10 +337,16 @@ namespace gswy
 			}
 		}
 
-		// TODO : Optimize the path result by Cubic spline
 		void HandlePlayerMovement(double dt)
 		{
+			// Do nothing if delta time has been set to 0 (game is paused)
+			if (!dt)
+			{
+				return;
+			}
+
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
 			ComponentDecorator<TransformCom, GameObjectType> transform;
 			ComponentDecorator<AnimationCom, GameObjectType> animation;
@@ -315,68 +354,77 @@ namespace gswy
 			m_parentWorld->Unpack(entity, transform);
 			m_parentWorld->Unpack(entity, body);
 			m_parentWorld->Unpack(entity, animation);
+			auto playerPos = body->GetPos();
 
-			if (m_pathResult.empty())
+			// Path finding end, set animation set to idle
+			if (m_pathResultCubicSplline.empty() || m_pathResult.empty())
 			{
 				body->SetVelocity(vec2(0));
-				//animation->SetCurrentAnimationState("Idle");
 				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Idle", false);
 				queue->Publish(e);
 				return;
 			}
-
-			auto audio = AudioManager::GetInstance();
-			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
-			auto playerPos = transform->GetPos();
-
-			// Update click to move
-
-			// 1. Rotate
-			auto pathsLeft = m_pathResult.size();
-			auto nextPos = tileMapObj->Grid2World((pathsLeft > m_pathFindingLookAhead) ? m_pathResult[pathsLeft-1-m_pathFindingLookAhead]: m_pathResult.back());
-			auto delta = nextPos - playerPos;
-			if (glm::length(delta) < m_advancePathFindingThreshold)
 			{
-				if (pathsLeft > m_pathFindingLookAhead)
+				//Update grid data
+				auto pathsLeft_size = m_pathResult.size();
+				auto nextPos = tileMapObj->Grid2World((pathsLeft_size > m_pathFindingLookAhead) ?
+					m_pathResult[pathsLeft_size - 1 - m_pathFindingLookAhead] :
+					m_pathResult.back());
+				//1. Rotate
+				auto delta = nextPos - playerPos;
+				if (glm::length(delta) < m_advancePathFindingThreshold)
 				{
-					m_pathResult.erase(m_pathResult.end() - 1 - m_pathFindingLookAhead, m_pathResult.end());
+					if (pathsLeft_size > m_pathFindingLookAhead)
+					{
+						m_pathResult.erase(m_pathResult.end() - 1 - m_pathFindingLookAhead, m_pathResult.end());
+					}
+					else
+					{
+						m_pathResult.pop_back();
+					}
 				}
-				else
-				{
-					m_pathResult.pop_back();
-				}
-				//PRINT(m_pathResult.size());
-			}
-			auto angle = LookAt(delta);
-			// TODO: need fine tune for smooth player turning
-			//if (angle > m_maxAngleRotation)
-			//{
-			//	angle = m_maxAngleRotation;
-			//}
-			//else if (angle < -m_maxAngleRotation)
-			//{
-			//	angle = -m_maxAngleRotation;
-			//}
-			if (dt)
-			{
-				transform->SetRotation(angle);
-			}
-			// 2. Move
-			body->SetVelocity(glm::normalize(delta) * m_speed);
-			//animation->SetCurrentAnimationState("Move");
-			auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Move", false);
-			queue->Publish(e);
+				// 0. Set aimation
+				auto e1 = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Move", false);
+				queue->Publish(e1);
+				// 1. Rotate
+				transform->SetRotation(LookAt(delta));
+				// 2. Move
+				body->SetVelocity(glm::normalize(delta) * m_speed);
+				// 3. Play sound
+				auto e2 = MemoryManager::Make_shared<SoundEvent>("footsteps1", body->GetPos(), 1, 1.15);
+				queue->Publish(e2);
 
-			// 3. Play sound
-			if (dt)
+			}
 			{
-				auto e = MemoryManager::Make_shared<SoundEvent>("footsteps1", vec3(0), 1, 1.15);
-				queue->Publish(e);
+				// Use cubic spline
+				//auto pathsLeft_size = m_pathResultCubicSplline.size();
+				//auto nextPos = tileMapObj->Grid2World((pathsLeft_size > m_pathFindingLookAhead) ?
+				//	m_pathResultCubicSplline[pathsLeft_size - 1 - m_pathFindingLookAhead] :
+				//	m_pathResultCubicSplline.back());
+				////1. Rotate
+				//auto delta = nextPos - playerPos;
+				//if (glm::length(delta) < m_advancePathFindingThreshold)
+				//{
+				//	if (pathsLeft_size > m_pathFindingLookAhead)
+				//	{
+				//		m_pathResultCubicSplline.erase(m_pathResultCubicSplline.end() - 1 - m_pathFindingLookAhead, m_pathResultCubicSplline.end());
+				//	}
+				//	else
+				//	{
+				//		m_pathResultCubicSplline.pop_back();
+				//	}
+				//}
+				//// 0. Set aimation
+				//auto e1 = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Move", false);
+				//queue->Publish(e1);
+				//// 1. Rotate
+				//transform->SetRotation(LookAt(delta));
+				//// 2. Move
+				//body->SetVelocity(glm::normalize(delta) * m_speed);
+				//// 3. Play sound
+				//auto e2 = MemoryManager::Make_shared<SoundEvent>("footstep02", body->GetPos(), 1, 0.65);
+				//queue->Publish(e2);
 			}
 		}
-
-		private:
-
-			std::map<int, SkillBinding> m_keyAndSkillBiding;
 	};
 }

@@ -39,6 +39,7 @@ namespace gswy {
 		void  SetPlayerHP(float val) { m_PlayerHP = val; }
 		void  SetGameProgress(float val) { m_Progress = val; }
 
+		std::shared_ptr<Texture2D> m_Texture_Coin;
 	private:
 		int m_TimerMin;
 		int m_TimerSec;
@@ -62,7 +63,8 @@ namespace gswy {
 			m_Texture_NewGame = Texture2D::Create(m_TexturePath_NewGame);
 			m_Texture_HowToPlay = Texture2D::Create(m_TexturePath_HowToPlay);
 			m_Texture_Option = Texture2D::Create(m_TexturePath_Option);
-			m_Texture_Exit = Texture2D::Create(m_TexturePath_Exit);
+			m_Texture_Credits = Texture2D::Create(m_TexturePath_Credits);
+			m_Texture_QuitGame = Texture2D::Create(m_TexturePath_QuitGame);
 		}
 		void Render() override;
 		WidgetManager* manager;
@@ -70,12 +72,14 @@ namespace gswy {
 		std::string m_TexturePath_NewGame;
 		std::string m_TexturePath_HowToPlay;
 		std::string m_TexturePath_Option;
-		std::string m_TexturePath_Exit;
-	private:
+		std::string m_TexturePath_Credits;
+		std::string m_TexturePath_QuitGame;
+
 		std::shared_ptr<Texture2D> m_Texture_NewGame;
 		std::shared_ptr<Texture2D> m_Texture_HowToPlay;
 		std::shared_ptr<Texture2D> m_Texture_Option;
-		std::shared_ptr<Texture2D> m_Texture_Exit;
+		std::shared_ptr<Texture2D> m_Texture_Credits;
+		std::shared_ptr<Texture2D> m_Texture_QuitGame;
 	};
 
 	//Resume, option, how to play, quit & save
@@ -85,16 +89,16 @@ namespace gswy {
 		PauseMenu() { IsVisible = false; };
 		void Init() override 
 		{
-			m_Texture_Resume = Texture2D::Create(m_TexturePath_Resume);
+			m_Texture_ResumeGame = Texture2D::Create(m_TexturePath_ResumeGame);
 			m_Texture_MainMenu = Texture2D::Create(m_TexturePath_MainMenu);
 		}
 		void Render() override;
 		WidgetManager* manager;
 
-		std::string m_TexturePath_Resume;
+		std::string m_TexturePath_ResumeGame;
 		std::string m_TexturePath_MainMenu;
 	private:
-		std::shared_ptr<Texture2D> m_Texture_Resume;
+		std::shared_ptr<Texture2D> m_Texture_ResumeGame;
 		std::shared_ptr<Texture2D> m_Texture_MainMenu;
 	};
 
@@ -118,13 +122,47 @@ namespace gswy {
 	public:
 		InventoryMenu() {
 			IsVisible = false; 
-			m_CurrentTab = 1; 
 		};
 		void Render() override;
 		WidgetManager* manager;
-		unsigned int GetCurrentTab() const { return m_CurrentTab; }
-	private:
-		unsigned int m_CurrentTab;
+
+		std::shared_ptr<Texture2D> m_Texture_Acitve1;
+		std::shared_ptr<Texture2D> m_Texture_Acitve2;
+		std::shared_ptr<Texture2D> m_Texture_Acitve3;
+		std::shared_ptr<Texture2D> m_Texture_Acitve4;
+
+		std::shared_ptr<Texture2D> m_Texture_Support1_2;
+		std::shared_ptr<Texture2D> m_Texture_Support1_3;
+		std::shared_ptr<Texture2D> m_Texture_Support1_4;
+		std::shared_ptr<Texture2D> m_Texture_Support2_2;
+		std::shared_ptr<Texture2D> m_Texture_Support2_3;
+		std::shared_ptr<Texture2D> m_Texture_Support2_4;
+		std::shared_ptr<Texture2D> m_Texture_Support3_2;
+		std::shared_ptr<Texture2D> m_Texture_Support3_3;
+		std::shared_ptr<Texture2D> m_Texture_Support3_4;
+		std::shared_ptr<Texture2D> m_Texture_Support4_2;
+		std::shared_ptr<Texture2D> m_Texture_Support4_3;
+		std::shared_ptr<Texture2D> m_Texture_Support4_4;
+	};
+
+	class OptionMenu : public Widget
+	{
+	public:
+		OptionMenu() {
+			IsVisible = false;  
+		}
+		void Init() override {
+			Engine& engine = Engine::Get();
+			m_FullScreen = engine.GetWindow().GetWindowProperties().IsFullScreen;
+		}
+		void Render() override;
+
+		void SetCallFromMainMenu(bool b) { m_CallFromMainMenu = b; }
+
+		bool m_FullScreen = false;
+		bool m_MuteMusic = false;
+		bool m_MuteAllAudio = false;
+		bool m_CallFromMainMenu = false;
 	};
 
 	class WidgetManager
@@ -145,6 +183,7 @@ namespace gswy {
 		HUD& GetHUD() { return m_Hud; }
 		MainMenu& GetMainMenu() { return m_MainMenu; }
 		PauseMenu& GetPauseMenu() { return m_PauseMenu; }
+		OptionMenu& GetOptionMenu() { return m_OptionMenu; }
 		ShopMenu& GetShopMenu() { return m_ShopMenu; }
 		InventoryMenu& GetInventoryMenu() { return m_InventoryMenu; }
 
@@ -156,6 +195,7 @@ namespace gswy {
 		HUD m_Hud;
 		MainMenu m_MainMenu;
 		PauseMenu m_PauseMenu;
+		OptionMenu m_OptionMenu;
 		ShopMenu m_ShopMenu;
 		InventoryMenu m_InventoryMenu;
 	};

@@ -99,6 +99,8 @@ namespace gswy
 			{
 				newSkill = std::make_shared<CycloneAttack>();
 			}
+			newSkill->SetIcon(item->m_icon);
+			newSkill->SetIconGray(item->m_iconGray);
 			std::shared_ptr<ActiveSkill> currentSkill = m_skills[skill_];
 			if (currentSkill != nullptr)
 			{
@@ -143,17 +145,23 @@ namespace gswy
 				if (item->m_type._Equal("MULTIPLE-PROJECTILE"))
 				{
 					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<MultipleProjectile>();
+					supportSkill->SetIcon(item->m_icon);
+					supportSkill->SetIconGray(item->m_iconGray);
 					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 				if (item->m_type._Equal("FORK"))
 				{
 					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<Forking>();
+					supportSkill->SetIcon(item->m_icon);
+					supportSkill->SetIconGray(item->m_iconGray);
 					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 
 				if (item->m_type._Equal("INCREASE-AOE"))
 				{
 					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<IncreaseAOE>();
+					supportSkill->SetIcon(item->m_icon);
+					supportSkill->SetIconGray(item->m_iconGray);
 					activeSkill->AddSupportSkill(slot_, supportSkill);
 				}
 			}
@@ -174,22 +182,27 @@ namespace gswy
 				skill->m_category = "ACTIVE";
 				skill->m_type = GetSkillType(activeSkill->GetActiveSkillType());
 				skill->m_tags = GetSkillTags(activeSkill);
+				skill->m_icon = activeSkill->GetIcon();
+				skill->m_iconGray = activeSkill->GetIconGray();
+				skill->m_skillNumber = skillNumber;
+				skill->m_slotNumber = slotNumber;
 			}
 			else
 			{
 				slot_ -= 1;
-				skill = std::make_shared<Skill>();
 				std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(slot_);
 				if (supportSkill != nullptr)
 				{
+					skill = std::make_shared<Skill>();
 					skill->m_category = "SUPPORT";
 					skill->m_type = GetSkillType(supportSkill->GetSkillType());
 					skill->m_tags = GetSkillTags(supportSkill);
+					skill->m_icon = supportSkill->GetIcon();
+					skill->m_iconGray = supportSkill->GetIconGray();
+					skill->m_skillNumber = skillNumber;
+					skill->m_slotNumber = slotNumber;
 				}
 			}
-
-			skill->m_skillNumber = skillNumber;
-			skill->m_slotNumber = slotNumber;
 		}
 		return skill;
 	}
@@ -207,6 +220,8 @@ namespace gswy
 			skill->m_tags = GetSkillTags(activeSkill);
 			skill->m_skillNumber = skillNumber;
 			skill->m_slotNumber = 1;
+			skill->m_icon = activeSkill->GetIcon();
+			skill->m_iconGray = activeSkill->GetIconGray();
 			skills->m_skills[0] = skill;
 
 			for (int i = 0; i < 3; ++i)
@@ -221,6 +236,8 @@ namespace gswy
 					skill->m_skillNumber = skillNumber;
 					skill->m_slotNumber = i + 2;
 					skills->m_skills[i + 1] = skill;
+					skill->m_icon = supportSkill->GetIcon();
+					skill->m_iconGray = supportSkill->GetIconGray();
 				}
 			}
 		}
@@ -367,5 +384,26 @@ namespace gswy
 			}
 		}
 		return skill;
+	}
+
+	void SkillManager::ResetSkills()
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			std::shared_ptr<ActiveSkill>& activeSkill = m_skills[i];
+			if (activeSkill != nullptr)
+			{
+				for (int j = 0; j < 3; ++j)
+				{
+					std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(i);
+					if (supportSkill != nullptr)
+					{
+						supportSkill.reset();
+					}
+				}
+
+				activeSkill.reset();
+			}
+		}
 	}
 }

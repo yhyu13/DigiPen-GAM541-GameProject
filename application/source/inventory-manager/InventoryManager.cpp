@@ -1,3 +1,15 @@
+/* Start Header -------------------------------------------------------
+Copyright (C) 2020 DigiPen Institute of Technology.
+Reproduction or disclosure of this file or its contents without the
+prior written consent of DigiPen Institute of Technology is prohibited.
+Language		: C++ 11
+Platform		: Windows 10 (X64)
+Project			: GAM541
+Filename		: InventoryManager.cpp
+Author			: Dushyant Shukla (dushyant.shukla@digipen.edu | 60000519),
+Creation date	: 03/20/2020
+- End Header ----------------------------*/
+
 #include "InventoryManager.h"
 #include "skill-manager/SkillManager.h"
 
@@ -48,6 +60,8 @@ namespace gswy
 				item->m_text.push_back(text[j].asString());
 			}
 			item->m_keyEventType = itemData["key-event"].asString();
+			item->m_icon = itemData["icon"].asString();
+			item->m_iconGray = itemData["inactive-icon"].asString();
 			m_items->Add(item);
 		}
 	}
@@ -78,6 +92,8 @@ namespace gswy
 				item->m_text.push_back(text[j].asString());
 			}
 			item->m_keyEventType = itemData["key-event"].asString();
+			item->m_icon = itemData["icon"].asString();
+			item->m_iconGray = itemData["inactive-icon"].asString();
 			m_items->Add(item);
 		}
 	}

@@ -4,9 +4,18 @@
       "NewGame": "./asset/UI/New_Game1.png",
       "HowToPlay": "./asset/UI/How_To_Play1.png",
       "Option": "./asset/UI/Option1.png",
-	  "Exit": "./asset/UI/quit1.png",
-	  "Resume": "./asset/UI/Resume1.png",
-	  "MainMenu": "./asset/UI/Main_Menu1.png"
+      "Credits": "./asset/UI/credits_button.png",
+      "QuitGame": "./asset/UI/quit_button.png",
+      "ResumeGame": "./asset/UI/resume_button.png",
+      "MainMenu": "./asset/UI/Main_Menu1.png"
     }
-  ]
+  ],
+  "styles":{
+	"HUD": [255,137,20,255],
+	"MainMenu": [255,137,20,255],
+	"PauseMenu": [255,137,20,255],
+	"OptionMenu": [255,137,20,255],
+	"ShopMenu": [255,137,20,255],
+	"InventoryMenu": [255,137,20,255]
+  }
 }
