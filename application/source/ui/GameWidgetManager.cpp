@@ -324,7 +324,7 @@ namespace gswy {
 			if (ImGui::Combo("##Mute BGM", &muteMusic, "Off\0On\0"))
 			{
 				m_MuteMusic = muteMusic;
-				SoundManager::GetInstance()->CallForMusicMute(m_MuteMusic);
+				SoundManager::GetInstance()->CallForMuteBGM(m_MuteMusic);
 			}
 			ImGui::NewLine();
 			ImGui::Separator();
@@ -341,7 +341,7 @@ namespace gswy {
 			if (ImGui::Combo("##Mute SFX", &muteAllAudio, "Off\0On\0"))
 			{
 				m_MuteAllAudio = muteAllAudio;
-				SoundManager::GetInstance()->CallForMute(m_MuteAllAudio);
+				SoundManager::GetInstance()->CallForMuteSFX(m_MuteAllAudio);
 			}
 			ImGui::NewLine();
 			ImGui::Separator();

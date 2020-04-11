@@ -26,15 +26,14 @@ namespace gswy
 
 		std::vector<GameObjectType> enemyTypes;
 		std::vector<EventType> soundTypes;
-		bool mute;
-
+		bool m_muteSFX = {false};
+		bool m_muteBGM = {false};
 	public:
 		
 		SoundComSys() 
 		{
 			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
 			soundTypes = { EventType::SOUND, EventType::WEAPON_SOUND} ;
-			mute = false;
 		}
 
 		virtual void Init() override 
@@ -43,12 +42,12 @@ namespace gswy
 			queue->Subscribe<SoundComSys>(this, EventType::SOUND, &SoundComSys::OnPLAYSOUND);
 			queue->Subscribe<SoundComSys>(this, EventType::COLLISION, &SoundComSys::CollisionPLAYSOUND);
 			queue->Subscribe<SoundComSys>(this, EventType::WEAPON_SOUND, &SoundComSys::WeaponPLAYSOUND);
-			queue->Subscribe<SoundComSys>(this, EventType::MUTE_SOUND, &SoundComSys::OnMute);
+			queue->Subscribe<SoundComSys>(this, EventType::MUTE_SFX, &SoundComSys::OnMute);
 		}
 
 		void OnPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (!mute)
+			if (!m_muteSFX)
 			{
 				auto audio = AudioManager::GetInstance();
 				if (auto event = static_pointer_cast<SoundEvent>(e))
@@ -63,23 +62,23 @@ namespace gswy
 
 		void OnMusicMute(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (auto event = static_pointer_cast<OnMuteMusicEvent>(e))
+			if (auto event = static_pointer_cast<OnMuteBGMEvent>(e))
 			{
-				mute = event->m_mute;
+				m_muteSFX = event->m_mute;
 			}
 		}
 
 		void OnMute(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (auto event = static_pointer_cast<OnMuteEvent>(e))
+			if (auto event = static_pointer_cast<OnMuteSFXEvent>(e))
 			{
-				mute = event->mute;
+				m_muteSFX = event->m_mute;
 			}
 		}
 
 		void WeaponPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (!mute)
+			if (!m_muteSFX)
 			{
 				auto audio = AudioManager::GetInstance();
 				if (auto event = static_pointer_cast<WeaponSoundEvent>(e))
@@ -91,7 +90,7 @@ namespace gswy
 
 		void CollisionPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (!mute)
+			if (!m_muteSFX)
 			{
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 				auto audio = AudioManager::GetInstance();
