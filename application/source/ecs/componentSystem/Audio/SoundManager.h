@@ -54,5 +54,11 @@ namespace gswy
 			queue->Publish(e);
 		}
 
+		void CallForMusicMute(float vol = 0.0f, bool play = true)
+		{
+			auto e = MemoryManager::Make_shared<OnMuteMusicEvent>(play);
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			queue->Publish(e);
+		}
 	};
 }

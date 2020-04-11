@@ -90,23 +90,25 @@ namespace gswy
 		float m_freq;
 	}; 
 
-	struct OnMuteSoundEvent : Event<GameObjectType, EventType>
+	struct OnMuteMusicEvent : Event<GameObjectType, EventType>
 	{
-		explicit OnMuteSoundEvent(const std::string& name, float vol = 0.0f, bool mute = true) : Event(EventType::SOUND)
+		explicit OnMuteMusicEvent(float vol = 0.0f, bool m = true) : Event(EventType::MUSIC_MUTE)
 		{
-			soundName = name;
-			mute = !mute;
-			if (mute == true)
+			if (m == true)
 			{
 				m_vol = vol;
+				m_mute = m;
 			}
 			else
+			{
 				m_vol = 1.0f;
+				m_mute = false;
+			}
+			
 		}
 	
-		std::string soundName;
 		float m_vol;
-		bool mute;
+		bool m_mute;
 	};
 
 	struct OnMuteEvent : Event<GameObjectType, EventType>

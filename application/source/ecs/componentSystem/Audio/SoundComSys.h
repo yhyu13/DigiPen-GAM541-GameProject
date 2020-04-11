@@ -33,7 +33,7 @@ namespace gswy
 		SoundComSys() 
 		{
 			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
-			soundTypes = { EventType::SOUND, EventType::WEAPON_SOUND};
+			soundTypes = { EventType::SOUND, EventType::WEAPON_SOUND} ;
 			mute = false;
 		}
 
@@ -60,6 +60,32 @@ namespace gswy
 				}
 			}
 			
+		}
+
+		void OnMusicMute(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (mute == false)
+			{
+				auto sound = SoundManager::GetInstance();
+				auto event = static_pointer_cast<OnMuteMusicEvent>(e);
+				if (event->m_mute)
+				{
+					mute = event->m_mute;
+				}
+				else
+					mute = false;
+			}
+			else
+			{
+				auto sound = SoundManager::GetInstance();
+				auto event = static_pointer_cast<OnMuteMusicEvent>(e);
+				if (event->m_mute)
+				{
+					mute = event->m_mute;
+				}
+				else
+					mute = false;
+			}
 		}
 
 		void OnMute(EventQueue<GameObjectType, EventType>::EventPtr e)
