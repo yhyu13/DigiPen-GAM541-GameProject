@@ -22,12 +22,15 @@ struct GLFWwindow;
 
 namespace gswy {
 
+	typedef std::function<void(const int& isFocussed)> InterruptHandler;
+
 	struct ENGINE_API WindowProperties {
 		unsigned int m_width;
 		unsigned int m_height;
 		std::string m_title;
 		InputManager* m_input = nullptr;
 		bool IsFullScreen = false;
+		InterruptHandler m_interruptHandler;
 
 		WindowProperties(unsigned int width = 1280, unsigned int height = 720, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title) {
 			m_input = InputManager::GetInstance();
@@ -58,6 +61,9 @@ namespace gswy {
 		inline unsigned int GetWidth() const { return m_windowProperties.m_width; }
 		inline unsigned int GetHeight() const { return m_windowProperties.m_height; }
 
+
+		inline void SetInterruptHandler(const InterruptHandler& handler) { m_windowProperties.m_interruptHandler = handler; };
+
 	protected:
 
 	private:
@@ -76,5 +82,6 @@ namespace gswy {
 
 		WindowProperties m_windowProperties;
 		GLFWwindow* m_window;
+		//InterruptHandler m_interruptHandler;
 	};
 }
