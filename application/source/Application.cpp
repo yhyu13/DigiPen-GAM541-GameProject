@@ -17,6 +17,7 @@ Creation date	: 01/26/2020
 #include "EngineExport.h"
 #include "Import.h"
 #include "engine/Main.h"
+#include "ecs/componentSystem/Audio/SoundManager.h"
 
 using namespace gswy;
 
@@ -929,6 +930,7 @@ namespace gswy
 				// TODO
 				m_world->SetPause(!m_world->IsPaused());
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
+				SoundManager::GetInstance()->CallForMute(false);
 			}
 			if (buttonName.compare("Main Menu") == 0)
 			{
@@ -955,6 +957,16 @@ namespace gswy
 				queue->Publish(creditScreenEvent);
 			}
 		}
+
+		void OnInterruption(const int& isFocussed)
+		{
+			if (!isFocussed)
+			{
+				m_world->SetPause(true);
+				//SoundManager::GetInstance()->CallForMute(true); MUTING THE SOUND 
+			}
+			WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
+		}
 	};
 }
 
@@ -965,6 +977,10 @@ public:
 		GameLayer* gameLayer = new GameLayer();
 		WidgetManager::ButtonInvokeFunction f = std::bind(&GameLayer::OnImGuiButtonClicke, gameLayer, std::placeholders::_1);
 		WidgetManager::GetInstance()->SetButtonInvoker(f);
+
+		InterruptHandler handler = std::bind(&GameLayer::OnInterruption, gameLayer, std::placeholders::_1);
+		GetWindow().SetInterruptHandler(handler);
+
 		PushLayer(gameLayer);
 	}
 
@@ -972,6 +988,7 @@ public:
 	{
 		
 	}
+
 };
 
 namespace gswy

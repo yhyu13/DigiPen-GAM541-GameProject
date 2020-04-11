@@ -171,6 +171,11 @@ namespace gswy
 					}
 				}
 			}
+
+			if (input->IsKeyReleased(GLFW_KEY_UNKNOWN))
+			{
+				APP_CRITICAL("CRITICAL EVENT");
+			}
 		}
 
 		void ProcessConstantInput()
@@ -180,7 +185,7 @@ namespace gswy
 			{
 				auto input = InputManager::GetInstance();
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_SPACE))
+				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 				{
 					auto e = MemoryManager::Make_shared<GCEvent>(credit_page[0]);
 					queue->Publish(e);
@@ -226,7 +231,6 @@ namespace gswy
 				}
 			}
 		}
-
 
 		bool HandleMouseCondition_Move(double dt)
 		{
