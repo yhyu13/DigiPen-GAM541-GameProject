@@ -89,7 +89,7 @@ namespace gswy {
 
 	void MainMenu::Render()
 	{
-		ImVec2 windowsize = ImVec2(m_WindowSize_X, m_WindowSize_Y);
+		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
 		ImVec2 nextWindowSize(500, 535);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
@@ -152,7 +152,7 @@ namespace gswy {
 
 	void PauseMenu::Render()
 	{
-		ImVec2 windowsize = ImVec2(m_WindowSize_X, m_WindowSize_Y);
+		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
 		ImVec2 nextWindowSize(500, 640);
 		ImGui::SetNextWindowSize(nextWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - nextWindowSize[0] / 2, windowsize[1] / 2 - nextWindowSize[1] / 2));
@@ -237,7 +237,7 @@ namespace gswy {
 
 	void OptionMenu::Render()
 	{
-		ImVec2 windowsize = ImVec2(m_WindowSize_X, m_WindowSize_Y);
+		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
 		ImVec2 OptionWindowSize(500, 535);
 		ImGui::SetNextWindowSize(OptionWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - OptionWindowSize[0] / 2, windowsize[1] / 2 - OptionWindowSize[1] / 2));
@@ -248,27 +248,60 @@ namespace gswy {
 		ImGui::Begin("Option", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
 		{
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
+
+
+			int selectBarWidth = 100;
+			//Full Screen
 			ImGui::SetCursorPosX(30);
-			if (ImGui::Button("Toggle Full Screen"))
+			ImGui::Text("Full Screen");
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(selectBarWidth);
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
+			static int fullScreen = m_FullScreen;
+			if (ImGui::Combo("##FullScreen", &fullScreen, "Off\0On\0"))
 			{
-				m_FullScreen = !m_FullScreen;
+				m_FullScreen = fullScreen;
 				Engine& engine = Engine::Get();
 				engine.GetWindow().ToggleFullScreen(m_FullScreen);
 			}
 			ImGui::NewLine();
+			ImGui::Separator();
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
+
+			//Mute Music
 			ImGui::SetCursorPosX(30);
-			ImGui::Checkbox("Mute Music", &m_MuteMusic);
-			if (m_MuteMusic)
+			ImGui::Text("Mute Music");
+			ImGui::SameLine();
+			
+			ImGui::SetNextItemWidth(selectBarWidth);
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
+			static int muteMusic = m_MuteMusic;
+			if (ImGui::Combo("##Mute Music", &muteMusic, "Off\0On\0"))
 			{
-				
+				m_MuteMusic = muteMusic;
+				SoundManager::GetInstance()->CallForMusicMute(m_MuteMusic);
 			}
 			ImGui::NewLine();
+			ImGui::Separator();
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
-			ImGui::SetCursorPosX(30);
-			ImGui::Checkbox("Mute All Audio", &m_MuteAllAudio);
-			SoundManager::GetInstance()->CallForMute(m_MuteAllAudio);
 
+			//Mute All Audio
+			ImGui::SetCursorPosX(30);
+			ImGui::Text("Mute All Audio");
+			ImGui::SameLine();
+
+			ImGui::SetNextItemWidth(selectBarWidth);
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
+			static int muteAllAudio = m_MuteAllAudio;
+			if (ImGui::Combo("##Mute All Audio", &muteAllAudio, "Off\0On\0"))
+			{
+				m_MuteAllAudio = muteAllAudio;
+				SoundManager::GetInstance()->CallForMute(m_MuteAllAudio);
+			}
+			ImGui::NewLine();
+			ImGui::Separator();
+
+			//Back Button
 			ImGui::SetCursorPos({ 30,450 });
 			if (ImGui::Button("Back", ImVec2(100,30)) || ImGui::IsKeyReleased(ImGui::GetKeyIndex(ImGuiKey_Escape)))
 			{
@@ -296,7 +329,7 @@ namespace gswy {
 		m_Progress = 0.5f;
 		m_BaseHP = 0.5f;
 		m_PlayerHP = 0.5f;
-		m_FrameBuffer = FrameBuffer::Create(m_WindowSize_X, m_WindowSize_Y);
+		m_FrameBuffer = FrameBuffer::Create(GetWindowSize_X(), GetWindowSize_Y());
 		m_Texture_Coin = Texture2D::Create("./asset/Sprites/coin_ui.png");
 	}
 
@@ -305,7 +338,7 @@ namespace gswy {
 		//Text : Wave
 		ImVec2 waveWindowSize = ImVec2(80, 20);
 		ImGui::SetNextWindowSize(waveWindowSize);
-		ImVec2 waveWindowPos = ImVec2(m_WindowSize_X / 2 - waveWindowSize[0] / 2, 8);
+		ImVec2 waveWindowPos = ImVec2(GetWindowSize_X() / 2 - waveWindowSize[0] / 2, 8);
 		ImGui::SetNextWindowPos(waveWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
@@ -325,7 +358,7 @@ namespace gswy {
 		//Progress Bar : Base HP
 		ImVec2 progressWindowSize = ImVec2(500, 40);
 		ImGui::SetNextWindowSize(progressWindowSize);
-		ImVec2 progressWindowPos = ImVec2(m_WindowSize_X / 2 - progressWindowSize[0] / 2, waveWindowSize.y + waveWindowPos.y + 17);
+		ImVec2 progressWindowPos = ImVec2(GetWindowSize_X() / 2 - progressWindowSize[0] / 2, waveWindowSize.y + waveWindowPos.y + 17);
 		ImGui::SetNextWindowPos(progressWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
@@ -342,7 +375,7 @@ namespace gswy {
 		//Text : Timer
 		ImVec2 timerWindowSize = ImVec2(60, 17);
 		ImGui::SetNextWindowSize(timerWindowSize);
-		ImVec2 timerWindowPos = ImVec2(m_WindowSize_X / 2 - timerWindowSize[0] / 2, progressWindowSize.y + progressWindowPos.y + 5);
+		ImVec2 timerWindowPos = ImVec2(GetWindowSize_X() / 2 - timerWindowSize[0] / 2, progressWindowSize.y + progressWindowPos.y + 5);
 		ImGui::SetNextWindowPos(timerWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
@@ -356,7 +389,7 @@ namespace gswy {
 		//Text : Coin
 		ImVec2 nextWindowSize = ImVec2(140, 70);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(30, m_WindowSize_Y - nextWindowSize[1] - 65));
+		ImGui::SetNextWindowPos(ImVec2(30, GetWindowSize_Y() - nextWindowSize[1] - 65));
 		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -372,7 +405,7 @@ namespace gswy {
 		//Progress Bar : Player HP
 		nextWindowSize = ImVec2(300, 40);
 		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(100, m_WindowSize_Y - nextWindowSize[1] - 70));
+		ImGui::SetNextWindowPos(ImVec2(100, GetWindowSize_Y() - nextWindowSize[1] - 70));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
@@ -692,7 +725,7 @@ namespace gswy {
 		//New Inventory
 		ImVec2 InventoryWindowSize = ImVec2(420, 160);
 		ImGui::SetNextWindowSize(InventoryWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(m_WindowSize_X - InventoryWindowSize[0] - 80, m_WindowSize_Y - InventoryWindowSize[1] - 20));
+		ImGui::SetNextWindowPos(ImVec2(GetWindowSize_X() - InventoryWindowSize[0] - 80, GetWindowSize_Y() - InventoryWindowSize[1] - 20));
 		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 1));

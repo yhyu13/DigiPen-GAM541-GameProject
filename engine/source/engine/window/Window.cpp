@@ -55,7 +55,16 @@ namespace gswy {
 
 	void Window::ToggleFullScreen(bool on)
 	{
-		glfwSetWindowMonitor(m_window, on ? glfwGetPrimaryMonitor() : NULL, 0, 0, m_windowProperties.m_width, m_windowProperties.m_height, GLFW_DONT_CARE);
+		if (on)
+		{
+			glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, m_windowProperties.m_width, m_windowProperties.m_height, GLFW_DONT_CARE);
+		}
+		else
+		{
+			int x, y, w, h;
+			glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &x, &y, &w, &h);
+			glfwSetWindowMonitor(m_window, nullptr, x, y, w, h, GLFW_DONT_CARE);
+		}
 	}
 
 	void Window::Shutdown() {
