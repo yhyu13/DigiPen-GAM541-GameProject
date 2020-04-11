@@ -40,6 +40,14 @@ namespace gswy {
 		void  SetGameProgress(float val) { m_Progress = val; }
 
 		std::shared_ptr<Texture2D> m_Texture_Coin;
+
+		glm::vec2 m_WaveWindowSize;
+		glm::vec2 m_GameProgressWindowSize;
+		glm::vec2 m_TimeWindowSize;
+		glm::vec2 m_CoinWindowSize;
+		glm::vec2 m_PlayerHPWindowSize;
+		glm::vec2 m_BaseHPWindowSize;
+
 	private:
 		int m_TimerMin;
 		int m_TimerSec;
@@ -57,7 +65,10 @@ namespace gswy {
 	class MainMenu : public Widget
 	{
 	public:
-		MainMenu() { IsVisible = false; }
+		MainMenu() { 
+			IsVisible = false; 
+			m_MainMenu = { 500, 535 };
+		}
 		void Init() override
 		{
 			m_Texture_NewGame = Texture2D::Create(m_TexturePath_NewGame);
@@ -80,6 +91,8 @@ namespace gswy {
 		std::shared_ptr<Texture2D> m_Texture_Option;
 		std::shared_ptr<Texture2D> m_Texture_Credits;
 		std::shared_ptr<Texture2D> m_Texture_QuitGame;
+
+		glm::vec2 m_MainMenu;
 	};
 
 	//Resume, option, how to play, quit & save
@@ -91,12 +104,15 @@ namespace gswy {
 		{
 			m_Texture_ResumeGame = Texture2D::Create(m_TexturePath_ResumeGame);
 			m_Texture_MainMenu = Texture2D::Create(m_TexturePath_MainMenu);
+			m_PauseMenuWindowSize = { 500, 640 };
 		}
 		void Render() override;
 		WidgetManager* manager;
 
 		std::string m_TexturePath_ResumeGame;
 		std::string m_TexturePath_MainMenu;
+
+		glm::vec2 m_PauseMenuWindowSize;
 	private:
 		std::shared_ptr<Texture2D> m_Texture_ResumeGame;
 		std::shared_ptr<Texture2D> m_Texture_MainMenu;
@@ -106,9 +122,14 @@ namespace gswy {
 	class ShopMenu : public Widget
 	{
 	public:
-		ShopMenu() { IsVisible = false; };
+		ShopMenu() { 
+			IsVisible = false; 
+			m_ShopMenuWindowSize = { 420, 400 };
+		};
 		void Render() override;
 		WidgetManager* manager;
+
+		glm::vec2 m_ShopMenuWindowSize;
 
 	private:
 		std::pair<std::shared_ptr<Item>, bool> m_ClickedItem;
@@ -122,6 +143,7 @@ namespace gswy {
 	public:
 		InventoryMenu() {
 			IsVisible = false; 
+			m_InventoryWindowSize = { 420, 160 };
 		};
 		void Render() override;
 		WidgetManager* manager;
@@ -143,6 +165,8 @@ namespace gswy {
 		std::shared_ptr<Texture2D> m_Texture_Support4_2;
 		std::shared_ptr<Texture2D> m_Texture_Support4_3;
 		std::shared_ptr<Texture2D> m_Texture_Support4_4;
+
+		glm::vec2 m_InventoryWindowSize;
 	};
 
 	class OptionMenu : public Widget
@@ -176,6 +200,11 @@ namespace gswy {
 
 		void SetButtonInvoker(const ButtonInvokeFunction& f) { buttonInvoker = f; }
 		void InvokeButton(const std::string& name) { buttonInvoker(name); }
+		
+		void PushPopModalStyle();
+		void PopPopupModalStyle();
+		void PushTabStyle();
+		void PopTabStyle();
 
 		HUD& GetHUD() { return m_Hud; }
 		MainMenu& GetMainMenu() { return m_MainMenu; }
