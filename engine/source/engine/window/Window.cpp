@@ -53,6 +53,11 @@ namespace gswy {
 		glfwSetWindowTitle(m_window, title.c_str());
 	}
 
+	void Window::ToggleFullScreen(bool on)
+	{
+		glfwSetWindowMonitor(m_window, on ? glfwGetPrimaryMonitor() : NULL, 0, 0, m_windowProperties.m_width, m_windowProperties.m_height, GLFW_DONT_CARE);
+	}
+
 	void Window::Shutdown() {
 		glfwDestroyWindow(m_window);
 	}
@@ -168,6 +173,13 @@ namespace gswy {
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double positionX, double positionY) {
 			WindowProperties& properties = *(WindowProperties*)glfwGetWindowUserPointer(window);
 			properties.m_input->UpdateCursorPosition(positionX, positionY);
+		});
+
+		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
+		{
+			WindowProperties& properties = *(WindowProperties*)glfwGetWindowUserPointer(window);
+			properties.m_width = width;
+			properties.m_height = height;
 		});
 	}
 }

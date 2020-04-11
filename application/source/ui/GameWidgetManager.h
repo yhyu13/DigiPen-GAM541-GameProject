@@ -149,14 +149,20 @@ namespace gswy {
 	{
 	public:
 		OptionMenu() {
-			IsVisible = false; 
-			m_CloseButton = &IsVisible;
+			IsVisible = false;  
+		}
+		void Init() override {
+			Engine& engine = Engine::Get();
+			m_FullScreen = engine.GetWindow().GetWindowProperties().IsFullScreen;
 		}
 		void Render() override;
+
+		void SetCallFromMainMenu(bool b) { m_CallFromMainMenu = b; }
+
 		bool m_FullScreen = false;
 		bool m_MuteMusic = false;
 		bool m_MuteAllAudio = false;
-		bool* m_CloseButton;
+		bool m_CallFromMainMenu = false;
 	};
 
 	class WidgetManager

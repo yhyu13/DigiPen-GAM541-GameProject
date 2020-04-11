@@ -19,7 +19,10 @@ gswy::FMODInstance::FMODInstance()
 {
 	mpStudioSystem = NULL;
 	AudioManager::ErrorCheck(FMOD::Studio::System::create(&mpStudioSystem));
-	AudioManager::ErrorCheck(mpStudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL));
+	// The init below will enable TCP/IP host for profiling.
+	// Since Digipen does not want offline game to use any form of networking, we will disable that.
+	//AudioManager::ErrorCheck(mpStudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_PROFILE_ENABLE, NULL));
+	AudioManager::ErrorCheck(mpStudioSystem->initialize(32, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, NULL));
 
 	mpSystem = NULL;
 	AudioManager::ErrorCheck(mpStudioSystem->getCoreSystem(&mpSystem));

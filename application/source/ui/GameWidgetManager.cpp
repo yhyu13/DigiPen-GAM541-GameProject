@@ -44,6 +44,7 @@ namespace gswy {
 		LoadWidget("./asset/archetypes/Widget.json");
 		m_MainMenu.Init();
 		m_PauseMenu.Init();
+		m_OptionMenu.Init();
 	}
 
 	void WidgetManager::RenderUI()
@@ -113,6 +114,7 @@ namespace gswy {
 			AudioManager::GetInstance()->PlaySound("click_sound");
 			//manager->InvokeButton("Option");
 			manager->GetOptionMenu().SetVisible(true);
+			manager->GetOptionMenu().SetCallFromMainMenu(true);
 		}
 		if (ImGui::ImageButton((void*)m_Texture_Credits->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
@@ -173,6 +175,7 @@ namespace gswy {
 			AudioManager::GetInstance()->PlaySound("click_sound");
 			//manager->InvokeButton("Option");
 			manager->GetOptionMenu().SetVisible(true);
+			manager->GetOptionMenu().SetCallFromMainMenu(false);
 		}
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
@@ -239,16 +242,22 @@ namespace gswy {
 		ImGui::SetNextWindowSize(OptionWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - OptionWindowSize[0] / 2, windowsize[1] / 2 - OptionWindowSize[1] / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
-		ImGui::Begin("Option", &IsVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+		ImGui::Begin("Option", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse);
 		{
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
-			ImGui::Checkbox("FullScreen", &m_FullScreen);
-			if (m_FullScreen)
+			ImGui::SetCursorPosX(30);
+			if (ImGui::Button("Toggle Full Screen"))
 			{
-				
+				m_FullScreen = !m_FullScreen;
+				Engine& engine = Engine::Get();
+				engine.GetWindow().ToggleFullScreen(m_FullScreen);
 			}
 			ImGui::NewLine();
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
+			ImGui::SetCursorPosX(30);
 			ImGui::Checkbox("Mute Music", &m_MuteMusic);
 			if (m_MuteMusic)
 			{
@@ -256,12 +265,24 @@ namespace gswy {
 			}
 			ImGui::NewLine();
 			ImGui::Dummy({ OptionWindowSize.x, 30 });
+			ImGui::SetCursorPosX(30);
 			ImGui::Checkbox("Mute All Audio", &m_MuteAllAudio);
 			SoundManager::GetInstance()->CallForMute(m_MuteAllAudio);
+
+			ImGui::SetCursorPos({ 30,450 });
+			if (ImGui::Button("Back", ImVec2(100,30)) || ImGui::IsKeyReleased(ImGui::GetKeyIndex(ImGuiKey_Escape)))
+			{
+				WidgetManager::GetInstance()->GetOptionMenu().SetVisible(false);
+				if(m_CallFromMainMenu)
+					WidgetManager::GetInstance()->GetMainMenu().SetVisible(true);
+				else
+					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(true);
+			}
 		}
 
 		ImGui::End();
 		ImGui::PopStyleColor(1);
+		ImGui::PopStyleVar(3);
 	}
 
 	HUD::HUD() 
