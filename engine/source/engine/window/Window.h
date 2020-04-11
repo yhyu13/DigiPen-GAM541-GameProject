@@ -29,6 +29,10 @@ namespace gswy {
 		InputManager* m_input = nullptr;
 		bool IsFullScreen = false;
 
+		//Pre-Calculate number for some reasons
+		int m_windowFrameSize_top = 38;
+		int m_windowFrameSize_bottom = 9;
+
 		WindowProperties(unsigned int width = 1280, unsigned int height = 720, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title) {
 			m_input = InputManager::GetInstance();
 			m_input->SetMouseMaxPositions(width, height);

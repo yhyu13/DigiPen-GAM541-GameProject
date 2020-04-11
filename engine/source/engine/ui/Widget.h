@@ -19,12 +19,7 @@ namespace gswy {
 	class Widget
 	{
 	public:
-		Widget() 
-		{
-			Engine& engine = Engine::Get();
-			m_WindowSize_X = engine.GetWindow().GetWidth();
-			m_WindowSize_Y = engine.GetWindow().GetHeight();
-		}
+		Widget() {}
 		virtual ~Widget() {}
 		virtual void Init() {}
 		virtual void Render() = 0;
@@ -32,10 +27,19 @@ namespace gswy {
 		inline bool GetVisible() const { return IsVisible; }
 		inline ImVec4 GetStyle() const { return m_styleColor; }
 		inline void SetStyle(int r, int g, int b, int a) { m_styleColor = (ImVec4)ImColor::ImColor(r, g, b, a); }
+
+		inline unsigned int GetWindowSize_X() 
+		{
+			Engine& engine = Engine::Get();
+			return engine.GetWindow().GetWidth();
+		}
+		inline unsigned int GetWindowSize_Y() 
+		{
+			Engine& engine = Engine::Get();
+			return engine.GetWindow().GetHeight();
+		}
 	protected:
 		bool IsVisible = true;
-		unsigned int m_WindowSize_X = 1920;
-		unsigned int m_WindowSize_Y = 1080;
 		ImVec4 m_styleColor;
 	};
 }
