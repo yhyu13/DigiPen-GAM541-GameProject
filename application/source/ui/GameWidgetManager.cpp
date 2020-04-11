@@ -313,15 +313,15 @@ namespace gswy {
 			ImGui::Separator();
 			ImGui::Dummy({ optionWindowSize.x, 30 });
 
-			//Mute Music
+			//Mute BGM
 			ImGui::SetCursorPosX(30);
-			ImGui::Text("Mute Music");
+			ImGui::Text("Mute BGM");
 			ImGui::SameLine();
 			
 			ImGui::SetNextItemWidth(selectBarWidth);
 			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
 			static int muteMusic = m_MuteMusic;
-			if (ImGui::Combo("##Mute Music", &muteMusic, "Off\0On\0"))
+			if (ImGui::Combo("##Mute BGM", &muteMusic, "Off\0On\0"))
 			{
 				m_MuteMusic = muteMusic;
 				SoundManager::GetInstance()->CallForMusicMute(m_MuteMusic);
@@ -330,15 +330,15 @@ namespace gswy {
 			ImGui::Separator();
 			ImGui::Dummy({ optionWindowSize.x, 30 });
 
-			//Mute All Audio
+			//Mute SFX
 			ImGui::SetCursorPosX(30);
-			ImGui::Text("Mute All Audio");
+			ImGui::Text("Mute SFX");
 			ImGui::SameLine();
 
 			ImGui::SetNextItemWidth(selectBarWidth);
 			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
 			static int muteAllAudio = m_MuteAllAudio;
-			if (ImGui::Combo("##Mute All Audio", &muteAllAudio, "Off\0On\0"))
+			if (ImGui::Combo("##Mute SFX", &muteAllAudio, "Off\0On\0"))
 			{
 				m_MuteAllAudio = muteAllAudio;
 				SoundManager::GetInstance()->CallForMute(m_MuteAllAudio);

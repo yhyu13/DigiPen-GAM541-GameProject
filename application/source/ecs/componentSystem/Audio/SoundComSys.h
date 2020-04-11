@@ -48,7 +48,7 @@ namespace gswy
 
 		void OnPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (mute == false)
+			if (!mute)
 			{
 				auto audio = AudioManager::GetInstance();
 				if (auto event = static_pointer_cast<SoundEvent>(e))
@@ -59,89 +59,67 @@ namespace gswy
 					}
 				}
 			}
-			
 		}
 
 		void OnMusicMute(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (mute == false)
+			if (auto event = static_pointer_cast<OnMuteMusicEvent>(e))
 			{
-				auto sound = SoundManager::GetInstance();
-				auto event = static_pointer_cast<OnMuteMusicEvent>(e);
-				if (event->m_mute)
-				{
-					mute = event->m_mute;
-				}
-				else
-					mute = false;
-			}
-			else
-			{
-				auto sound = SoundManager::GetInstance();
-				auto event = static_pointer_cast<OnMuteMusicEvent>(e);
-				if (event->m_mute)
-				{
-					mute = event->m_mute;
-				}
-				else
-					mute = false;
-
+				mute = event->m_mute;
 			}
 		}
 
 		void OnMute(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			auto sound = SoundManager::GetInstance();
-			auto event = static_pointer_cast<OnMuteEvent>(e);
-			if (event->mute)
+			if (auto event = static_pointer_cast<OnMuteEvent>(e))
 			{
 				mute = event->mute;
 			}
-			else
-				mute = false;
 		}
 
 		void WeaponPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (mute == false)
+			if (!mute)
 			{
 				auto audio = AudioManager::GetInstance();
-				auto event = static_pointer_cast<WeaponSoundEvent>(e);
-				auto playing = audio->PlaySound(event->soundName, event->m_location, event->m_freq);
+				if (auto event = static_pointer_cast<WeaponSoundEvent>(e))
+				{
+					auto playing = audio->PlaySound(event->soundName, AudioVector3(event->m_location), event->m_vol, event->m_freq);
+				}
 			}
 		}
 
 		void CollisionPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (mute == false)
+			if (!mute)
 			{
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 				auto audio = AudioManager::GetInstance();
-				auto event = static_pointer_cast<CollisionEvent>(e);
-
-				if ((std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityA.m_type) != enemyTypes.end() &&
-					event->m_entityB.m_type == GameObjectType::FIREBALL) ||
-					(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
-						event->m_entityA.m_type == GameObjectType::FIREBALL))
+				if (auto event = static_pointer_cast<CollisionEvent>(e))
 				{
-					auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
-
-					if (!audio->IsPlaying(e1->soundName))
+					if ((std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityA.m_type) != enemyTypes.end() &&
+						event->m_entityB.m_type == GameObjectType::FIREBALL) ||
+						(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
+							event->m_entityA.m_type == GameObjectType::FIREBALL))
 					{
-						queue->Publish(e1);
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+
+						if (!audio->IsPlaying(e1->soundName))
+						{
+							queue->Publish(e1);
+						}
 					}
-				}
-				else
-				if ((std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityA.m_type) != enemyTypes.end() &&
-					event->m_entityB.m_type == GameObjectType::ICEBALL) ||
-					(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
-						event->m_entityA.m_type == GameObjectType::ICEBALL))
-				{
-					auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
-
-					if (!audio->IsPlaying(e1->soundName))
+					else if ((std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityA.m_type) != enemyTypes.end() &&
+							event->m_entityB.m_type == GameObjectType::ICEBALL) ||
+							(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
+								event->m_entityA.m_type == GameObjectType::ICEBALL))
 					{
-						queue->Publish(e1);
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+
+						if (!audio->IsPlaying(e1->soundName))
+						{
+							queue->Publish(e1);
+						}
 					}
 				}
 			}
