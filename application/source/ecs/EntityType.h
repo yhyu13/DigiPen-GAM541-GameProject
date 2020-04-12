@@ -11,6 +11,7 @@ Creation date: 02/14/2020
 
 #pragma once
 #include <iostream>
+#include <vector>
 
 namespace gswy
 {
@@ -50,6 +51,9 @@ namespace gswy
 
 		NUM
 	};
+
+	extern std::vector<GameObjectType> g_towerTypes;
+	extern std::vector<GameObjectType> g_enemyTypes;
 }
 
 std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n);

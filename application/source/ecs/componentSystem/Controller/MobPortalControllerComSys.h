@@ -24,11 +24,8 @@ Creation date: 03/17/2020
 namespace gswy
 {
 	class MobPortalControllerComSys : public BaseComponentSystem<GameObjectType> {
-	private:
-		std::vector<GameObjectType> enemyTypes;
 	public:
 		MobPortalControllerComSys() {
-			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
 		}
 
 		virtual void Update(double dt) override {
@@ -64,7 +61,7 @@ namespace gswy
 				}
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				m_parentWorld->Unpack(portal, transform);
-				auto e = MemoryManager::Make_shared<SpawnEvent>(enemyTypes[RAND_I(0, enemyTypes.size())], transform->GetPos3D());
+				auto e = MemoryManager::Make_shared<SpawnEvent>(g_enemyTypes[RAND_I(0, g_enemyTypes.size())], transform->GetPos3D());
 				queue->Publish(e);
 				coolDownController->Update(dt);
 			}

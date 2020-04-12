@@ -61,6 +61,8 @@ namespace gswy
 	private:
 		bool m_cheatEnabled = { false };
 		bool m_autoPlayEnabled = { false };
+		double m_autoPlayPathFindingCoolDown = { .5 };
+		double m_autoPlayPathFindingCoolDown_ = m_autoPlayPathFindingCoolDown;
 
 		float m_speed = { 1.0f };
 		int m_pathFindingLookAhead = { 4 };
@@ -151,46 +153,26 @@ namespace gswy
 			{
 				return;
 			}
-			auto input = InputManager::GetInstance();
-			{
-				// Handle mouse action
-				if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
-				{
-					HandleMouseAction_LeftTriggered();
-				}
 
+			auto input = InputManager::GetInstance();
+
+			{
+				// Handle mouse action				
+				HandleMouseAction_LeftTriggered(dt);
+				// Handle move conditions
 				HandleMouseCondition_Move(dt);
-				if (input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-				{
-					HandleMouseAction_LeftPressed();
-				}
+				HandleMouseAction_LeftPressed(dt);
+				// Update movement
 				HandlePlayerMovement(dt);
+				// Update skill
+				HandlePlayerSkill(dt);
 			}
 			
-
 			{
 				// Handle Cheat
 				ProcessCheatInput();
 				// Handle UI input
 				ProcessUIInput();
-			}
-
-			{
-				// Checking for skill key binding
-				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-				auto skillManager = SkillManager::GetInstance();
-				for (const auto& keyBinding : m_keyAndSkillBiding)
-				{
-					if (keyBinding.second.m_inputFunction(keyBinding.first))
-					{
-						std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(keyBinding.second.m_skillIndex);
-						if (skill != nullptr)
-						{
-							auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
-							queue->Publish(e);
-						}
-					}
-				}
 			}
 
 			if (input->IsKeyReleased(GLFW_KEY_UNKNOWN))
@@ -201,6 +183,7 @@ namespace gswy
 
 		void ProcessConstantInput()
 		{
+			auto input = InputManager::GetInstance();
 			// Process showing and hiding of the game credit page
 			auto credit_page = m_parentWorld->GetAllEntityWithType(GameObjectType::CREDITS);
 			if (!credit_page.empty())
@@ -216,6 +199,15 @@ namespace gswy
 					{
 						WidgetManager::GetInstance()->GetPauseMenu().SetVisible(true);
 					}
+				}
+			}
+			// Showing or hiding the pause menu page
+			if (GameLevelMapManager::GetInstance()->IsInGame())
+			{
+				if (input->IsKeyTriggered(KEY_ESCAPE))
+				{
+					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+					m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
 				}
 			}
 		}
@@ -234,6 +226,7 @@ namespace gswy
 			if (input->IsKeyTriggered(KEY_F1))
 			{
 				m_autoPlayEnabled = !m_autoPlayEnabled;
+				m_autoPlayPathFindingCoolDown_ = m_autoPlayPathFindingCoolDown;
 			}
 
 			// Add coins 
@@ -284,11 +277,6 @@ namespace gswy
 						WidgetManager::GetInstance()->GetShopMenu().SetVisible(!v1);
 						m_bDisableMoveInput = !v1;
 					}
-					if (input->IsKeyTriggered(KEY_ESCAPE))
-					{
-						WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-						m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-					}
 				}
 			}
 		}
@@ -318,10 +306,19 @@ namespace gswy
 			return couldMove;
 		}
 
-		void HandleMouseAction_LeftPressed()
+		void HandleMouseAction_LeftPressed(double dt)
 		{
+			// function static variable that stores the target location 
+			// if autoplay is enabled
+			static vec2 autoPlayTargetPos = vec2(0);
+
 			// Click to move conditions
 			if (m_timeDisableMoveCommand > 0 || m_bDisableMoveInput)
+			{
+				return;
+			}
+			auto input = InputManager::GetInstance();
+			if (!m_autoPlayEnabled && !input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 			{
 				return;
 			}
@@ -339,11 +336,53 @@ namespace gswy
 			m_parentWorld->Unpack(entity, animation);
 			m_parentWorld->Unpack(entity, body);
 			auto playerPos = transform->GetPos();
+			autoPlayTargetPos = playerPos;
+			auto cursorPos = autoPlayTargetPos;
 
-			auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
-			ComponentDecorator<TransformCom, GameObjectType> mouseTransform;
-			m_parentWorld->Unpack(mouse, mouseTransform);
-			auto cursorPos = mouseTransform->GetPos();
+			if (m_autoPlayEnabled)
+			{
+				if (m_autoPlayPathFindingCoolDown_ == m_autoPlayPathFindingCoolDown)
+				{
+					std::vector<Entity<GameObjectType>> allEnemies;
+					int trails = 5;
+					// Get a specific type of enemy as targets
+					while (allEnemies.empty() && (--trails > 0))
+					{
+						allEnemies = m_parentWorld->GetAllEntityWithType(g_enemyTypes[RAND_I(0, g_enemyTypes.size())]);
+					}
+					if (!allEnemies.empty())
+					{
+						bool find_nearest = false;
+						vec2 closest_enmey_delta(5);
+						for (auto& entity : allEnemies) {
+							ComponentDecorator<TransformCom, GameObjectType> transform;
+							m_parentWorld->Unpack(entity, transform);
+							auto enmey_pos = transform->GetPos();
+							auto delta = enmey_pos - playerPos;
+
+							// Find the cloest enmey position
+							if (glm::length(delta) < glm::length(closest_enmey_delta))
+							{
+								closest_enmey_delta = delta;
+								cursorPos = enmey_pos;
+								autoPlayTargetPos = enmey_pos;
+								find_nearest = true;
+							}
+						}
+					}
+				}
+				if ((m_autoPlayPathFindingCoolDown_ -= dt) < 0)
+				{
+					m_autoPlayPathFindingCoolDown_ = m_autoPlayPathFindingCoolDown;
+				}
+			}
+			else
+			{
+				auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
+				ComponentDecorator<TransformCom, GameObjectType> mouseTransform;
+				m_parentWorld->Unpack(mouse, mouseTransform);
+				cursorPos = mouseTransform->GetPos();
+			}
 
 			// Click to move
 			auto dest = cursorPos;
@@ -389,8 +428,14 @@ namespace gswy
 			}
 		}
 
-		void HandleMouseAction_LeftTriggered()
+		void HandleMouseAction_LeftTriggered(double dt)
 		{
+			auto input = InputManager::GetInstance();
+			if (!input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+			{
+				return;
+			}
+
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto mouse = m_parentWorld->GetAllEntityWithType(GameObjectType::MOUSE)[0];
 			ComponentDecorator<BodyCom, GameObjectType> mouseBodyCom;
@@ -499,6 +544,25 @@ namespace gswy
 				// 3. Play sound
 				auto e2 = MemoryManager::Make_shared<SoundEvent>("footsteps1", body->GetPos(), 1, 1.15);
 				queue->Publish(e2);
+			}
+		}
+
+		void HandlePlayerSkill(double dt)
+		{
+			// Checking for skill key binding
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			auto skillManager = SkillManager::GetInstance();
+			for (const auto& keyBinding : m_keyAndSkillBiding)
+			{
+				if (keyBinding.second.m_inputFunction(keyBinding.first))
+				{
+					std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(keyBinding.second.m_skillIndex);
+					if (skill != nullptr)
+					{
+						auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
+						queue->Publish(e);
+					}
+				}
 			}
 		}
 	};

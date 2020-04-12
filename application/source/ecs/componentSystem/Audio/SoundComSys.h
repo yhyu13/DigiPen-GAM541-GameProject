@@ -23,17 +23,12 @@ Creation date: 02/17/2020
 namespace gswy
 {
 	class SoundComSys : public BaseComponentSystem<GameObjectType> {
-
-		std::vector<GameObjectType> enemyTypes;
-		std::vector<EventType> soundTypes;
 		bool m_muteSFX = {false};
 		bool m_muteBGM = {false};
 	public:
 		
 		SoundComSys() 
 		{
-			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
-			soundTypes = { EventType::SOUND, EventType::WEAPON_SOUND} ;
 		}
 
 		virtual void Init() override 
@@ -104,9 +99,9 @@ namespace gswy
 				auto audio = AudioManager::GetInstance();
 				if (auto event = static_pointer_cast<CollisionEvent>(e))
 				{
-					if ((std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityA.m_type) != enemyTypes.end() &&
+					if ((std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityA.m_type) != g_enemyTypes.end() &&
 						event->m_entityB.m_type == GameObjectType::FIREBALL) ||
-						(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
+						(std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityB.m_type) != g_enemyTypes.end() &&
 							event->m_entityA.m_type == GameObjectType::FIREBALL))
 					{
 						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
@@ -116,9 +111,9 @@ namespace gswy
 							queue->Publish(e1);
 						}
 					}
-					else if ((std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityA.m_type) != enemyTypes.end() &&
+					else if ((std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityA.m_type) != g_enemyTypes.end() &&
 							event->m_entityB.m_type == GameObjectType::ICEBALL) ||
-							(std::find(enemyTypes.begin(), enemyTypes.end(), event->m_entityB.m_type) != enemyTypes.end() &&
+							(std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityB.m_type) != g_enemyTypes.end() &&
 								event->m_entityA.m_type == GameObjectType::ICEBALL))
 					{
 						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());

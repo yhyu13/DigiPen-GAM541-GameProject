@@ -26,14 +26,10 @@ namespace gswy
 {
 	class TowerControllerComSys : public BaseComponentSystem<GameObjectType> {
 	private:
-		std::vector<GameObjectType> towerTypes;
-		std::vector<GameObjectType> enemyTypes;
 		int m_towerBuildCost = {100};
 		bool m_bCanBuild = { false };
 	public:
 		TowerControllerComSys() {
-			towerTypes = { GameObjectType::TOWER_FIRE ,GameObjectType::TOWER_ICE ,GameObjectType::TOWER_LIGHTNING };
-			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
 		}
 
 		virtual void Init() override
@@ -69,14 +65,14 @@ namespace gswy
 			// Get a specific type of enemy as targets
 			while (allEnemies.empty() && (--trails > 0))
 			{
-				allEnemies = m_parentWorld->GetAllEntityWithType(enemyTypes[RAND_I(0, enemyTypes.size())]);
+				allEnemies = m_parentWorld->GetAllEntityWithType(g_enemyTypes[RAND_I(0, g_enemyTypes.size())]);
 			}
 			if (allEnemies.empty())
 			{
 				return;
 			}
 			
-			for (auto& towerType : towerTypes)
+			for (auto& towerType : g_towerTypes)
 			{
 				m_registeredEntities = m_parentWorld->GetAllEntityWithType(towerType);
 				for (auto& tower : m_registeredEntities)

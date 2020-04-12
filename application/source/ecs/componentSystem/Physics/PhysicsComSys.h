@@ -28,7 +28,6 @@ namespace gswy
 
 	private:
 		size_t m_CollisionDisableMap[(size_t)GameObjectType::NUM][(size_t)GameObjectType::NUM];
-		std::vector<GameObjectType> enemyTypes;
 
 	public:
 		PhysicsComSys()
@@ -36,8 +35,6 @@ namespace gswy
 			m_systemSignature.AddComponent<BodyCom>();
 			m_systemSignature.AddComponent<TransformCom>();
 			m_systemSignature.AddComponent<OwnershiptCom<GameObjectType>>();
-
-			enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
 		}
 
 		virtual void Init() override
@@ -66,7 +63,7 @@ namespace gswy
 		}
 
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 		virtual void PostRenderUpdate(double dt) override
 		{
 			static bool debugDraw = false;
@@ -109,7 +106,7 @@ namespace gswy
 				unlock();
 			}
 		}
-//#endif // _DEBUG
+#endif // _DEBUG
 
 		virtual void Update(double dt) override
 		{
@@ -172,8 +169,8 @@ namespace gswy
 						continue;
 					}
 						
-					if ((std::find(enemyTypes.begin(), enemyTypes.end(), first_Entity->m_type) != enemyTypes.end()) &&
-						(std::find(enemyTypes.begin(), enemyTypes.end(), second_Entity->m_type) != enemyTypes.end()))
+					if ((std::find(g_enemyTypes.begin(), g_enemyTypes.end(), first_Entity->m_type) != g_enemyTypes.end()) &&
+						(std::find(g_enemyTypes.begin(), g_enemyTypes.end(), second_Entity->m_type) != g_enemyTypes.end()))
 					{
 						continue;
 					}

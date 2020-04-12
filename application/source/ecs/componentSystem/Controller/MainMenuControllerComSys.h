@@ -129,7 +129,6 @@ namespace gswy
 			else
 			{
 				ProcessConstantInput();
-				ProcessCheatInput();
 			}
 		}
 
@@ -152,23 +151,6 @@ namespace gswy
 					}
 				}
 			}
-		}
-		
-		void ProcessCheatInput()
-		{
-			//if (!m_cheatEnabled)
-			//{
-			//	return;
-			//}
-
-			//auto input = InputManager::GetInstance();
-			//auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			//
-			//// Loading the game world with auto play controller
-			//if (input->IsKeyTriggered(KEY_F1))
-			//{
-
-			//}
 		}
 	};
 }

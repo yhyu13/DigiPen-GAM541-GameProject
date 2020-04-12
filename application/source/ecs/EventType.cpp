@@ -11,6 +11,11 @@ Creation date: 03/17/2020
 
 #include "EventType.h"
 
+namespace gswy
+{
+	std::vector<EventType> g_soundTypes = { EventType::SOUND, EventType::WEAPON_SOUND };
+}
+
 std::ostream& operator<<(std::ostream& o, gswy::EventType n) {
 	const char* s = 0;
 #define PROCESS_VAL(p) case(p): s = #p; break;

@@ -11,6 +11,7 @@ Creation date: 02/16/2020
 
 #pragma once
 #include <iostream>
+#include <vector>
 
 namespace gswy
 {
@@ -65,6 +66,8 @@ namespace gswy
 
 		NUM
 	};
+
+	extern std::vector<EventType> g_soundTypes;
 }
 
 std::ostream& operator<<(std::ostream& o, gswy::EventType n);

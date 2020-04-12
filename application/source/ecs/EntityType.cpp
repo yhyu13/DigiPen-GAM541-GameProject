@@ -11,6 +11,13 @@ Creation date: 03/17/2020
 
 #include "EntityType.h"
 
+namespace gswy
+{
+	std::vector<GameObjectType> g_towerTypes = { GameObjectType::TOWER_FIRE ,GameObjectType::TOWER_ICE ,GameObjectType::TOWER_LIGHTNING };
+	std::vector<GameObjectType> g_enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
+}
+
+
 std::ostream& operator<<(std::ostream& o, gswy::GameObjectType n) {
 	const char* s = 0;
 #define PROCESS_VAL(p) case(p): s = #p; break;
