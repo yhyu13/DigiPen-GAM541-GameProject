@@ -90,8 +90,6 @@ namespace gswy
 			// Renderer
 			Renderer2D::Init();
 			OpenGLDebugDraw::Init();
-			m_PostProcessing.SetScreenSize(1280, 720);
-			m_PostProcessing.Init();
 
 			GameLevelMapManager::GetInstance()->Init();
 
@@ -738,7 +736,6 @@ namespace gswy
 
 		void Render(double ts)
 		{
-			if(m_PP) m_PostProcessing.Bind();
 			RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1 });
 			RenderCommand::Clear();
 			m_CameraController.OnUpdate(ts);
@@ -747,11 +744,6 @@ namespace gswy
 			// m_world render
 			m_world->Render(ts);
 
-			if (m_PP)
-			{
-				m_PostProcessing.Unbind();
-				m_PostProcessing.Render(ts);
-			}
 			Renderer2D::EndBatch();
 			Renderer2D::DrawBatch();
 			//Renderer2D::EndScene();
@@ -764,11 +756,6 @@ namespace gswy
 			double dt = (!m_world->IsPaused())? ts: 0;
 
 			{
-				if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2))
-				{
-					m_PP = !m_PP;
-				}
-
 				/*if (!IS_INGAME)
 				{
 					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
@@ -892,8 +879,6 @@ namespace gswy
 		std::shared_ptr<gswy::Texture2D> m_miniMapTexture;
 
 		std::shared_ptr<GameWorld<GameObjectType>> m_world;
-		gswy::OpenGLPostProcessing m_PostProcessing;
-		bool m_PP = false;
 
 	/*
 	ImGui call back
