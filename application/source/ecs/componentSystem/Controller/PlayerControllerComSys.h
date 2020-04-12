@@ -246,7 +246,7 @@ namespace gswy
 			}
 
 			// Tooggle lock base HP
-			if (input->IsKeyTriggered(KEY_F3))
+			if (input->IsKeyTriggered(KEY_F4))
 			{
 				auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
 				auto HP = GetComponent<HitPointCom>(entity);
