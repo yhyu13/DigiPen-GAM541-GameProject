@@ -610,12 +610,21 @@ namespace gswy
 				m_CameraController.SetPosition(vec3(transform->GetPos(), 0));
 				m_miniMapCameraController.SetPosition(vec3(transform->GetPos(), 0));
 			}
+
+			{
+				// Play BGM
+				ComponentDecorator<TransformCom, GameObjectType> transform;
+				m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
+				AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ transform->GetPos3D() }, 1, 1);
+			}
 		}
 
 		void BeforeRun()
 		{
-			// Play BGM
-			//AudioManager::GetInstance()->PlaySound("Track2", AudioVector3{ 0, 0, 0 }, 1, 1);
+			//// Play BGM
+			//ComponentDecorator<TransformCom, GameObjectType> transform;
+			//m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
+			//AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ transform->GetPos3D() }, 1, 1);
 		}
 
 		void AfterRun()
@@ -946,13 +955,15 @@ namespace gswy
 
 		void OnInterruption(const int& isFocussed)
 		{
-			if (!isFocussed)
+			if (IS_INGAME)
 			{
-				m_world->SetPause(true);
-				SoundManager::GetInstance()->CallForMuteBGM(false);
-				SoundManager::GetInstance()->CallForMuteSFX(false);
+				if (!isFocussed)
+				{
+					m_world->SetPause(true);
+					// TODO : pause music
+				}
+				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
 			}
-			WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
 		}
 	};
 }
