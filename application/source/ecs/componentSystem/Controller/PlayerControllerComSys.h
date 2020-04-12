@@ -63,6 +63,8 @@ namespace gswy
 		bool m_autoPlayEnabled = { false };
 		double m_autoPlayPathFindingCoolDown = { .5 };
 		double m_autoPlayPathFindingCoolDown_ = m_autoPlayPathFindingCoolDown;
+		double m_autoPlayApplySkillCoolDown = { .5 };
+		double m_autoPlayApplySkillCoolDown_ = m_autoPlayApplySkillCoolDown;
 
 		float m_speed = { 1.0f };
 		int m_pathFindingLookAhead = { 4 };
@@ -313,7 +315,7 @@ namespace gswy
 			static vec2 autoPlayTargetPos = vec2(0);
 
 			// Click to move conditions
-			if (m_timeDisableMoveCommand > 0 || m_bDisableMoveInput)
+			if (m_timeDisableMoveCommand > 0 || m_bDisableMoveInput || m_bDisableInput)
 			{
 				return;
 			}
@@ -341,6 +343,7 @@ namespace gswy
 
 			if (m_autoPlayEnabled)
 			{
+				// Exectue auto path finding when cool down is ready
 				if (m_autoPlayPathFindingCoolDown_ == m_autoPlayPathFindingCoolDown)
 				{
 					std::vector<Entity<GameObjectType>> allEnemies;
@@ -371,6 +374,7 @@ namespace gswy
 						}
 					}
 				}
+				// Update cool down
 				if ((m_autoPlayPathFindingCoolDown_ -= dt) < 0)
 				{
 					m_autoPlayPathFindingCoolDown_ = m_autoPlayPathFindingCoolDown;
@@ -431,7 +435,7 @@ namespace gswy
 		void HandleMouseAction_LeftTriggered(double dt)
 		{
 			auto input = InputManager::GetInstance();
-			if (!input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+			if (!input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || m_bDisableInput)
 			{
 				return;
 			}
@@ -457,7 +461,7 @@ namespace gswy
 		void HandlePlayerMovement(double dt)
 		{
 			// Do nothing if delta time has been set to 0 (game is paused)
-			if (!dt)
+			if (!dt || m_bDisableMoveInput || m_bDisableInput)
 			{
 				return;
 			}
@@ -549,18 +553,52 @@ namespace gswy
 
 		void HandlePlayerSkill(double dt)
 		{
+			// Do nothing if delta time has been set to 0 (game is paused)
+			if (!dt || m_bDisableInput)
+			{
+				return;
+			}
+
 			// Checking for skill key binding
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto skillManager = SkillManager::GetInstance();
-			for (const auto& keyBinding : m_keyAndSkillBiding)
+			if (m_autoPlayEnabled)
 			{
-				if (keyBinding.second.m_inputFunction(keyBinding.first))
+				// Exectue auto path finding when cool down is ready
+				if (m_autoPlayApplySkillCoolDown_ == m_autoPlayApplySkillCoolDown)
 				{
-					std::shared_ptr<ActiveSkill> skill = skillManager->GetActiveSkill(keyBinding.second.m_skillIndex);
-					if (skill != nullptr)
+					std::vector<std::shared_ptr<ActiveSkill>> skills;
+					for (const auto& keyBinding : m_keyAndSkillBiding)
 					{
-						auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
+						if (auto skill = skillManager->GetActiveSkill(keyBinding.second.m_skillIndex))
+						{
+							skills.push_back(skill);
+						}
+					}
+					// Apply a random active skill
+					if (!skills.empty())
+					{
+						auto e = MemoryManager::Make_shared<SkillUseEvent>(skills[RAND_I(0, skills.size())]);
 						queue->Publish(e);
+					}
+				}
+				// Update cool down
+				if ((m_autoPlayApplySkillCoolDown_ -= dt) < 0)
+				{
+					m_autoPlayApplySkillCoolDown_ = m_autoPlayApplySkillCoolDown;
+				}
+			}
+			else
+			{
+				for (const auto& keyBinding : m_keyAndSkillBiding)
+				{
+					if (keyBinding.second.m_inputFunction(keyBinding.first))
+					{
+						if (auto skill = skillManager->GetActiveSkill(keyBinding.second.m_skillIndex))
+						{
+							auto e = MemoryManager::Make_shared<SkillUseEvent>(skill);
+							queue->Publish(e);
+						}
 					}
 				}
 			}
