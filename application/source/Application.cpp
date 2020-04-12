@@ -90,11 +90,8 @@ namespace gswy
 			// Renderer
 			Renderer2D::Init();
 			OpenGLDebugDraw::Init();
-			m_PostProcessing.SetScreenSize(1280, 720);
-			m_PostProcessing.Init();
-
+			// Level manager
 			GameLevelMapManager::GetInstance()->Init();
-
 			// Texture loader
 			ResourceAllocator<Texture2D>::GetInstance()->Init();
 			// Animation loader
@@ -738,23 +735,14 @@ namespace gswy
 
 		void Render(double ts)
 		{
-			if(m_PP) m_PostProcessing.Bind();
 			RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1 });
 			RenderCommand::Clear();
 			m_CameraController.OnUpdate(ts);
 			Renderer2D::BeginBatch(m_CameraController.GetCamera());
-			//Renderer2D::BeginScene(m_CameraController.GetCamera());
 			// m_world render
 			m_world->Render(ts);
-
-			if (m_PP)
-			{
-				m_PostProcessing.Unbind();
-				m_PostProcessing.Render(ts);
-			}
 			Renderer2D::EndBatch();
 			Renderer2D::DrawBatch();
-			//Renderer2D::EndScene();
 		}
 
 		virtual void OnUpdate(double ts) override
@@ -764,59 +752,6 @@ namespace gswy
 			double dt = (!m_world->IsPaused())? ts: 0;
 
 			{
-				if (InputManager::GetInstance()->IsKeyTriggered(KEY_F2))
-				{
-					m_PP = !m_PP;
-				}
-
-				/*if (!IS_INGAME)
-				{
-					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-					InputManager* input = InputManager::GetInstance();
-					if (input->IsKeyTriggered(KEY_TAB) || input->IsKeyTriggered(KEY_S))
-					{
-						switch (m_loadState)
-						{
-						case SplashScreenState::DIGIPEN_LOGO:
-						{
-							queue->RemoveDelayedEvent(EventType::FADE);
-							queue->RemoveDelayedEvent(EventType::LOAD_TEAM_LOGO);
-
-							auto _e = MemoryManager::Make_shared<FadeEvent>(m_DigipenLogo->GetEntity(), 1.f, -0.5f, 0.1f, EventType::GC);
-							queue->Publish(_e);
-
-							auto teamLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_TEAM_LOGO);
-							queue->Publish(teamLogoEvent);
-						}
-						break;
-
-						case SplashScreenState::TEAM_LOGO:
-						{
-							queue->RemoveDelayedEvent(EventType::FADE);
-							queue->RemoveDelayedEvent(EventType::LOAD_GAME_LOGO);
-
-							auto _e = MemoryManager::Make_shared<FadeEvent>(m_teamLogo->GetEntity(), 1.f, -0.5f, 0.1f, EventType::GC);
-							queue->Publish(_e);
-
-							auto gameLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_GAME_LOGO);
-							queue->Publish(gameLogoEvent);
-						}
-						break;
-
-						case SplashScreenState::GAME_LOGO:
-						{
-							auto _e = MemoryManager::Make_shared<FadeEvent>(m_gameLogo->GetEntity(), 1.f, -0.5f, 0.1f, EventType::GC);
-							queue->Publish(_e);
-
-							auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-							queue->Publish(_e1);
-						}
-						break;
-						}
-					}
-				}*/
-
-
 				if (IS_INGAME)
 				{
 					TIME("Pre Update");
@@ -890,10 +825,7 @@ namespace gswy
 		OrthographicCameraController m_CameraController;
 		OrthographicCameraController m_miniMapCameraController;
 		std::shared_ptr<gswy::Texture2D> m_miniMapTexture;
-
 		std::shared_ptr<GameWorld<GameObjectType>> m_world;
-		gswy::OpenGLPostProcessing m_PostProcessing;
-		bool m_PP = false;
 
 	/*
 	ImGui call back

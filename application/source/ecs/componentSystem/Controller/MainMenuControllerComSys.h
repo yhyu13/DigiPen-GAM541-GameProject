@@ -31,6 +31,7 @@ namespace gswy
 
 	class MainMenuControllerComSys : public BaseComponentSystem<GameObjectType> {
 	private:
+		bool m_cheatEnabled = { false };
 		bool m_bIsMainMenuLoaded = { false };
 		SplashScreenState m_loadState = { SplashScreenState::DIGIPEN_LOGO };
 	public:
@@ -39,6 +40,12 @@ namespace gswy
 
 		virtual void Init() override
 		{
+			Json::Value engineConfiguration;
+			std::ifstream file("./asset/engine-configuration/engine-config.json", std::ifstream::binary);
+			file >> engineConfiguration;
+			file.close();
+			m_cheatEnabled = engineConfiguration["enable-cheat"].asBool();
+
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<MainMenuControllerComSys>(this, EventType::LOAD_MAIN_MENU, &MainMenuControllerComSys::OnLoadMainMenuWorld);
 			queue->Subscribe<MainMenuControllerComSys>(this, EventType::ON_SPLASH_STATE_CHANGE, &MainMenuControllerComSys::OnSplashStateChange);
@@ -122,27 +129,46 @@ namespace gswy
 			else
 			{
 				ProcessConstantInput();
+				ProcessCheatInput();
 			}
 		}
 
 		void ProcessConstantInput()
 		{
+			// Process showing and hiding of the game credit page
 			auto credit_page = m_parentWorld->GetAllEntityWithType(GameObjectType::CREDITS);
 			if (!credit_page.empty())
 			{
+				auto credit = credit_page[0];
 				auto input = InputManager::GetInstance();
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_SPACE))
 				{
-					auto e = MemoryManager::Make_shared<GCEvent>(credit_page[0]);
+					auto e = MemoryManager::Make_shared<GCEvent>(credit);
 					queue->Publish(e);
-					// Set widget
+					// Set main menu back to visible
 					{
-						WidgetManager* manager = WidgetManager::GetInstance();
-						manager->GetMainMenu().SetVisible(true);
+						WidgetManager::GetInstance()->GetMainMenu().SetVisible(true);
 					}
 				}
 			}
+		}
+		
+		void ProcessCheatInput()
+		{
+			//if (!m_cheatEnabled)
+			//{
+			//	return;
+			//}
+
+			//auto input = InputManager::GetInstance();
+			//auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+			//
+			//// Loading the game world with auto play controller
+			//if (input->IsKeyTriggered(KEY_F1))
+			//{
+
+			//}
 		}
 	};
 }

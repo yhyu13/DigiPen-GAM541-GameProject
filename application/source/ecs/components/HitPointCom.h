@@ -50,6 +50,11 @@ namespace gswy
 			m_HPLock = b;
 		}
 
+		bool IsHitPointLock()
+		{
+			return m_HPLock;
+		}
+
 		void SetIsDead(bool b)
 		{
 			m_IsDead = b;

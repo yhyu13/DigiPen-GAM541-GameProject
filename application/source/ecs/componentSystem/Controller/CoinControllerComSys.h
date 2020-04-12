@@ -47,8 +47,8 @@ namespace gswy
 			auto active = ActiveCom();
 			coin.AddComponent(active);
 
-			auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
-			coin.AddComponent(OwnershiptCom<GameObjectType>(player));
+			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
+			coin.AddComponent(OwnershiptCom<GameObjectType>(entity));
 
 			auto transform = TransformCom(addCoinEvent->m_enemyPosition.x, addCoinEvent->m_enemyPosition.y, Z_ORDER(500));
 			coin.AddComponent(transform);
@@ -67,7 +67,7 @@ namespace gswy
 			aabb.m_overrideFriction = true;
 			aabb.ChooseShape("Circle", 0.1);
 
-			auto targetBody = GetComponent<BodyCom>(player);
+			auto targetBody = GetComponent<BodyCom>(entity);
 			aabb.SetVelocity(glm::normalize(targetBody->GetPos() - aabb.GetPos()) * 1.5f);
 
 			coin.AddComponent(aabb);
@@ -77,8 +77,8 @@ namespace gswy
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto coins = m_parentWorld->GetAllEntityWithType(GameObjectType::COIN);
-			auto player = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
-			auto playerBodyCom = GetComponent<BodyCom>(player);
+			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+			auto playerBodyCom = GetComponent<BodyCom>(entity);
 			for (auto& coin : coins)
 			{
 				auto bodyCom = GetComponent<BodyCom>(coin);
@@ -88,7 +88,7 @@ namespace gswy
 				{
 					auto e = MemoryManager::Make_shared<GCEvent>(coin);
 					queue->Publish(e, 0.10);
-					// Add coins to player
+					// Add coins to entity
 					GameLevelMapManager::GetInstance()->AddCoins(m_coinsValue);
 				}
 				else
