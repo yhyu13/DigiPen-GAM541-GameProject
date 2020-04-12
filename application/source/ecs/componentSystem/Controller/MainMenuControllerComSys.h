@@ -141,6 +141,7 @@ namespace gswy
 						WidgetManager* manager = WidgetManager::GetInstance();
 						manager->GetMainMenu().SetVisible(true);
 					}
+
 				}
 			}
 		}

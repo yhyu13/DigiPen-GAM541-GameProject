@@ -297,6 +297,15 @@ void gswy::AudioManager::StopAllChannels()
 	}
 }
 
+void gswy::AudioManager::PauseAllChannels(bool pause)
+{
+	for (auto iter = m_fmodInstance->mChannels.begin(); iter != m_fmodInstance->mChannels.end(); ++iter)
+	{
+		AudioManager::ErrorCheck(iter->second->setPaused(pause));
+	}
+}
+
+
 void gswy::AudioManager::SetChannel3dPosition(int nChannelId, const AudioVector3& vPosition)
 {
 	auto tFoundIt = m_fmodInstance->mChannels.find(nChannelId);
