@@ -76,6 +76,7 @@ namespace gswy {
 		void StopChannel(int nChannelId);
 		void StopEvent(const string& strEventName, bool bImmediate = false);
 		void StopAllChannels();
+		void PauseAllChannels(bool pause);
 		void SetChannel3dPosition(int nChannelId, const AudioVector3& vPosition);
 		void SetChannelvolume(int nChannelId, float fVolumedB);
 		bool IsPlaying(const string& strSoundName);

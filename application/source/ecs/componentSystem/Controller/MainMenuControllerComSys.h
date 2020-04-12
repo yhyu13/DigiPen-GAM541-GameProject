@@ -149,6 +149,7 @@ namespace gswy
 					{
 						WidgetManager::GetInstance()->GetMainMenu().SetVisible(true);
 					}
+
 				}
 			}
 		}

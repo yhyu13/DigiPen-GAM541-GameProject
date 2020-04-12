@@ -873,6 +873,7 @@ namespace gswy
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
 				SoundManager::GetInstance()->CallForMuteBGM(true);
 				SoundManager::GetInstance()->CallForMuteSFX(true);
+				AudioManager::GetInstance()->PauseAllChannels(false);
 			}
 			if (buttonName.compare("Main Menu") == 0)
 			{
@@ -908,6 +909,7 @@ namespace gswy
 				{
 					m_world->SetPause(true);
 					// TODO : pause music
+					AudioManager::GetInstance()->PauseAllChannels(true);
 				}
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
 			}
