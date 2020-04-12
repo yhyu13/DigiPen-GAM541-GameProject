@@ -107,6 +107,8 @@ namespace gswy {
 		m_Shader->Bind();
 		m_Shader->SetInt("u_Texture", 0);
 		glBindTexture(GL_TEXTURE_2D, m_RenderTargetID);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_ScreenWidth, m_ScreenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
 		glBindVertexArray(m_VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);

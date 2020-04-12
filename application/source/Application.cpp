@@ -17,6 +17,7 @@ Creation date	: 01/26/2020
 #include "EngineExport.h"
 #include "Import.h"
 #include "engine/Main.h"
+#include "ecs/componentSystem/Audio/SoundManager.h"
 
 using namespace gswy;
 
@@ -608,12 +609,21 @@ namespace gswy
 				m_CameraController.SetPosition(vec3(transform->GetPos(), 0));
 				m_miniMapCameraController.SetPosition(vec3(transform->GetPos(), 0));
 			}
+
+			{
+				// Play BGM
+				ComponentDecorator<TransformCom, GameObjectType> transform;
+				m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
+				AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ transform->GetPos3D() }, 1, 1);
+			}
 		}
 
 		void BeforeRun()
 		{
-			// Play BGM
-			//AudioManager::GetInstance()->PlaySound("BGM", AudioVector3{ 0, 0, 0 }, 1, 1);
+			//// Play BGM
+			//ComponentDecorator<TransformCom, GameObjectType> transform;
+			//m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
+			//AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ transform->GetPos3D() }, 1, 1);
 		}
 
 		void AfterRun()
@@ -861,6 +871,8 @@ namespace gswy
 				// TODO
 				m_world->SetPause(!m_world->IsPaused());
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
+				SoundManager::GetInstance()->CallForMuteBGM(true);
+				SoundManager::GetInstance()->CallForMuteSFX(true);
 			}
 			if (buttonName.compare("Main Menu") == 0)
 			{
@@ -887,6 +899,19 @@ namespace gswy
 				queue->Publish(creditScreenEvent);
 			}
 		}
+
+		void OnInterruption(const int& isFocussed)
+		{
+			if (IS_INGAME)
+			{
+				if (!isFocussed)
+				{
+					m_world->SetPause(true);
+					// TODO : pause music
+				}
+				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
+			}
+		}
 	};
 }
 
@@ -897,6 +922,10 @@ public:
 		GameLayer* gameLayer = new GameLayer();
 		WidgetManager::ButtonInvokeFunction f = std::bind(&GameLayer::OnImGuiButtonClicke, gameLayer, std::placeholders::_1);
 		WidgetManager::GetInstance()->SetButtonInvoker(f);
+
+		InterruptHandler handler = std::bind(&GameLayer::OnInterruption, gameLayer, std::placeholders::_1);
+		GetWindow().SetInterruptHandler(handler);
+
 		PushLayer(gameLayer);
 	}
 
@@ -904,6 +933,7 @@ public:
 	{
 		
 	}
+
 };
 
 namespace gswy

@@ -417,6 +417,14 @@
     {
       "type": "audio",
       "sounds": [
+		{
+          "path": "./asset/Audio_Assets/BGM_Tracks/Track_1.ogg",
+          "stream": false
+        },
+        {
+          "path": "./asset/Audio_Assets/BGM_Tracks/Track_2.ogg",
+          "stream": false
+        },
         {
           "path": "./asset/Audio_Assets/footstep02.ogg",
           "stream": false
