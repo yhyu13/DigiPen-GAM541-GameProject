@@ -22,12 +22,15 @@ struct GLFWwindow;
 
 namespace gswy {
 
+	typedef std::function<void(const int& isFocussed)> InterruptHandler;
+
 	struct ENGINE_API WindowProperties {
 		unsigned int m_width;
 		unsigned int m_height;
 		std::string m_title;
 		InputManager* m_input = nullptr;
 		bool IsFullScreen = false;
+		InterruptHandler m_interruptHandler;
 		bool IsVSync = false;
 
 		//Pre-Calculate number for some reasons
@@ -63,6 +66,9 @@ namespace gswy {
 		WindowProperties GetWindowProperties() const { return m_windowProperties; }
 		inline unsigned int GetWidth() const { return m_windowProperties.m_width; }
 		inline unsigned int GetHeight() const { return m_windowProperties.m_height; }
+
+
+		inline void SetInterruptHandler(const InterruptHandler& handler) { m_windowProperties.m_interruptHandler = handler; };
 
 	protected:
 
