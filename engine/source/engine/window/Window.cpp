@@ -199,5 +199,11 @@ namespace gswy {
 			properties.m_width = width;
 			properties.m_height = height;
 		});
+
+		glfwSetWindowFocusCallback(m_window, [](GLFWwindow* window, int focussed)
+		{
+			WindowProperties& properties = *(WindowProperties*)glfwGetWindowUserPointer(window);
+			properties.m_interruptHandler(focussed);
+		});
 	}
 }
