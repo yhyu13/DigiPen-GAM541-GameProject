@@ -10,12 +10,13 @@
       "MainMenu": "./asset/UI/Main_Menu1.png"
     }
   ],
-  "styles":{
-	"HUD": [255,137,20,255],
-	"MainMenu": [255,137,20,255],
-	"PauseMenu": [255,137,20,255],
-	"OptionMenu": [255,137,20,255],
-	"ShopMenu": [255,137,20,255],
-	"InventoryMenu": [255,137,20,255]
+  "styles": 
+  {
+    "HUD": [ 255, 137, 20, 255 ],
+    "MainMenu": [ 255, 137, 20, 255 ],
+    "PauseMenu": [ 255, 137, 20, 255 ],
+    "OptionMenu": [ 255, 137, 20, 255 ],
+    "ShopMenu": [ 255, 137, 20, 255 ],
+    "InventoryMenu": [ 255, 137, 20, 255 ]
   }
 }

@@ -90,34 +90,22 @@ namespace gswy
 		float m_freq;
 	}; 
 
-	struct OnMuteMusicEvent : Event<GameObjectType, EventType>
+	struct OnMuteBGMEvent : Event<GameObjectType, EventType>
 	{
-		explicit OnMuteMusicEvent(float vol = 0.0f, bool m = true) : Event(EventType::MUSIC_MUTE)
+		explicit OnMuteBGMEvent(bool m = true) : Event(EventType::MUTE_BGM)
 		{
-			if (m == true)
-			{
-				m_vol = vol;
-				m_mute = m;
-			}
-			else
-			{
-				m_vol = 1.0f;
-				m_mute = false;
-			}			
+			m_mute = m;
 		}
-	
-		float m_vol;
 		bool m_mute;
 	};
 
-	struct OnMuteEvent : Event<GameObjectType, EventType>
+	struct OnMuteSFXEvent : Event<GameObjectType, EventType>
 	{
-		explicit OnMuteEvent(bool m = true) : Event(EventType::MUTE_SOUND)
+		explicit OnMuteSFXEvent(bool m = true) : Event(EventType::MUTE_SFX)
 		{
-			mute = m;
+			m_mute = m;
 		}
-
-		bool mute;
+		bool m_mute;
 	};
  
 	struct WeaponSoundEvent : Event<GameObjectType, EventType> {

@@ -48,7 +48,8 @@ namespace gswy {
 		std::unique_ptr<Window> window;
 		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
-		double m_startTime;
+		double m_StartTime;
+		unsigned int m_MaxFrameRate;
 
 		static Engine* s_instance;
 

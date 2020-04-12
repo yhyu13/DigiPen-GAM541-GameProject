@@ -930,7 +930,8 @@ namespace gswy
 				// TODO
 				m_world->SetPause(!m_world->IsPaused());
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
-				SoundManager::GetInstance()->CallForMute(false);
+				SoundManager::GetInstance()->CallForMuteBGM(true);
+				SoundManager::GetInstance()->CallForMuteSFX(true);
 			}
 			if (buttonName.compare("Main Menu") == 0)
 			{
@@ -963,7 +964,8 @@ namespace gswy
 			if (!isFocussed)
 			{
 				m_world->SetPause(true);
-				//SoundManager::GetInstance()->CallForMute(true); MUTING THE SOUND 
+				SoundManager::GetInstance()->CallForMuteBGM(false);
+				SoundManager::GetInstance()->CallForMuteSFX(false);
 			}
 			WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
 		}

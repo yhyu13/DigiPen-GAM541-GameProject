@@ -33,7 +33,7 @@ namespace gswy {
 
 	Engine::Engine() 
 	{
-		m_startTime = glfwGetTime();
+		m_StartTime = glfwGetTime();
 		Logger::Init();
 		ENGINE_INFO("Initialized Engine Log!");
 		APP_INFO("Initialized Application Log!");
@@ -46,6 +46,7 @@ namespace gswy {
 		file.close();
 
 		window = std::unique_ptr<Window>(Window::InitializeWindow(engineConfiguration["window"]));
+		m_MaxFrameRate = engineConfiguration["max-framerate"].asInt();
 		MemoryManager::GetInstance()->Init();
 		AudioManager::GetInstance()->Init();
 
@@ -60,12 +61,12 @@ namespace gswy {
 	}
 
 	void Engine::Run() {
-		FramerateController* rateController = FramerateController::GetInstance(60);
+		FramerateController* rateController = FramerateController::GetInstance(m_MaxFrameRate);
 		while (isRunning) {
 			rateController->FrameStart();
 
 //#ifdef _DEBUG
-			Instrumentor::GetInstance()->AddInstrumentorResult({ "Up Time", (glfwGetTime() - m_startTime), "s " });
+			Instrumentor::GetInstance()->AddInstrumentorResult({ "Up Time", (glfwGetTime() - m_StartTime), "s " });
 //#endif
 
 			Update(rateController->GetFrameTime());
