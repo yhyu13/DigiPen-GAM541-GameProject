@@ -615,7 +615,7 @@ namespace gswy
 		void BeforeRun()
 		{
 			// Play BGM
-			AudioManager::GetInstance()->PlaySound("Track2", AudioVector3{ 0, 0, 0 }, 1, 1);
+			//AudioManager::GetInstance()->PlaySound("Track2", AudioVector3{ 0, 0, 0 }, 1, 1);
 		}
 
 		void AfterRun()
