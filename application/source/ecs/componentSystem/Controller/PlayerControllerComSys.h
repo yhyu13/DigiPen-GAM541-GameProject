@@ -74,7 +74,6 @@ namespace gswy
 		double m_timeDisableMoveCommand = { 0 };
 		bool m_bDisableMoveInput = { false };
 		bool m_bDisableInput = { false };
-		//bool m_muteInput = { true };
 
 		std::vector<glm::ivec2> m_pathResult;
 		
@@ -211,10 +210,8 @@ namespace gswy
 				{
 					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
 					m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-
 					//Pause track
-					AudioManager::GetInstance()->SetSoundPause("Track_1", true);   //put m_muteInput value instead of true to toggle only between escape
-					//m_muteInput = !m_muteInput;
+					AudioManager::GetInstance()->SetSoundPause("Track_1", m_parentWorld->IsPaused());
 				}
 			}
 		}
