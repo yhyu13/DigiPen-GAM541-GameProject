@@ -41,12 +41,8 @@ namespace gswy
 			queue->Subscribe<SoundComSys>(this, EventType::MUTE_BGM, &SoundComSys::OnMuteBGM);
 		}
 
-		/*
-		Controll BGM volume here
-		*/
 		virtual void Update(double dt) override
 		{
-			// Get BGM and set its volume to -100 on mute
 		}
 
 		void OnPLAYSOUND(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -68,14 +64,7 @@ namespace gswy
 		{
 			if (auto event = static_pointer_cast<OnMuteBGMEvent>(e))
 			{
-				if (event->m_mute)
-				{
-					AudioManager::GetInstance()->SetSoundDB("Track_1", -100);
-				}
-				else
-				{
-					AudioManager::GetInstance()->SetSoundDB("Track_1", 1.0f);
-				}
+				AudioManager::GetInstance()->SetSoundMute("Track_1", event->m_mute);
 			}
 		}
 

@@ -495,6 +495,11 @@ namespace gswy
 				m_CameraController.SetPosition(vec3(0));
 				m_miniMapCameraController.SetPosition(vec3(0));
 			}
+
+			// Stop BGM
+			{
+				AudioManager::GetInstance()->StopAllChannels();
+			}
 		}
 
 		void LoadGameWorld(int level, bool reloadGameWorld = false)
@@ -610,20 +615,15 @@ namespace gswy
 				m_miniMapCameraController.SetPosition(vec3(transform->GetPos(), 0));
 			}
 
+			// Play BGM
 			{
-				// Play BGM
-				ComponentDecorator<TransformCom, GameObjectType> transform;
-				m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
+				AudioManager::GetInstance()->StopAllChannels();
 				AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ 0,0,0 }, 1, 1);
 			}
 		}
 
 		void BeforeRun()
 		{
-			//// Play BGM
-			//ComponentDecorator<TransformCom, GameObjectType> transform;
-			//m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
-			//AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ transform->GetPos3D() }, 1, 1);
 		}
 
 		void AfterRun()
@@ -685,6 +685,10 @@ namespace gswy
 				m_CameraController.SetPosition(newPos);
 				m_CameraController.SetZoomLevel(1);
 			}
+		}
+
+		void UpdateAudio(double ts)
+		{
 			// Set 3D sound
 			AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
 			AudioManager::GetInstance()->SetChannel3dPosition(AudioManager::GetInstance()->GetSoundChannel("Track_1"), AudioVector3(m_CameraController.GetPosition()));
@@ -767,6 +771,7 @@ namespace gswy
 				{
 					TIME("Pre Update");
 					UpdateCamera(dt);
+					UpdateAudio(dt);
 					UpdateCursor(dt);
 					UpdateMiniMap(dt);
 				}
@@ -872,7 +877,7 @@ namespace gswy
 				// TODO
 				m_world->SetPause(!m_world->IsPaused());
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
-				AudioManager::GetInstance()->PauseAllChannels(false);
+				AudioManager::GetInstance()->PauseAllChannels(m_world->IsPaused());
 			}
 			if (buttonName.compare("Main Menu") == 0)
 			{

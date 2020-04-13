@@ -213,11 +213,6 @@ namespace gswy {
 			manager->GetOptionMenu().SetVisible(true);
 			manager->GetOptionMenu().SetCallFromMainMenu(false);
 		}
-		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
-		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
-			manager->InvokeButton("Credits");
-		}
 		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ImVec2(480, 100), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			AudioManager::GetInstance()->PlaySound("click_sound");

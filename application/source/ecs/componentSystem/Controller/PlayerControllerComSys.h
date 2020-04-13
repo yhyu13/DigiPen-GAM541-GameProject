@@ -210,6 +210,8 @@ namespace gswy
 				{
 					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
 					m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+					//Pause track
+					AudioManager::GetInstance()->SetSoundPause("Track_1", m_parentWorld->IsPaused());
 				}
 			}
 		}

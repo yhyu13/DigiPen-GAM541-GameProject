@@ -36,19 +36,21 @@ gswy::FMODInstance::~FMODInstance()
 
 void gswy::FMODInstance::Update()
 {
-	std::vector<ChannelMap::iterator> pStoppedChannels;
+	std::vector<int> pStoppedChannels;
 	for (auto it = mChannels.begin(), itEnd = mChannels.end(); it != itEnd; ++it)
 	{
 		bool bIsPlaying = false;
 		it->second->isPlaying(&bIsPlaying);
 		if (!bIsPlaying)
 		{
-			pStoppedChannels.push_back(it);
+			pStoppedChannels.push_back(it->first);
 		}
 	}
 	for (auto& it : pStoppedChannels)
 	{
 		mChannels.erase(it);
+		mSound2Channels.erase(mChannels2Sound[it]);
+		mChannels2Sound.erase(it);
 	}
 	AudioManager::ErrorCheck(mpStudioSystem->update());
 }
@@ -86,14 +88,12 @@ int gswy::AudioManager::ErrorCheck(FMOD_RESULT result)
 
 int gswy::AudioManager::GetSoundChannel(const string& strSoundName)
 {
+	int id = -1;
 	if (m_fmodInstance->mSound2Channels.find(strSoundName) != m_fmodInstance->mSound2Channels.end())
 	{
-		return m_fmodInstance->mSound2Channels[strSoundName];
+		id =  m_fmodInstance->mSound2Channels[strSoundName];
 	}
-	else
-	{
-		return -1;
-	}
+	return id;
 }
 
 void gswy::AudioManager::LoadBank(const string& strBankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags)
@@ -189,82 +189,90 @@ int gswy::AudioManager::PlaySound(const string& strSoundName, const AudioVector3
 		AudioManager::ErrorCheck(pChannel->setPaused(false));
 		AudioManager::ErrorCheck(pChannel->setPitch(frequency));
 		m_fmodInstance->mSound2Channels[strSoundName] = nChannelId;
+		m_fmodInstance->mChannels2Sound[nChannelId] = strSoundName;
 		m_fmodInstance->mChannels[nChannelId] = pChannel;
 		return nChannelId;
 	}
 	return -1;
 }
 
-int gswy::AudioManager::PauseSound(const string& strSoundName, const AudioVector3& vPos, float fVolumedB , float frequency )
+int gswy::AudioManager::StopSound(const string& strSoundName)
 {
 	auto tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
 	if (tFoundIt == m_fmodInstance->mSounds.end())
 	{
 		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has not been loaded!");
 	}
-	FMOD::Channel* pChannel = nullptr;
-	AudioManager::ErrorCheck(m_fmodInstance->mpSystem->playSound(tFoundIt->second, nullptr, true, &pChannel));
-	if (pChannel)
+	int id = GetSoundChannel(strSoundName);
+	if (id != -1)
 	{
-		int nChannelId = m_fmodInstance->mnNextChannelId++;
-		FMOD_MODE currMode;
-		tFoundIt->second->getMode(&currMode);
-		if (currMode & FMOD_3D) {
-			FMOD_VECTOR position = VectorToFmod(vPos);
-			AudioManager::ErrorCheck(pChannel->set3DAttributes(&position, nullptr));
+		if (auto channel = m_fmodInstance->mChannels[id])
+		{
+			StopChannel(id);
+			return id;
 		}
-		AudioManager::ErrorCheck(pChannel->setVolume(dbToVolume(fVolumedB)));
-		AudioManager::ErrorCheck(pChannel->setPaused(true));
-		AudioManager::ErrorCheck(pChannel->setPitch(frequency));
-		m_fmodInstance->mSound2Channels[strSoundName] = nChannelId;
-		m_fmodInstance->mChannels[nChannelId] = pChannel;
-		return nChannelId;
 	}
-	return -1;
-}
-
-int gswy::AudioManager::MuteSound(const string& strSoundName, const AudioVector3& vPos, float fVolumedB, float frequency)
-{
-	auto tFoundIt = m_fmodInstance->mSounds.find(strSoundName);
-	if (tFoundIt == m_fmodInstance->mSounds.end())
-	{
-		throw EngineException(_CRT_WIDE(__FILE__), __LINE__, L"Sound at " + str2wstr(strSoundName) + L" has not been loaded!");
-	}
-	FMOD::Channel* pChannel = nullptr;
-	AudioManager::ErrorCheck(m_fmodInstance->mpSystem->playSound(tFoundIt->second, nullptr, true, &pChannel));
-	if (pChannel)
-	{
-		int nChannelId = m_fmodInstance->mnNextChannelId++;
-		FMOD_MODE currMode;
-		tFoundIt->second->getMode(&currMode);
-		if (currMode & FMOD_3D) {
-			FMOD_VECTOR position = VectorToFmod(vPos);
-			AudioManager::ErrorCheck(pChannel->set3DAttributes(&position, nullptr));
-		}
-		AudioManager::ErrorCheck(pChannel->setVolume(dbToVolume(fVolumedB)));
-		AudioManager::ErrorCheck(pChannel->setPaused(false));
-		AudioManager::ErrorCheck(pChannel->setPitch(frequency));
-		m_fmodInstance->mSound2Channels[strSoundName] = nChannelId;
-		m_fmodInstance->mChannels[nChannelId] = pChannel;
-		return nChannelId;
-	}
-
 	return -1;
 }
 
 void gswy::AudioManager::SetSoundFreqency(const string& strSoundName, float frequency)
 {
-	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setPitch(frequency);
+	int id = GetSoundChannel(strSoundName);
+	if (id != -1)
+	{
+		if (auto channel = m_fmodInstance->mChannels[id])
+		{
+			channel->setPitch(frequency);
+		}
+	}
 }
 
 void gswy::AudioManager::SetSoundDB(const string& strSoundName, float fVolumedB)
 {
-	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setVolume(dbToVolume(fVolumedB));
+	int id = GetSoundChannel(strSoundName);
+	if (id != -1)
+	{
+		if (auto channel = m_fmodInstance->mChannels[id])
+		{
+			channel->setVolume(dbToVolume(fVolumedB));
+		}
+	}
 }
 
 void gswy::AudioManager::SetSoundVol(const string& strSoundName, float vol)
 {
-	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setVolume(vol);
+	int id = GetSoundChannel(strSoundName);
+	if (id != -1)
+	{
+		if (auto channel = m_fmodInstance->mChannels[id])
+		{
+			channel->setVolume(vol);
+		}
+	}
+}
+
+void gswy::AudioManager::SetSoundPause(const string& strSoundName, bool pause)
+{
+	int id = GetSoundChannel(strSoundName);
+	if (id != -1)
+	{
+		if (auto channel = m_fmodInstance->mChannels[id])
+		{
+			channel->setPaused(pause);
+		}
+	}
+}
+
+void gswy::AudioManager::SetSoundMute(const string& strSoundName, bool mute)
+{
+	int id = GetSoundChannel(strSoundName);
+	if (id != -1)
+	{
+		if (auto channel = m_fmodInstance->mChannels[id])
+		{
+			channel->setMute(mute);
+		}
+	}
 }
 
 void gswy::AudioManager::PlayEvent(const string& strEventName)
