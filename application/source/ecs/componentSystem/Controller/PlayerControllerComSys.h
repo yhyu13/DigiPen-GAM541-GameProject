@@ -213,7 +213,7 @@ namespace gswy
 					m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
 
 					//Pause track
-					AudioManager::GetInstance()->SetSoundPause("Track_1", true); //put m_muteInput value instead of true to toggle only between escape
+					AudioManager::GetInstance()->SetSoundPause("Track_1", true);   //put m_muteInput value instead of true to toggle only between escape
 					//m_muteInput = !m_muteInput;
 				}
 			}

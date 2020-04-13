@@ -264,6 +264,7 @@ void gswy::AudioManager::SetSoundVol(const string& strSoundName, float vol)
 
 void gswy::AudioManager::SetSoundPause(const string& strSoundName, bool mute)
 {
+
 	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setPaused(mute);
 }
 
