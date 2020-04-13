@@ -58,7 +58,19 @@ namespace gswy
 
 		bool** closedList;
 		cell** cellDetails;
-	
+
+		// Cost of moving of 1 unit on the grid (default as 1)
+		double D = {1.0};
+		// Octile distance
+		double D2 = { sqrt(2) };
+
+		/*
+		// Heuristic options:
+		// 0 L1
+		// 1 L2
+		// 2 Octile
+		*/
+		int H_option = {1};
 	private:
 		// A Utility Function to check whether given cell (row, col) 
 		// is a valid cell or not. 

@@ -96,9 +96,21 @@ bool gswy::PathFinding::isDestination(int row, int col, Pair dest)
 
 double gswy::PathFinding::calculateHValue(int row, int col, Pair dest)
 {
-	// Return using the distance formula 
-	return ((double)sqrt((row - dest.first) * (row - dest.first)
-		+ (col - dest.second) * (col - dest.second)));
+	
+	double dx = row - dest.first;
+	double dy = col - dest.second;
+	switch (H_option)
+	{
+	case 0:
+		// L1
+		return D * (dx + dy);
+	case 1:
+		// L2
+		return D * sqrt(dx * dx + dy * dy);
+	case 2:
+		// L-infinity
+		return D * (dx + dy) + (D2 - 2 * D) * MIN(dx, dy);
+	}
 }
 
 // A Utility Function to trace the path from the source 
@@ -270,7 +282,7 @@ bool gswy::PathFinding::aStarSearch(const Grid_float& grid, Pair src, Pair dest)
 			else if (closedList[i - 1][j] == false &&
 				isUnBlocked(grid, i - 1, j) == true)
 			{
-				gNew = cellDetails[i][j].g + 1.0;
+				gNew = cellDetails[i][j].g + D;
 				hNew = calculateHValue(i - 1, j, dest);
 				fNew = gNew + hNew;
 
@@ -321,7 +333,7 @@ bool gswy::PathFinding::aStarSearch(const Grid_float& grid, Pair src, Pair dest)
 			else if (closedList[i + 1][j] == false &&
 				isUnBlocked(grid, i + 1, j) == true)
 			{
-				gNew = cellDetails[i][j].g + 1.0;
+				gNew = cellDetails[i][j].g + D;
 				hNew = calculateHValue(i + 1, j, dest);
 				fNew = gNew + hNew;
 
@@ -371,7 +383,7 @@ bool gswy::PathFinding::aStarSearch(const Grid_float& grid, Pair src, Pair dest)
 			else if (closedList[i][j + 1] == false &&
 				isUnBlocked(grid, i, j + 1) == true)
 			{
-				gNew = cellDetails[i][j].g + 1.0;
+				gNew = cellDetails[i][j].g + D;
 				hNew = calculateHValue(i, j + 1, dest);
 				fNew = gNew + hNew;
 
@@ -423,7 +435,7 @@ bool gswy::PathFinding::aStarSearch(const Grid_float& grid, Pair src, Pair dest)
 			else if (closedList[i][j - 1] == false &&
 				isUnBlocked(grid, i, j - 1) == true)
 			{
-				gNew = cellDetails[i][j].g + 1.0;
+				gNew = cellDetails[i][j].g + D;
 				hNew = calculateHValue(i, j - 1, dest);
 				fNew = gNew + hNew;
 
