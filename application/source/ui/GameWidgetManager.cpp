@@ -371,7 +371,7 @@ namespace gswy {
 
 	void OptionMenu::Update()
 	{
-		SoundManager::GetInstance()->CallForMuteBGM(m_MuteMusic);
+		SoundManager::GetInstance()->CallForMuteBGM("Track_1", -200.0f);
 		SoundManager::GetInstance()->CallForMuteSFX(m_MuteSFX);
 	}
 

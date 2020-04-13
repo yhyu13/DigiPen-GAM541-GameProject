@@ -92,11 +92,14 @@ namespace gswy
 
 	struct OnMuteBGMEvent : Event<GameObjectType, EventType>
 	{
-		explicit OnMuteBGMEvent(bool m = true) : Event(EventType::MUTE_BGM)
+		explicit OnMuteBGMEvent(const std::string& name, float vol) : Event(EventType::MUTE_BGM)
 		{
-			m_mute = m;
+			soundName = name;
+			m_vol = vol;
 		}
-		bool m_mute;
+		
+		std::string soundName;
+		float m_vol;
 	};
 
 	struct OnMuteSFXEvent : Event<GameObjectType, EventType>

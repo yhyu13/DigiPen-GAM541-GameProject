@@ -871,7 +871,7 @@ namespace gswy
 				// TODO
 				m_world->SetPause(!m_world->IsPaused());
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
-				SoundManager::GetInstance()->CallForMuteBGM(true);
+				//SoundManager::GetInstance()->CallForMuteBGM(true);
 				SoundManager::GetInstance()->CallForMuteSFX(true);
 				AudioManager::GetInstance()->PauseAllChannels(false);
 			}

@@ -67,7 +67,12 @@ namespace gswy
 		{
 			if (auto event = static_pointer_cast<OnMuteBGMEvent>(e))
 			{
-				m_muteBGM = event->m_mute;
+				if (event->m_vol <= -100)
+				{
+					AudioManager::GetInstance()->SetSoundVol(event->soundName, event->m_vol);
+				}
+				else
+					AudioManager::GetInstance()->SetSoundVol(event->soundName, 1.0f);
 			}
 		}
 

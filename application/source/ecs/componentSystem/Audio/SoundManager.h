@@ -54,9 +54,9 @@ namespace gswy
 			queue->Publish(e);
 		}
 
-		void CallForMuteBGM(bool play)
+		void CallForMuteBGM(const std::string& track, float vol)
 		{
-			auto e = MemoryManager::Make_shared<OnMuteBGMEvent>(play);
+			auto e = MemoryManager::Make_shared<OnMuteBGMEvent>(track, vol);
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Publish(e);
 		}
