@@ -614,7 +614,7 @@ namespace gswy
 				// Play BGM
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				m_world->Unpack(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0], transform);
-				AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ transform->GetPos3D() }, 1, 1);
+				AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ 0,0,0 }, 1, 1);
 			}
 		}
 
@@ -687,6 +687,7 @@ namespace gswy
 			}
 			// Set 3D sound
 			AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
+			AudioManager::GetInstance()->SetChannel3dPosition(AudioManager::GetInstance()->GetSoundChannel("Track_1"), AudioVector3(m_CameraController.GetPosition()));
 		}
 
 		void UpdateCursor(double ts)
@@ -871,8 +872,6 @@ namespace gswy
 				// TODO
 				m_world->SetPause(!m_world->IsPaused());
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
-				//SoundManager::GetInstance()->CallForMuteBGM(true);
-				SoundManager::GetInstance()->CallForMuteSFX(true);
 				AudioManager::GetInstance()->PauseAllChannels(false);
 			}
 			if (buttonName.compare("Main Menu") == 0)

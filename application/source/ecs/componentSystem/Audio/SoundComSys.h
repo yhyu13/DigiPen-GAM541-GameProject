@@ -38,6 +38,7 @@ namespace gswy
 			queue->Subscribe<SoundComSys>(this, EventType::COLLISION, &SoundComSys::CollisionPLAYSOUND);
 			queue->Subscribe<SoundComSys>(this, EventType::WEAPON_SOUND, &SoundComSys::WeaponPLAYSOUND);
 			queue->Subscribe<SoundComSys>(this, EventType::MUTE_SFX, &SoundComSys::OnMuteSFX);
+			queue->Subscribe<SoundComSys>(this, EventType::MUTE_BGM, &SoundComSys::OnMuteBGM);
 		}
 
 		/*
@@ -67,12 +68,14 @@ namespace gswy
 		{
 			if (auto event = static_pointer_cast<OnMuteBGMEvent>(e))
 			{
-				if (event->m_vol <= -100)
+				if (event->m_mute)
 				{
-					AudioManager::GetInstance()->SetSoundVol(event->soundName, event->m_vol);
+					AudioManager::GetInstance()->SetSoundDB("Track_1", -100);
 				}
 				else
-					AudioManager::GetInstance()->SetSoundVol(event->soundName, 1.0f);
+				{
+					AudioManager::GetInstance()->SetSoundDB("Track_1", 1.0f);
+				}
 			}
 		}
 

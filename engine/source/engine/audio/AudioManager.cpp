@@ -257,6 +257,11 @@ void gswy::AudioManager::SetSoundFreqency(const string& strSoundName, float freq
 	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setPitch(frequency);
 }
 
+void gswy::AudioManager::SetSoundDB(const string& strSoundName, float fVolumedB)
+{
+	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setVolume(dbToVolume(fVolumedB));
+}
+
 void gswy::AudioManager::SetSoundVol(const string& strSoundName, float vol)
 {
 	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setVolume(vol);
