@@ -906,7 +906,7 @@ namespace gswy
 
 			if (buttonName.compare("Full Screen") == 0)
 			{
-				m_CameraController.SetAspectRatio(GSWY_GetWindowWidth() / GSWY_GetWindowHeight());
+				//m_CameraController.SetAspectRatio(GSWY_GetWindowWidth() / GSWY_GetWindowHeight());
 			}
 		}
 
