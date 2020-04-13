@@ -296,6 +296,7 @@ namespace gswy {
 			if (ImGui::Combo("##FullScreen", &fullScreen, "Off\0On\0"))
 			{
 				engine.GetWindow().ToggleFullScreen(fullScreen);
+				WidgetManager::GetInstance()->InvokeButton("Full Screen");
 			}
 			ImGui::NewLine();
 			ImGui::Separator();
@@ -399,7 +400,7 @@ namespace gswy {
 		//Text : Wave
 		ImVec2 waveWindowSize = ImVec2(m_WaveWindowSize.x, m_WaveWindowSize.y);
 		ImGui::SetNextWindowSize(waveWindowSize);
-		ImVec2 waveWindowPos = ImVec2(GetWindowSize_X() / 2 - waveWindowSize[0] / 2, 8);
+		ImVec2 waveWindowPos = ImVec2(GetWindowSize_X() / 2 - waveWindowSize[0] / 2, 12);
 		ImGui::SetNextWindowPos(waveWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);

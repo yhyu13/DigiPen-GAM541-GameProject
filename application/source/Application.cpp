@@ -900,6 +900,11 @@ namespace gswy
 				auto creditScreenEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_CREDIT_SCREEN);
 				queue->Publish(creditScreenEvent);
 			}
+
+			if (buttonName.compare("Full Screen") == 0)
+			{
+				m_CameraController.SetAspectRatio(GSWY_GetWindowWidth() / GSWY_GetWindowHeight());
+			}
 		}
 
 		void OnInterruption(const int& isFocussed)

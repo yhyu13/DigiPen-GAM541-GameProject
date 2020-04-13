@@ -14,6 +14,7 @@ Creation date	: 01/26/2020
 #include "engine-precompiled-header.h"
 #include "engine/window/Window.h"
 #include "engine/EngineCore.h"
+#include "engine/renderer/Renderer2D.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -57,15 +58,48 @@ namespace gswy {
 	{
 		if (on)
 		{
+			//glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
+			glfwWindowHint(GLFW_DECORATED, false);
 			glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, m_windowProperties.m_width, m_windowProperties.m_height, GLFW_DONT_CARE);
+			int w, h;
+			glfwGetWindowSize(m_window, &w, &h);
+			m_windowProperties.m_width = w;
+			m_windowProperties.m_height = h;
+
+			printf("Full Screen : width = %d, height = %d\n", w, h);
+
+			int l, r, t, b;
+			glfwGetWindowFrameSize(m_window, &l, &t, &r, &b);
+			printf("Frame Size : left = %d, top = %d right = %d, bottom = %d\n", l, t, r, b);
 		}
 		else
 		{
-			int x, y, w, h;
+			glfwWindowHint(GLFW_DECORATED, true);
+			int x = 0, y = 0, w = 1, h = 1;
+			glfwSetWindowMonitor(m_window, nullptr, x, y, w, h, GLFW_DONT_CARE);
+
+			int l, r, t, b;
+			glfwGetWindowFrameSize(m_window, &l, &t, &r, &b);
+			printf("Frame Size : left = %d, top = %d right = %d, bottom = %d\n", l, t, r, b);
+
+			//int x, y, w, h;
 			glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &x, &y, &w, &h);
 			glfwSetWindowMonitor(m_window, nullptr, x, y, w, h, GLFW_DONT_CARE);
+
+			m_windowProperties.m_width = w;
+			m_windowProperties.m_height = h;
+			printf("No Full Screen : posX = %d, posY = %d width = %d, height = %d\n", x, y, w, h);
+
 		}
 		m_windowProperties.IsFullScreen = on;
+		width = m_windowProperties.m_width;
+		height = m_windowProperties.m_height;
+		printf("Window Size : %d x %d\n", width, height);
+
+		int w, h;
+		glfwGetFramebufferSize(m_window, &w, &h);
+		printf("Framebuffer Size : %d x %d\n", w, h);
+		
 	}
 
 	void Window::SetVSync(bool on)
@@ -125,7 +159,7 @@ namespace gswy {
 			m_windowProperties.m_width = mode->width;
 			m_windowProperties.m_height = mode->height;
 
-			m_window = glfwCreateWindow(mode->width, mode->height, m_windowProperties.m_title.c_str(), monitor, NULL);
+			m_window = glfwCreateWindow(mode->width, mode->height, m_windowProperties.m_title.c_str(), monitor, nullptr);
 			m_windowProperties.m_input->SetMouseMaxPositions(mode->width, mode->height);
 		}
 		else
@@ -198,6 +232,8 @@ namespace gswy {
 			WindowProperties& properties = *(WindowProperties*)glfwGetWindowUserPointer(window);
 			properties.m_width = width;
 			properties.m_height = height;
+
+			Renderer2D::OnWindowResize(width, height);
 		});
 
 		glfwSetWindowFocusCallback(m_window, [](GLFWwindow* window, int focussed)

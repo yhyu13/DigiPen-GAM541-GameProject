@@ -28,6 +28,7 @@ namespace gswy {
 		float GetZoomLevel() const { return m_ZoomLevel; }
 		float GetCameraMoveSpeed() const { return m_CameraMoveSpeed; }
 		float GetAspectRatio() const { return m_AspectRatio; }
+		void SetAspectRatio(float aspectRatio) {  m_AspectRatio = aspectRatio; }
 		void SetZoomLevel(float level) { m_ZoomLevel = level; }
 		void SetPosition(const glm::vec3& pos) { m_CameraPosition = pos; }
 		const glm::vec3& GetPosition() const { return m_CameraPosition; }

@@ -15,6 +15,7 @@ Creation date: 03/12/2020
 #include "engine/renderer/Buffer.h"
 #include "inventory-manager/Item.h"
 #include "engine/renderer/Texture.h"
+#include "engine/renderer/OrthographicCameraController.h"
 
 namespace gswy {
 
