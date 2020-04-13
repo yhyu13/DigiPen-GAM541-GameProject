@@ -874,6 +874,8 @@ namespace gswy
 				//SoundManager::GetInstance()->CallForMuteBGM(true);
 				SoundManager::GetInstance()->CallForMuteSFX(true);
 				AudioManager::GetInstance()->PauseAllChannels(false);
+
+				AudioManager::GetInstance()->SetSoundPause("Track_1", false);
 			}
 			if (buttonName.compare("Main Menu") == 0)
 			{

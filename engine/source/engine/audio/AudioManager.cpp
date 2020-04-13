@@ -262,6 +262,11 @@ void gswy::AudioManager::SetSoundVol(const string& strSoundName, float vol)
 	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setVolume(vol);
 }
 
+void gswy::AudioManager::SetSoundPause(const string& strSoundName, bool mute)
+{
+	m_fmodInstance->mChannels[GetSoundChannel(strSoundName)]->setPaused(mute);
+}
+
 void gswy::AudioManager::PlayEvent(const string& strEventName)
 {
 	auto tFoundit = m_fmodInstance->mEvents.find(strEventName);
