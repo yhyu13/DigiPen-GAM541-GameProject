@@ -104,7 +104,7 @@ namespace gswy {
 		{
 			m_Texture_ResumeGame = Texture2D::Create(m_TexturePath_ResumeGame);
 			m_Texture_MainMenu = Texture2D::Create(m_TexturePath_MainMenu);
-			m_PauseMenuWindowSize = { 500, 640 };
+			m_PauseMenuWindowSize = { 500, 535 };
 		}
 		void Render() override;
 		WidgetManager* manager;
