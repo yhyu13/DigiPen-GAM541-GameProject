@@ -349,6 +349,8 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 2.0f);
+			auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
+			queue->Publish(e2);
 		}
 		void OnLoadWonLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
@@ -376,6 +378,14 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 2.0f);
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtPlayerLocationEvent>("Victory", 1, 1);
+			queue->Publish(e3);
+			auto e4 = MemoryManager::Make_shared<LoadMainMenuEvent>();
+			queue->Publish(e4, 3);
+			auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
+			queue->Publish(e2);
+			auto audio = AudioManager::GetInstance();
+			audio->StopSound("Track_1");
 		}
 		void OnLoadLostLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
@@ -403,6 +413,14 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 2.0f);
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtPlayerLocationEvent>("Defeat", 1, 1);
+			queue->Publish(e3);
+			auto e4 = MemoryManager::Make_shared<LoadMainMenuEvent>();
+			queue->Publish(e4, 3);
+			auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
+			queue->Publish(e2);
+			auto audio = AudioManager::GetInstance();
+			audio->StopSound("Track_1");
 		}
 		void OnLoadDiedLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
@@ -430,6 +448,14 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 2.0f);
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtPlayerLocationEvent>("Defeat", 1, 1);
+			queue->Publish(e3);
+			auto e4 = MemoryManager::Make_shared<LoadMainMenuEvent>();
+			queue->Publish(e4, 3);
+			auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
+			queue->Publish(e2);
+			auto audio = AudioManager::GetInstance();
+			audio->StopSound("Track_1");
 		}
 		void OnLoadFinalWaveLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{

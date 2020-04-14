@@ -64,6 +64,21 @@ namespace gswy
 		float m_damage;
 	};
 
+	struct PlaySoundAtPlayerLocationEvent : Event<GameObjectType, EventType> {
+
+		explicit PlaySoundAtPlayerLocationEvent(const std::string& name, float vol = 1.0f, float freq = 1.0f)
+			:
+			Event(EventType::SOUND_PLAYER)
+		{
+			soundName = name;
+			m_vol = vol;
+			m_freq = freq;
+		}
+		std::string soundName;
+		float m_vol;
+		float m_freq;
+	};
+
 	struct SoundEvent : Event<GameObjectType, EventType> {
 
 		explicit SoundEvent(const std::string& name, glm::vec3& pos = glm::vec3(0), float vol = 1.0f, float freq = 1.0f)

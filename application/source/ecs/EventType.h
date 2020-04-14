@@ -19,6 +19,7 @@ namespace gswy
 		EMPTY = 0,
 		COLLISION,								// Collision event
 		SOUND,									// Play sound event
+		SOUND_PLAYER,
 		WEAPON_SOUND,							// Play weapon sound event
 		MUTE_SFX,                             // Mute Sound Event
 		MUTE_BGM,                             // Mute music Event

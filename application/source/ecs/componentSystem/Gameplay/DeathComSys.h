@@ -43,8 +43,6 @@ namespace gswy
 					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 					auto e1 = MemoryManager::Make_shared<LoadLostEvent>();
 					queue->Publish(e1);
-					auto e3 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-					queue->Publish(e3, 4.0);
 				}
 				break;
 				case GameObjectType::PLAYER:
@@ -54,8 +52,6 @@ namespace gswy
 					queue->Publish(e1);
 					auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
 					queue->Publish(e2);
-					auto e3 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-					queue->Publish(e3, 4.0);
 				}
 					break;
 				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:

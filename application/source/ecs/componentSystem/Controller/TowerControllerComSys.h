@@ -17,6 +17,7 @@ Creation date: 03/11/2020
 #include "engine/input/InputManager.h"
 #include "ecs/components/ActiveCom.h"
 #include "ecs/components/TransformCom.h"
+#include "ecs/components/ChildrenCom.h"
 #include "ecs/components/CoolDownCom.h"
 #include "ecs/components/MiniMapSprite.h"
 #include "ecs/EntityType.h"
@@ -26,7 +27,7 @@ namespace gswy
 {
 	class TowerControllerComSys : public BaseComponentSystem<GameObjectType> {
 	private:
-		int m_towerBuildCost = {100};
+		int m_towerBuildCost = { 100 };
 		bool m_bCanBuild = { false };
 	public:
 		TowerControllerComSys() {
@@ -45,18 +46,39 @@ namespace gswy
 			m_towerBuildCost = items["cost"].asInt();
 		}
 
-		virtual void Update(double dt) override 
+		virtual void Update(double dt) override
 		{
 			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::TOWER_BUILD);
 			m_bCanBuild = GameLevelMapManager::GetInstance()->GetCoins() >= m_towerBuildCost;
 			if (!m_bCanBuild)
 			{
+				// Turn all tower to off due to insufficent coins
 				for (auto& tower : m_registeredEntities)
 				{
-					GetComponent<SpriteCom>(tower)->SetTexture("TowerHammer_Off");
+					if (GetComponent<ActiveCom>(tower)->IsActive())
+					{
+						GetComponent<SpriteCom>(tower)->SetTexture("TowerHammer_Off");
+					}
 				}
 			}
-
+			else
+			{
+				// Turn on all un-selected tower if enough coins
+				for (auto& tower : m_registeredEntities)
+				{
+					auto children = GetComponent<ChildrenCom<GameObjectType>>(tower)->GetEntities();
+					if (!children.empty())
+					{
+						if (!GetComponent<ActiveCom>(children[0])->IsActive())
+						{
+							if (GetComponent<ActiveCom>(tower)->IsActive())
+							{
+								GetComponent<SpriteCom>(tower)->SetTexture("TowerHammer_On");
+							}
+						}
+					}
+				}
+			}
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			std::vector<Entity<GameObjectType>> allEnemies;

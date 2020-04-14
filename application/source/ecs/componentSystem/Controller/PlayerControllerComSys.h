@@ -98,6 +98,7 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<PlayerControllerComSys>(this, EventType::KEY_BIND_EVENT, &PlayerControllerComSys::OnKeyBindingEvent);
 			queue->Subscribe<PlayerControllerComSys>(this, EventType::CAN_PLAYER_INPUT, &PlayerControllerComSys::OnCanPlayerInput);
+			queue->Subscribe<PlayerControllerComSys>(this, EventType::SOUND_PLAYER, &PlayerControllerComSys::OnPlaySoundAtPlayerLocation);
 		}
 
 		void OnKeyBindingEvent(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -140,6 +141,20 @@ namespace gswy
 			{
 				m_bDisableMoveInput = !event->m_bInput;
 				m_bDisableInput = !event->m_bInput;
+			}
+		}
+
+		void OnPlaySoundAtPlayerLocation(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = dynamic_pointer_cast<PlaySoundAtPlayerLocationEvent>(e))
+			{
+				auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+				ComponentDecorator<BodyCom, GameObjectType> body;
+				m_parentWorld->Unpack(entity, body);
+				auto playerPos = body->GetPos();
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto e1 = MemoryManager::Make_shared<SoundEvent>(event->soundName, playerPos, event->m_vol, event->m_freq);
+				queue->Publish(e1);
 			}
 		}
 
