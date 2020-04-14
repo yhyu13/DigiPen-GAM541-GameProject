@@ -588,7 +588,7 @@ namespace gswy
 				auto sprite = SpriteCom();
 				auto m_sprite = sprite.Get();
 				m_sprite->SetSpriteTexture(logoTexture);
-				m_sprite->SetSpriteScale(vec2(.5, .5 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+				m_sprite->SetSpriteScale(vec2(1.5, 1.5 / logoTexture->GetWidth() * logoTexture->GetHeight()));
 				m_sprite->SetSpritePosition(vec3(0));
 				logo.AddComponent(sprite);
 				auto transform = TransformCom(0, 0, Z_ORDER(9000));
@@ -894,7 +894,9 @@ namespace gswy
 			}
 			if (buttonName.compare("How To Play") == 0)
 			{
-				// TODO
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto e = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_HOW_TO_PLAY);
+				queue->Publish(e);
 			}
 			if (buttonName.compare("Option") == 0)
 			{

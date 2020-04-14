@@ -17,7 +17,7 @@
         },
         {
           "name": "credits",
-          "path": "./asset/Logo/credits.png"
+          "path": "./asset/Logo/credits_comp.png"
         },
         {
           "name": "You_Won",
@@ -57,7 +57,7 @@
         },
         {
           "name": "Press_Space",
-          "path": "./asset/UI/Press_Space.png"
+          "path": "./asset/UI/press_space_2.png"
         },
         {
           "name": "Portal_0",
@@ -166,6 +166,18 @@
         {
           "name": "coin_SFX",
           "path": "./asset/Sprites/coin.png"
+        },
+        {
+          "name": "htp_1",
+          "path": "./asset/UI/htp_1.png"
+        },
+        {
+          "name": "htp_2",
+          "path": "./asset/UI/htp_2.png"
+        },
+        {
+          "name": "htp_3",
+          "path": "./asset/UI/htp_3.png"
         }
       ]
     },

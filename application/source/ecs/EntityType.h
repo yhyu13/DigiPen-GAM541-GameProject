@@ -23,6 +23,7 @@ namespace gswy
 		TEAM_LOGO,
 		GAME_LOGO,
 		CREDITS,
+		HOW_TO_PLAY,
 		MINIMAP,
 		BASE,
 		PLAYER,
