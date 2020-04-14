@@ -499,6 +499,7 @@ namespace gswy
 			// Stop BGM
 			{
 				AudioManager::GetInstance()->StopAllChannels();
+				AudioManager::GetInstance()->Update(0);
 			}
 		}
 
@@ -618,7 +619,15 @@ namespace gswy
 			// Play BGM
 			{
 				AudioManager::GetInstance()->StopAllChannels();
+				AudioManager::GetInstance()->Update(0);
 				AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ 0,0,0 }, 1, 1);
+			}
+
+			// Re-enable player input
+			{
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(true);
+				queue->Publish(e2);
 			}
 		}
 
