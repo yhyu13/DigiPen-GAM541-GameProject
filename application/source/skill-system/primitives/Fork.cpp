@@ -23,12 +23,12 @@ namespace gswy
 	{
 	}
 
-	const int& Fork::GetForkCount()
+	const int Fork::GetForkCount()
 	{
 		return m_forkCount;
 	}
 
-	void Fork::SetForkCount(const int& forkCount)
+	void Fork::SetForkCount(int forkCount)
 	{
 		m_forkCount = forkCount;
 	}

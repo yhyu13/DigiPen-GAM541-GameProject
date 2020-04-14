@@ -19,6 +19,7 @@ Creation date: 03/12/2020
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/BodyCom.h"
 #include "ecs/components/BuffCom.h"
+#include "ecs/components/DamageCom.h"
 #include "ecs/components/OwnershiptCom.h"
 #include "ecs/components/SpriteCom.h"
 #include "ecs/components/TransformCom.h"
@@ -211,6 +212,7 @@ namespace gswy
 			obj.AddComponent(HitPointCom(100));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
+			obj.AddComponent(DamageCom(5));
 
 			// Mob floating hp bar
 			{
@@ -259,6 +261,7 @@ namespace gswy
 			obj.AddComponent(HitPointCom(75));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
+			obj.AddComponent(DamageCom(5));
 
 			// Mob floating hp bar
 			{
@@ -307,6 +310,7 @@ namespace gswy
 			obj.AddComponent(HitPointCom(200));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
+			obj.AddComponent(DamageCom(20));
 
 			// Mob floating hp bar
 			{

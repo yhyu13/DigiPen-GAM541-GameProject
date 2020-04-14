@@ -23,8 +23,8 @@ namespace gswy
 		Fork();
 		~Fork();
 
-		const int& GetForkCount();
-		void SetForkCount(const int& forkCount);
+		const int GetForkCount();
+		void SetForkCount(int forkCount);
 
 	private:
 

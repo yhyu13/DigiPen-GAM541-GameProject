@@ -499,13 +499,14 @@ namespace gswy
 			// Stop BGM
 			{
 				AudioManager::GetInstance()->StopAllChannels();
+				AudioManager::GetInstance()->Update(0);
 			}
 		}
 
 		void LoadGameWorld(int level, bool reloadGameWorld = false)
 		{
 			auto sampleID = Str(level);
-			PRINT("Loading map ID " + sampleID);
+			DEBUG_PRINT("Loading map ID " + sampleID);
 			// Re-load game world
 			{
 				if (reloadGameWorld)
@@ -618,7 +619,15 @@ namespace gswy
 			// Play BGM
 			{
 				AudioManager::GetInstance()->StopAllChannels();
+				AudioManager::GetInstance()->Update(0);
 				AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ 0,0,0 }, 1, 1);
+			}
+
+			// Re-enable player input
+			{
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(true);
+				queue->Publish(e2);
 			}
 		}
 
@@ -849,7 +858,7 @@ namespace gswy
 	public:
 		void OnImGuiButtonClicke(const std::string& buttonName)
 		{
-			PRINT(buttonName);
+			DEBUG_PRINT(buttonName);
 
 			// Main menu
 			if (buttonName.compare("New Game") == 0)

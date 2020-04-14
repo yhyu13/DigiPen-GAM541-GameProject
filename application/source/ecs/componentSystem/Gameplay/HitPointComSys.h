@@ -14,6 +14,7 @@ Creation date: 02/18/2020
 #include "engine/ecs/BaseComponent.h"
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
+#include "ecs/components/DamageCom.h"
 #include "ecs/components/HitPointCom.h"
 #include "ecs/components/HitPreventionCom.h"
 #include "ecs/CustomEvents.h"
@@ -138,13 +139,16 @@ namespace gswy
 				m_parentWorld->Unpack(entityA, HitPoint);
 				m_parentWorld->Unpack(entityB, HitPrevention);
 
+				ComponentDecorator<DamageCom, GameObjectType> Damage;
+				m_parentWorld->Unpack(entityB, Damage);
+
 				// Note: Fireball has hit prevention that only applies one hit to enemy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-5);
+					HitPoint->AddHitPoint(-Damage->GetDamange());
 
-					PRINT("Player is hit! HP: " + Str(HitPoint->GetPercentageHP()*100) + "%");
+					DEBUG_PRINT("Player is hit! HP: " + Str(HitPoint->GetPercentageHP()*100) + "%");
 
 					auto speedDownBuff = MemoryManager::Make_shared<ModifySpeedPercentBuff>(0.33, 0.5);
 					auto e = MemoryManager::Make_shared<AddBuffEvent>(entityA, speedDownBuff, true);
@@ -171,6 +175,9 @@ namespace gswy
 				m_parentWorld->Unpack(entityB, cooldown);
 				m_parentWorld->Unpack(entityB, owner);
 
+				ComponentDecorator<DamageCom, GameObjectType> Damage;
+				m_parentWorld->Unpack(entityB, Damage);
+
 				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkill;
 				m_parentWorld->Unpack(owner->GetEntity(), playerSkill);
 
@@ -179,7 +186,7 @@ namespace gswy
 
 				if (!cooldown->IsFreezed() && !cooldown->IsCoolDown())
 				{
-					HitPoint->AddHitPoint(-8);
+					HitPoint->AddHitPoint(-Damage->GetDamange());
 				}
 			}
 			break;
@@ -190,11 +197,14 @@ namespace gswy
 				m_parentWorld->Unpack(entityA, HitPoint);
 				m_parentWorld->Unpack(entityB, HitPrevention);
 
+				ComponentDecorator<DamageCom, GameObjectType> Damage;
+				m_parentWorld->Unpack(entityB, Damage);
+
 				// Note: Fireball has hit prevention that only applies one hit to enemy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-15);
+					HitPoint->AddHitPoint(-Damage->GetDamange());
 
 					auto e = MemoryManager::Make_shared<GCEvent>(entityB);
 					queue->Publish(e, 0.15);
@@ -212,11 +222,14 @@ namespace gswy
 				m_parentWorld->Unpack(entityA, HitPoint);
 				m_parentWorld->Unpack(entityB, HitPrevention);
 
+				ComponentDecorator<DamageCom, GameObjectType> Damage;
+				m_parentWorld->Unpack(entityB, Damage);
+
 				// Note: Fireball has hit prevention that only applies one hit to enemy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-10);
+					HitPoint->AddHitPoint(-Damage->GetDamange());
 				}
 			}
 			break;
@@ -228,11 +241,14 @@ namespace gswy
 				m_parentWorld->Unpack(entityA, HitPoint);
 				m_parentWorld->Unpack(entityB, HitPrevention);
 
+				ComponentDecorator<DamageCom, GameObjectType> Damage;
+				m_parentWorld->Unpack(entityB, Damage);
+
 				// Note: Iceball has hit prevention that only applies one hit to enemy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-10);
+					HitPoint->AddHitPoint(-Damage->GetDamange());
 
 					// Iceball makes target it hit slow down
 					auto speedDownBuff = MemoryManager::Make_shared<ModifySpeedPercentBuff>(0.5, 1);
@@ -249,11 +265,14 @@ namespace gswy
 				m_parentWorld->Unpack(entityA, HitPoint);
 				m_parentWorld->Unpack(entityB, HitPrevention);
 
+				ComponentDecorator<DamageCom, GameObjectType> Damage;
+				m_parentWorld->Unpack(entityB, Damage);
+
 				// Note: Fireball has hit prevention that only applies one hit to enemy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-10);
+					HitPoint->AddHitPoint(-Damage->GetDamange());
 
 					// Iceball makes target it hit slow down
 					auto speedDownBuff = MemoryManager::Make_shared<ModifySpeedPercentBuff>(0.8, 0.5);
@@ -270,11 +289,14 @@ namespace gswy
 				m_parentWorld->Unpack(entityA, HitPoint);
 				m_parentWorld->Unpack(entityB, HitPrevention);
 
+				ComponentDecorator<DamageCom, GameObjectType> Damage;
+				m_parentWorld->Unpack(entityB, Damage);
+
 				// Note: Fireball has hit prevention that only applies one hit to enemy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
 					HitPrevention->Add(entityA);
-					HitPoint->AddHitPoint(-25);
+					HitPoint->AddHitPoint(-Damage->GetDamange());
 				}
 			}
 			break;
@@ -288,12 +310,15 @@ namespace gswy
 				m_parentWorld->Unpack(entityB, cooldown);
 				m_parentWorld->Unpack(entityB, owner);
 
+				ComponentDecorator<DamageCom, GameObjectType> Damage;
+				m_parentWorld->Unpack(entityB, Damage);
+
 				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkill;
 				m_parentWorld->Unpack(owner->GetEntity(), playerSkill);
 
 				if (!cooldown->IsFreezed() && !cooldown->IsCoolDown())
 				{
-					HitPoint->AddHitPoint(-1);
+					HitPoint->AddHitPoint(-Damage->GetDamange());
 				}
 			}
 			break;

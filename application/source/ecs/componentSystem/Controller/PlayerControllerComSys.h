@@ -265,7 +265,6 @@ namespace gswy
 				// Start level by pressing space
 				if (input->IsKeyTriggered(KEY_SPACE))
 				{
-					PRINT("SPACE");
 					if (!GameLevelMapManager::GetInstance()->IsWaveStarted())
 					{
 						GameLevelMapManager::GetInstance()->StartWave();
@@ -430,7 +429,7 @@ namespace gswy
 			}
 			else
 			{
-				PRINT(Str(entity) + " path not found");
+				DEBUG_PRINT(Str(entity) + " path not found");
 			}
 		}
 

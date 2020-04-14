@@ -14,8 +14,11 @@ Creation date	: 03/26/2020
 
 namespace gswy
 {
-	CycloneAttack::CycloneAttack() : ActiveSkill(ActiveSkillType::CYCLONE)
+	CycloneAttack::CycloneAttack() 
+		: 
+		ActiveSkill(ActiveSkillType::CYCLONE)
 	{
+		SetBaseDamange(8);
 	}
 
 	CycloneAttack::~CycloneAttack()

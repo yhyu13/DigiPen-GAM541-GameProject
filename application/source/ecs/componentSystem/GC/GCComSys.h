@@ -23,6 +23,7 @@ Creation date: 02/17/2020
 #include "ecs/components/BuffCom.h"
 #include "ecs/components/ChildrenCom.h"
 #include "ecs/components/CoolDownCom.h"
+#include "ecs/components/DamageCom.h"
 #include "ecs/components/HitPointCom.h"
 #include "ecs/components/HitPreventionCom.h"
 #include "ecs/components/LifeTimeCom.h"
@@ -61,20 +62,16 @@ namespace gswy
 		{
 			for (auto& e : m_GCList)
 			{
-				PRINT("Delete: " + Str(e));
+				DEBUG_PRINT("Delete: " + Str(e));
 
-				// Instead of removing the entity from ActiveCom manager like we do for all other component,
-				// we set activeCom to false
-				/*auto active = GetComponent<ActiveCom>(e);
-				active->SetActive(false);*/
 				m_parentWorld->RemoveComponent<ActiveCom>(e);
-
 				m_parentWorld->RemoveComponent<AnimationCom>(e);
 				m_parentWorld->RemoveComponent<AttachedMovementCom>(e);
 				m_parentWorld->RemoveComponent<BodyCom>(e);
 				m_parentWorld->RemoveComponent<BuffCom>(e);
 				m_parentWorld->RemoveComponent<ChildrenCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<CoolDownCom>(e);
+				m_parentWorld->RemoveComponent<DamageCom>(e);
 				m_parentWorld->RemoveComponent<HitPointCom>(e);
 				m_parentWorld->RemoveComponent<HitPreventionCom<GameObjectType>>(e);
 				m_parentWorld->RemoveComponent<LifeTimeCom>(e);

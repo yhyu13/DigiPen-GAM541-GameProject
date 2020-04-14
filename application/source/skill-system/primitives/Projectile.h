@@ -25,10 +25,10 @@ namespace gswy
 		Projectile();
 		~Projectile();
 
-		const int& GetCount();
-		void SetCount(const int& count);
+		const int GetCount();
+		void SetCount(int count);
 
-		const glm::vec3& GetVelocity();
+		const glm::vec3 GetVelocity();
 		void SetVelocity(const glm::vec3& velocity);
 
 	private:

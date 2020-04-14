@@ -59,7 +59,7 @@ namespace gswy
 				auto baseHPCom = GetComponent<HitPointCom>(base);
 				baseHPCom->AddHitPoint(-event->m_damage);
 
-				PRINT("Base HP: " + Str(baseHPCom->GetPercentageHP()*100) + "%");
+				DEBUG_PRINT("Base HP: " + Str(baseHPCom->GetPercentageHP()*100) + "%");
 			}
 		}
 	};

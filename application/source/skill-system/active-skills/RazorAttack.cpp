@@ -16,6 +16,7 @@ namespace gswy
 {
 	RazorAttack::RazorAttack(): ActiveSkill(ActiveSkillType::RAZOR)
 	{
+		SetBaseDamange(1);
 	}
 
 	RazorAttack::~RazorAttack()
