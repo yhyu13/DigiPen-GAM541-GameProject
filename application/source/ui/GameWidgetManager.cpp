@@ -319,13 +319,13 @@ namespace gswy {
 
 			//Mute BGM
 			ImGui::SetCursorPosX(30);
-			ImGui::Text("Mute BGM");
+			ImGui::Text("Music");
 			ImGui::SameLine();
 			
 			ImGui::SetNextItemWidth(selectBarWidth);
 			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
 			static int muteMusic = m_MuteMusic;
-			if (ImGui::Combo("##Mute BGM", &muteMusic, "Off\0On\0"))
+			if (ImGui::Combo("##Mute BGM", &muteMusic, "On\0Off\0"))
 			{
 				m_MuteMusic = muteMusic;
 			}
@@ -418,7 +418,7 @@ namespace gswy {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::Begin("Base HP", false, menuFlag);
 		ImGui::AlignFirstTextHeightToWidgets();
-		ImGui::Text("Base HP");
+		ImGui::Text("Shrine HP");
 		ImGui::SameLine();
 		ImGui::ProgressBarCustomColor(m_BaseHP, ImVec4((1.0f - m_BaseHP), m_BaseHP, 0, 1));
 		ImGui::End();
