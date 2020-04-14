@@ -6,5 +6,6 @@ enum class SupportSkillType
 	MULTIPLE_PROJECTILE,
 	FORK,
 	INCREASE_AOE,
+	CONCENTRATED_AOE,
 	NUM
 };

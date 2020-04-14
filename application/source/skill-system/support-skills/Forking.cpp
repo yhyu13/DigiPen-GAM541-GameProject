@@ -25,7 +25,7 @@ namespace gswy
 	{
 	}
 
-	const int& Forking::GetCount()
+	const int Forking::GetCount()
 	{
 		return m_count;
 	}

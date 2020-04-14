@@ -12,7 +12,9 @@ Creation date: 03/30/2020
 #include "IncreaseAOE.h"
 #include "skill-system/primitives/AOE.h"
 
-gswy::IncreaseAOE::IncreaseAOE() : SupportSkill(SupportSkillType::INCREASE_AOE)
+gswy::IncreaseAOE::IncreaseAOE() 
+	: 
+	SupportSkill(SupportSkillType::INCREASE_AOE)
 {
 	m_value = 1.3;
 }
@@ -21,7 +23,7 @@ gswy::IncreaseAOE::~IncreaseAOE()
 {
 }
 
-const float& gswy::IncreaseAOE::GetValue()
+const float gswy::IncreaseAOE::GetValue()
 {
 	return m_value;
 }

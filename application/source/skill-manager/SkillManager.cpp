@@ -17,6 +17,7 @@ Creation date	: 03/20/2020
 #include "skill-system/support-skills/MultipleProjectile.h"
 #include "skill-system/support-skills/Forking.h"
 #include "skill-system/support-skills/IncreaseAOE.h"
+#include "skill-system/support-skills/ConcentratedAOE.h"
 #include "skill-system/active-skills/RazorAttack.h"
 #include "skill-system/active-skills/CycloneAttack.h"
 #include "ecs/CustomEvents.h"
@@ -56,6 +57,10 @@ namespace gswy
 		if (type._Equal("INCREASE-AOE"))
 		{
 			return std::make_shared<IncreaseAOE>();
+		}
+		if (type._Equal("CONCENTRATED-AOE"))
+		{
+			return std::make_shared<ConcentratedAOE>();
 		}
 	}
 
@@ -160,6 +165,14 @@ namespace gswy
 				if (item->m_type._Equal("INCREASE-AOE"))
 				{
 					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<IncreaseAOE>();
+					supportSkill->SetIcon(item->m_icon);
+					supportSkill->SetIconGray(item->m_iconGray);
+					activeSkill->AddSupportSkill(slot_, supportSkill);
+				}
+
+				if (item->m_type._Equal("CONCENTRATED-AOE"))
+				{
+					std::shared_ptr<SupportSkill> supportSkill = std::make_shared<ConcentratedAOE>();
 					supportSkill->SetIcon(item->m_icon);
 					supportSkill->SetIconGray(item->m_iconGray);
 					activeSkill->AddSupportSkill(slot_, supportSkill);
@@ -331,6 +344,11 @@ namespace gswy
 		if (type == SupportSkillType::INCREASE_AOE)
 		{
 			return "INCREASE-AOE";
+		}
+
+		if (type == SupportSkillType::CONCENTRATED_AOE)
+		{
+			return "CONCENTRATED-AOE";
 		}
 
 		return "";

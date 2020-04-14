@@ -25,12 +25,12 @@ namespace gswy
 	{
 	}
 
-	void MultipleProjectile::SetMultiplier(const int& multiplier)
+	void MultipleProjectile::SetMultiplier(const int multiplier)
 	{
 		m_multiplier = multiplier;
 	}
 
-	const int& MultipleProjectile::GetMultiplier()
+	const int MultipleProjectile::GetMultiplier()
 	{
 		return m_multiplier;
 	}

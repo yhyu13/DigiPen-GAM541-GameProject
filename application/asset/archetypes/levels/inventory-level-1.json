@@ -132,6 +132,24 @@
       ],
       "icon": "./asset/Sprites/aoe.png",
       "inactive-icon": "./asset/Sprites/aoe-inactive.png"
+    },
+	{
+      "id": "7",
+      "type": "CONCENTRATED-AOE",
+      "category": "SUPPORT",
+      "tags": [
+        "AOE"
+      ],
+      "cost": 1500,
+      "purchased": 0,
+      "installed": 0,
+      "text": [
+        "Property : (Support, AOE)",
+        "Decrease Area of Effect but increase damage",
+        "Cost : 1500"
+      ],
+      "icon": "./asset/Sprites/aoe-inactive.png",
+      "inactive-icon": "./asset/Sprites/aoe-inactive.png"
     }
   ]
 }

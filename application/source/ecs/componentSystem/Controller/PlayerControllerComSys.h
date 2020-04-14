@@ -321,7 +321,7 @@ namespace gswy
 				return;
 			}
 			auto input = InputManager::GetInstance();
-			if (!m_autoPlayEnabled && !input->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			if (!m_autoPlayEnabled && !input->IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
 			{
 				return;
 			}

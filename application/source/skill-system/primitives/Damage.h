@@ -6,29 +6,28 @@ Language: c++ 11
 Platform: Windows 10 (X64)
 Project: GAM541
 Author: Hang Yu (hang.yu@digipen.edu | 60001119)
-Creation date: 03/30/2020
+Creation date: 04/13/2020
 - End Header ----------------------------*/
 
 #pragma once
 
-#include "SupportSkill.h"
+#include "skill-system/BaseSkill.h"
 
 namespace gswy
 {
-	class IncreaseAOE : public SupportSkill
+	class Damage : virtual public BaseSkill
 	{
 	public:
 
-		IncreaseAOE();
-		~IncreaseAOE();
+		Damage();
+		~Damage();
 
-		const float GetValue();
-		void SetValue(const float value);
-		virtual void HandleSkill(BaseSkill* skill) override;
-		virtual void RemoveSkill(std::shared_ptr<BaseSkill> skill) override;
-
+		void SetBaseDamange(float baseDmanage);
+		const float GetDamage();
+		void SetDamangeMultipler(float multiplier);
+		void ApplyDamangeMultipler(float multiplier);
 	private:
-
-		float m_value;
+		float m_baseDmanage;
+		float m_multiplier;
 	};
 }

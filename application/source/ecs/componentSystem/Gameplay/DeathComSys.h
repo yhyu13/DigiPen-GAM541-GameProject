@@ -60,7 +60,6 @@ namespace gswy
 					break;
 				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:
 				{
-
 					auto body = GetComponent<BodyCom>(event->m_entity);
 					glm::vec2 position = glm::vec2(body->GetPos().x, body->GetPos().y);
 					auto addCoinEvent = MemoryManager::Make_shared<AddCoinEvent>(position);

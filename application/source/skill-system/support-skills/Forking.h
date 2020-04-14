@@ -23,7 +23,7 @@ namespace gswy
 		Forking();
 		~Forking();
 
-		const int& GetCount();
+		const int GetCount();
 		void SetCount(const int count);
 		virtual void HandleSkill(BaseSkill* skill) override;
 		virtual void RemoveSkill(std::shared_ptr<BaseSkill> skill) override;
