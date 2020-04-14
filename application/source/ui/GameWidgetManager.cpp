@@ -335,13 +335,13 @@ namespace gswy {
 
 			//Mute SFX
 			ImGui::SetCursorPosX(30);
-			ImGui::Text("Mute SFX");
+			ImGui::Text("SFX");
 			ImGui::SameLine();
 
 			ImGui::SetNextItemWidth(selectBarWidth);
 			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
 			static int muteSFX = m_MuteSFX;
-			if (ImGui::Combo("##Mute SFX", &muteSFX, "Off\0On\0"))
+			if (ImGui::Combo("##Mute SFX", &muteSFX, "On\0Off\0"))
 			{
 				m_MuteSFX = muteSFX;
 			}
