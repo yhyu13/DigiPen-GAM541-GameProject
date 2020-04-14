@@ -26,6 +26,7 @@ Creation date	: 03/15/2020
 #include "ecs/components/BodyCom.h"
 #include "ecs/components/CoolDownCom.h"
 #include "ecs/components/ChildrenCom.h"
+#include "ecs/components/DamageCom.h"
 #include "ecs/components/OwnershiptCom.h"
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/SpriteCom.h"
@@ -109,6 +110,8 @@ namespace gswy
 				{
 					{
 						auto aoe_multipler = fireballAttack->GetAOEMultipler();
+						auto damage = fireballAttack->GetDamage();
+
 						auto pos = transform->GetPos();
 						auto rot = transform->GetRotation();
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FIREBALL);
@@ -139,6 +142,7 @@ namespace gswy
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
+						weapon.AddComponent(DamageCom(damage));
 					}
 				}
 				auto e = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_shoot_lr1", transform->GetPos());
@@ -151,6 +155,8 @@ namespace gswy
 				{
 					{
 						auto aoe_multipler = iceballAttack->GetAOEMultipler();
+						auto damage = iceballAttack->GetDamage();
+
 						auto pos = transform->GetPos();
 						auto rot = transform->GetRotation();
 						auto weapon = m_parentWorld->GenerateEntity(GameObjectType::ICEBALL);
@@ -179,6 +185,7 @@ namespace gswy
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
+						weapon.AddComponent(DamageCom(damage));
 					}
 				}
 				auto e = MemoryManager::Make_shared<WeaponSoundEvent>("ice_shoot1", transform->GetPos());
@@ -187,25 +194,27 @@ namespace gswy
 			else if (cycloneAttack != nullptr)
 			{
 				auto aoe_multipler = cycloneAttack->GetAOEMultipler();
-				auto cyclone_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];
-				auto sprite = GetComponent<SpriteCom>(cyclone_sfx);
+				auto damage = cycloneAttack->GetDamage();
+				auto weapon = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];
+				auto sprite = GetComponent<SpriteCom>(weapon);
 				sprite->SetScale(vec2(0.5 * aoe_multipler, 0.5 * aoe_multipler));
-				auto body = GetComponent<BodyCom>(cyclone_sfx);
+				auto body = GetComponent<BodyCom>(weapon);
 				body->ChooseShape("Circle", 0.5* aoe_multipler);
+				auto damageCom = GetComponent<DamageCom>(weapon);
+				damageCom->SetDamange(damage);
 
 				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(player, "CycloneAttack", true);
 				queue->Publish(e);
-
-				
 			}
 			else if (razorAttack != nullptr)
 			{
 				auto aoe_multipler = razorAttack->GetAOEMultipler();
+				auto damage = razorAttack->GetDamage();
+
 				auto pos = transform->GetPos();
 				auto rot = transform->GetRotation();
 
 				auto weapon = m_parentWorld->GenerateEntity(GameObjectType::RAZOR);
-
 				auto active = ActiveCom();
 				weapon.AddComponent(active);
 
@@ -238,6 +247,8 @@ namespace gswy
 
 				auto targetEntityComponent = TargetEntityComponent();
 				weapon.AddComponent(targetEntityComponent);
+
+				weapon.AddComponent(DamageCom(damage));
 			}
 			auto e = MemoryManager::Make_shared<WeaponSoundEvent>("razor_shoot", transform->GetPos());
 			queue->Publish(e);
@@ -263,6 +274,8 @@ namespace gswy
 					{
 						{
 							auto aoe_multipler = fireballAttack->GetAOEMultipler();
+							auto damage = fireballAttack->GetDamage();
+
 							auto pos = position;
 							auto rot = rotation;
 							auto weapon = m_parentWorld->GenerateEntity(GameObjectType::FORKED_FIREBALL);
@@ -293,6 +306,7 @@ namespace gswy
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(1.0));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+							weapon.AddComponent(DamageCom(damage*2/3));
 						}
 					}
 				}

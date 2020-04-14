@@ -22,9 +22,9 @@ namespace gswy
 		AOE();
 		~AOE();
 
-		const float& GetAOEMultipler();
-		void SetAOEMultipler(const float& multiplier);
-
+		const float GetAOEMultipler();
+		void SetAOEMultipler(float multiplier);
+		void ApplyAOEMultipler(float multiplier);
 	private:
 
 		float m_multiplier;

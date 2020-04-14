@@ -18,23 +18,24 @@ namespace gswy
 {
 	IceballAttack::IceballAttack(ActiveSkillType type) : ActiveSkill(type)
 	{
+		SetBaseDamange(10);
 	}
 
 	IceballAttack::~IceballAttack()
 	{
 	}
 
-	const int& IceballAttack::GetCount()
+	const int IceballAttack::GetCount()
 	{
 		return Projectile::GetCount();
 	}
 
-	const glm::vec3& IceballAttack::GetVelocity()
+	const glm::vec3 IceballAttack::GetVelocity()
 	{
 		return Projectile::GetVelocity();
 	}
 
-	const int& IceballAttack::GetId()
+	const int IceballAttack::GetId()
 	{
 		return BaseSkill::GetId();
 	}

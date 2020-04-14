@@ -15,6 +15,7 @@ Creation date: 02/17/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "ecs/components/AttachedMovementCom.h"
+#include "ecs/components/DamageCom.h"
 #include "ecs/components/ParticleCom.h"
 #include "ecs/components/LifeTimeCom.h"
 #include "ecs/components/HitPointCom.h"
@@ -75,6 +76,7 @@ namespace gswy
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
+						weapon.AddComponent(DamageCom(6));
 					}
 				}
 				break;
@@ -127,6 +129,9 @@ namespace gswy
 
 							// Fireball does not hit one target twice
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+
+							// Damage
+							weapon.AddComponent(DamageCom(15));
 						}
 					}
 				}
@@ -161,6 +166,7 @@ namespace gswy
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(1.0));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+							weapon.AddComponent(DamageCom(10));
 						}
 					}
 				}
@@ -197,6 +203,7 @@ namespace gswy
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(0.5));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
+							weapon.AddComponent(DamageCom(25));
 						}
 					}
 				}

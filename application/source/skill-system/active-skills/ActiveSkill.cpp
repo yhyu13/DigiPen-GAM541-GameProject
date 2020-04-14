@@ -25,7 +25,7 @@ namespace gswy
 		RemoveSkillTag(SkillTag::ACTIVE);
 	}
 
-	const int& ActiveSkill::GetId()
+	const int ActiveSkill::GetId()
 	{
 		return BaseSkill::GetId();
 	}

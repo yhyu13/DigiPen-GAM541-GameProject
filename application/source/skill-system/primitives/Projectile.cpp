@@ -25,17 +25,17 @@ namespace gswy
 		RemoveSkillTag(SkillTag::PROJECTILE);
 	}
 
-	const int& Projectile::GetCount()
+	const int Projectile::GetCount()
 	{
 		return m_count;
 	}
 
-	void Projectile::SetCount(const int& count)
+	void Projectile::SetCount(int count)
 	{
 		m_count = count;
 	}
 
-	const glm::vec3& Projectile::GetVelocity()
+	const glm::vec3 Projectile::GetVelocity()
 	{
 		return m_velocity;
 	}

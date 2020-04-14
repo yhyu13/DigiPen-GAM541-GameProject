@@ -68,7 +68,7 @@ namespace gswy {
 					for (auto& object : layer.getObjects())
 					{
 						auto objName = layer.getName();
-						PRINT("Processing " + objName);
+						DEBUG_PRINT("Processing " + objName);
 
 						// TODO : need proper handle of player creation (c++ RTTR)
 						if (objName.compare("Player") == 0)
@@ -135,7 +135,7 @@ namespace gswy {
 				else if (layer.getType() == tson::Layer::Type::TileLayer)
 				{
 					auto layerName = layer.getName();
-					PRINT("Processing " + layerName);
+					DEBUG_PRINT("Processing " + layerName);
 					//When the map is of a fixed size, you can get the tiles like this
 					if (map->isInfinite())
 					{
@@ -278,7 +278,7 @@ namespace gswy {
 					for (auto& object : layer.getObjects())
 					{
 						auto objName = layer.getName();
-						PRINT("Processing " + objName);
+						DEBUG_PRINT("Processing " + objName);
 
 						if (objName.compare("MobSpawn" + Str(level)) == 0)
 						{

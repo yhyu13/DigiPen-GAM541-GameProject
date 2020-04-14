@@ -15,10 +15,11 @@ Creation date	: 03/26/2020
 #include "ActiveSkill.h"
 #include "skill-system/support-skills/SupportSkill.h"
 #include "skill-system/primitives/AOE.h"
+#include "skill-system/primitives/Damage.h"
 
 namespace gswy
 {
-	class CycloneAttack : public ActiveSkill, public AOE
+	class CycloneAttack : public ActiveSkill, public AOE, public Damage
 	{
 
 	public:

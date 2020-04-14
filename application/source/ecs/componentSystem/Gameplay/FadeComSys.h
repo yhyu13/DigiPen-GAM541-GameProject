@@ -122,13 +122,13 @@ namespace gswy
 				{
 				case EventType::GC:
 				{
-					PRINT("GC on fade end.");
+					DEBUG_PRINT("GC on fade end.");
 					auto _e = MemoryManager::Make_shared<GCEvent>(event->m_entity);
 					queue->Publish(_e);
 				}
 					break;
 				default:
-					PRINT("No action on fade end.");
+					DEBUG_PRINT("No action on fade end.");
 					break;
 				}
 			}

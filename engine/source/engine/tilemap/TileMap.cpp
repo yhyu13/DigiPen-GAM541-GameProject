@@ -37,7 +37,7 @@ std::shared_ptr<TileMap> gswy::TileMap::Create(const std::string& path)
 		for (auto& tileset : map->getTilesets())
 		{
 			auto path = tileset.getImagePath().u8string();
-			PRINT("Loading tileset at " + path);
+			DEBUG_PRINT("Loading tileset at " + path);
 			ResourceAllocator<Texture2D>::GetInstance()->Create(path, tileset.getName());
 		}
 		return result;

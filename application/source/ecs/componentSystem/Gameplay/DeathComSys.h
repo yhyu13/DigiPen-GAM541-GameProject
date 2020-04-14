@@ -66,18 +66,9 @@ namespace gswy
 					auto addCoinEvent = MemoryManager::Make_shared<AddCoinEvent>(position);
 					queue->Publish(addCoinEvent);
 
-					// TODO : Need proper handle of enemy death
-					PRINT("ENEMY has died!");
+					DEBUG_PRINT("ENEMY has died!");
 					auto _e = MemoryManager::Make_shared<GCEvent>(event->m_entity);
 					queue->Publish(_e);
-
-					// This is now done in HitPointComSys
-					// Add coins to player on enemy destruction
-					//GameLevelMapManager::GetInstance()->AddCoins(10);
-
-					// Test code : Instead of calling GC on death, making enemies fade out in 1 sec
-					/*auto _e = MemoryManager::Make_shared<FadeEvent>(event->m_entity, 1.f, 0.f, 1.f, EventType::GC);
-					queue->Publish(_e);*/
 				}
 					break;
 				default:

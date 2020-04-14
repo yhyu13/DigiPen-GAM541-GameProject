@@ -28,7 +28,7 @@ namespace gswy
 		ActiveSkill(ActiveSkillType type);
 		virtual ~ActiveSkill();
 
-		virtual const int& GetId();
+		virtual const int GetId();
 		virtual void AddSupportSkill(std::shared_ptr<SupportSkill> skill);
 		virtual ActiveSkillType GetActiveSkillType();
 

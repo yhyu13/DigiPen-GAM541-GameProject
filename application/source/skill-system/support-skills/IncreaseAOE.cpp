@@ -35,11 +35,7 @@ void gswy::IncreaseAOE::HandleSkill(BaseSkill* skill)
 {
 	if (auto s = dynamic_cast<AOE*>(skill))
 	{
-		s->SetAOEMultipler(m_value);
-	}
-	else
-	{
-		throw 42;
+		s->ApplyAOEMultipler(m_value);
 	}
 }
 
@@ -47,6 +43,6 @@ void gswy::IncreaseAOE::RemoveSkill(std::shared_ptr<BaseSkill> skill)
 {
 	if (auto s = std::dynamic_pointer_cast<AOE>(skill))
 	{
-		s->SetAOEMultipler(1);
+		s->ApplyAOEMultipler(1.0f / m_value);
 	}
 }

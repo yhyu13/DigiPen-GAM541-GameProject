@@ -77,7 +77,7 @@ namespace gswy
 		{
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto coins = m_parentWorld->GetAllEntityWithType(GameObjectType::COIN);
-			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];
+			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
 			auto playerBodyCom = GetComponent<BodyCom>(entity);
 			for (auto& coin : coins)
 			{
@@ -88,7 +88,7 @@ namespace gswy
 				{
 					auto e = MemoryManager::Make_shared<GCEvent>(coin);
 					queue->Publish(e, 0.10);
-					// Add coins to entity
+					// Add coins
 					GameLevelMapManager::GetInstance()->AddCoins(m_coinsValue);
 				}
 				else

@@ -11,7 +11,9 @@ Creation date: 03/30/2020
 
 #include "AOE.h"
 
-gswy::AOE::AOE() : m_multiplier(1)
+gswy::AOE::AOE() 
+	: 
+	m_multiplier(1.0f)
 {
 	AddSkillTag(SkillTag::AOE);
 }
@@ -20,15 +22,23 @@ gswy::AOE::~AOE()
 {
 }
 
-const float& gswy::AOE::GetAOEMultipler()
+const float gswy::AOE::GetAOEMultipler()
 {
 	return m_multiplier;
 }
 
-void gswy::AOE::SetAOEMultipler(const float& multiplier)
+void gswy::AOE::SetAOEMultipler(float multiplier)
 {
 	if (multiplier > 0)
 	{
 		m_multiplier = multiplier;
+	}
+}
+
+void gswy::AOE::ApplyAOEMultipler(float multiplier)
+{
+	if (multiplier > 0)
+	{
+		m_multiplier *= multiplier;
 	}
 }

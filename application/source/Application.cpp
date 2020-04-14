@@ -505,7 +505,7 @@ namespace gswy
 		void LoadGameWorld(int level, bool reloadGameWorld = false)
 		{
 			auto sampleID = Str(level);
-			PRINT("Loading map ID " + sampleID);
+			DEBUG_PRINT("Loading map ID " + sampleID);
 			// Re-load game world
 			{
 				if (reloadGameWorld)
@@ -849,7 +849,7 @@ namespace gswy
 	public:
 		void OnImGuiButtonClicke(const std::string& buttonName)
 		{
-			PRINT(buttonName);
+			DEBUG_PRINT(buttonName);
 
 			// Main menu
 			if (buttonName.compare("New Game") == 0)

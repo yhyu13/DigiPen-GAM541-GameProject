@@ -17,23 +17,24 @@ Creation date	: 03/13/2020
 #include "skill-system/primitives/Projectile.h"
 #include "skill-system/primitives/Fork.h"
 #include "skill-system/primitives/AOE.h"
+#include "skill-system/primitives/Damage.h"
 
 #include <set>
 #include <memory>
 
 namespace gswy
 {
-	class FireballAttack: public ActiveSkill, public Projectile, public Fork, public AOE
+	class FireballAttack: public ActiveSkill, public Projectile, public Fork, public AOE, public Damage
 	{
 	public:
 
 		FireballAttack(ActiveSkillType type);
 		~FireballAttack();
 
-		const int& GetCount();
-		const int& GetForkCount();
-		const glm::vec3& GetVelocity();
+		const int GetCount();
+		const int GetForkCount();
+		const glm::vec3 GetVelocity();
 
-		virtual const int& GetId() override;
+		virtual const int GetId() override;
 	};
 }

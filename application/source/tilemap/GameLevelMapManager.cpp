@@ -31,7 +31,7 @@ void gswy::GameLevelMapManager::SetIsLoading(bool b)
 
 void gswy::GameLevelMapManager::StartWave()
 {
-	PRINT("Start Wave " + Str(m_currentWave));
+	DEBUG_PRINT("Start Wave " + Str(m_currentWave));
 	m_waveStart = true;
 	m_timeOut = false;
 	m_timeRemaining = m_timePerLevel;
@@ -173,7 +173,7 @@ void gswy::GameLevelMapManager::Update(double dt)
 		{
 			m_timeOut = true;
 			m_timeRemaining = 0;
-			PRINT("Time's up, kill all reminaing monsters to finish the level!");
+			DEBUG_PRINT("Time's up, kill all reminaing monsters to finish the level!");
 		}
 	}
 	// Check if a level is finished
@@ -186,7 +186,7 @@ void gswy::GameLevelMapManager::Update(double dt)
 			// Stop wave and advance wave
 			if (AdvanceWave())
 			{
-				PRINT("Load new wave");
+				DEBUG_PRINT("Load new wave");
 				LoadLevel(m_world, m_currentWave);
 
 				// Show wave clear indicator
@@ -197,10 +197,10 @@ void gswy::GameLevelMapManager::Update(double dt)
 			else
 			{
 				// TODO: load new level
-				PRINT("You have beat this level!");
+				DEBUG_PRINT("You have beat this level!");
 				if (AdvanceLevel())
 				{
-					PRINT("Load new level in 5 sec!");
+					DEBUG_PRINT("Load new level in 5 sec!");
 					// Show new level indicator
 					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 					auto e1 = MemoryManager::Make_shared<LoadLevelClearEvent>(m_currentLevel);
@@ -212,7 +212,7 @@ void gswy::GameLevelMapManager::Update(double dt)
 				else
 				{
 					// TODO : proper handle beating the game
-					PRINT("You have beat the game!");
+					DEBUG_PRINT("You have beat the game!");
 					// Show won indicator
 					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 					auto e1 = MemoryManager::Make_shared<LoadWonEvent>();
@@ -228,7 +228,7 @@ void gswy::GameLevelMapManager::Update(double dt)
 
 void gswy::GameLevelMapManager::ResetLevelData()
 {
-	PRINT("Reset level!");
+	DEBUG_PRINT("Reset level!");
 	m_isAnyLevelLoaded = false;
 	m_timeOut = false;
 	m_waveStart = false;

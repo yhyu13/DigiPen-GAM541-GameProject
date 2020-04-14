@@ -19,6 +19,7 @@ Creation date: 03/24/2020
 #include "tilemap/GameLevelMapManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/BodyCom.h"
+#include "ecs/components/DamageCom.h"
 #include "ecs/components/AnimationCom.h"
 #include "ecs/components/CoolDownCom.h"
 #include "ecs/EntityType.h"
@@ -84,7 +85,8 @@ namespace gswy
 							continue;
 						}
 
-						auto e = MemoryManager::Make_shared<AttackBaseEvent>(5);
+						auto damage = GetComponent<DamageCom>(entity)->GetDamange();
+						auto e = MemoryManager::Make_shared<AttackBaseEvent>(damage);
 						queue->Publish(e);
 
 						continue;
