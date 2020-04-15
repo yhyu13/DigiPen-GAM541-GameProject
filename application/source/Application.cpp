@@ -860,7 +860,7 @@ namespace gswy
 			ImGui::PushStyleColor(ImGuiCol_ResizeGrip, 0);
 			ImGui::PushStyleColor(ImGuiCol_TitleBgActive, 0);
 			ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, 0);
-			ImGui::Begin("Instrumenting Profiling", false, ImGuiWindowFlags_NoDecoration);
+			ImGui::Begin("Instrumenting Profiling", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize);
 			for (auto& result : instrumentor->GetResults()) {
 				char entry[100];
 				strcpy(entry, "%10.3f %s\t");
