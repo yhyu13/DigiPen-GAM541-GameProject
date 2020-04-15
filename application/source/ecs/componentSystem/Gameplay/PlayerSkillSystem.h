@@ -250,7 +250,7 @@ namespace gswy
 
 				weapon.AddComponent(DamageCom(damage));
 			}
-			auto e = MemoryManager::Make_shared<WeaponSoundEvent>("razor_shoot", transform->GetPos());
+			auto e = MemoryManager::Make_shared<WeaponSoundEvent>("razor_shoot2", transform->GetPos());
 			queue->Publish(e);
 		}
 

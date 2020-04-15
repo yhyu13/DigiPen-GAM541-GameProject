@@ -5,7 +5,7 @@ prior written consent of DigiPen Institute of Technology is prohibited.
 Language: c++ 11
 Platform: Windows 10 (X64)
 Project: GAM541
-Author: Hang Yu (hang.yu@digipen.edu | 60001119)
+Author: Taksh Goyal (taksh.goyal@digipen.edu | 60001319)
 Creation date: 02/17/2020
 - End Header ----------------------------*/
 
@@ -114,6 +114,18 @@ namespace gswy
 								event->m_entityA.m_type == GameObjectType::ICEBALL))
 					{
 						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+
+						if (!audio->IsPlaying(e1->soundName))
+						{
+							queue->Publish(e1);
+						}
+					}
+					else if ((std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityA.m_type) != g_enemyTypes.end() &&
+						event->m_entityB.m_type == GameObjectType::RAZOR) ||
+						(std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityB.m_type) != g_enemyTypes.end() &&
+							event->m_entityA.m_type == GameObjectType::RAZOR))
+					{
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("razor_hit", GetComponent<TransformCom>(event->m_entityA)->GetPos());
 
 						if (!audio->IsPlaying(e1->soundName))
 						{
