@@ -380,10 +380,10 @@
           "name": "boltAnim1",
           "properties": {
             "texture-name": "Lightningbolt_strike",
-            "x": 512,
+            "x": 64,
             "y": 0,
-            "width": 512,
-            "height": 512,
+            "width": 64,
+            "height": 64,
             "delay": 1.0,
             "frame-count": 30.0
           }
@@ -392,10 +392,10 @@
           "name": "boltAnim2",
           "properties": {
             "texture-name": "Lightningbolt_channel",
-            "x": 512,
+            "x": 64,
             "y": 0,
-            "width": 512,
-            "height": 512,
+            "width": 64,
+            "height": 64,
             "delay": 1.0,
             "frame-count": 30.0
           }
