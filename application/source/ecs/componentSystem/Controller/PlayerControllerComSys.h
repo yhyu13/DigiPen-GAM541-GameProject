@@ -278,7 +278,7 @@ namespace gswy
 				switch (m_howToPlayState)
 				{
 				case HowToPlayState::HOW_TO_PLAY_1:
-					if (input->IsKeyTriggered(KEY_DOWN))
+					if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 					{
 						ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 						m_parentWorld->Unpack(entity, spriteCom);
@@ -300,7 +300,7 @@ namespace gswy
 						howToPlaySprite->SetSpriteTexture(howToPlayTexture);
 						m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
 					}
-					else if (input->IsKeyTriggered(KEY_DOWN))
+					if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 					{
 						ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 						m_parentWorld->Unpack(entity, spriteCom);
@@ -320,6 +320,16 @@ namespace gswy
 						auto howToPlaySprite = spriteCom->Get();
 						howToPlaySprite->SetSpriteTexture(howToPlayTexture);
 						m_howToPlayState = HowToPlayState::HOW_TO_PLAY_2;
+					}
+
+					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+					{
+						ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
+						m_parentWorld->Unpack(entity, spriteCom);
+						auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
+						auto howToPlaySprite = spriteCom->Get();
+						howToPlaySprite->SetSpriteTexture(howToPlayTexture);
+						m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
 					}
 					break;
 				}
