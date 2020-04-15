@@ -63,7 +63,7 @@ namespace gswy {
 				m_PauseMenu.Render();
 			if (m_OptionMenu.GetVisible())		 m_OptionMenu.Render();
 			if (m_ShopMenu.GetVisible())         m_ShopMenu.Render();
-			if (m_InventoryMenu.GetVisible())    m_InventoryMenu.Render();
+			//if (m_InventoryMenu.GetVisible())    m_InventoryMenu.Render();
 		}
 	}
 
@@ -385,91 +385,100 @@ namespace gswy {
 		m_FrameBuffer = FrameBuffer::Create(GetWindowSize_X(), GetWindowSize_Y());
 		m_Texture_Coin = Texture2D::Create("./asset/Sprites/coin_ui.png");
 
-		m_WaveWindowSize = { 80, 20 };
-		m_BaseHPWindowSize = { 500, 40 };
-		m_TimeWindowSize = { 60, 17 };
+		m_WaveWindowSize = { 80, 27 };
+		m_BaseHPWindowSize = { 530, 40 };
+		m_TimeWindowSize = { 60, 27 };
 		m_CoinWindowSize = { 140, 70 };
-		m_PlayerHPWindowSize = { 300, 40 };
+		m_PlayerHPWindowSize = { 310, 40 };
 	}
 
 	void HUD::Render()
 	{	
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowBgAlpha(0.0f);
+		ImGui::Begin("HUD", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoMouseInputs| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse);
+		
 		//Text : Wave
 		ImVec2 waveWindowSize = ImVec2(m_WaveWindowSize.x, m_WaveWindowSize.y);
-		ImGui::SetNextWindowSize(waveWindowSize);
-		ImVec2 waveWindowPos = ImVec2(GetWindowSize_X() / 2 - waveWindowSize[0] / 2, 12);
+		ImVec2 waveWindowPos = ImVec2(GetWindowSize_X() / 2 - waveWindowSize[0] / 2, viewport->Pos.y + 12);
 		ImGui::SetNextWindowPos(waveWindowPos);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Wave", false, menuFlag);
-		ImGui::Text("Wave : %i", m_Wave);
-		ImGui::End();
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("Wave", waveWindowSize, false, menuFlag);
+		ImGui::SetCursorPosX(10.0f);
+		ImGui::SetCursorPosY(ImGui::GetFontSize() / 4);
+		ImGui::Text("Wave : %i", m_Wave);		
+		ImGui::EndChild();
 		ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(2);
 
 		//Progress Bar : Base HP
 		ImVec2 BaseHPWindowSize = ImVec2(m_BaseHPWindowSize.x, m_BaseHPWindowSize.y);
-		ImGui::SetNextWindowSize(BaseHPWindowSize);
-		ImVec2 BaseHPWindowPos = ImVec2(GetWindowSize_X() / 2 - BaseHPWindowSize[0] / 2, waveWindowSize.y + waveWindowPos.y + 17);
+		ImVec2 BaseHPWindowPos = ImVec2(viewport->Size.x / 2 - BaseHPWindowSize.x / 2, waveWindowSize.y + waveWindowPos.y + 5);
 		ImGui::SetNextWindowPos(BaseHPWindowPos);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Base HP", false, menuFlag);
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("Shrine HP", BaseHPWindowSize, false, menuFlag | ImGuiWindowFlags_AlwaysUseWindowPadding);
 		ImGui::AlignFirstTextHeightToWidgets();
 		ImGui::Text("Shrine HP");
 		ImGui::SameLine();
 		ImGui::ProgressBarCustomColor(m_BaseHP, ImVec4((1.0f - m_BaseHP), m_BaseHP, 0, 1));
-		ImGui::End();
+		ImGui::EndChild();
 		ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(2);
 
 		//Text : Timer
 		ImVec2 timerWindowSize = ImVec2(m_TimeWindowSize.x, m_TimeWindowSize.y);
-		ImGui::SetNextWindowSize(timerWindowSize);
 		ImVec2 timerWindowPos = ImVec2(GetWindowSize_X() / 2 - timerWindowSize[0] / 2, BaseHPWindowSize.y + BaseHPWindowPos.y + 5);
 		ImGui::SetNextWindowPos(timerWindowPos);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Timer", false, menuFlag);
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("Timer", timerWindowSize, false, menuFlag);
+		ImGui::SetCursorPosX(12.0f);
+		ImGui::SetCursorPosY(ImGui::GetFontSize() / 4);
 		ImGui::Text("%i : %i", m_TimerMin, m_TimerSec);
-		ImGui::End();
+		ImGui::EndChild();
 		ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(2);
 		
 		//Text : Coin
 		ImVec2 nextWindowSize = ImVec2(m_CoinWindowSize.x, m_CoinWindowSize.y);
-		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(30, GetWindowSize_Y() - nextWindowSize[1] - 65));
+		ImGui::SetNextWindowPos(ImVec2(30, viewport->Size.y - nextWindowSize[1] - 65));
 		ImGui::SetNextWindowBgAlpha(0.0f);
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Coin", false, menuFlag | ImGuiWindowFlags_NoScrollWithMouse);
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("Coin", nextWindowSize, false, menuFlag | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_AlwaysUseWindowPadding);
 		ImGui::SetCursorPosX(15);
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f),"%i", m_Coins);
 		ImGui::Image((void*)m_Texture_Coin->GetRendererID(), ImVec2(40, 40));
-		ImGui::End();
+		ImGui::EndChild();
 		ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(2);
 		
 		//Progress Bar : Player HP
-		nextWindowSize = ImVec2(m_PlayerHPWindowSize.x, m_PlayerHPWindowSize.y);
-		ImGui::SetNextWindowSize(nextWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(100, GetWindowSize_Y() - nextWindowSize[1] - 70));
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
+		ImVec2 playerHPWindowSize = ImVec2(m_PlayerHPWindowSize.x, m_PlayerHPWindowSize.y);
+		ImGui::SetNextWindowPos(ImVec2(100, viewport->Size.y - playerHPWindowSize[1] - 70));
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
-		ImGui::Begin("Player HP", false, menuFlag);
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("Player HP", playerHPWindowSize, false, menuFlag | ImGuiWindowFlags_AlwaysUseWindowPadding);
 		ImGui::AlignFirstTextHeightToWidgets();
 		ImGui::Text("Player HP");
 		ImGui::SameLine();
 		ImGui::ProgressBarCustomColor(m_PlayerHP, ImVec4((1.0f-m_PlayerHP), m_PlayerHP,0,1));
-		ImGui::End();
+		ImGui::EndChild();
 		ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(2);
+
+		WidgetManager::GetInstance()->GetInventoryMenu().Render();
+
+		ImGui::End();
 	}
 
 	void ShopMenu::Render()
@@ -781,24 +790,29 @@ namespace gswy {
 	{
 		//New Inventory
 		ImVec2 InventoryWindowSize = ImVec2(m_InventoryWindowSize.x, m_InventoryWindowSize.y);
-		ImGui::SetNextWindowSize(InventoryWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(GetWindowSize_X() - InventoryWindowSize[0] - 80, GetWindowSize_Y() - InventoryWindowSize[1] - 20));
 		ImGui::SetNextWindowBgAlpha(0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 1));
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImVec2 imageButtonSize = ImVec2(100, 100);
 		ImVec2 boxButtonSize = ImVec2(94, 94);
-		ImGui::Begin("Inventory", false, menuFlag);
+		ImGui::BeginChild("Inventory", InventoryWindowSize, false, menuFlag | ImGuiWindowFlags_AlwaysUseWindowPadding);
+		float aPosX1 = 0.0f;
+		float aPosX2 = 0.0f;
+		float aPosX3 = 0.0f;
+		float aPosX4 = 0.0f;
 		{
 			//Active Skills
 			if (SkillManager::GetInstance()->GetSkill(1, 1))
 			{
 				m_Texture_Acitve1 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 1)->m_icon);
-				ImGui::BeginChild("Test", imageButtonSize);
 				ImVec2 p = ImGui::GetCursorScreenPos();
+				aPosX1 = ImGui::GetCursorPosX();
+				ImGui::BeginChild("Test", imageButtonSize);
 				ImGui::Image((void*)m_Texture_Acitve1->GetRendererID(), imageButtonSize);
+				//aPosX1 = p.x;
 				ImGui::EndChild();
 				ImGui::BeginChild("Test");
 				ImGui::GetWindowDrawList()->AddText(ImGui::GetFont(), ImGui::GetFontSize(), ImVec2(p.x, p.y + imageButtonSize.y - ImGui::GetFontSize()), IM_COL32(255, 255, 255, 255), "Q");
@@ -809,6 +823,7 @@ namespace gswy {
 				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImVec2 p = ImGui::GetCursorScreenPos();
+				aPosX1 = ImGui::GetCursorPosX();
 				ImGui::BeginChild("Test", boxButtonSize);
 				ImGui::Button("ACTIVE 1", boxButtonSize);
 				ImGui::EndChild();
@@ -823,8 +838,9 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(2, 1))
 			{
 				m_Texture_Acitve2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 1)->m_icon);
-				ImGui::BeginChild("Test2", imageButtonSize);
 				ImVec2 p = ImGui::GetCursorScreenPos();
+				aPosX2 = ImGui::GetCursorPosX();
+				ImGui::BeginChild("Test2", imageButtonSize);
 				ImGui::Image((void*)m_Texture_Acitve2->GetRendererID(), imageButtonSize);
 				ImGui::EndChild();
 				ImGui::BeginChild("Test2");
@@ -836,6 +852,7 @@ namespace gswy {
 				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImVec2 p = ImGui::GetCursorScreenPos();
+				aPosX2 = ImGui::GetCursorPosX();
 				ImGui::BeginChild("Test2", boxButtonSize);
 				ImGui::Button("ACTIVE 2", boxButtonSize);
 				ImGui::EndChild();
@@ -850,8 +867,9 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(3, 1))
 			{
 				m_Texture_Acitve3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 1)->m_icon);
-				ImGui::BeginChild("Test3", imageButtonSize);
 				ImVec2 p = ImGui::GetCursorScreenPos();
+				aPosX3 = ImGui::GetCursorPosX();
+				ImGui::BeginChild("Test3", imageButtonSize);
 				ImGui::Image((void*)m_Texture_Acitve3->GetRendererID(), imageButtonSize);
 				ImGui::EndChild();
 				ImGui::BeginChild("Test3");
@@ -863,6 +881,7 @@ namespace gswy {
 				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImVec2 p = ImGui::GetCursorScreenPos();
+				aPosX3 = ImGui::GetCursorPosX();
 				ImGui::BeginChild("Test3", boxButtonSize);
 				ImGui::Button("ACTIVE 3", boxButtonSize);
 				ImGui::EndChild();
@@ -877,8 +896,9 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(4, 1))
 			{
 				m_Texture_Acitve4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 1)->m_icon);
-				ImGui::BeginChild("Test4", imageButtonSize);
 				ImVec2 p = ImGui::GetCursorScreenPos();
+				aPosX4 = ImGui::GetCursorPosX();
+				ImGui::BeginChild("Test4", imageButtonSize);
 				ImGui::Image((void*)m_Texture_Acitve4->GetRendererID(), imageButtonSize);
 				ImGui::EndChild();
 				ImGui::BeginChild("Test4");
@@ -890,6 +910,7 @@ namespace gswy {
 				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImVec2 p = ImGui::GetCursorScreenPos();
+				aPosX4 = ImGui::GetCursorPosX();
 				ImGui::BeginChild("Test4", boxButtonSize);
 				ImGui::Button("ACTIVE 4", boxButtonSize);
 				ImGui::EndChild();
@@ -905,7 +926,8 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(1, 2))
 			{
 				m_Texture_Support1_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 2)->m_icon);
-				ImGui::SetCursorPosX(15);
+				//ImGui::SetCursorPosX(10);
+				ImGui::SetCursorPosX(aPosX1);
 				ImGui::Image((void*)m_Texture_Support1_2->GetRendererID(), ImVec2(30, 30));
 			}
 			else
@@ -913,6 +935,7 @@ namespace gswy {
 				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
 				//ImGui::SetCursorPosX(15);
+				ImGui::SetCursorPosX(aPosX1);
 				ImGui::Button("", ImVec2(30, 30));
 				ImGui::PopStyleColor(2);
 			}
@@ -920,7 +943,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(1, 3))
 			{
 				m_Texture_Support1_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 3)->m_icon);
-				ImGui::SetCursorPosX(45);
+				//ImGui::SetCursorPosX(40);
 				ImGui::Image((void*)m_Texture_Support1_3->GetRendererID(), ImVec2(30, 30));
 			}
 			else
@@ -935,7 +958,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(1, 4))
 			{
 				m_Texture_Support1_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(1, 4)->m_icon);
-				ImGui::SetCursorPosX(75);
+				//ImGui::SetCursorPosX(70);
 				ImGui::Image((void*)m_Texture_Support1_4->GetRendererID(), ImVec2(30, 30));
 			}
 			else
@@ -950,14 +973,16 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(2, 2))
 			{
 				m_Texture_Support2_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 2)->m_icon);
-				ImGui::SetCursorPosX(120);
+				ImGui::SetCursorPosX(110);
+				ImGui::SetCursorPosX(aPosX2);
 				ImGui::Image((void*)m_Texture_Support2_2->GetRendererID(), ImVec2(30, 30));
 			}
 			else
 			{
 				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
-				ImGui::SetCursorPosX(105);
+				//ImGui::SetCursorPosX(105);
+				ImGui::SetCursorPosX(aPosX2);
 				ImGui::Button("", ImVec2(30, 30));
 				ImGui::PopStyleColor(2);
 			}
@@ -965,7 +990,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(2, 3))
 			{
 				m_Texture_Support2_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 3)->m_icon);
-				ImGui::SetCursorPosX(150);
+				//ImGui::SetCursorPosX(140);
 				ImGui::Image((void*)m_Texture_Support2_3->GetRendererID(), ImVec2(30, 30));
 			}
 			else
@@ -980,7 +1005,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(2, 4))
 			{
 				m_Texture_Support2_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(2, 4)->m_icon);
-				ImGui::SetCursorPosX(180);
+				//ImGui::SetCursorPosX(170);
 				ImGui::Image((void*)m_Texture_Support2_4->GetRendererID(), ImVec2(30, 30));
 			}
 			else
@@ -995,14 +1020,16 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(3, 2))
 			{
 				m_Texture_Support3_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 2)->m_icon);
-				ImGui::SetCursorPosX(225);
+				//ImGui::SetCursorPosX(210);
+				ImGui::SetCursorPosX(aPosX3);
 				ImGui::Image((void*)m_Texture_Support3_2->GetRendererID(), ImVec2(30, 30));
 			}
 			else
 			{
 				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
-				ImGui::SetCursorPosX(202);
+				//ImGui::SetCursorPosX(202);
+				ImGui::SetCursorPosX(aPosX3);
 				ImGui::Button("", ImVec2(30, 30));
 				ImGui::PopStyleColor(2);
 			}
@@ -1010,7 +1037,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(3, 3))
 			{
 				m_Texture_Support3_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 3)->m_icon);
-				ImGui::SetCursorPosX(255);
+				//ImGui::SetCursorPosX(240);
 				ImGui::Image((void*)m_Texture_Support3_3->GetRendererID(), ImVec2(30, 30));
 			}
 			else
@@ -1025,7 +1052,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(3, 4))
 			{
 				m_Texture_Support3_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(3, 4)->m_icon);
-				ImGui::SetCursorPosX(285);
+				//ImGui::SetCursorPosX(270);
 				ImGui::Image((void*)m_Texture_Support3_4->GetRendererID(), ImVec2(30, 30));
 			}
 			else
@@ -1040,14 +1067,16 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(4, 2))
 			{
 				m_Texture_Support4_2 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 2)->m_icon);
-				ImGui::SetCursorPosX(330);
+				//ImGui::SetCursorPosX(310);
+				ImGui::SetCursorPosX(aPosX4);
 				ImGui::Image((void*)m_Texture_Support4_2->GetRendererID(), ImVec2(30, 30));
 			}
 			else
 			{
 				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::ImColor(70, 70, 70));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::ImColor(70, 70, 70));
-				ImGui::SetCursorPosX(299);
+				//ImGui::SetCursorPosX(299);
+				ImGui::SetCursorPosX(aPosX4);
 				ImGui::Button("", ImVec2(30, 30));
 				ImGui::PopStyleColor(2);
 			}
@@ -1055,7 +1084,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(4, 3))
 			{
 				m_Texture_Support4_3 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 3)->m_icon);
-				ImGui::SetCursorPosX(360);
+				//ImGui::SetCursorPosX(340);
 				ImGui::Image((void*)m_Texture_Support4_3->GetRendererID(), ImVec2(30, 30));
 			}
 			else
@@ -1070,7 +1099,7 @@ namespace gswy {
 			if (SkillManager::GetInstance()->GetSkill(4, 4))
 			{
 				m_Texture_Support4_4 = Texture2D::Create(SkillManager::GetInstance()->GetSkill(4, 4)->m_icon);
-				ImGui::SetCursorPosX(390);
+				//ImGui::SetCursorPosX(370);
 				ImGui::Image((void*)m_Texture_Support4_4->GetRendererID(), ImVec2(30, 30));
 			}
 			else
@@ -1082,7 +1111,7 @@ namespace gswy {
 				ImGui::PopStyleColor(2);
 			}
 		}
-		ImGui::End();
+		ImGui::EndChild();
 		ImGui::PopStyleVar(4);
 	}
 }
