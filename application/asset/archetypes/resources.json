@@ -485,6 +485,10 @@
           "path": "./asset/Audio_Assets/Weapons_Sounds/razor_shoot2.ogg",
           "stream": false
         },
+		{
+          "path": "./asset/Audio_Assets/Weapons_Sounds/cyclone_shoot.ogg",
+          "stream": false
+        },
         {
           "path": "./asset/Audio_Assets/HUD_Sounds/bind_sound.ogg",
           "stream": false

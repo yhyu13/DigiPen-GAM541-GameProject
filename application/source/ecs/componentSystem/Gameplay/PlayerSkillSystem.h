@@ -205,6 +205,9 @@ namespace gswy
 
 				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(player, "CycloneAttack", true);
 				queue->Publish(e);
+
+				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("cyclone_shoot", transform->GetPos());
+				queue->Publish(e1);
 			}
 			else if (razorAttack != nullptr)
 			{
@@ -249,9 +252,10 @@ namespace gswy
 				weapon.AddComponent(targetEntityComponent);
 
 				weapon.AddComponent(DamageCom(damage));
+
+				auto e = MemoryManager::Make_shared<WeaponSoundEvent>("razor_shoot2", pos);
+				queue->Publish(e);
 			}
-			auto e = MemoryManager::Make_shared<WeaponSoundEvent>("razor_shoot2", transform->GetPos());
-			queue->Publish(e);
 		}
 
 		void OnFork(EventQueue<GameObjectType, EventType>::EventPtr event)
