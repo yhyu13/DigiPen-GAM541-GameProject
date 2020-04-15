@@ -527,6 +527,11 @@ namespace gswy
 				AudioManager::GetInstance()->StopAllChannels();
 				AudioManager::GetInstance()->Update(0);
 			}
+
+			//Play Placeholder menu music
+			{
+				AudioManager::GetInstance()->PlaySound("Menu_Track");
+			}
 		}
 
 		void LoadGameWorld(int level, bool reloadGameWorld = false)

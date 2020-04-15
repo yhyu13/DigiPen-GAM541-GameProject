@@ -438,6 +438,10 @@
           "stream": false
         },
 		{
+          "path": "./asset/Audio_Assets/BGM_Tracks/Menu_Track.ogg",
+          "stream": false
+        },
+		{
           "path": "./asset/Audio_Assets/Victory.mp3",
           "stream": false
         },
