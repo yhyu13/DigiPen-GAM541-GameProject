@@ -457,4 +457,17 @@ namespace gswy
 
 		glm::vec2 m_enemyPosition;
 	};
+
+	struct LoadHowToPlayEvent : Event<GameObjectType, EventType>
+	{
+		LoadHowToPlayEvent() : Event(EventType::LOAD_HOW_TO_PLAY), m_cameraPosition({ 0.0f, 0.0f })
+		{
+		}
+
+		LoadHowToPlayEvent(glm::vec2 cameraPosition) : Event(EventType::LOAD_HOW_TO_PLAY), m_cameraPosition(cameraPosition)
+		{
+		}
+
+		glm::vec2 m_cameraPosition;
+	};
 }

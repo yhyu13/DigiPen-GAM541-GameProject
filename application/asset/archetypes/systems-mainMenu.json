@@ -1,14 +1,14 @@
 {
-   "systems":[
-      "mainMenu-controller",
-	  
-      "sound",
-	  "fade",
+  "systems": [
+    "mainMenu-controller",
 
-	  "animation",
-	  "sprite",
-	  "scene",
-	  
-	  "gc"
-   ]
+    "sound",
+    "fade",
+
+    "animation",
+    "sprite",
+    "scene",
+
+    "gc"
+  ]
 }

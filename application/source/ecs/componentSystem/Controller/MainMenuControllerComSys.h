@@ -19,6 +19,7 @@ Creation date: 04/03/2020
 #include "ecs/CustomEvents.h"
 #include "ecs/components/ActiveCom.h"
 #include "ecs/components/SpriteCom.h"
+#include "HowToPlayState.h"
 
 namespace gswy
 {
@@ -29,13 +30,6 @@ namespace gswy
 		GAME_LOGO,
 		CREDIT,
 		END
-	};
-
-	enum class HowToPlayState
-	{
-		HOW_TO_PLAY_1,
-		HOW_TO_PLAY_2,
-		HOW_TO_PLAY_3
 	};
 
 	class MainMenuControllerComSys : public BaseComponentSystem<GameObjectType> {
@@ -66,7 +60,6 @@ namespace gswy
 
 		void OnLoadHowToPlay(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			APP_CRITICAL("HOW TO PLAY LOAD EVENT");
 			if (!m_howToPlayInitialized)
 			{
 				auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
@@ -100,23 +93,26 @@ namespace gswy
 			}
 		}
 
-		virtual void Update(double dt) override {	
+		virtual void Update(double dt) override {
 			if (!m_bIsMainMenuLoaded)
 			{
 				auto input = InputManager::GetInstance();
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 
+				if (m_howToPlayInitialized && input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+				{
+					return;
+				}
+
 				// Escape the start up screen by pressing ESC, ENTER, SPACE, and MLB
 				if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_ENTER) || input->IsKeyTriggered(KEY_SPACE) || input->IsKeyTriggered(KEY_ESCAPE))
 				{
-
 					auto howToPlay = m_parentWorld->GetAllEntityWithType(GameObjectType::HOW_TO_PLAY);
 					if (!howToPlay.empty())
 					{
 						auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 						auto e = MemoryManager::Make_shared<GCEvent>(howToPlay[0]);
 						queue->Publish(e);
-						APP_CRITICAL("HOW TO PLAY DELETED!!");
 						m_howToPlayInitialized = false;
 					}
 
@@ -182,7 +178,6 @@ namespace gswy
 					case HowToPlayState::HOW_TO_PLAY_1:
 						if (input->IsKeyTriggered(KEY_DOWN))
 						{
-							APP_CRITICAL("HOW TO PLAY 1 KEY DOWN");
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
 							auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_2");
@@ -196,7 +191,6 @@ namespace gswy
 
 						if (input->IsKeyTriggered(KEY_UP))
 						{
-							APP_CRITICAL("HOW TO PLAY 2 KEY UP");
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
 							auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
@@ -206,7 +200,6 @@ namespace gswy
 						}
 						else if (input->IsKeyTriggered(KEY_DOWN))
 						{
-							APP_CRITICAL("HOW TO PLAY 2 KEY DOWN");
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
 							auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_3");
@@ -219,7 +212,6 @@ namespace gswy
 					case HowToPlayState::HOW_TO_PLAY_3:
 						if (input->IsKeyTriggered(KEY_UP))
 						{
-							APP_CRITICAL("HOW TO PLAY 3 KEY UP");
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
 							auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_2");

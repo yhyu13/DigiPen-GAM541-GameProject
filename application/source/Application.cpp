@@ -744,11 +744,12 @@ namespace gswy
 
 		void UpdateMiniMap(double ts)
 		{
+			if (!m_world->IsPaused())
 			{
 				// Set minimap camera to be 2x the zoom level of main camera
 				m_miniMapCameraController.SetPosition(m_CameraController.GetPosition());
 				m_miniMapCameraController.SetZoomLevel(m_CameraController.GetZoomLevel() * 2);
-				
+
 				// Update minimap world position
 				ComponentDecorator<TransformCom, GameObjectType> position;
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
@@ -757,7 +758,7 @@ namespace gswy
 				m_world->Unpack(miniMap, sprite);
 				// Use main camera position and zoom to display the minimap on the main camera
 				auto cameraPos = m_CameraController.GetPosition();
-				auto RelativePos = InputManager::GetInstance()->GetCursorViewPosition(11./12 * GSWY_GetWindowWidth(),1.0/12 * GSWY_GetWindowHeight());
+				auto RelativePos = InputManager::GetInstance()->GetCursorViewPosition(11. / 12 * GSWY_GetWindowWidth(), 1.0 / 12 * GSWY_GetWindowHeight());
 				auto zoomLevel = m_CameraController.GetZoomLevel();
 				position->SetPos(vec2(cameraPos.x + zoomLevel * RelativePos.x, cameraPos.y + zoomLevel * RelativePos.y));
 				// Use minimap camera for the scaling
@@ -767,20 +768,23 @@ namespace gswy
 
 		void MiniMapRender(double ts)
 		{
-			auto fbo = RenderCommand::CreateAndBindFBO();
-			m_miniMapTexture->AttachToFrameBuffer();
+			if (!m_world->IsPaused())
+			{
+				auto fbo = RenderCommand::CreateAndBindFBO();
+				m_miniMapTexture->AttachToFrameBuffer();
 
-			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-			RenderCommand::Clear();
-			m_miniMapCameraController.OnUpdate(ts);
-			Renderer2D::BeginBatch(m_miniMapCameraController.GetCamera());
-			//Renderer2D::BeginScene(m_miniMapCameraController.GetCamera());
-			// m_world render
-			m_world->Render2(ts);
-			Renderer2D::EndBatch();
-			Renderer2D::DrawBatch();
-			//Renderer2D::EndScene();
-			RenderCommand::DestoryAndUnBindFBO(fbo);
+				RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+				RenderCommand::Clear();
+				m_miniMapCameraController.OnUpdate(ts);
+				Renderer2D::BeginBatch(m_miniMapCameraController.GetCamera());
+				//Renderer2D::BeginScene(m_miniMapCameraController.GetCamera());
+				// m_world render
+				m_world->Render2(ts);
+				Renderer2D::EndBatch();
+				Renderer2D::DrawBatch();
+				//Renderer2D::EndScene();
+				RenderCommand::DestoryAndUnBindFBO(fbo);
+			}
 		}
 
 		void Render(double ts)
@@ -895,7 +899,8 @@ namespace gswy
 			if (buttonName.compare("How To Play") == 0)
 			{
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-				auto e = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_HOW_TO_PLAY);
+				auto cameraPos = m_CameraController.GetPosition();
+				auto e = MemoryManager::Make_shared<LoadHowToPlayEvent>(glm::vec2(cameraPos.x, cameraPos.y));
 				queue->Publish(e);
 			}
 			if (buttonName.compare("Option") == 0)
@@ -935,7 +940,6 @@ namespace gswy
 					manager->GetMainMenu().SetVisible(false);
 				}
 
-				APP_CRITICAL("Credits clicked");
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 				auto creditScreenEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_CREDIT_SCREEN);
 				queue->Publish(creditScreenEvent);
