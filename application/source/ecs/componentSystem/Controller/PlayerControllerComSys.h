@@ -99,7 +99,7 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<PlayerControllerComSys>(this, EventType::KEY_BIND_EVENT, &PlayerControllerComSys::OnKeyBindingEvent);
 			queue->Subscribe<PlayerControllerComSys>(this, EventType::CAN_PLAYER_INPUT, &PlayerControllerComSys::OnCanPlayerInput);
-			queue->Subscribe<PlayerControllerComSys>(this, EventType::SOUND_PLAYER, &PlayerControllerComSys::OnPlaySoundAtPlayerLocation);
+			queue->Subscribe<PlayerControllerComSys>(this, EventType::SOUND_AT_PLAYER, &PlayerControllerComSys::OnPlaySoundAtPlayerLocation);
 			queue->Subscribe<PlayerControllerComSys>(this, EventType::LOAD_HOW_TO_PLAY, &PlayerControllerComSys::OnLoadHowToPlay);
 		}
 
@@ -229,11 +229,10 @@ namespace gswy
 				}
 				return;
 			}
-			
-			if (!how_to_play.empty())
+			else if (!how_to_play.empty())
 			{
 				auto entity = how_to_play[0];
-				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsKeyTriggered(KEY_SPACE))
+				if (input->IsKeyTriggered(KEY_ESCAPE))
 				{
 					auto e = MemoryManager::Make_shared<GCEvent>(entity);
 					queue->Publish(e);
@@ -248,7 +247,7 @@ namespace gswy
 					{
 					case HowToPlayState::HOW_TO_PLAY_1:
 					{
-						if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+						if (input->IsKeyTriggered(KEY_DOWN))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -262,7 +261,7 @@ namespace gswy
 
 					case HowToPlayState::HOW_TO_PLAY_2:
 					{
-						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
+						if (input->IsKeyTriggered(KEY_UP))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -271,7 +270,7 @@ namespace gswy
 							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
 							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
 						}
-						else if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+						else if (input->IsKeyTriggered(KEY_DOWN))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -285,7 +284,7 @@ namespace gswy
 
 					case HowToPlayState::HOW_TO_PLAY_3:
 					{
-						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
+						if (input->IsKeyTriggered(KEY_UP))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -302,11 +301,17 @@ namespace gswy
 				}
 				return;
 			}
-
-			if (input->IsKeyTriggered(KEY_ESCAPE))
+			// Toggle the pause menu
+			else if (input->IsKeyTriggered(KEY_ESCAPE))
 			{
-				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-				m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+				// Turn off the option menu anyway
+				auto& option = WidgetManager::GetInstance()->GetOptionMenu();
+				option.SetVisible(false);
+
+				// Toggle the pause menu and the BGM
+				auto& pause = WidgetManager::GetInstance()->GetPauseMenu();
+				m_parentWorld->SetPause(!m_parentWorld->IsPaused());
+				pause.SetVisible(m_parentWorld->IsPaused());
 				//Pause track
 				AudioManager::GetInstance()->SetSoundPause("Track_1", m_parentWorld->IsPaused());
 				return;
