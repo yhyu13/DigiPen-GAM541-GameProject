@@ -60,7 +60,7 @@ namespace gswy
 
 	bool ActiveSkill::HasSupportSkill(const SupportSkillType& type)
 	{
-		for (int i = 0; i < 3; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
 			std::shared_ptr<SupportSkill> skill = m_suppportSkills[i];
 			if (type == skill->GetSkillType())
