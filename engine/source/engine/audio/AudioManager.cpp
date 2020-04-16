@@ -345,14 +345,25 @@ void gswy::AudioManager::SetChannelvolume(int nChannelId, float fVolumedB)
 
 bool gswy::AudioManager::IsPlaying(const string& strSoundName)
 {
-	return IsPlaying(GetSoundChannel(strSoundName));
+	int id = GetSoundChannel(strSoundName);
+	if (id != -1)
+	{
+		// Using the sound name to channel map to book keep the is playing or not status of sound
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool gswy::AudioManager::IsPlaying(int nChannelId)
 {
 	auto tFoundIt = m_fmodInstance->mChannels.find(nChannelId);
 	if (tFoundIt == m_fmodInstance->mChannels.end())
+	{
 		return false;
+	}
 	bool bIsPlaying;
 	tFoundIt->second->isPlaying(&bIsPlaying);
 	return bIsPlaying;

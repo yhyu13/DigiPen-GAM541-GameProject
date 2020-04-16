@@ -206,8 +206,12 @@ namespace gswy
 				auto e = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(player, "CycloneAttack", true);
 				queue->Publish(e);
 
-				auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("cyclone_shoot", body->GetPos());
-				queue->Publish(e1);
+				auto audio = AudioManager::GetInstance();
+				if (!audio->IsPlaying("cyclone_shoot"))
+				{
+					auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("cyclone_shoot", body->GetPos());
+					queue->Publish(e1);
+				}
 			}
 			else if (razorAttack != nullptr)
 			{
