@@ -14,7 +14,7 @@
 	"level_start":1,
 	"level_max":1,
 	"coins": 1000,
-	"time_per_wave": 5,
+	"time_per_wave": 2,
 	"coins_per_mob" : 2
   }
 }

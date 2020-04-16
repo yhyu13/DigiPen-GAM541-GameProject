@@ -114,7 +114,7 @@ namespace gswy
 					Before over-writing an existing active skill.
 					Update the new skill with support skills of the existing active skill.
 				*/
-				for (int slot = 0; slot < 3; ++slot)
+				for (int slot = 0; slot < currentSkill->GetMaxSupportSKillNum(); ++slot)
 				{
 					std::shared_ptr<SupportSkill> supportSkill = currentSkill->GetSupportSkill(slot);
 					if (supportSkill != nullptr)
@@ -237,7 +237,7 @@ namespace gswy
 			skill->m_iconGray = activeSkill->GetIconGray();
 			skills->m_skills[0] = skill;
 
-			for (int i = 0; i < 3; ++i)
+			for (int i = 0; i < activeSkill->GetMaxSupportSKillNum(); ++i)
 			{
 				std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(i);
 				if (supportSkill != nullptr)
@@ -269,7 +269,7 @@ namespace gswy
 			if (slotNumber == 0) // remove the active skill
 			{
 				// remove all the support skills
-				for (int i = 0; i < 3; ++i)
+				for (int i = 0; i < activeSkill->GetMaxSupportSKillNum(); ++i)
 				{
 					if (activeSkill->GetSupportSkill(i) != nullptr)
 					{
@@ -411,7 +411,7 @@ namespace gswy
 			std::shared_ptr<ActiveSkill>& activeSkill = m_skills[i];
 			if (activeSkill != nullptr)
 			{
-				for (int j = 0; j < 3; ++j)
+				for (int j = 0; j < activeSkill->GetMaxSupportSKillNum(); ++j)
 				{
 					std::shared_ptr<SupportSkill> supportSkill = activeSkill->GetSupportSkill(i);
 					if (supportSkill != nullptr)

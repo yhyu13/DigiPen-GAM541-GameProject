@@ -36,10 +36,12 @@ namespace gswy
 		virtual std::shared_ptr<SupportSkill> GetSupportSkill(const int& slot);
 		virtual void ResetSupportSkill(const int& slot);
 		virtual bool HasSupportSkill(const SupportSkillType& type);
+		int GetMaxSupportSKillNum();
 
 	private:
 		std::set<std::shared_ptr<SupportSkill>> m_supportSkillsLegacy;
 		ActiveSkillType m_type;
-		std::shared_ptr<SupportSkill> m_suppportSkills[3];
+		std::shared_ptr<SupportSkill> m_suppportSkills[4];
+		int m_maxSupportSKillNum = {4};
 	};
 }

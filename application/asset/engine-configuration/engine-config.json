@@ -3,9 +3,9 @@
 		"width": 1280,
 		"height": 720,
 		"title": "Light of Empyrion",
-		"full-screen": true
+		"full-screen": false
 	},
-	"startup-screen": true,
+	"startup-screen": false,
 	"max-framerate" : 60,
 	"enable-cheat" : true
 }
