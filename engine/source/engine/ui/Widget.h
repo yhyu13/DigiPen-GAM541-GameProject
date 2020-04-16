@@ -28,6 +28,11 @@ namespace gswy {
 		inline bool GetVisible() const { return IsVisible; }
 		inline ImVec4 GetStyle() const { return m_styleColor; }
 		inline void SetStyle(int r, int g, int b, int a) { m_styleColor = (ImVec4)ImColor::ImColor(r, g, b, a); }
+		inline ImVec2 ScaleBy1080p(const ImVec2& vec, const ImVec2& windowSize)
+		{
+			return ImVec2(vec.x / 1920.0 * windowSize.x, vec.y / 1080.0 * windowSize.y);
+		}
+
 
 		inline unsigned int GetWindowSize_X() 
 		{
