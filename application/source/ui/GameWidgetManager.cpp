@@ -279,7 +279,7 @@ namespace gswy {
 	void OptionMenu::Render()
 	{
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
-		ImVec2 optionWindowSize(500, 535);
+		ImVec2 optionWindowSize = ScaleBy1080p(ImVec2{ 500, 535 }, windowsize);
 		ImGui::SetNextWindowSize(optionWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - optionWindowSize[0] / 2, windowsize[1] / 2 - optionWindowSize[1] / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
