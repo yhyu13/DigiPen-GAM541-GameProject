@@ -15,7 +15,7 @@ Creation date: 02/17/2020
 #include "engine/ecs/ComponentDecorator.h"
 #include "engine/ecs/GameWorld.h"
 #include "ecs/CustomEvents.h"
-#include "tilemap/GameLevelMapManager.h"
+#include "level/GameLevelMapManager.h"
 
 namespace gswy
 {

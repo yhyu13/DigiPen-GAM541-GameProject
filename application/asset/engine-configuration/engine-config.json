@@ -5,7 +5,7 @@
 		"title": "Light of Empyrion",
 		"full-screen": true
 	},
-	"startup-screen": false,
+	"startup-screen": true,
 	"max-framerate" : 60,
 	"enable-cheat" : true
 }

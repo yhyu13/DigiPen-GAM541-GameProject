@@ -12,7 +12,7 @@ Creation date: 03/12/2020
 
 #include "GameWidgetManager.h"
 #include "inventory-manager/InventoryManager.h"
-#include "tilemap/GameLevelMapManager.h"
+#include "level/GameLevelMapManager.h"
 #include "skill-manager/SkillManager.h"
 #include "engine/audio/AudioManager.h"
 #include "ecs/componentSystem/Audio/SoundComSys.h"

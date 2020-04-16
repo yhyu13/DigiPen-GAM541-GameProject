@@ -16,7 +16,7 @@ Creation date: 02/16/2020
 #include "engine/ecs/GameWorld.h"
 #include "engine/input/InputManager.h"
 #include "engine/ai/PathFinding.h"
-#include "tilemap/GameLevelMapManager.h"
+#include "level/GameLevelMapManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/BodyCom.h"
 #include "ecs/components/DamageCom.h"

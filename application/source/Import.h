@@ -49,7 +49,7 @@ Creation date: 02/15/2020
 
 ///// Client application framework /////
 #include "object-factory/GameObjectFactory.h"
-#include "tilemap/GameLevelMapManager.h"
+#include "level/GameLevelMapManager.h"
 #include "ui/GameWidgetManager.h"
 #include "inventory-manager/InventoryManager.h"
 #include "skill-manager/SkillManager.h"
