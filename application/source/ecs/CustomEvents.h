@@ -464,7 +464,20 @@ namespace gswy
 		{
 		}
 
-		LoadHowToPlayEvent(const glm::vec2& cameraPosition) : Event(EventType::LOAD_HOW_TO_PLAY), m_cameraPosition(cameraPosition)
+		explicit LoadHowToPlayEvent(const glm::vec2& cameraPosition) : Event(EventType::LOAD_HOW_TO_PLAY), m_cameraPosition(cameraPosition)
+		{
+		}
+
+		glm::vec2 m_cameraPosition;
+	};
+
+	struct LoadCreditScreenEvent : Event<GameObjectType, EventType>
+	{
+		LoadCreditScreenEvent() : Event(EventType::LOAD_CREDIT_SCREEN), m_cameraPosition({ 0.0f, 0.0f })
+		{
+		}
+
+		explicit LoadCreditScreenEvent(const glm::vec2& cameraPosition) : Event(EventType::LOAD_CREDIT_SCREEN), m_cameraPosition(cameraPosition)
 		{
 		}
 

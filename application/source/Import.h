@@ -18,6 +18,7 @@ Creation date: 02/15/2020
 
 ///// Client application gameplay /////
 #include "ecs/componentSystem/Audio/SoundComSys.h"
+#include "ecs/componentSystem/Controller/StartUpControllerComSysy.h"
 #include "ecs/componentSystem/Controller/MainMenuControllerComSys.h"
 #include "ecs/componentSystem/Controller/PlayerControllerComSys.h"
 #include "ecs/componentSystem/Controller/PlayerAnimationControllerComSys.h"

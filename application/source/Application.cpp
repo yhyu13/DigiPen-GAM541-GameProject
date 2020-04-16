@@ -110,13 +110,14 @@ namespace gswy
 
 			// Load all resources
 			LoadResources();
-			LoadGameWorldAndInit("./asset/archetypes/systems-mainMenu.json");
+			LoadGameWorldAndInit("./asset/archetypes/systems-startUp.json");
 			
 			Json::Value engineConfiguration;
 			std::ifstream file("./asset/engine-configuration/engine-config.json", std::ifstream::binary);
 			file >> engineConfiguration;
 			file.close();
 
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			if (engineConfiguration["startup-screen"].asBool())
 			{
 				// Load logo
@@ -160,7 +161,7 @@ namespace gswy
 				m_gameLogo->AddComponent(gameLogoTransform);
 
 				// Fading logo
-				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				
 				auto _e = MemoryManager::Make_shared<FadeEvent>(m_DigipenLogo->GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 				queue->Publish(_e, 2.0f);
 				auto teamLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_TEAM_LOGO);
@@ -184,11 +185,18 @@ namespace gswy
 			// Event queue clearing and initialization must happen before game world initialization
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Clear();
+
+			m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
+			GameObjectFactory::GetInstance()->LoadSystem(system_file, m_world);
+			// Initialize world and all system event subscribing
+			m_world->Init();
+
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_MAIN_MENU, &GameLayer::OnLoadMainMenuWorld);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_WORLD, &GameLayer::OnLoadGameWorld);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_TEAM_LOGO, &GameLayer::OnLoadTeamLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_GAME_LOGO, &GameLayer::OnLoadGameLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_CREDIT_SCREEN, &GameLayer::OnLoadCreditScreen);
+			queue->Subscribe<GameLayer>(this, EventType::LOAD_HOW_TO_PLAY, &GameLayer::OnLoadHowToPlay);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_LEVEL_LOGO, &GameLayer::OnLoadLevelLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_WAVE_CLEAR_LOGO, &GameLayer::OnLoadWaveClearLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_LEVEL_CLEAR_LOGO, &GameLayer::OnLoadLevelClearLogo);
@@ -196,12 +204,6 @@ namespace gswy
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_LOST_LOGO, &GameLayer::OnLoadLostLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_DIED_LOG, &GameLayer::OnLoadDiedLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_FINAL_WAVE, &GameLayer::OnLoadFinalWaveLogo);
-			
-			
-			m_world = MemoryManager::Make_shared<GameWorld<GameObjectType>>();
-			GameObjectFactory::GetInstance()->LoadSystem(system_file, m_world);
-			// Initialize world and all system event subscribing
-			m_world->Init();
 		}
 
 		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -231,7 +233,6 @@ namespace gswy
 			auto e2 = MemoryManager::Make_shared<FadeEvent>(m_teamLogo, 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(e2, 1.0f);
 		}
-
 		void OnLoadGameLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			ComponentDecorator<ActiveCom, GameObjectType> activeCom;
@@ -245,24 +246,43 @@ namespace gswy
 			auto e2 = MemoryManager::Make_shared<FadeEvent>(m_gameLogo, 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(e2, 2.0f);
 		}
-
 		void OnLoadCreditScreen(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			auto creditsTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("credits");
-			auto credit = m_world->GenerateEntity(GameObjectType::CREDITS);
-			auto creditsActive = ActiveCom();
-			credit.AddComponent(creditsActive);
-			auto creditsSpriteCom = SpriteCom();
-			auto creditsSprite = creditsSpriteCom.Get();
-			creditsSprite->SetSpriteTexture(creditsTexture);
-			creditsSprite->SetSpriteScale(vec2(3.6f, 3.6f / creditsTexture->GetWidth() * creditsTexture->GetHeight()));
-			creditsSprite->SetSpritePosition(vec3(0));
-			credit.AddComponent(creditsSpriteCom);
-			auto cameraPos = m_CameraController.GetPosition();
-			auto creditsTransform = TransformCom(cameraPos.x, cameraPos.y, Z_ORDER(9100));
-			credit.AddComponent(creditsTransform);
+			if (auto event = std::dynamic_pointer_cast<LoadCreditScreenEvent>(e))
+			{
+				auto creditsTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("credits");
+				auto credit = m_world->GenerateEntity(GameObjectType::CREDITS);
+				auto creditsActive = ActiveCom();
+				credit.AddComponent(creditsActive);
+				auto creditsSpriteCom = SpriteCom();
+				auto creditsSprite = creditsSpriteCom.Get();
+				creditsSprite->SetSpriteTexture(creditsTexture);
+				creditsSprite->SetSpriteScale(vec2(3.6f, 3.6f / creditsTexture->GetWidth() * creditsTexture->GetHeight()));
+				creditsSprite->SetSpritePosition(vec3(0));
+				credit.AddComponent(creditsSpriteCom);
+				auto cameraPos = event->m_cameraPosition;
+				auto creditsTransform = TransformCom(cameraPos.x, cameraPos.y, Z_ORDER(9500));
+				credit.AddComponent(creditsTransform);
+			}
 		}
-
+		void OnLoadHowToPlay(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = std::dynamic_pointer_cast<LoadHowToPlayEvent>(e))
+			{
+				auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
+				auto m_HowToPlayLogo = (m_world->GenerateEntity(GameObjectType::HOW_TO_PLAY));
+				m_HowToPlayLogo.AddComponent(ActiveCom());
+				auto howToPlaySpriteCom = SpriteCom();
+				auto howToPlaySprite = howToPlaySpriteCom.Get();
+				howToPlaySprite->SetSpriteTexture(howToPlayTexture);
+				howToPlaySprite->SetSpriteScale(vec2(3.6f, 3.6f / howToPlayTexture->GetWidth() * howToPlayTexture->GetHeight()));
+				howToPlaySprite->SetSpritePosition(vec3(0));
+				m_HowToPlayLogo.AddComponent(howToPlaySpriteCom);
+				auto cameraPos = event->m_cameraPosition;
+				auto howToPlayTransform = TransformCom(cameraPos.x, cameraPos.y, Z_ORDER(9500));
+				m_HowToPlayLogo.AddComponent(howToPlayTransform);
+			}
+		}
 		void OnLoadLevelLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			if (auto event = dynamic_pointer_cast<LoadLevelLogoEvent>(e))
@@ -513,8 +533,19 @@ namespace gswy
 				auto m_sprite = sprite.Get();
 				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel1"));
 				m_sprite->SetSpriteScale(vec2(10, 10));
-				m_sprite->SetSpritePosition(vec3(0));
+				m_sprite->SetSpritePosition(vec3(0,0,-0.5));
 				background.AddComponent(sprite);
+
+				auto gameLogoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Game-Logo");
+				auto m_gameLogo = (m_world->GenerateEntity(GameObjectType::GAME_LOGO));
+				auto gameLogoActive = ActiveCom();
+				m_gameLogo.AddComponent(gameLogoActive);
+				auto gameLogoSpriteCom = SpriteCom();
+				auto gameLogoSprite = gameLogoSpriteCom.Get();
+				gameLogoSprite->SetSpriteTexture(gameLogoTexture);
+				gameLogoSprite->SetSpriteScale(vec2(2.f, 2.f / gameLogoTexture->GetWidth() * gameLogoTexture->GetHeight()));
+				gameLogoSprite->SetSpritePosition(vec3(0, .5, Z_ORDER(9000)));
+				m_gameLogo.AddComponent(gameLogoSpriteCom);
 			}
 			// Reset camera
 			{
@@ -625,7 +656,7 @@ namespace gswy
 				auto miniMap = m_world->GenerateEntity(GameObjectType::MINIMAP);
 				auto active = ActiveCom();
 				miniMap.AddComponent(active);
-				miniMap.AddComponent(TransformCom(0,0,1));
+				miniMap.AddComponent(TransformCom(0,0,Z_ORDER(9000)));
 				auto sprite = SpriteCom();
 				auto m_sprite = sprite.Get();
 				m_sprite->SetSpriteTexture(m_miniMapTexture);
@@ -902,6 +933,11 @@ namespace gswy
 			}
 			if (buttonName.compare("How To Play") == 0)
 			{
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto cameraPos = m_CameraController.GetPosition();
+				auto e = MemoryManager::Make_shared<LoadHowToPlayEvent>(glm::vec2(cameraPos.x, cameraPos.y));
+				queue->Publish(e);
+
 				// Set widget
 				{
 					WidgetManager* manager = WidgetManager::GetInstance();
@@ -912,10 +948,6 @@ namespace gswy
 					manager->GetMainMenu().SetVisible(false);
 				}
 
-				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-				auto cameraPos = m_CameraController.GetPosition();
-				auto e = MemoryManager::Make_shared<LoadHowToPlayEvent>(glm::vec2(cameraPos.x, cameraPos.y));
-				queue->Publish(e);
 			}
 			if (buttonName.compare("Option") == 0)
 			{
@@ -943,6 +975,10 @@ namespace gswy
 
 			if (buttonName.compare("Credits") == 0)
 			{
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto cameraPos = m_CameraController.GetPosition();
+				auto e = MemoryManager::Make_shared<LoadCreditScreenEvent>(glm::vec2(cameraPos.x, cameraPos.y));
+				queue->Publish(e);
 
 				// Set widget
 				{
@@ -953,10 +989,6 @@ namespace gswy
 					manager->GetShopMenu().SetVisible(false);
 					manager->GetMainMenu().SetVisible(false);
 				}
-
-				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-				auto creditScreenEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_CREDIT_SCREEN);
-				queue->Publish(creditScreenEvent);
 			}
 
 			if (buttonName.compare("Full Screen") == 0)

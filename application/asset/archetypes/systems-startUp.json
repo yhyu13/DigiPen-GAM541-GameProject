@@ -1,0 +1,14 @@
+{
+  "systems": [
+    "startUp-controller",
+
+    "sound",
+    "fade",
+
+    "animation",
+    "sprite",
+    "scene",
+
+    "gc"
+  ]
+}

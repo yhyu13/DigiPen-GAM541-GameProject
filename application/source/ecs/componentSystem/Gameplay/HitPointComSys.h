@@ -181,9 +181,6 @@ namespace gswy
 				ComponentDecorator<PlayerSkillComponent, GameObjectType> playerSkill;
 				m_parentWorld->Unpack(owner->GetEntity(), playerSkill);
 
-				// Skill support effect
-				// playerSkill->GetCurrentSkill()->HasSupportSkill();
-
 				if (!cooldown->IsFreezed() && !cooldown->IsCoolDown())
 				{
 					HitPoint->AddHitPoint(-Damage->GetDamange());
