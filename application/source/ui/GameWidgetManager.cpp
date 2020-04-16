@@ -353,10 +353,14 @@ namespace gswy {
 			if (ImGui::Button("Back", ImVec2(100,30)) || ImGui::IsKeyReleased(ImGui::GetKeyIndex(ImGuiKey_Escape)))
 			{
 				WidgetManager::GetInstance()->GetOptionMenu().SetVisible(false);
-				if(m_CallFromMainMenu)
+				if (m_CallFromMainMenu)
+				{
 					WidgetManager::GetInstance()->GetMainMenu().SetVisible(true);
+				}
 				else
+				{
 					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(true);
+				}
 			}
 		}
 

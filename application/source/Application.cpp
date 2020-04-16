@@ -844,7 +844,6 @@ namespace gswy
 				{
 					GameLevelMapManager::GetInstance()->Update(dt);
 				}
-				if (IS_INGAME)
 				{
 					TIME("PostRender Update");
 					PostRenderUpdate(dt);
@@ -903,6 +902,16 @@ namespace gswy
 			}
 			if (buttonName.compare("How To Play") == 0)
 			{
+				// Set widget
+				{
+					WidgetManager* manager = WidgetManager::GetInstance();
+					manager->GetHUD().SetVisible(false);
+					manager->GetInventoryMenu().SetVisible(false);
+					manager->GetPauseMenu().SetVisible(false);
+					manager->GetShopMenu().SetVisible(false);
+					manager->GetMainMenu().SetVisible(false);
+				}
+
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 				auto cameraPos = m_CameraController.GetPosition();
 				auto e = MemoryManager::Make_shared<LoadHowToPlayEvent>(glm::vec2(cameraPos.x, cameraPos.y));

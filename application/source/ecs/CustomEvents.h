@@ -464,7 +464,7 @@ namespace gswy
 		{
 		}
 
-		LoadHowToPlayEvent(glm::vec2 cameraPosition) : Event(EventType::LOAD_HOW_TO_PLAY), m_cameraPosition(cameraPosition)
+		LoadHowToPlayEvent(const glm::vec2& cameraPosition) : Event(EventType::LOAD_HOW_TO_PLAY), m_cameraPosition(cameraPosition)
 		{
 		}
 

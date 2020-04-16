@@ -38,7 +38,6 @@ namespace gswy
 		bool m_bIsMainMenuLoaded = { false };
 		SplashScreenState m_loadState = { SplashScreenState::DIGIPEN_LOGO };
 		HowToPlayState m_howToPlayState = { HowToPlayState::HOW_TO_PLAY_1 };
-		bool m_howToPlayInitialized = { false };
 
 	public:
 		MainMenuControllerComSys() {
@@ -60,23 +59,22 @@ namespace gswy
 
 		void OnLoadHowToPlay(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (!m_howToPlayInitialized)
+			auto how_to_play = m_parentWorld->GetAllEntityWithType(GameObjectType::HOW_TO_PLAY);
+			if (how_to_play.empty())
 			{
+				m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
 				auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
-				auto m_HowToPlayLogo = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_parentWorld->GenerateEntity(GameObjectType::HOW_TO_PLAY));
+				auto m_HowToPlayLogo = (m_parentWorld->GenerateEntity(GameObjectType::HOW_TO_PLAY));
 				auto howToPlayLogoActive = ActiveCom(true);
-				m_HowToPlayLogo->AddComponent(howToPlayLogoActive);
+				m_HowToPlayLogo.AddComponent(howToPlayLogoActive);
 				auto howToPlaySpriteCom = SpriteCom();
 				auto howToPlaySprite = howToPlaySpriteCom.Get();
 				howToPlaySprite->SetSpriteTexture(howToPlayTexture);
 				howToPlaySprite->SetSpriteScale(vec2(3.6f, 3.6f / howToPlayTexture->GetWidth() * howToPlayTexture->GetHeight()));
 				howToPlaySprite->SetSpritePosition(vec3(0));
-				m_HowToPlayLogo->AddComponent(howToPlaySpriteCom);
+				m_HowToPlayLogo.AddComponent(howToPlaySpriteCom);
 				auto howToPlayTransform = TransformCom(0, 0, Z_ORDER(2500));
-				m_HowToPlayLogo->AddComponent(howToPlayTransform);
-				m_howToPlayInitialized = true;
-
-				WidgetManager::GetInstance()->GetMainMenu().SetVisible(false);
+				m_HowToPlayLogo.AddComponent(howToPlayTransform);
 			}
 		}
 
@@ -99,25 +97,9 @@ namespace gswy
 				auto input = InputManager::GetInstance();
 				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 
-				if (m_howToPlayInitialized && input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT)) // DO NOTHING
-				{
-				}
-
 				// Escape the start up screen by pressing ESC, ENTER, SPACE, and MLB
-				else if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_ENTER) || input->IsKeyTriggered(KEY_SPACE) || input->IsKeyTriggered(KEY_ESCAPE))
+				if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_ENTER) || input->IsKeyTriggered(KEY_SPACE) || input->IsKeyTriggered(KEY_ESCAPE))
 				{
-					if (!input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
-					{
-						auto howToPlay = m_parentWorld->GetAllEntityWithType(GameObjectType::HOW_TO_PLAY);
-						if (!howToPlay.empty())
-						{
-							auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-							auto e = MemoryManager::Make_shared<GCEvent>(howToPlay[0]);
-							queue->Publish(e);
-							m_howToPlayInitialized = false;
-						}
-					}
-
 					auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
 					// Pulish event in the next frame
 					queue->Publish(_e1,dt);
@@ -170,11 +152,49 @@ namespace gswy
 					break;
 					}
 				}
+			}
+			else
+			{
+				ProcessConstantInput();
+			}
+		}
 
-				if (m_howToPlayInitialized)
+		void ProcessConstantInput()
+		{
+			auto input = InputManager::GetInstance();
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+
+			// Process showing and hiding of the game credit page
+			auto credit = m_parentWorld->GetAllEntityWithType(GameObjectType::CREDITS);
+			if (!credit.empty())
+			{
+				auto entity = credit[0];
+				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_SPACE))
 				{
-					Entity<GameObjectType> entity = m_parentWorld->GetAllEntityWithType(GameObjectType::HOW_TO_PLAY)[0];
-					InputManager* input = InputManager::GetInstance();
+					auto e = MemoryManager::Make_shared<GCEvent>(entity);
+					queue->Publish(e);
+					// Set main menu back to visible
+					{
+						WidgetManager::GetInstance()->GetMainMenu().SetVisible(true);
+					}
+				}
+			}
+
+			auto how_to_play = m_parentWorld->GetAllEntityWithType(GameObjectType::HOW_TO_PLAY);
+			if (!how_to_play.empty())
+			{
+				auto entity = how_to_play[0];
+				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsKeyTriggered(KEY_SPACE))
+				{
+					auto e = MemoryManager::Make_shared<GCEvent>(entity);
+					queue->Publish(e);
+					// Set main menu back to visible
+					{
+						WidgetManager::GetInstance()->GetMainMenu().SetVisible(true);
+					}
+				}
+				else
+				{
 					switch (m_howToPlayState)
 					{
 					case HowToPlayState::HOW_TO_PLAY_1:
@@ -191,7 +211,7 @@ namespace gswy
 
 					case HowToPlayState::HOW_TO_PLAY_2:
 
-						if (input->IsKeyTriggered(KEY_UP))
+						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -200,7 +220,7 @@ namespace gswy
 							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
 							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
 						}
-						if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+						else if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -212,7 +232,7 @@ namespace gswy
 						break;
 
 					case HowToPlayState::HOW_TO_PLAY_3:
-						if (input->IsKeyTriggered(KEY_UP))
+						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -221,44 +241,8 @@ namespace gswy
 							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
 							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_2;
 						}
-
-						if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
-						{
-							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
-							m_parentWorld->Unpack(entity, spriteCom);
-							auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
-							auto howToPlaySprite = spriteCom->Get();
-							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
-							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
-						}
 						break;
 					}
-				}
-			}
-			else
-			{
-				ProcessConstantInput();
-			}
-		}
-
-		void ProcessConstantInput()
-		{
-			// Process showing and hiding of the game credit page
-			auto credit_page = m_parentWorld->GetAllEntityWithType(GameObjectType::CREDITS);
-			if (!credit_page.empty())
-			{
-				auto credit = credit_page[0];
-				auto input = InputManager::GetInstance();
-				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT) || input->IsKeyTriggered(KEY_SPACE))
-				{
-					auto e = MemoryManager::Make_shared<GCEvent>(credit);
-					queue->Publish(e);
-					// Set main menu back to visible
-					{
-						WidgetManager::GetInstance()->GetMainMenu().SetVisible(true);
-					}
-
 				}
 			}
 		}

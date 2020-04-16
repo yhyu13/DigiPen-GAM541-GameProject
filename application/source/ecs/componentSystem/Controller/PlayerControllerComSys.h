@@ -75,13 +75,9 @@ namespace gswy
 		double m_timeDisableMoveCommand = { 0 };
 		bool m_bDisableMoveInput = { false };
 		bool m_bDisableInput = { false };
-		bool m_howToPlayInitialized = { false };
 		HowToPlayState m_howToPlayState = { HowToPlayState::HOW_TO_PLAY_1 };
 
-		bool isShopMenuVisible;
-
 		std::vector<glm::ivec2> m_pathResult;
-		
 		bool m_cubicSplineEnabled = { false };	// Cubic spline refinement of path finding should be disabled due to unstable result
 		float m_cubicSplineStepSize = { .5f };
 		std::vector<glm::vec2> m_pathResultCubicSplline;
@@ -109,35 +105,25 @@ namespace gswy
 
 		void OnLoadHowToPlay(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			if (!m_howToPlayInitialized)
+			if (auto event = std::dynamic_pointer_cast<LoadHowToPlayEvent>(e))
 			{
-				auto event = std::dynamic_pointer_cast<LoadHowToPlayEvent>(e);
-				if (event != nullptr)
+				auto how_to_play = m_parentWorld->GetAllEntityWithType(GameObjectType::HOW_TO_PLAY);
+				if (how_to_play.empty())
 				{
+					m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
 					auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
-					auto m_HowToPlayLogo = MemoryManager::Make_shared<EntityDecorator<GameObjectType>>(m_parentWorld->GenerateEntity(GameObjectType::HOW_TO_PLAY));
-					auto howToPlayLogoActive = ActiveCom(true);
-					m_HowToPlayLogo->AddComponent(howToPlayLogoActive);
+					auto m_HowToPlayLogo = (m_parentWorld->GenerateEntity(GameObjectType::HOW_TO_PLAY));
+					m_HowToPlayLogo.AddComponent(ActiveCom());
 					auto howToPlaySpriteCom = SpriteCom();
 					auto howToPlaySprite = howToPlaySpriteCom.Get();
 					howToPlaySprite->SetSpriteTexture(howToPlayTexture);
 					howToPlaySprite->SetSpriteScale(vec2(3.6f, 3.6f / howToPlayTexture->GetWidth() * howToPlayTexture->GetHeight()));
 					howToPlaySprite->SetSpritePosition(vec3(0));
-					m_HowToPlayLogo->AddComponent(howToPlaySpriteCom);
+					m_HowToPlayLogo.AddComponent(howToPlaySpriteCom);
 
-					auto playerPos = event->m_cameraPosition;
-					auto howToPlayTransform = TransformCom(playerPos.x, playerPos.y, Z_ORDER(9500));
-					m_HowToPlayLogo->AddComponent(howToPlayTransform);
-					m_howToPlayInitialized = true;
-
-					isShopMenuVisible = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
-					WidgetManager::GetInstance()->GetHUD().SetVisible(false);
-					WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(false);
-					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(false);
-					WidgetManager::GetInstance()->GetShopMenu().SetVisible(false);
-					WidgetManager::GetInstance()->GetMainMenu().SetVisible(false);
-
-					m_parentWorld->SetPause(true);
+					auto cameraPos = event->m_cameraPosition;
+					auto howToPlayTransform = TransformCom(cameraPos.x, cameraPos.y, Z_ORDER(9500));
+					m_HowToPlayLogo.AddComponent(howToPlayTransform);
 
 					auto miniMap = m_parentWorld->GetAllEntityWithType(GameObjectType::MINIMAP)[0];
 					ComponentDecorator<ActiveCom, GameObjectType> activeCom;
@@ -242,121 +228,87 @@ namespace gswy
 		void ProcessConstantInput()
 		{
 			auto input = InputManager::GetInstance();
-			// Process showing and hiding of the game credit page
-			auto credit_page = m_parentWorld->GetAllEntityWithType(GameObjectType::CREDITS);
-			if (!credit_page.empty())
+			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+
+			auto how_to_play = m_parentWorld->GetAllEntityWithType(GameObjectType::HOW_TO_PLAY);
+			if (!how_to_play.empty())
 			{
-				auto credit = credit_page[0];
-				auto input = InputManager::GetInstance();
-				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+				auto entity = how_to_play[0];
+				if (input->IsKeyTriggered(KEY_ESCAPE) || input->IsKeyTriggered(KEY_SPACE))
 				{
-					auto e = MemoryManager::Make_shared<GCEvent>(credit);
+					auto e = MemoryManager::Make_shared<GCEvent>(entity);
 					queue->Publish(e);
 					// Set pause menu back to visible
 					{
 						WidgetManager::GetInstance()->GetPauseMenu().SetVisible(true);
-					}
-				}
-			}
-			// Showing or hiding the pause menu page
-			if (GameLevelMapManager::GetInstance()->IsInGame())
-			{
-				if (input->IsKeyTriggered(KEY_ESCAPE))
-				{
-					WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-					m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
-					//Pause track
-					AudioManager::GetInstance()->SetSoundPause("Track_1", m_parentWorld->IsPaused());
-				}
-			}
-
-			if (m_howToPlayInitialized && GameLevelMapManager::GetInstance()->IsInGame())
-			{
-				Entity<GameObjectType> entity = m_parentWorld->GetAllEntityWithType(GameObjectType::HOW_TO_PLAY)[0];
-				InputManager* input = InputManager::GetInstance();
-				switch (m_howToPlayState)
-				{
-				case HowToPlayState::HOW_TO_PLAY_1:
-					if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
-					{
-						ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
-						m_parentWorld->Unpack(entity, spriteCom);
-						auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_2");
-						auto howToPlaySprite = spriteCom->Get();
-						howToPlaySprite->SetSpriteTexture(howToPlayTexture);
-						m_howToPlayState = HowToPlayState::HOW_TO_PLAY_2;
-					}
-					break;
-
-				case HowToPlayState::HOW_TO_PLAY_2:
-
-					if (input->IsKeyTriggered(KEY_UP))
-					{
-						ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
-						m_parentWorld->Unpack(entity, spriteCom);
-						auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
-						auto howToPlaySprite = spriteCom->Get();
-						howToPlaySprite->SetSpriteTexture(howToPlayTexture);
-						m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
-					}
-					if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
-					{
-						ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
-						m_parentWorld->Unpack(entity, spriteCom);
-						auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_3");
-						auto howToPlaySprite = spriteCom->Get();
-						howToPlaySprite->SetSpriteTexture(howToPlayTexture);
-						m_howToPlayState = HowToPlayState::HOW_TO_PLAY_3;
-					}
-					break;
-
-				case HowToPlayState::HOW_TO_PLAY_3:
-					if (input->IsKeyTriggered(KEY_UP))
-					{
-						ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
-						m_parentWorld->Unpack(entity, spriteCom);
-						auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_2");
-						auto howToPlaySprite = spriteCom->Get();
-						howToPlaySprite->SetSpriteTexture(howToPlayTexture);
-						m_howToPlayState = HowToPlayState::HOW_TO_PLAY_2;
-					}
-
-					if (input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
-					{
-						ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
-						m_parentWorld->Unpack(entity, spriteCom);
-						auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
-						auto howToPlaySprite = spriteCom->Get();
-						howToPlaySprite->SetSpriteTexture(howToPlayTexture);
-						m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
-					}
-					break;
-				}
-
-				if (input->IsKeyTriggered(KEY_ENTER) || input->IsKeyTriggered(KEY_SPACE) || input->IsKeyTriggered(KEY_ESCAPE))
-				{
-
-					auto howToPlay = m_parentWorld->GetAllEntityWithType(GameObjectType::HOW_TO_PLAY);
-					if (!howToPlay.empty())
-					{
-						auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-						auto e = MemoryManager::Make_shared<GCEvent>(howToPlay[0]);
-						queue->Publish(e);
-						m_howToPlayInitialized = false;
-
-						WidgetManager::GetInstance()->GetHUD().SetVisible(true);
-						WidgetManager::GetInstance()->GetInventoryMenu().SetVisible(true);
-						WidgetManager::GetInstance()->GetPauseMenu().SetVisible(true);
-						WidgetManager::GetInstance()->GetShopMenu().SetVisible(isShopMenuVisible);
-
 						auto miniMap = m_parentWorld->GetAllEntityWithType(GameObjectType::MINIMAP)[0];
 						ComponentDecorator<ActiveCom, GameObjectType> activeCom;
 						m_parentWorld->Unpack(miniMap, activeCom);
 						activeCom->SetActive(true);
 					}
 				}
+				else
+				{
+					switch (m_howToPlayState)
+					{
+					case HowToPlayState::HOW_TO_PLAY_1:
+						if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+						{
+							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
+							m_parentWorld->Unpack(entity, spriteCom);
+							auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_2");
+							auto howToPlaySprite = spriteCom->Get();
+							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
+							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_2;
+						}
+						break;
+
+					case HowToPlayState::HOW_TO_PLAY_2:
+
+						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
+						{
+							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
+							m_parentWorld->Unpack(entity, spriteCom);
+							auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_1");
+							auto howToPlaySprite = spriteCom->Get();
+							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
+							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
+						}
+						else if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
+						{
+							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
+							m_parentWorld->Unpack(entity, spriteCom);
+							auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_3");
+							auto howToPlaySprite = spriteCom->Get();
+							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
+							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_3;
+						}
+						break;
+
+					case HowToPlayState::HOW_TO_PLAY_3:
+						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
+						{
+							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
+							m_parentWorld->Unpack(entity, spriteCom);
+							auto howToPlayTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("htp_2");
+							auto howToPlaySprite = spriteCom->Get();
+							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
+							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_2;
+						}
+						break;
+					}
+				}
+				return;
 			}
+
+			if (input->IsKeyTriggered(KEY_ESCAPE))
+			{
+				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(!WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+				m_parentWorld->SetPause(WidgetManager::GetInstance()->GetPauseMenu().GetVisible());
+				//Pause track
+				AudioManager::GetInstance()->SetSoundPause("Track_1", m_parentWorld->IsPaused());
+			}
+			return;
 		}
 
 		void ProcessCheatInput()

@@ -65,6 +65,7 @@ namespace gswy
 			if (auto event = static_pointer_cast<OnMuteBGMEvent>(e))
 			{
 				AudioManager::GetInstance()->SetSoundMute("Track_1", event->m_mute);
+				AudioManager::GetInstance()->SetSoundMute("Menu_Track", event->m_mute);
 			}
 		}
 
