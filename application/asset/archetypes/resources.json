@@ -96,12 +96,20 @@
           "path": "./asset/Sprites/Mob2_Unarmed_Attack.png"
         },
         {
-          "name": "Mob1_Boss_Moving",
-          "path": "./asset/Sprites/Mob1_Boss_Moving.png"
+          "name": "Mob_Boss1_Moving",
+          "path": "./asset/Sprites/Mob_Boss1_Moving.png"
         },
         {
-          "name": "Mob1_Boss_Attack",
-          "path": "./asset/Sprites/Mob1_Boss_Attack.png"
+          "name": "Mob_Boss1_Attack",
+          "path": "./asset/Sprites/Mob_Boss1_Attack.png"
+        },
+		{
+          "name": "Mob_Boss2_Moving",
+          "path": "./asset/Sprites/Mob_Boss2_Moving.png"
+        },
+        {
+          "name": "Mob_Boss2_Attack",
+          "path": "./asset/Sprites/Mob_Boss2_Attack.png"
         },
         {
           "name": "YellowLayer",
@@ -341,9 +349,9 @@
           }
         },
         {
-          "name": "Mob1_BossAnimation_Moving",
+          "name": "Mob_Boss1Animation_Moving",
           "properties": {
-            "texture-name": "Mob1_Boss_Moving",
+            "texture-name": "Mob_Boss1_Moving",
             "x": 128,
             "y": 0,
             "width": 128,
@@ -353,9 +361,33 @@
           }
         },
         {
-          "name": "Mob1_BossAnimation_Attack",
+          "name": "Mob_Boss1Animation_Attack",
           "properties": {
-            "texture-name": "Mob1_Boss_Attack",
+            "texture-name": "Mob_Boss1_Attack",
+            "x": 128,
+            "y": 0,
+            "width": 128,
+            "height": 128,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+		{
+          "name": "Mob_Boss2Animation_Moving",
+          "properties": {
+            "texture-name": "Mob_Boss2_Moving",
+            "x": 128,
+            "y": 0,
+            "width": 128,
+            "height": 128,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+        {
+          "name": "Mob_Boss2Animation_Attack",
+          "properties": {
+            "texture-name": "Mob_Boss2_Attack",
             "x": 128,
             "y": 0,
             "width": 128,

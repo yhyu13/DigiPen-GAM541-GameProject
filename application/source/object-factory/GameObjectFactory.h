@@ -59,6 +59,10 @@ namespace gswy {
 					m_world->RegisterSystem(MemoryManager::Make_shared<Mob1BossControllerComSys>());
 					continue;
 				}
+				if (system._Equal("mob-2-Boss-controller")) {
+					m_world->RegisterSystem(MemoryManager::Make_shared<Mob2BossControllerComSys>());
+					continue;
+				}
 				if (system._Equal("MobPortalControllerComSys")) {
 					m_world->RegisterSystem(MemoryManager::Make_shared<MobPortalControllerComSys>());
 					continue;

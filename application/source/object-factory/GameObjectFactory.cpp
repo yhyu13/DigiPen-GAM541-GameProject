@@ -161,7 +161,7 @@ namespace gswy {
 						continue;
 					}
 
-					if (name._Equal("Mob1_BossAnimation_Moving")) {
+					if (name._Equal("Mob_Boss1Animation_Moving")) {
 						auto mobAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
 						for (int k = 0; k < 4; ++k) {
 							mobAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
@@ -169,7 +169,23 @@ namespace gswy {
 						continue;
 					}
 
-					if (name._Equal("Mob1_BossAnimation_Attack")) {
+					if (name._Equal("Mob_Boss1Animation_Attack")) {
+						auto mobAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
+						for (int k = 0; k < 5; ++k) {
+							mobAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
+						}
+						continue;
+					}
+
+					if (name._Equal("Mob_Boss2Animation_Moving")) {
+						auto mobAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
+						for (int k = 0; k < 4; ++k) {
+							mobAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);
+						}
+						continue;
+					}
+
+					if (name._Equal("Mob_Boss2Animation_Attack")) {
 						auto mobAnim1 = ResourceAllocator<Animation>::GetInstance()->Create("", name);
 						for (int k = 0; k < 5; ++k) {
 							mobAnim1->AddFrame(textureName, x * k, y, width, height, delay / frameCount);

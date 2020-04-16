@@ -65,6 +65,9 @@ namespace gswy
 				case GameObjectType::ENEMY_BOSS_1:
 					SpawnEnemeyBoss1(e);
 					break;
+				case GameObjectType::ENEMY_BOSS_2:
+					SpawnEnemeyBoss2(e);
+					break;
 				case GameObjectType::TOWER_BUILD:
 					SpawnTower(e);
 					break;
@@ -292,8 +295,8 @@ namespace gswy
 			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
 			obj.AddComponent(transform);
 			auto animCom2 = AnimationCom();
-			animCom2.Add("Mob1_BossAnimation_Moving", "Move");
-			animCom2.Add("Mob1_BossAnimation_Attack", "Attack");
+			animCom2.Add("Mob_Boss1Animation_Moving", "Move");
+			animCom2.Add("Mob_Boss1Animation_Attack", "Attack");
 			animCom2.SetCurrentAnimationState("Move");
 			obj.AddComponent(animCom2);
 			auto sprite = SpriteCom();
@@ -311,6 +314,55 @@ namespace gswy
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(20));
+
+			// Mob floating hp bar
+			{
+				auto hp_bar = m_parentWorld->GenerateEntity(GameObjectType::HP_BAR);
+				auto active = ActiveCom();
+				hp_bar.AddComponent(active);
+				hp_bar.AddComponent(OwnershiptCom<GameObjectType>(obj));
+				auto attach = AttachedMovementCom();
+				attach.followPos = true;
+				attach.rPos = vec2(0, 0.2);
+				hp_bar.AddComponent(attach);
+				hp_bar.AddComponent(BodyCom(event->m_pos.x, event->m_pos.y));
+				hp_bar.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+				auto sprite = SpriteCom();
+				sprite.SetTexture("RedLayer");
+				sprite.SetScale(vec2(0.20, 0.02));
+				hp_bar.AddComponent(sprite);
+			}
+		}
+
+		void SpawnEnemeyBoss2(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			auto event = static_pointer_cast<SpawnEvent>(e);
+			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_BOSS_2);
+			obj.AddComponent(ActiveCom());
+			obj.AddComponent(BuffCom());
+			obj.AddComponent(OwnershiptCom<GameObjectType>());
+			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
+			obj.AddComponent(transform);
+			auto animCom2 = AnimationCom();
+			animCom2.Add("Mob_Boss2Animation_Moving", "Move");
+			animCom2.Add("Mob_Boss2Animation_Attack", "Attack");
+			animCom2.SetCurrentAnimationState("Move");
+			obj.AddComponent(animCom2);
+			auto sprite = SpriteCom();
+			sprite.SetScale(vec2(0.7, 0.7));
+			obj.AddComponent(sprite);
+			auto sprite0 = MiniMapSprite();
+			sprite0.SetScale(vec2(0.3, 0.3));
+			sprite0.SetTexture("RedLayer");
+			obj.AddComponent(sprite0);
+			auto aabb1 = BodyCom();
+			aabb1.SetPos(transform.GetPos());
+			aabb1.ChooseShape("AABB", 0.7, 0.7);
+			obj.AddComponent(aabb1);
+			obj.AddComponent(HitPointCom(500));
+			auto cooldown = CoolDownCom(0.1);
+			obj.AddComponent(cooldown);
+			obj.AddComponent(DamageCom(30));
 
 			// Mob floating hp bar
 			{

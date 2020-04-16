@@ -6,7 +6,7 @@ Language: c++ 11
 Platform: Windows 10 (X64)
 Project: GAM541
 Author: Hang Yu (hang.yu@digipen.edu | 60001119)
-Creation date: 03/24/2020
+Creation date: 04/16/2020
 - End Header ----------------------------*/
 
 #pragma once
@@ -19,19 +19,19 @@ Creation date: 03/24/2020
 #include "level/GameLevelMapManager.h"
 #include "ecs/components/TransformCom.h"
 #include "ecs/components/BodyCom.h"
-#include "ecs/components/DamageCom.h"
 #include "ecs/components/CoolDownCom.h"
+#include "ecs/components/DamageCom.h"
 #include "ecs/components/AnimationCom.h"
 #include "ecs/EntityType.h"
 
 namespace gswy
 {
-	class Mob1BossControllerComSys : public BaseComponentSystem<GameObjectType> {
+	class Mob2BossControllerComSys : public BaseComponentSystem<GameObjectType> {
 	private:
 		double m_updateTimer = { 1.0 / 10.0 };
-		float m_speed = 0.35f;
+		float m_speed = 0.45f;
 	public:
-		Mob1BossControllerComSys() {
+		Mob2BossControllerComSys() {
 		}
 
 		virtual void Update(double dt) override {
@@ -49,7 +49,7 @@ namespace gswy
 			auto pathGrid = tileMapObj->GetTileGrid("MobPath");
 			auto Astar = tileMapObj->GetPathFinder("MobPath");
 			auto destEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
-			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY_BOSS_1);
+			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY_BOSS_2);
 			for (auto& entity : m_registeredEntities) {
 				{
 					ComponentDecorator<TransformCom, GameObjectType> transform;

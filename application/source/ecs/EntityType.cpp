@@ -14,7 +14,7 @@ Creation date: 03/17/2020
 namespace gswy
 {
 	std::vector<GameObjectType> g_towerTypes = { GameObjectType::TOWER_FIRE ,GameObjectType::TOWER_ICE ,GameObjectType::TOWER_LIGHTNING };
-	std::vector<GameObjectType> g_enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
+	std::vector<GameObjectType> g_enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1,GameObjectType::ENEMY_BOSS_2 };
 }
 
 

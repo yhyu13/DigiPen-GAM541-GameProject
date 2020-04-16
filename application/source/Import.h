@@ -25,6 +25,7 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/Controller/Mob1ControllerComSys.h"
 #include "ecs/componentSystem/Controller/Mob2ControllerComSys.h"
 #include "ecs/componentSystem/Controller/Mob1BossControllerComSys.h"
+#include "ecs/componentSystem/Controller/Mob2BossControllerComSys.h"
 #include "ecs/componentSystem/Controller/MobPortalControllerComSys.h"
 #include "ecs/componentSystem/Controller/TowerControllerComSys.h"
 #include "ecs/componentSystem/Controller/BaseControllerComSys.h"
