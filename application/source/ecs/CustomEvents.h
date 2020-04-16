@@ -68,7 +68,22 @@ namespace gswy
 
 		explicit PlaySoundAtPlayerLocationEvent(const std::string& name, float vol = 1.0f, float freq = 1.0f)
 			:
-			Event(EventType::SOUND_PLAYER)
+			Event(EventType::SOUND_AT_PLAYER)
+		{
+			soundName = name;
+			m_vol = vol;
+			m_freq = freq;
+		}
+		std::string soundName;
+		float m_vol;
+		float m_freq;
+	};
+
+	struct PlaySoundAtCameraLocationEvent : Event<GameObjectType, EventType> {
+
+		explicit PlaySoundAtCameraLocationEvent(const std::string& name, float vol = 1.0f, float freq = 1.0f)
+			:
+			Event(EventType::SOUND_AT_CAMERA)
 		{
 			soundName = name;
 			m_vol = vol;

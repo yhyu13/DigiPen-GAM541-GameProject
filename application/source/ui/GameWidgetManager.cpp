@@ -123,6 +123,7 @@ namespace gswy {
 
 	void MainMenu::Render()
 	{
+		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
 		ImVec2 mainMenuWindowSize = ScaleBy1080p(m_MainMenu, windowsize);
 		ImGui::SetNextWindowSize(mainMenuWindowSize);
@@ -136,29 +137,29 @@ namespace gswy {
 		ImGui::SetWindowFontScale(1.0);
 		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize),ImVec2(0,1), ImVec2(1,0), 0, ImVec4(0,0,0,1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("New Game");
 		}
 		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("How To Play");
 		}
 		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			//manager->InvokeButton("Option");
 			manager->GetOptionMenu().SetVisible(true);
 			manager->GetOptionMenu().SetCallFromMainMenu(true);
 		}
 		if (ImGui::ImageButton((void*)m_Texture_Credits->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("Credits");
 		}
 		if (ImGui::ImageButton((void*)m_Texture_QuitGame->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			ImGui::OpenPopup("Quit?");
 		}
 		if (ImGui::BeginPopupModal("Quit?", NULL, popupFlag))
@@ -168,7 +169,7 @@ namespace gswy {
 			WidgetManager::GetInstance()->PushPopModalStyle();
 			if (ImGui::Button("Yes", ImVec2(120, 0))) 
 			{ 
-				AudioManager::GetInstance()->PlaySound("click_sound");
+				auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 				ImGui::CloseCurrentPopup(); 
 				manager->InvokeButton("Exit");
 			}
@@ -176,7 +177,7 @@ namespace gswy {
 			ImGui::SameLine();
 			if (ImGui::Button("No", ImVec2(120, 0))) 
 			{ 
-				AudioManager::GetInstance()->PlaySound("click_sound");
+				auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 				ImGui::CloseCurrentPopup();
 			}
 			WidgetManager::GetInstance()->PopPopupModalStyle();
@@ -189,6 +190,7 @@ namespace gswy {
 
 	void PauseMenu::Render()
 	{
+		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
 		ImVec2 pauseMenuWindowSize = ScaleBy1080p(m_PauseMenuWindowSize, windowsize);
 		ImGui::SetNextWindowSize(pauseMenuWindowSize);
@@ -199,29 +201,29 @@ namespace gswy {
 		ImGui::SetWindowFontScale(1.0);
 		if (ImGui::ImageButton((void*)m_Texture_ResumeGame->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("Resume Game");
 		}
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_HowToPlay->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("How To Play");
 		}
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Option->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			//manager->InvokeButton("Option");
 			manager->GetOptionMenu().SetVisible(true);
 			manager->GetOptionMenu().SetCallFromMainMenu(false);
 		}
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("Credits");
 		}
 		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			ImGui::OpenPopup("Main menu?");
 		}
 		if (ImGui::BeginPopupModal("Main menu?", NULL, popupFlag))
@@ -231,7 +233,7 @@ namespace gswy {
 			WidgetManager::GetInstance()->PushPopModalStyle();
 			if (ImGui::Button("Yes", ImVec2(120, 0)))
 			{
-				AudioManager::GetInstance()->PlaySound("click_sound");
+				auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 				ImGui::CloseCurrentPopup();
 				manager->InvokeButton("Main Menu");
 			}
@@ -239,7 +241,7 @@ namespace gswy {
 			ImGui::SameLine();
 			if (ImGui::Button("No", ImVec2(120, 0)))
 			{
-				AudioManager::GetInstance()->PlaySound("click_sound");
+				auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 				ImGui::CloseCurrentPopup();
 			}
 			WidgetManager::GetInstance()->PopPopupModalStyle();
@@ -247,7 +249,7 @@ namespace gswy {
 		}
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
-			AudioManager::GetInstance()->PlaySound("click_sound");
+			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			ImGui::OpenPopup("Quit?");
 		}
 		if (ImGui::BeginPopupModal("Quit?", NULL, popupFlag))
@@ -257,7 +259,7 @@ namespace gswy {
 			WidgetManager::GetInstance()->PushPopModalStyle();
 			if (ImGui::Button("Yes", ImVec2(120, 0)))
 			{
-				AudioManager::GetInstance()->PlaySound("click_sound");
+				auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 				ImGui::CloseCurrentPopup();
 				manager->InvokeButton("Exit");
 			}
@@ -265,7 +267,7 @@ namespace gswy {
 			ImGui::SameLine();
 			if (ImGui::Button("No", ImVec2(120, 0)))
 			{
-				AudioManager::GetInstance()->PlaySound("click_sound");
+				auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 				ImGui::CloseCurrentPopup();
 			}
 			WidgetManager::GetInstance()->PopPopupModalStyle();

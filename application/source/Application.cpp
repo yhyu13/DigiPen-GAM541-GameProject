@@ -204,6 +204,7 @@ namespace gswy
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_LOST_LOGO, &GameLayer::OnLoadLostLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_DIED_LOG, &GameLayer::OnLoadDiedLogo);
 			queue->Subscribe<GameLayer>(this, EventType::LOAD_FINAL_WAVE, &GameLayer::OnLoadFinalWaveLogo);
+			queue->Subscribe<GameLayer>(this, EventType::SOUND_AT_CAMERA, &GameLayer::OnPlaySoundAtCamera);
 		}
 
 		void OnLoadMainMenuWorld(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -504,6 +505,16 @@ namespace gswy
 			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
 			queue->Publish(_e, 2.0f);
 		}
+		void OnPlaySoundAtCamera(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = dynamic_pointer_cast<PlaySoundAtCameraLocationEvent>(e))
+			{
+				auto playerPos = m_CameraController.GetPosition();
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto e1 = MemoryManager::Make_shared<SoundEvent>(event->soundName, playerPos, event->m_vol, event->m_freq);
+				queue->Publish(e1);
+			}
+		}
 
 		void LoadMainMenuWorld()
 		{
@@ -557,11 +568,7 @@ namespace gswy
 			{
 				AudioManager::GetInstance()->StopAllChannels();
 				AudioManager::GetInstance()->Update(0);
-			}
-
-			//Play Placeholder menu music
-			{
-				AudioManager::GetInstance()->PlaySound("Menu_Track");
+				AudioManager::GetInstance()->PlaySound("Menu_Track", AudioVector3{ 0,0,0 }, -10, 1);
 			}
 		}
 
@@ -682,7 +689,7 @@ namespace gswy
 			{
 				AudioManager::GetInstance()->StopAllChannels();
 				AudioManager::GetInstance()->Update(0);
-				AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ 0,0,0 }, 1, 1);
+				AudioManager::GetInstance()->PlaySound("Track_1", AudioVector3{ 0,0,0 }, -10, 1);
 			}
 
 			// Re-enable player input
@@ -744,13 +751,6 @@ namespace gswy
 				auto cursor = InputManager::GetInstance()->GetCursorPosition();
 				auto center = InputManager::GetInstance()->GetCursorMaxPosition() * 0.5f;
 				auto delta = vec2(0);
-
-				// Enable it if you want have crusing camera effect
-				//auto len = glm::length(cursor - center);
-				//if (len > 1e-2)
-				//{
-				//	delta = glm::normalize(cursor - center) * (float)ts * ((len > 30.0f) ? 30.0f : len);
-				//}
 				auto targetPos = vec3(transform->GetPos(),0.0f) + vec3(delta.x, -delta.y, 0.0f);
 				auto newPos = m_CameraController.GetPosition() + (targetPos - m_CameraController.GetPosition()) * m_CameraController.GetCameraMoveSpeed() * (float)ts;
 				m_CameraController.SetPosition(newPos);
@@ -761,8 +761,11 @@ namespace gswy
 		void UpdateAudio(double ts)
 		{
 			// Set 3D sound
-			AudioManager::GetInstance()->Set3dListenerAndOrientation(m_CameraController.GetPosition());
-			AudioManager::GetInstance()->SetChannel3dPosition(AudioManager::GetInstance()->GetSoundChannel("Track_1"), AudioVector3(m_CameraController.GetPosition()));
+			auto audio = AudioManager::GetInstance();
+			auto position = AudioVector3(m_CameraController.GetPosition());
+			audio->Set3dListenerAndOrientation(position);
+			audio->SetChannel3dPosition(audio->GetSoundChannel("Track_1"), position);
+			audio->SetChannel3dPosition(audio->GetSoundChannel("Menu_Track"), position);
 		}
 
 		void UpdateCursor(double ts)
@@ -838,17 +841,17 @@ namespace gswy
 		virtual void OnUpdate(double ts) override
 		{
 			BeforeFrame();
-		
 			double dt = (!m_world->IsPaused())? ts: 0;
-
 			{
-				if (IS_INGAME)
 				{
-					TIME("Pre Update");
-					UpdateCamera(dt);
+					TIME("Pre Update (Game)");
+					if (IS_INGAME)
+					{
+						UpdateCamera(dt);
+						UpdateCursor(dt);
+						UpdateMiniMap(dt);
+					}
 					UpdateAudio(dt);
-					UpdateCursor(dt);
-					UpdateMiniMap(dt);
 				}
 				{
 					TIME("System Update");
@@ -858,22 +861,21 @@ namespace gswy
 					TIME("PreRender Update");
 					PreRenderUpdate(dt);
 				}
-				if (IS_INGAME)
-				{
-					TIME("MiniMap Update");
-					MiniMapRender(dt);
-				}
 				{
 					TIME("Render Update");
+					if (IS_INGAME)
+					{
+						MiniMapRender(dt);
+					}
 					Render(dt);
 				}
 				{
 					TIME("Manager Update");
 					EventQueue<GameObjectType, EventType>::GetInstance()->Update(dt);
-				}
-				if (IS_INGAME)
-				{
-					GameLevelMapManager::GetInstance()->Update(dt);
+					if (IS_INGAME)
+					{
+						GameLevelMapManager::GetInstance()->Update(dt);
+					}
 				}
 				{
 					TIME("PostRender Update");
