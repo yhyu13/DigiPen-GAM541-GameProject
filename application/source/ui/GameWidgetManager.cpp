@@ -25,7 +25,8 @@ namespace gswy {
 	WidgetManager* WidgetManager::s_instance = 0;
 
 	ImGuiWindowFlags popupFlag = { ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize };
-	ImGuiWindowFlags menuFlag = { ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse };
+	//ImGuiWindowFlags menuFlag = { ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse };
+	ImGuiWindowFlags menuFlag = { ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse };
 
 	WidgetManager* WidgetManager::GetInstance()
 	{
@@ -123,12 +124,13 @@ namespace gswy {
 
 	void MainMenu::Render()
 	{
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
 		ImVec2 mainMenuWindowSize = ScaleBy1080p(m_MainMenu, windowsize);
 		ImGui::SetNextWindowSize(mainMenuWindowSize);
 		// Make the main menu a bit below the title
-		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - mainMenuWindowSize[0] / 2, windowsize[1]*1.33 / 2 - mainMenuWindowSize[1] / 2));
+		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + viewport->Size.x / 2 - mainMenuWindowSize.x / 2, viewport->Pos.y + viewport->Size.y * 1.33 / 2 - mainMenuWindowSize.y / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
@@ -190,11 +192,13 @@ namespace gswy {
 
 	void PauseMenu::Render()
 	{
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
 		ImVec2 pauseMenuWindowSize = ScaleBy1080p(m_PauseMenuWindowSize, windowsize);
 		ImGui::SetNextWindowSize(pauseMenuWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - pauseMenuWindowSize[0] / 2, windowsize[1] / 2 - pauseMenuWindowSize[1] / 2));
+		//ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - pauseMenuWindowSize[0] / 2, windowsize[1] / 2 - pauseMenuWindowSize[1] / 2));
+		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + viewport->Size.x / 2 - pauseMenuWindowSize.x / 2, viewport->Pos.y + viewport->Size.y / 2 - pauseMenuWindowSize.y / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
 		ImGui::Begin("A new world", false, menuFlag);
@@ -280,10 +284,12 @@ namespace gswy {
 
 	void OptionMenu::Render()
 	{
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
 		ImVec2 optionWindowSize = ScaleBy1080p(ImVec2{ 500, 535 }, windowsize);
 		ImGui::SetNextWindowSize(optionWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - optionWindowSize[0] / 2, windowsize[1] / 2 - optionWindowSize[1] / 2));
+		//ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - optionWindowSize[0] / 2, windowsize[1] / 2 - optionWindowSize[1] / 2));
+		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + viewport->Size.x / 2 - optionWindowSize.x / 2, viewport->Pos.y + viewport->Size.y / 2 - optionWindowSize.y / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -410,11 +416,19 @@ namespace gswy {
 		ImGui::SetNextWindowSize(viewport->Size);
 		ImGui::SetNextWindowPos(viewport->Pos);
 		ImGui::SetNextWindowBgAlpha(0.0f);
-		ImGui::Begin("HUD", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoMouseInputs| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse);
+		ImGui::Begin("HUD", false, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse);
 		
+		// DockSpace
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+		{
+			ImGuiID dockspace_id = ImGui::GetID("HUDDockSpace");
+			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+		}
+
 		//Text : Wave
 		ImVec2 waveWindowSize = ImVec2(m_WaveWindowSize.x, m_WaveWindowSize.y);
-		ImVec2 waveWindowPos = ImVec2(GetWindowSize_X() / 2 - waveWindowSize[0] / 2, viewport->Pos.y + 12);
+		ImVec2 waveWindowPos = ImVec2(viewport->Pos.x + viewport->Size.x / 2 - waveWindowSize.x / 2, viewport->Pos.y + 12);
 		ImGui::SetNextWindowPos(waveWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
@@ -429,7 +443,7 @@ namespace gswy {
 
 		//Progress Bar : Base HP
 		ImVec2 BaseHPWindowSize = ImVec2(m_BaseHPWindowSize.x, m_BaseHPWindowSize.y);
-		ImVec2 BaseHPWindowPos = ImVec2(viewport->Size.x / 2 - BaseHPWindowSize.x / 2, waveWindowSize.y + waveWindowPos.y + 5);
+		ImVec2 BaseHPWindowPos = ImVec2(viewport->Pos.x + viewport->Size.x / 2 - BaseHPWindowSize.x / 2, waveWindowPos.y + waveWindowSize.y + 5);
 		ImGui::SetNextWindowPos(BaseHPWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
@@ -445,7 +459,7 @@ namespace gswy {
 
 		//Text : Timer
 		ImVec2 timerWindowSize = ImVec2(m_TimeWindowSize.x, m_TimeWindowSize.y);
-		ImVec2 timerWindowPos = ImVec2(GetWindowSize_X() / 2 - timerWindowSize[0] / 2, BaseHPWindowSize.y + BaseHPWindowPos.y + 5);
+		ImVec2 timerWindowPos = ImVec2(viewport->Pos.x + viewport->Size.x / 2 - timerWindowSize[0] / 2, BaseHPWindowPos.y + BaseHPWindowSize.y + 5);
 		ImGui::SetNextWindowPos(timerWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
@@ -459,7 +473,7 @@ namespace gswy {
 		ImGui::PopStyleVar(2);
 
 		ImVec2 KillWindowSize = ImVec2(m_WaveWindowSize.x, m_WaveWindowSize.y);
-		ImVec2 KillWindowPos = ImVec2(GetWindowSize_X() / 2 - KillWindowSize[0] / 2, timerWindowSize.y + timerWindowPos.y + 6);
+		ImVec2 KillWindowPos = ImVec2(viewport->Pos.x + viewport->Size.x / 2 - KillWindowSize[0] / 2, timerWindowPos.y + timerWindowSize.y + 6);
 		ImGui::SetNextWindowPos(KillWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
@@ -474,7 +488,7 @@ namespace gswy {
 		
 		//Text : Coin
 		ImVec2 nextWindowSize = ImVec2(m_CoinWindowSize.x, m_CoinWindowSize.y);
-		ImGui::SetNextWindowPos(ImVec2(30, viewport->Size.y - nextWindowSize[1] - 65));
+		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + 30, viewport->Pos.y + viewport->Size.y - nextWindowSize[1] - 65));
 		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -489,7 +503,7 @@ namespace gswy {
 		
 		//Progress Bar : Player HP
 		ImVec2 playerHPWindowSize = ImVec2(m_PlayerHPWindowSize.x, m_PlayerHPWindowSize.y);
-		ImGui::SetNextWindowPos(ImVec2(100, viewport->Size.y - playerHPWindowSize[1] - 70));
+		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + 100, viewport->Pos.y + viewport->Size.y - playerHPWindowSize[1] - 70));
 		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
@@ -814,9 +828,9 @@ namespace gswy {
 
 	void InventoryMenu::Render()
 	{
-		//New Inventory
 		ImVec2 InventoryWindowSize = ImVec2(m_InventoryWindowSize.x, m_InventoryWindowSize.y);
-		ImGui::SetNextWindowPos(ImVec2(GetWindowSize_X() - InventoryWindowSize[0] - 80, GetWindowSize_Y() - InventoryWindowSize[1] - 20));
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + viewport->Size.x - InventoryWindowSize[0] - 80, viewport->Pos.y + viewport->Size.y - InventoryWindowSize[1] - 20));
 		ImGui::SetNextWindowBgAlpha(0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 1));
