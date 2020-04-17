@@ -32,6 +32,7 @@ namespace gswy
 		ENEMY_2,
 		ENEMY_BOSS_1,
 		ENEMY_BOSS_2,
+		ENERGY_SHIELD,
 
 		HP_BAR,
 		TOWER_BUILD,

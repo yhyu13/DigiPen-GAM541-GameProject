@@ -187,8 +187,41 @@ namespace gswy
 			obj.AddComponent(sprite);
 		}
 
+		float MobProbSpawnWithES(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = static_pointer_cast<SpawnEvent>(e))
+			{
+				DEBUG_PRINT("Receive " + Str(*e));
+
+				auto prob = 0.25f;
+				auto level = GameLevelMapManager::GetInstance()->m_currentLevel;
+				auto wave = GameLevelMapManager::GetInstance()->m_currentWave;
+
+				switch (event->m_type)
+				{
+				case GameObjectType::ENEMY_1:
+					break;
+				case GameObjectType::ENEMY_2:
+					break;
+				case GameObjectType::ENEMY_BOSS_1:
+					break;
+				case GameObjectType::ENEMY_BOSS_2:
+					break;
+				default:
+					break;
+				}
+
+				return prob;
+			}
+		}
+
 		void SpawnEnemey1(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
+			auto spriteScale = vec2(0.5, 0.5);
+			auto miniMapScale = vec2(0.1, 0.1);
+			auto bbScale = vec2(0.5, 0.5);
+			auto energyShieldScale = vec2(0.3, 0.3);
+
 			auto event = static_pointer_cast<SpawnEvent>(e);
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_1);
 			obj.AddComponent(ActiveCom());
@@ -202,20 +235,48 @@ namespace gswy
 			animCom2.SetCurrentAnimationState("Move");
 			obj.AddComponent(animCom2);
 			auto sprite = SpriteCom();
-			sprite.SetScale(vec2(0.5, 0.5 / 70 * 50));
+			sprite.SetScale(vec2(spriteScale.x, spriteScale.y / 70 * 50));
 			obj.AddComponent(sprite);
 			auto sprite0 = MiniMapSprite();
-			sprite0.SetScale(vec2(0.1, 0.1));
+			sprite0.SetScale(miniMapScale);
 			sprite0.SetTexture("RedLayer");
 			obj.AddComponent(sprite0);
 			auto aabb1 = BodyCom();
 			aabb1.SetPos(transform.GetPos());
-			aabb1.ChooseShape("AABB", 0.5, 0.5 / 70 * 50);
+			aabb1.ChooseShape("AABB", bbScale.x, bbScale.y / 70 * 50);
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom(100));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(5));
+
+			auto buffCom = BuffCom();
+			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
+			{
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.1, -1);
+				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
+				// Mob energy shield
+				{
+					auto energy_shield = m_parentWorld->GenerateEntity(GameObjectType::ENERGY_SHIELD);
+					auto active = ActiveCom();
+					energy_shield.AddComponent(active);
+					energy_shield.AddComponent(OwnershiptCom<GameObjectType>(obj));
+					auto attach = AttachedMovementCom();
+					attach.followPos = true;
+					attach.rPos = vec2(0, 0);
+					energy_shield.AddComponent(attach);
+					energy_shield.AddComponent(BodyCom(event->m_pos.x, event->m_pos.y));
+					energy_shield.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+					auto sprite = SpriteCom();
+					sprite.SetScale(energyShieldScale);
+					energy_shield.AddComponent(sprite);
+					auto animCom2 = AnimationCom();
+					animCom2.Add("Energy_shieldAnimation", "Move");
+					animCom2.SetCurrentAnimationState("Move");
+					energy_shield.AddComponent(animCom2);
+				}
+			}
+			obj.AddComponent(buffCom);
 
 			// Mob floating hp bar
 			{
@@ -238,6 +299,11 @@ namespace gswy
 
 		void SpawnEnemey2(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
+			auto spriteScale = vec2(0.5, 0.5);
+			auto miniMapScale = vec2(0.1, 0.1);
+			auto bbScale = vec2(0.25, 0.25);
+			auto energyShieldScale = vec2(0.3, 0.3);
+
 			auto event = static_pointer_cast<SpawnEvent>(e);
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_2);
 			obj.AddComponent(ActiveCom());
@@ -251,20 +317,48 @@ namespace gswy
 			animCom2.SetCurrentAnimationState("Move");
 			obj.AddComponent(animCom2);
 			auto sprite = SpriteCom();
-			sprite.SetScale(vec2(0.5, 0.5 / 70 * 50));
+			sprite.SetScale(vec2(spriteScale.x, spriteScale.y / 70 * 50));
 			obj.AddComponent(sprite);
 			auto sprite0 = MiniMapSprite();
-			sprite0.SetScale(vec2(0.1, 0.1));
+			sprite0.SetScale(miniMapScale);
 			sprite0.SetTexture("RedLayer");
 			obj.AddComponent(sprite0);
 			auto aabb1 = BodyCom();
 			aabb1.SetPos(transform.GetPos());
-			aabb1.ChooseShape("AABB", 0.25, 0.25 / 70 * 50);
+			aabb1.ChooseShape("AABB", bbScale.x, bbScale.y / 70 * 50);
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom(75));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(5));
+
+			auto buffCom = BuffCom();
+			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
+			{
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.1, -1);
+				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
+				// Mob energy shield
+				{
+					auto energy_shield = m_parentWorld->GenerateEntity(GameObjectType::ENERGY_SHIELD);
+					auto active = ActiveCom();
+					energy_shield.AddComponent(active);
+					energy_shield.AddComponent(OwnershiptCom<GameObjectType>(obj));
+					auto attach = AttachedMovementCom();
+					attach.followPos = true;
+					attach.rPos = vec2(0, 0);
+					energy_shield.AddComponent(attach);
+					energy_shield.AddComponent(BodyCom(event->m_pos.x, event->m_pos.y));
+					energy_shield.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+					auto sprite = SpriteCom();
+					sprite.SetScale(energyShieldScale);
+					energy_shield.AddComponent(sprite);
+					auto animCom2 = AnimationCom();
+					animCom2.Add("Energy_shieldAnimation", "Move");
+					animCom2.SetCurrentAnimationState("Move");
+					energy_shield.AddComponent(animCom2);
+				}
+			}
+			obj.AddComponent(buffCom);
 
 			// Mob floating hp bar
 			{
@@ -287,10 +381,14 @@ namespace gswy
 
 		void SpawnEnemeyBoss1(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
+			auto spriteScale = vec2(0.5, 0.5);
+			auto miniMapScale = vec2(0.2, 0.2);
+			auto bbScale = vec2(0.5, 0.5);
+			auto energyShieldScale = vec2(0.4, 0.4);
+
 			auto event = static_pointer_cast<SpawnEvent>(e);
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_BOSS_1);
 			obj.AddComponent(ActiveCom());
-			obj.AddComponent(BuffCom());
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
 			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
 			obj.AddComponent(transform);
@@ -300,20 +398,48 @@ namespace gswy
 			animCom2.SetCurrentAnimationState("Move");
 			obj.AddComponent(animCom2);
 			auto sprite = SpriteCom();
-			sprite.SetScale(vec2(0.5, 0.5));
+			sprite.SetScale(spriteScale);
 			obj.AddComponent(sprite);
 			auto sprite0 = MiniMapSprite();
-			sprite0.SetScale(vec2(0.2, 0.2));
+			sprite0.SetScale(miniMapScale);
 			sprite0.SetTexture("RedLayer");
 			obj.AddComponent(sprite0);
 			auto aabb1 = BodyCom();
 			aabb1.SetPos(transform.GetPos());
-			aabb1.ChooseShape("AABB", 0.5, 0.5);
+			aabb1.ChooseShape("AABB", bbScale.x, bbScale.y);
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom(200));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(20));
+
+			auto buffCom = BuffCom();
+			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
+			{
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.1, -1);
+				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
+				// Mob energy shield
+				{
+					auto energy_shield = m_parentWorld->GenerateEntity(GameObjectType::ENERGY_SHIELD);
+					auto active = ActiveCom();
+					energy_shield.AddComponent(active);
+					energy_shield.AddComponent(OwnershiptCom<GameObjectType>(obj));
+					auto attach = AttachedMovementCom();
+					attach.followPos = true;
+					attach.rPos = vec2(0, 0);
+					energy_shield.AddComponent(attach);
+					energy_shield.AddComponent(BodyCom(event->m_pos.x, event->m_pos.y));
+					energy_shield.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+					auto sprite = SpriteCom();
+					sprite.SetScale(energyShieldScale);
+					energy_shield.AddComponent(sprite);
+					auto animCom2 = AnimationCom();
+					animCom2.Add("Energy_shieldAnimation", "Move");
+					animCom2.SetCurrentAnimationState("Move");
+					energy_shield.AddComponent(animCom2);
+				}
+			}
+			obj.AddComponent(buffCom);
 
 			// Mob floating hp bar
 			{
@@ -336,10 +462,14 @@ namespace gswy
 
 		void SpawnEnemeyBoss2(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
+			auto spriteScale = vec2(0.7, 0.7);
+			auto miniMapScale = vec2(0.3, 0.3);
+			auto bbScale = vec2(0.7, 0.7);
+			auto energyShieldScale = vec2(0.5, 0.5);
+
 			auto event = static_pointer_cast<SpawnEvent>(e);
 			auto obj = m_parentWorld->GenerateEntity(GameObjectType::ENEMY_BOSS_2);
 			obj.AddComponent(ActiveCom());
-			obj.AddComponent(BuffCom());
 			obj.AddComponent(OwnershiptCom<GameObjectType>());
 			auto transform = TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++));
 			obj.AddComponent(transform);
@@ -349,20 +479,48 @@ namespace gswy
 			animCom2.SetCurrentAnimationState("Move");
 			obj.AddComponent(animCom2);
 			auto sprite = SpriteCom();
-			sprite.SetScale(vec2(0.7, 0.7));
+			sprite.SetScale(spriteScale);
 			obj.AddComponent(sprite);
 			auto sprite0 = MiniMapSprite();
-			sprite0.SetScale(vec2(0.3, 0.3));
+			sprite0.SetScale(miniMapScale);
 			sprite0.SetTexture("RedLayer");
 			obj.AddComponent(sprite0);
 			auto aabb1 = BodyCom();
 			aabb1.SetPos(transform.GetPos());
-			aabb1.ChooseShape("AABB", 0.7, 0.7);
+			aabb1.ChooseShape("AABB", bbScale.x, bbScale.y);
 			obj.AddComponent(aabb1);
 			obj.AddComponent(HitPointCom(500));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(30));
+
+			auto buffCom = BuffCom();
+			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
+			{
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.1, -1);
+				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
+				// Mob energy shield
+				{
+					auto energy_shield = m_parentWorld->GenerateEntity(GameObjectType::ENERGY_SHIELD);
+					auto active = ActiveCom();
+					energy_shield.AddComponent(active);
+					energy_shield.AddComponent(OwnershiptCom<GameObjectType>(obj));
+					auto attach = AttachedMovementCom();
+					attach.followPos = true;
+					attach.rPos = vec2(0, 0);
+					energy_shield.AddComponent(attach);
+					energy_shield.AddComponent(BodyCom(event->m_pos.x, event->m_pos.y));
+					energy_shield.AddComponent(TransformCom(event->m_pos.x, event->m_pos.y, Z_ORDER(m_spawnZOrder++)));
+					auto sprite = SpriteCom();
+					sprite.SetScale(energyShieldScale);
+					energy_shield.AddComponent(sprite);
+					auto animCom2 = AnimationCom();
+					animCom2.Add("Energy_shieldAnimation", "Move");
+					animCom2.SetCurrentAnimationState("Move");
+					energy_shield.AddComponent(animCom2);
+				}
+			}
+			obj.AddComponent(buffCom);
 
 			// Mob floating hp bar
 			{
