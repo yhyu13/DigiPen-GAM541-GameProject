@@ -1,9 +1,13 @@
 {
 	"window": {
-		"width": 1280,
-		"height": 720,
+		"width": 1920,
+		"height": 1080,
 		"title": "Light of Empyrion",
-		"full-screen": false
+		"full-screen": false,
+		"Resolution1_X" : 1920, "Resolution1_Y" : 1080,
+		"Resolution2_X" : 1920, "Resolution2_Y" : 1200,
+		"Resolution3_X" : 1280, "Resolution3_Y" : 1024,
+		"Resolution4_X" : 1024, "Resolution4_Y" : 768
 	},
 	"startup-screen": false,
 	"max-framerate" : 60,

@@ -127,7 +127,7 @@ namespace gswy {
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
-		ImVec2 mainMenuWindowSize = ScaleBy1080p(m_MainMenu, windowsize);
+		ImVec2 mainMenuWindowSize = PosScaleBySize(m_MainMenu, windowsize);
 		ImGui::SetNextWindowSize(mainMenuWindowSize);
 		// Make the main menu a bit below the title
 		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + viewport->Size.x / 2 - mainMenuWindowSize.x / 2, viewport->Pos.y + viewport->Size.y * 1.33 / 2 - mainMenuWindowSize.y / 2));
@@ -137,29 +137,29 @@ namespace gswy {
 		ImGui::Begin("A new world", false, menuFlag);
 		float f = 0.0;
 		ImGui::SetWindowFontScale(1.0);
-		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize),ImVec2(0,1), ImVec2(1,0), 0, ImVec4(0,0,0,1)))
+		if (ImGui::ImageButton((void*)m_Texture_NewGame->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize),ImVec2(0,1), ImVec2(1,0), 0, ImVec4(0,0,0,1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("New Game");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("How To Play");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			//manager->InvokeButton("Option");
 			manager->GetOptionMenu().SetVisible(true);
 			manager->GetOptionMenu().SetCallFromMainMenu(true);
 		}
-		if (ImGui::ImageButton((void*)m_Texture_Credits->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_Credits->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("Credits");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_QuitGame->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_QuitGame->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			ImGui::OpenPopup("Quit?");
@@ -195,37 +195,37 @@ namespace gswy {
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
-		ImVec2 pauseMenuWindowSize = ScaleBy1080p(m_PauseMenuWindowSize, windowsize);
+		//ImVec2 pauseMenuWindowSize = PosScaleBySize(m_PauseMenuWindowSize, windowsize);
+		ImVec2 pauseMenuWindowSize = ScaleSize(m_PauseMenuWindowSize);
 		ImGui::SetNextWindowSize(pauseMenuWindowSize);
-		//ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - pauseMenuWindowSize[0] / 2, windowsize[1] / 2 - pauseMenuWindowSize[1] / 2));
 		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + viewport->Size.x / 2 - pauseMenuWindowSize.x / 2, viewport->Pos.y + viewport->Size.y / 2 - pauseMenuWindowSize.y / 2));
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 5));
 		ImGui::Begin("A new world", false, menuFlag);
 		ImGui::SetWindowFontScale(1.0);
-		if (ImGui::ImageButton((void*)m_Texture_ResumeGame->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_ResumeGame->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("Resume Game");
 		}
-		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_HowToPlay->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_HowToPlay->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("How To Play");
 		}
-		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Option->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Option->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			//manager->InvokeButton("Option");
 			manager->GetOptionMenu().SetVisible(true);
 			manager->GetOptionMenu().SetCallFromMainMenu(false);
 		}
-		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("Credits");
 		}
-		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			ImGui::OpenPopup("Main menu?");
@@ -251,7 +251,7 @@ namespace gswy {
 			WidgetManager::GetInstance()->PopPopupModalStyle();
 			ImGui::EndPopup();
 		}
-		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame->GetRendererID(), ScaleBy1080p(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
+		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			ImGui::OpenPopup("Quit?");
@@ -286,10 +286,11 @@ namespace gswy {
 	{
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
-		ImVec2 optionWindowSize = ScaleBy1080p(ImVec2{ 500, 535 }, windowsize);
+		//ImVec2 optionWindowSize = PosScaleBySize(ImVec2{ 500, 535 }, viewport->Size);
+		ImVec2 optionWindowSize = ScaleSize(ImVec2{ 500, 635 });
 		ImGui::SetNextWindowSize(optionWindowSize);
-		//ImGui::SetNextWindowPos(ImVec2(windowsize[0] / 2 - optionWindowSize[0] / 2, windowsize[1] / 2 - optionWindowSize[1] / 2));
-		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + viewport->Size.x / 2 - optionWindowSize.x / 2, viewport->Pos.y + viewport->Size.y / 2 - optionWindowSize.y / 2));
+		ImVec2 optionWindowPos = ImVec2(viewport->Pos.x + viewport->Size.x / 2 - optionWindowSize.x / 2, viewport->Pos.y + viewport->Size.y / 2 - optionWindowSize.y / 2);
+		ImGui::SetNextWindowPos(optionWindowPos);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
@@ -299,7 +300,7 @@ namespace gswy {
 			ImGui::Dummy({ optionWindowSize.x, 30 });
 			Engine& engine = Engine::Get();
 
-			int selectBarWidth = 100;
+			int selectBarWidth = ScaleSize({ 120,0 }).x;
 			//Full Screen
 			ImGui::SetCursorPosX(30);
 			ImGui::Text("Full Screen");
@@ -311,6 +312,22 @@ namespace gswy {
 			{
 				engine.GetWindow().ToggleFullScreen(fullScreen);
 				WidgetManager::GetInstance()->InvokeButton("Full Screen");
+			}
+			ImGui::NewLine();
+			ImGui::Separator();
+			ImGui::Dummy({ optionWindowSize.x, 30 });
+
+			//Resolution
+			ImGui::SetCursorPosX(30);
+			ImGui::Text("Resolution");
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(selectBarWidth);
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
+			const char* resItems[] = { "1920x1080", "1920x1200", "1280x1024", "1024x768" };
+			static int resulutionPair = 0;
+			if (ImGui::Combo("##Resolution", &resulutionPair, resItems, IM_ARRAYSIZE(resItems)))
+			{
+				engine.GetWindow().SetResolution(resulutionPair);
 			}
 			ImGui::NewLine();
 			ImGui::Separator();
@@ -363,7 +380,7 @@ namespace gswy {
 			ImGui::Separator();
 
 			//Back Button
-			ImGui::SetCursorPos({ 30,450 });
+			ImGui::SetCursorPos({ 30,550 });
 			if (ImGui::Button("Back", ImVec2(100,30)) || ImGui::IsKeyReleased(ImGui::GetKeyIndex(ImGuiKey_Escape)))
 			{
 				WidgetManager::GetInstance()->GetOptionMenu().SetVisible(false);

@@ -70,7 +70,7 @@ namespace gswy {
 	public:
 		MainMenu() { 
 			IsVisible = false; 
-			m_MainMenu = { 500, 535 };
+			m_MainMenu = ScaleSize({ 500, 535 });
 		}
 		void Init() override
 		{
@@ -107,7 +107,7 @@ namespace gswy {
 		{
 			m_Texture_ResumeGame = Texture2D::Create(m_TexturePath_ResumeGame);
 			m_Texture_MainMenu = Texture2D::Create(m_TexturePath_MainMenu);
-			m_PauseMenuWindowSize = { 500, 640 };
+			m_PauseMenuWindowSize = ScaleSize({ 500, 640 });
 		}
 		void Render() override;
 		WidgetManager* manager;
@@ -127,7 +127,7 @@ namespace gswy {
 	public:
 		ShopMenu() { 
 			IsVisible = false; 
-			m_ShopMenuWindowSize = { 420, 400 };
+			m_ShopMenuWindowSize = ScaleSize({ 420, 400 });
 		};
 		void Render() override;
 		WidgetManager* manager;

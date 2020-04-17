@@ -27,17 +27,26 @@ namespace gswy {
 	struct ENGINE_API WindowProperties {
 		unsigned int m_width;
 		unsigned int m_height;
+		unsigned int m_resolutionX;
+		unsigned int m_resolutionY;
 		std::string m_title;
 		InputManager* m_input = nullptr;
 		bool IsFullScreen = false;
 		InterruptHandler m_interruptHandler;
 		bool IsVSync = false;
 
-		//Pre-Calculate number for some reasons
-		int m_windowFrameSize_top = 38;
-		int m_windowFrameSize_bottom = 9;
+		std::pair<unsigned int, unsigned int> m_Res1;
+		std::pair<unsigned int, unsigned int> m_Res2;
+		std::pair<unsigned int, unsigned int> m_Res3;
+		std::pair<unsigned int, unsigned int> m_Res4;
 
-		WindowProperties(unsigned int width = 1280, unsigned int height = 720, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title) {
+		unsigned int m_monitorWidth;
+		unsigned int m_monitorHeight;
+		//Pre-Calculate number for some reasons
+		//int m_windowFrameSize_top = 38;
+		//int m_windowFrameSize_bottom = 9;
+
+		WindowProperties(unsigned int width = 1280, unsigned int height = 720, std::string title = "ENGINE GSWY") : m_width(width), m_height(height), m_title(title), m_resolutionX(width), m_resolutionY(height){
 			m_input = InputManager::GetInstance();
 			m_input->SetMouseMaxPositions(width, height);
 		}
@@ -60,6 +69,7 @@ namespace gswy {
 		bool ShouldExit();
 		void UpdateTitle(std::string title);
 		void ToggleFullScreen(bool on);
+		void SetResolution(int n);
 		void SetVSync(bool on);
 
 		GLFWwindow* GetNativeWindow() const { return m_window; }

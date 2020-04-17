@@ -60,7 +60,8 @@ namespace gswy {
 		{
 			//glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
 			glfwWindowHint(GLFW_DECORATED, false);
-			glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, m_windowProperties.m_width, m_windowProperties.m_height, GLFW_DONT_CARE);
+			glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, m_windowProperties.m_resolutionX, m_windowProperties.m_resolutionY, GLFW_DONT_CARE);
+			
 			int w, h;
 			glfwGetWindowSize(m_window, &w, &h);
 			m_windowProperties.m_width = w;
@@ -84,7 +85,8 @@ namespace gswy {
 
 			//int x, y, w, h;
 			glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &x, &y, &w, &h);
-			glfwSetWindowMonitor(m_window, nullptr, x, y, w, h, GLFW_DONT_CARE);
+			//glfwSetWindowMonitor(m_window, nullptr, x, y, w, h, GLFW_DONT_CARE);
+			glfwSetWindowMonitor(m_window, nullptr, x, y, m_windowProperties.m_resolutionX, m_windowProperties.m_resolutionY, GLFW_DONT_CARE);
 
 			m_windowProperties.m_width = w;
 			m_windowProperties.m_height = h;
@@ -100,6 +102,60 @@ namespace gswy {
 		glfwGetFramebufferSize(m_window, &w, &h);
 		printf("Framebuffer Size : %d x %d\n", w, h);
 		
+	}
+
+	void Window::SetResolution(int n)
+	{
+		switch (n)
+		{
+			case 0:
+			{
+				m_windowProperties.m_resolutionX = m_windowProperties.m_Res1.first;
+				m_windowProperties.m_resolutionY = m_windowProperties.m_Res1.second;
+			}
+				break;
+
+			case 1:
+			{
+				m_windowProperties.m_resolutionX = m_windowProperties.m_Res2.first;
+				m_windowProperties.m_resolutionY = m_windowProperties.m_Res2.second;
+			}
+				break;
+
+			case 2:
+			{
+				m_windowProperties.m_resolutionX = m_windowProperties.m_Res3.first;
+				m_windowProperties.m_resolutionY = m_windowProperties.m_Res3.second;
+			}
+				break;
+
+			case 3:
+			{
+				m_windowProperties.m_resolutionX = m_windowProperties.m_Res4.first;
+				m_windowProperties.m_resolutionY = m_windowProperties.m_Res4.second;
+			}
+				break;
+
+			default:
+			{
+				m_windowProperties.m_resolutionX = m_windowProperties.m_width;
+				m_windowProperties.m_resolutionY = m_windowProperties.m_height;
+			}
+				break;
+		}
+
+		if (m_windowProperties.IsFullScreen)
+		{
+			glfwWindowHint(GLFW_DECORATED, false);
+			glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, m_windowProperties.m_resolutionX, m_windowProperties.m_resolutionY, GLFW_DONT_CARE);
+		}
+		else
+		{
+			int x, y;
+			glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &x, &y, nullptr, nullptr);
+			glfwSetWindowMonitor(m_window, nullptr, x, 6, m_windowProperties.m_resolutionX, m_windowProperties.m_resolutionY, GLFW_DONT_CARE);
+		}
+
 	}
 
 	void Window::SetVSync(bool on)
@@ -138,16 +194,25 @@ namespace gswy {
 		m_windowProperties.m_input = InputManager::GetInstance();
 		m_windowProperties.m_input->SetMouseMaxPositions(width, height);
 
+		m_windowProperties.m_Res1 = { windowConfiguration["Resolution1_X"].asInt(), windowConfiguration["Resolution1_Y"].asInt() };
+		m_windowProperties.m_Res2 = { windowConfiguration["Resolution2_X"].asInt(), windowConfiguration["Resolution2_Y"].asInt() };
+		m_windowProperties.m_Res3 = { windowConfiguration["Resolution3_X"].asInt(), windowConfiguration["Resolution3_Y"].asInt() };
+		m_windowProperties.m_Res4 = { windowConfiguration["Resolution4_X"].asInt(), windowConfiguration["Resolution4_Y"].asInt() };
+
 		int success = glfwInit();
 		ASSERT(success < 0, "Failed to initialize GLFW!");
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
+		auto monitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+		m_windowProperties.m_monitorWidth = mode->width;
+		m_windowProperties.m_monitorHeight = mode->height;
+
 		if (m_windowProperties.IsFullScreen)
 		{
 			//Full Screen Settings
-			auto monitor = glfwGetPrimaryMonitor();
-			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);

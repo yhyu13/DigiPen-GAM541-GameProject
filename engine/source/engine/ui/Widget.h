@@ -28,11 +28,21 @@ namespace gswy {
 		inline bool GetVisible() const { return IsVisible; }
 		inline ImVec4 GetStyle() const { return m_styleColor; }
 		inline void SetStyle(int r, int g, int b, int a) { m_styleColor = (ImVec4)ImColor::ImColor(r, g, b, a); }
-		inline ImVec2 ScaleBy1080p(const ImVec2& vec, const ImVec2& windowSize)
+		inline ImVec2 PosScaleBySize(const ImVec2& vec, const ImVec2& windowSize)
 		{
-			return ImVec2(vec.x / 1920.0 * windowSize.x, vec.y / 1080.0 * windowSize.y);
+			Engine& engine = Engine::Get();
+			auto width = engine.GetWindow().GetWindowProperties().m_monitorWidth;
+			auto height = engine.GetWindow().GetWindowProperties().m_monitorHeight;
+			return ImVec2(vec.x / width * windowSize.x, vec.y / height * windowSize.y);
 		}
-
+		inline ImVec2 ScaleSize(const ImVec2& itemSize) {
+			Engine& engine = Engine::Get();
+			auto monitorWidth = engine.GetWindow().GetWindowProperties().m_monitorWidth;
+			auto monitorHeight = engine.GetWindow().GetWindowProperties().m_monitorHeight;
+			auto winWidth = engine.GetWindow().GetWindowProperties().m_width;
+			auto winHeight = engine.GetWindow().GetWindowProperties().m_height;
+			return ImVec2(itemSize.x * winWidth / monitorWidth, itemSize.y * winHeight / monitorHeight);
+		}
 
 		inline unsigned int GetWindowSize_X() 
 		{
