@@ -376,6 +376,7 @@ namespace gswy {
 		bool m_timeOut;
 		bool m_bIsLoading;
 		int m_coins;
+		int m_Kill;
 
 		int m_currentWave;
 		int m_maxWave;

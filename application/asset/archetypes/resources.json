@@ -111,6 +111,10 @@
           "name": "Mob_Boss2_Attack",
           "path": "./asset/Sprites/Mob_Boss2_Attack.png"
         },
+		{
+          "name": "Energy_shield",
+          "path": "./asset/Sprites/Energy_shield.png"
+        },
         {
           "name": "YellowLayer",
           "path": "./asset/Sprites/YellowLayer.png"
@@ -392,6 +396,18 @@
             "y": 0,
             "width": 128,
             "height": 128,
+            "delay": 1.0,
+            "frame-count": 15.0
+          }
+        },
+		{
+          "name": "Energy_shieldAnimation",
+          "properties": {
+            "texture-name": "Energy_shield",
+            "x": 64,
+            "y": 0,
+            "width": 64,
+            "height": 64,
             "delay": 1.0,
             "frame-count": 15.0
           }

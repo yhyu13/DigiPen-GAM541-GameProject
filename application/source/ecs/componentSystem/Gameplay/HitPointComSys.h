@@ -109,7 +109,7 @@ namespace gswy
 				case GameObjectType::PLAYER:
 					PLAYER(entityA, entityB);
 					goto END;
-				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:
+				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1: case GameObjectType::ENEMY_BOSS_2:
 					ENEMY(entityA, entityB, position, rotation);
 					goto END;
 				default:

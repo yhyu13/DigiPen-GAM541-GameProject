@@ -54,12 +54,15 @@ namespace gswy
 					queue->Publish(e2);
 				}
 					break;
-				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1:
+				case GameObjectType::ENEMY_1: case GameObjectType::ENEMY_2: case GameObjectType::ENEMY_BOSS_1: case GameObjectType::ENEMY_BOSS_2:
 				{
 					auto body = GetComponent<BodyCom>(event->m_entity);
 					glm::vec2 position = glm::vec2(body->GetPos().x, body->GetPos().y);
 					auto addCoinEvent = MemoryManager::Make_shared<AddCoinEvent>(position);
 					queue->Publish(addCoinEvent);
+
+					// Self increment the level manager counter
+					GameLevelMapManager::GetInstance()->m_Kill++;
 
 					DEBUG_PRINT("ENEMY has died!");
 					auto _e = MemoryManager::Make_shared<GCEvent>(event->m_entity);

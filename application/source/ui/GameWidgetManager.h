@@ -39,6 +39,7 @@ namespace gswy {
 		void  SetBaseHP(float val) { m_BaseHP = val; }
 		void  SetPlayerHP(float val) { m_PlayerHP = val; }
 		void  SetGameProgress(float val) { m_Progress = val; }
+		void  SetKill(int val) { m_Kill = val; }
 
 		std::shared_ptr<Texture2D> m_Texture_Coin;
 
@@ -55,6 +56,7 @@ namespace gswy {
 		int m_Wave;
 		int m_Level;
 		int m_Coins;
+		int m_Kill;
 		float m_Progress;
 		float m_BaseHP;
 		float m_PlayerHP;

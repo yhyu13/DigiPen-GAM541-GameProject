@@ -931,7 +931,7 @@ namespace gswy
 			if (buttonName.compare("New Game") == 0)
 			{
 				// TODO
-				LoadGameWorld(1, true);
+				LoadGameWorld(GameLevelMapManager::GetInstance()->m_currentLevel, true);
 			}
 			if (buttonName.compare("How To Play") == 0)
 			{

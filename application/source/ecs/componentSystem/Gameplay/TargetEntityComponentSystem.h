@@ -52,7 +52,7 @@ namespace gswy
 		virtual void Update(double dt) override
 		{
 			// Lock a random enemy as target
-			std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType({ GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 });
+			std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType(g_enemyTypes);
 
 			for (auto entity : m_registeredEntities)
 			{
@@ -84,7 +84,7 @@ namespace gswy
 					auto entityBody = GetComponent<BodyCom>(entity);
 					float minDistance = INFINITY;
 					std::shared_ptr<Entity<GameObjectType>> target = nullptr;
-					std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType({ GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 });
+					std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType(g_enemyTypes);
 					for (auto enemy : enemies)
 					{
 						auto enemyBody = GetComponent<BodyCom>(enemy);
@@ -102,7 +102,7 @@ namespace gswy
 					continue;
 				}
 
-				std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType({ GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 });
+				std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType(g_enemyTypes);
 				std::shared_ptr<Entity<GameObjectType>> target = targetEntityComponent->m_target;
 				if (std::find(enemies.begin(), enemies.end(), *target) != enemies.end())
 				{

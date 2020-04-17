@@ -41,36 +41,37 @@ namespace gswy
 
 		void OnAddCoin(EventQueue<GameObjectType, EventType>::EventPtr event)
 		{
-			auto addCoinEvent = std::static_pointer_cast<AddCoinEvent>(event);
+			if (auto addCoinEvent = std::static_pointer_cast<AddCoinEvent>(event))
+			{
+				auto coin = m_parentWorld->GenerateEntity(GameObjectType::COIN);
+				auto active = ActiveCom();
+				coin.AddComponent(active);
 
-			auto coin = m_parentWorld->GenerateEntity(GameObjectType::COIN);
-			auto active = ActiveCom();
-			coin.AddComponent(active);
+				auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
+				coin.AddComponent(OwnershiptCom<GameObjectType>(entity));
 
-			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
-			coin.AddComponent(OwnershiptCom<GameObjectType>(entity));
+				auto transform = TransformCom(addCoinEvent->m_enemyPosition.x, addCoinEvent->m_enemyPosition.y, Z_ORDER(500));
+				coin.AddComponent(transform);
 
-			auto transform = TransformCom(addCoinEvent->m_enemyPosition.x, addCoinEvent->m_enemyPosition.y, Z_ORDER(500));
-			coin.AddComponent(transform);
+				auto animCom = AnimationCom();
+				animCom.Add("coinAnimation", "Move");
+				animCom.SetCurrentAnimationState("Move");
+				coin.AddComponent(animCom);
 
-			auto animCom = AnimationCom();
-			animCom.Add("coinAnimation", "Move");
-			animCom.SetCurrentAnimationState("Move");
-			coin.AddComponent(animCom);
+				auto sprite = SpriteCom();
+				sprite.SetScale(vec2(0.1, 0.1));
+				coin.AddComponent(sprite);
 
-			auto sprite = SpriteCom();
-			sprite.SetScale(vec2(0.1, 0.1));
-			coin.AddComponent(sprite);
+				auto aabb = BodyCom();
+				aabb.SetPos(transform.GetPos());
+				aabb.m_overrideFriction = true;
+				aabb.ChooseShape("Circle", 0.1);
 
-			auto aabb = BodyCom();
-			aabb.SetPos(transform.GetPos());
-			aabb.m_overrideFriction = true;
-			aabb.ChooseShape("Circle", 0.1);
+				auto targetBody = GetComponent<BodyCom>(entity);
+				aabb.SetVelocity(glm::normalize(targetBody->GetPos() - aabb.GetPos()) * 1.5f);
 
-			auto targetBody = GetComponent<BodyCom>(entity);
-			aabb.SetVelocity(glm::normalize(targetBody->GetPos() - aabb.GetPos()) * 1.5f);
-
-			coin.AddComponent(aabb);
+				coin.AddComponent(aabb);
+			}
 		}
 
 		virtual void Update(double dt) override

@@ -457,6 +457,20 @@ namespace gswy {
 		ImGui::EndChild();
 		ImGui::PopStyleColor(1);
 		ImGui::PopStyleVar(2);
+
+		ImVec2 KillWindowSize = ImVec2(m_WaveWindowSize.x, m_WaveWindowSize.y);
+		ImVec2 KillWindowPos = ImVec2(GetWindowSize_X() / 2 - KillWindowSize[0] / 2, timerWindowSize.y + timerWindowPos.y + 6);
+		ImGui::SetNextWindowPos(KillWindowPos);
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, GetStyle());
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+		ImGui::BeginChild("Kill Stream", KillWindowSize, false, menuFlag);
+		ImGui::SetCursorPosX(10.0f);
+		ImGui::SetCursorPosY(ImGui::GetFontSize() / 4);
+		ImGui::Text("Kill : %i", m_Kill);
+		ImGui::EndChild();
+		ImGui::PopStyleColor(1);
+		ImGui::PopStyleVar(2);
 		
 		//Text : Coin
 		ImVec2 nextWindowSize = ImVec2(m_CoinWindowSize.x, m_CoinWindowSize.y);

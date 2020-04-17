@@ -132,6 +132,8 @@ void gswy::GameLevelMapManager::Update(double dt)
 	hud.SetCoinNum(m_coins);
 	hud.SetWave(m_currentWave);
 	hud.SetLevel(m_currentLevel);
+	hud.SetKill(m_Kill);
+
 	if (m_world)
 	{
 		auto player = m_world->GetAllEntityWithType(GameObjectType::PLAYER);
@@ -231,6 +233,7 @@ void gswy::GameLevelMapManager::ResetLevelData()
 	m_timeOut = false;
 	m_waveStart = false;
 	m_bIsLoading = false;
+	m_Kill = 0;
 
 	Json::Value root;
 	std::ifstream file("./asset/archetypes/levels/sample-level.json", std::ifstream::binary);
@@ -240,14 +243,22 @@ void gswy::GameLevelMapManager::ResetLevelData()
 
 	m_coins = items["coins"].asInt();
 
+	ASSERT(!(m_coins >= 0), "Coin must be positive or zero!");
+
 	m_currentWave = items["wave_start"].asInt();
 	m_maxWave = items["wave_max"].asInt();
+
+	ASSERT(!(m_maxWave >= m_currentWave && m_currentWave >=0), "Wave setup error!");
 
 	m_currentLevel = items["level_start"].asInt();
 	m_maxLevel = items["level_max"].asInt();
 
+	ASSERT(!(m_maxLevel >= m_currentLevel && m_currentLevel >= 0), "Level setup error!");
+
 	m_timePerLevel = items["time_per_wave"].asInt();
 	m_timeRemaining = m_timePerLevel;
+
+	ASSERT(!(m_timePerLevel >= 0), "Time setup error!");
 }
 
 /*
@@ -259,6 +270,7 @@ bool gswy::GameLevelMapManager::IsWaveFinsihed()
 	return m_world->GetAllEntityWithType(GameObjectType::ENEMY_1).empty()
 		&& m_world->GetAllEntityWithType(GameObjectType::ENEMY_2).empty()
 		&& m_world->GetAllEntityWithType(GameObjectType::ENEMY_BOSS_1).empty()
+		&& m_world->GetAllEntityWithType(GameObjectType::ENEMY_BOSS_2).empty()
 		&& IsWaveStarted() && m_timeOut;
 }
 

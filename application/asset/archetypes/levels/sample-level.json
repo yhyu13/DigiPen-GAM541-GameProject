@@ -11,10 +11,10 @@
   {
 	"wave_start": 1,
 	"wave_max":1,
-	"level_start":1,
-	"level_max":1,
+	"level_start":3,
+	"level_max":3,
 	"coins": 1000,
-	"time_per_wave": 20,
+	"time_per_wave": 2,
 	"coins_per_mob" : 2
   }
 }
