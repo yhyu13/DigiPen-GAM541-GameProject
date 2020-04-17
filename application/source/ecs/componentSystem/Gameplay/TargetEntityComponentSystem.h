@@ -54,19 +54,14 @@ namespace gswy
 			// Lock a random enemy as target
 			std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType(g_enemyTypes);
 
-			for (auto entity : m_registeredEntities)
+			for (auto& entity : m_registeredEntities)
 			{
 				auto targetEntityComponent = GetComponent<TargetEntityComponent>(entity);
 				if (targetEntityComponent->m_target == nullptr)
 				{
-					int i = 0;
-					if (enemies.size() > 0)
+					if (!enemies.empty())
 					{
-						if (enemies.size() > 1)
-						{
-							i = rand() % (enemies.size() - 1);
-						}
-						Entity<GameObjectType> randomEntity = enemies.at(i);
+						auto randomEntity = enemies[RAND_I(0,enemies.size())];
 						if (!IsTargetAlreadyLocked(randomEntity))
 						{
 							targetEntityComponent->m_target = MemoryManager::Make_shared<Entity<GameObjectType>>(randomEntity);
@@ -82,10 +77,8 @@ namespace gswy
 				if (targetEntityComponent->m_target == nullptr) // if a target could not be locked
 				{
 					auto entityBody = GetComponent<BodyCom>(entity);
-					float minDistance = INFINITY;
-					std::shared_ptr<Entity<GameObjectType>> target = nullptr;
-					std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType(g_enemyTypes);
-					for (auto enemy : enemies)
+					float minDistance = 3;
+					for (auto& enemy : enemies)
 					{
 						auto enemyBody = GetComponent<BodyCom>(enemy);
 						float distance = glm::length(enemyBody->GetPos() - entityBody->GetPos());
@@ -102,7 +95,6 @@ namespace gswy
 					continue;
 				}
 
-				std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType(g_enemyTypes);
 				std::shared_ptr<Entity<GameObjectType>> target = targetEntityComponent->m_target;
 				if (std::find(enemies.begin(), enemies.end(), *target) != enemies.end())
 				{
@@ -123,18 +115,22 @@ namespace gswy
 				{
 					// target is already dead
 					targetEntityComponent->m_target.reset();
+					targetEntityComponent->m_target = nullptr;
 				}
 			}
 		}
 
 		bool IsTargetAlreadyLocked(Entity<GameObjectType> target)
 		{
-			for (auto entity : m_registeredEntities)
+			for (auto& entity : m_registeredEntities)
 			{
 				auto targetEntityComponent = GetComponent<TargetEntityComponent>(entity);
-				if (targetEntityComponent->m_target != nullptr && targetEntityComponent->m_target->m_id == target.m_id)
+				if (targetEntityComponent->m_target)
 				{
-					return true;
+					if (targetEntityComponent->m_target->m_id == target.m_id)
+					{
+						return true;
+					}
 				}
 			}
 			return false;

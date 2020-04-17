@@ -1019,7 +1019,7 @@ class Application : public Engine {
 public:
 	Application()
 	{
-		GameLayer* gameLayer = new GameLayer();
+		auto gameLayer = new GameLayer();
 		WidgetManager::ButtonInvokeFunction f = std::bind(&GameLayer::OnImGuiButtonClicke, gameLayer, std::placeholders::_1);
 		WidgetManager::GetInstance()->SetButtonInvoker(f);
 
@@ -1031,7 +1031,6 @@ public:
 
 	~Application()
 	{
-		
 	}
 
 };

@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
 			L"\n\nException caught at main window creation.";
 		std::wcerr << e.GetExceptionType().c_str() << std::endl;
 		std::wcerr << eMsg.c_str() << std::endl;
+		__debugbreak();
 	}
 	catch (const std::exception & e)
 	{
@@ -45,10 +46,12 @@ int main(int argc, char** argv) {
 			L"\n\nException caught at main window creation.";
 		std::wcerr << "Unhandled STL Exception" << std::endl;
 		std::wcerr << eMsg.c_str() << std::endl;
+		__debugbreak();
 	}
 	catch (...)
 	{
 		std::wcerr << L"Unhandled Non-STL Exception" << std::endl;
 		std::wcerr << L"Exception caught at main window creation." << std::endl;
+		__debugbreak();
 	}
 }

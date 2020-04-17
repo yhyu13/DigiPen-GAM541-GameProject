@@ -47,8 +47,8 @@ namespace gswy
 			auto pathGrid = tileMapObj->GetTileGrid("MobPath");
 			auto Astar = tileMapObj->GetPathFinder("MobPath");
 			auto destEntity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
-			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY_1);
-			for (auto& entity : m_registeredEntities) {
+			auto mob = m_parentWorld->GetAllEntityWithType(GameObjectType::ENEMY_1);
+			for (auto& entity : mob) {
 				{
 					ComponentDecorator<TransformCom, GameObjectType> transform;
 					ComponentDecorator<AnimationCom, GameObjectType> animation;

@@ -250,10 +250,12 @@ namespace gswy
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(5));
 
+			auto childrenCom = ChildrenCom<GameObjectType>();
+
 			auto buffCom = BuffCom();
 			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
 			{
-				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.1, -1);
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 				// Mob energy shield
 				{
@@ -274,6 +276,8 @@ namespace gswy
 					animCom2.Add("Energy_shieldAnimation", "Move");
 					animCom2.SetCurrentAnimationState("Move");
 					energy_shield.AddComponent(animCom2);
+					// Add to obj
+					childrenCom.AddEntity(energy_shield);
 				}
 			}
 			obj.AddComponent(buffCom);
@@ -294,7 +298,10 @@ namespace gswy
 				sprite.SetTexture("RedLayer");
 				sprite.SetScale(vec2(0.20, 0.02));
 				hp_bar.AddComponent(sprite);
+				// Add to obj
+				childrenCom.AddEntity(hp_bar);
 			}
+			obj.AddComponent(childrenCom);
 		}
 
 		void SpawnEnemey2(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -332,10 +339,12 @@ namespace gswy
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(5));
 
+			auto childrenCom = ChildrenCom<GameObjectType>();
+
 			auto buffCom = BuffCom();
 			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
 			{
-				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.1, -1);
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 				// Mob energy shield
 				{
@@ -356,6 +365,8 @@ namespace gswy
 					animCom2.Add("Energy_shieldAnimation", "Move");
 					animCom2.SetCurrentAnimationState("Move");
 					energy_shield.AddComponent(animCom2);
+					// Add to obj
+					childrenCom.AddEntity(energy_shield);
 				}
 			}
 			obj.AddComponent(buffCom);
@@ -376,7 +387,10 @@ namespace gswy
 				sprite.SetTexture("RedLayer");
 				sprite.SetScale(vec2(0.20, 0.02));
 				hp_bar.AddComponent(sprite);
+				// Add to obj
+				childrenCom.AddEntity(hp_bar);
 			}
+			obj.AddComponent(childrenCom);
 		}
 
 		void SpawnEnemeyBoss1(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -413,10 +427,12 @@ namespace gswy
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(20));
 
+			auto childrenCom = ChildrenCom<GameObjectType>();
+
 			auto buffCom = BuffCom();
 			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
 			{
-				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.1, -1);
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 				// Mob energy shield
 				{
@@ -437,6 +453,8 @@ namespace gswy
 					animCom2.Add("Energy_shieldAnimation", "Move");
 					animCom2.SetCurrentAnimationState("Move");
 					energy_shield.AddComponent(animCom2);
+					// Add to obj
+					childrenCom.AddEntity(energy_shield);
 				}
 			}
 			obj.AddComponent(buffCom);
@@ -457,7 +475,10 @@ namespace gswy
 				sprite.SetTexture("RedLayer");
 				sprite.SetScale(vec2(0.20, 0.02));
 				hp_bar.AddComponent(sprite);
+				// Add to obj
+				childrenCom.AddEntity(hp_bar);
 			}
+			obj.AddComponent(childrenCom);
 		}
 
 		void SpawnEnemeyBoss2(EventQueue<GameObjectType, EventType>::EventPtr e)
@@ -494,10 +515,12 @@ namespace gswy
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(30));
 
+			auto childrenCom = ChildrenCom<GameObjectType>();
+
 			auto buffCom = BuffCom();
 			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
 			{
-				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.1, -1);
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 				// Mob energy shield
 				{
@@ -518,6 +541,8 @@ namespace gswy
 					animCom2.Add("Energy_shieldAnimation", "Move");
 					animCom2.SetCurrentAnimationState("Move");
 					energy_shield.AddComponent(animCom2);
+					// Add to obj
+					childrenCom.AddEntity(energy_shield);
 				}
 			}
 			obj.AddComponent(buffCom);
@@ -538,7 +563,11 @@ namespace gswy
 				sprite.SetTexture("RedLayer");
 				sprite.SetScale(vec2(0.20, 0.02));
 				hp_bar.AddComponent(sprite);
+				// Add to obj
+				childrenCom.AddEntity(hp_bar);
 			}
+
+			obj.AddComponent(childrenCom);
 		}
 	};
 }

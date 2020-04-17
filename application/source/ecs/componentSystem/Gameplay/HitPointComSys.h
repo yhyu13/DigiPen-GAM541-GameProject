@@ -73,8 +73,6 @@ namespace gswy
 				// Remove hp bar for dead onwer entity
 				if (std::find(deathList.begin(), deathList.end(), ownerCom->GetEntity()) != deathList.end())
 				{
-					auto e = MemoryManager::Make_shared<GCEvent>(hp_barEntity);
-					queue->Publish(e);
 					continue;
 				}
 
@@ -197,6 +195,9 @@ namespace gswy
 				ComponentDecorator<DamageCom, GameObjectType> Damage;
 				m_parentWorld->Unpack(entityB, Damage);
 
+				ComponentDecorator<OwnershiptCom<GameObjectType>, GameObjectType> owner;
+				m_parentWorld->Unpack(entityB, owner);
+
 				// Note: Fireball has hit prevention that only applies one hit to enemy
 				if (!HitPrevention->IsIncluded(entityA))
 				{
@@ -206,8 +207,11 @@ namespace gswy
 					auto e = MemoryManager::Make_shared<GCEvent>(entityB);
 					queue->Publish(e, 0.15);
 
-					auto forkEvent = MemoryManager::Make_shared<ForkEvent>(ActiveSkillType::FIRE_BALL, position, rotation);
-					queue->Publish(forkEvent);
+					if (owner->GetEntity().m_type == GameObjectType::PLAYER)
+					{
+						auto forkEvent = MemoryManager::Make_shared<ForkEvent>(ActiveSkillType::FIRE_BALL, position, rotation);
+						queue->Publish(forkEvent);
+					}
 				}
 			}
 				break;

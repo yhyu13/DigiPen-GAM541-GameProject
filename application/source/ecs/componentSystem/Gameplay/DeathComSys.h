@@ -65,6 +65,14 @@ namespace gswy
 					GameLevelMapManager::GetInstance()->m_Kill++;
 
 					DEBUG_PRINT("ENEMY has died!");
+
+					auto children = GetComponent<ChildrenCom<GameObjectType>>(event->m_entity);
+					for (auto& child : children->GetEntities())
+					{
+						auto _e = MemoryManager::Make_shared<GCEvent>(child);
+						queue->Publish(_e);
+					}
+
 					auto _e = MemoryManager::Make_shared<GCEvent>(event->m_entity);
 					queue->Publish(_e);
 				}
