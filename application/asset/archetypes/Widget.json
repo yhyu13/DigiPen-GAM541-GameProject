@@ -1,13 +1,21 @@
 {
   "Widget": [
     {
-      "NewGame": "./asset/UI/New_Game1.png",
-      "HowToPlay": "./asset/UI/How_To_Play1.png",
-      "Option": "./asset/UI/Option1.png",
-      "Credits": "./asset/UI/credits_button.png",
-      "QuitGame": "./asset/UI/quit_button.png",
-      "ResumeGame": "./asset/UI/resume_button.png",
-      "MainMenu": "./asset/UI/Main_Menu1.png"
+      "NewGame_Normal": "./asset/UI/new_game.png",
+      "HowToPlay_Normal": "./asset/UI/how_to_play.png",
+      "Option_Normal": "./asset/UI/option.png",
+      "Credits_Normal": "./asset/UI/credits_button.png",
+      "QuitGame_Normal": "./asset/UI/quit_button.png",
+      "ResumeGame_Normal": "./asset/UI/resume_button.png",
+      "MainMenu_Normal": "./asset/UI/main_menu.png",
+	  
+	  "NewGame_Active": "./asset/UI/new_game_active.png",
+      "HowToPlay_Active": "./asset/UI/how_to_play_active.png",
+      "Option_Active": "./asset/UI/option_active.png",
+      "Credits_Active": "./asset/UI/credits_button_active.png",
+      "QuitGame_Active": "./asset/UI/quit_button_active.png",
+      "ResumeGame_Active": "./asset/UI/resume_button_active.png",
+      "MainMenu_Active": "./asset/UI/main_menu_active.png"
     }
   ],
   "styles": 

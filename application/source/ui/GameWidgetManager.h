@@ -74,26 +74,57 @@ namespace gswy {
 		}
 		void Init() override
 		{
-			m_Texture_NewGame = Texture2D::Create(m_TexturePath_NewGame);
-			m_Texture_HowToPlay = Texture2D::Create(m_TexturePath_HowToPlay);
-			m_Texture_Option = Texture2D::Create(m_TexturePath_Option);
-			m_Texture_Credits = Texture2D::Create(m_TexturePath_Credits);
-			m_Texture_QuitGame = Texture2D::Create(m_TexturePath_QuitGame);
+			m_Texture_NewGame_Normal   = Texture2D::Create(m_TexturePath_NewGame_Normal);
+			m_Texture_HowToPlay_Normal = Texture2D::Create(m_TexturePath_HowToPlay_Normal);
+			m_Texture_Option_Normal    = Texture2D::Create(m_TexturePath_Option_Normal);
+			m_Texture_Credits_Normal   = Texture2D::Create(m_TexturePath_Credits_Normal);
+			m_Texture_QuitGame_Normal  = Texture2D::Create(m_TexturePath_QuitGame_Normal);
+
+			m_Texture_NewGame_Active   = Texture2D::Create(m_TexturePath_NewGame_Active);
+			m_Texture_HowToPlay_Active = Texture2D::Create(m_TexturePath_HowToPlay_Active);
+			m_Texture_Option_Active    = Texture2D::Create(m_TexturePath_Option_Active);
+			m_Texture_Credits_Active   = Texture2D::Create(m_TexturePath_Credits_Active);
+			m_Texture_QuitGame_Active  = Texture2D::Create(m_TexturePath_QuitGame_Active);
+
+			m_Texture_NewGame          = m_Texture_NewGame_Normal;
+			m_Texture_HowToPlay        = m_Texture_HowToPlay_Normal;
+			m_Texture_Option           = m_Texture_Option_Normal;
+			m_Texture_Credits          = m_Texture_Credits_Normal;
+			m_Texture_QuitGame         = m_Texture_QuitGame_Normal;
 		}
 		void Render() override;
 		WidgetManager* manager;
 
-		std::string m_TexturePath_NewGame;
-		std::string m_TexturePath_HowToPlay;
-		std::string m_TexturePath_Option;
-		std::string m_TexturePath_Credits;
-		std::string m_TexturePath_QuitGame;
+
+		std::string m_TexturePath_NewGame_Normal;
+		std::string m_TexturePath_HowToPlay_Normal;
+		std::string m_TexturePath_Option_Normal;
+		std::string m_TexturePath_Credits_Normal;
+		std::string m_TexturePath_QuitGame_Normal;
+
+		std::string m_TexturePath_NewGame_Active;
+		std::string m_TexturePath_HowToPlay_Active;
+		std::string m_TexturePath_Option_Active;
+		std::string m_TexturePath_Credits_Active;
+		std::string m_TexturePath_QuitGame_Active;
 
 		std::shared_ptr<Texture2D> m_Texture_NewGame;
 		std::shared_ptr<Texture2D> m_Texture_HowToPlay;
 		std::shared_ptr<Texture2D> m_Texture_Option;
 		std::shared_ptr<Texture2D> m_Texture_Credits;
 		std::shared_ptr<Texture2D> m_Texture_QuitGame;
+
+		std::shared_ptr<Texture2D> m_Texture_NewGame_Normal;
+		std::shared_ptr<Texture2D> m_Texture_HowToPlay_Normal;
+		std::shared_ptr<Texture2D> m_Texture_Option_Normal;
+		std::shared_ptr<Texture2D> m_Texture_Credits_Normal;
+		std::shared_ptr<Texture2D> m_Texture_QuitGame_Normal;
+
+		std::shared_ptr<Texture2D> m_Texture_NewGame_Active;
+		std::shared_ptr<Texture2D> m_Texture_HowToPlay_Active;
+		std::shared_ptr<Texture2D> m_Texture_Option_Active;
+		std::shared_ptr<Texture2D> m_Texture_Credits_Active;
+		std::shared_ptr<Texture2D> m_Texture_QuitGame_Active;
 
 		ImVec2 m_MainMenu;
 	};
@@ -105,9 +136,16 @@ namespace gswy {
 		PauseMenu() { IsVisible = false; };
 		void Init() override 
 		{
-			m_Texture_ResumeGame = Texture2D::Create(m_TexturePath_ResumeGame);
-			m_Texture_MainMenu = Texture2D::Create(m_TexturePath_MainMenu);
 			m_PauseMenuWindowSize = ScaleSize({ 500, 640 });
+
+			m_Texture_ResumeGame_Normal = Texture2D::Create(m_TexturePath_ResumeGame_Normal);
+			m_Texture_MainMenu_Normal = Texture2D::Create(m_TexturePath_MainMenu_Normal);
+
+			m_Texture_ResumeGame_Active = Texture2D::Create(m_TexturePath_ResumeGame_Active);
+			m_Texture_MainMenu_Active = Texture2D::Create(m_TexturePath_MainMenu_Active);
+
+			m_Texture_ResumeGame = m_Texture_ResumeGame_Normal;
+			m_Texture_MainMenu = m_Texture_MainMenu_Normal;
 		}
 		void Render() override;
 		WidgetManager* manager;
@@ -115,10 +153,22 @@ namespace gswy {
 		std::string m_TexturePath_ResumeGame;
 		std::string m_TexturePath_MainMenu;
 
+		std::string m_TexturePath_ResumeGame_Active;
+		std::string m_TexturePath_MainMenu_Active;
+
+		std::string m_TexturePath_ResumeGame_Normal;
+		std::string m_TexturePath_MainMenu_Normal;
+
 		ImVec2 m_PauseMenuWindowSize;
 	private:
 		std::shared_ptr<Texture2D> m_Texture_ResumeGame;
 		std::shared_ptr<Texture2D> m_Texture_MainMenu;
+
+		std::shared_ptr<Texture2D> m_Texture_ResumeGame_Active;
+		std::shared_ptr<Texture2D> m_Texture_MainMenu_Active;
+
+		std::shared_ptr<Texture2D> m_Texture_ResumeGame_Normal;
+		std::shared_ptr<Texture2D> m_Texture_MainMenu_Normal;
 	};
 
 	//Purchase tower upgrades, purchase player skill upgrades

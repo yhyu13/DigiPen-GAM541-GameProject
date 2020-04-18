@@ -109,14 +109,23 @@ namespace gswy {
 		for (int i = 0; i < widgets.size(); ++i)
 		{
 			Json::Value widgetData = widgets[i];
-			GetMainMenu().m_TexturePath_NewGame = widgetData["NewGame"].asString();
-			GetMainMenu().m_TexturePath_HowToPlay = widgetData["HowToPlay"].asString();
-			GetMainMenu().m_TexturePath_Option = widgetData["Option"].asString();
-			GetMainMenu().m_TexturePath_Credits = widgetData["Credits"].asString();
-			GetMainMenu().m_TexturePath_QuitGame = widgetData["QuitGame"].asString();
-			GetPauseMenu().m_TexturePath_ResumeGame = widgetData["ResumeGame"].asString();
-			GetPauseMenu().m_TexturePath_MainMenu = widgetData["MainMenu"].asString();
+			GetMainMenu().m_TexturePath_NewGame_Active = widgetData["NewGame_Active"].asString();
+			GetMainMenu().m_TexturePath_HowToPlay_Active = widgetData["HowToPlay_Active"].asString();
+			GetMainMenu().m_TexturePath_Option_Active = widgetData["Option_Active"].asString();
+			GetMainMenu().m_TexturePath_Credits_Active = widgetData["Credits_Active"].asString();
+			GetMainMenu().m_TexturePath_QuitGame_Active = widgetData["QuitGame_Active"].asString();
+			GetPauseMenu().m_TexturePath_ResumeGame_Active = widgetData["ResumeGame_Active"].asString();
+			GetPauseMenu().m_TexturePath_MainMenu_Active = widgetData["MainMenu_Active"].asString();
+
+			GetMainMenu().m_TexturePath_NewGame_Normal = widgetData["NewGame_Normal"].asString();
+			GetMainMenu().m_TexturePath_HowToPlay_Normal = widgetData["HowToPlay_Normal"].asString();
+			GetMainMenu().m_TexturePath_Option_Normal = widgetData["Option_Normal"].asString();
+			GetMainMenu().m_TexturePath_Credits_Normal = widgetData["Credits_Normal"].asString();
+			GetMainMenu().m_TexturePath_QuitGame_Normal = widgetData["QuitGame_Normal"].asString();
+			GetPauseMenu().m_TexturePath_ResumeGame_Normal = widgetData["ResumeGame_Normal"].asString();
+			GetPauseMenu().m_TexturePath_MainMenu_Normal = widgetData["MainMenu_Normal"].asString();
 		}
+
 		auto styles = root["styles"];
 		{
 			m_Hud.SetStyle(styles["HUD"][0].asInt(), styles["HUD"][1].asInt(), styles["HUD"][2].asInt(), styles["HUD"][3].asInt());
@@ -148,11 +157,13 @@ namespace gswy {
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("New Game");
 		}
+		m_Texture_NewGame = ImGui::IsItemHovered() ? m_Texture_NewGame_Active : m_Texture_NewGame_Normal;
 		if (ImGui::ImageButton((void*)m_Texture_HowToPlay->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("How To Play");
 		}
+		m_Texture_HowToPlay = ImGui::IsItemHovered() ? m_Texture_HowToPlay_Active : m_Texture_HowToPlay_Normal;
 		if (ImGui::ImageButton((void*)m_Texture_Option->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
@@ -160,16 +171,19 @@ namespace gswy {
 			manager->GetOptionMenu().SetVisible(true);
 			manager->GetOptionMenu().SetCallFromMainMenu(true);
 		}
+		m_Texture_Option = ImGui::IsItemHovered() ? m_Texture_Option_Active : m_Texture_Option_Normal;
 		if (ImGui::ImageButton((void*)m_Texture_Credits->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("Credits");
 		}
+		m_Texture_Credits = ImGui::IsItemHovered() ? m_Texture_Credits_Active : m_Texture_Credits_Normal;
 		if (ImGui::ImageButton((void*)m_Texture_QuitGame->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			ImGui::OpenPopup("Quit?");
 		}
+		m_Texture_QuitGame = ImGui::IsItemHovered() ? m_Texture_QuitGame_Active : m_Texture_QuitGame_Normal;
 		if (ImGui::BeginPopupModal("Quit?", NULL, popupFlag))
 		{
 			ImGui::Text("Are you sure to quit game?\n");
@@ -213,11 +227,13 @@ namespace gswy {
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("Resume Game");
 		}
+		m_Texture_ResumeGame = ImGui::IsItemHovered() ? m_Texture_ResumeGame_Active : m_Texture_ResumeGame_Normal;
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_HowToPlay->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("How To Play");
 		}
+		WidgetManager::GetInstance()->GetMainMenu().m_Texture_HowToPlay = ImGui::IsItemHovered() ? WidgetManager::GetInstance()->GetMainMenu().m_Texture_HowToPlay_Active : WidgetManager::GetInstance()->GetMainMenu().m_Texture_HowToPlay_Normal;
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Option->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
@@ -225,16 +241,19 @@ namespace gswy {
 			manager->GetOptionMenu().SetVisible(true);
 			manager->GetOptionMenu().SetCallFromMainMenu(false);
 		}
+		WidgetManager::GetInstance()->GetMainMenu().m_Texture_Option = ImGui::IsItemHovered() ? WidgetManager::GetInstance()->GetMainMenu().m_Texture_Option_Active : WidgetManager::GetInstance()->GetMainMenu().m_Texture_Option_Normal;
 		if (ImGui::ImageButton((void*)WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			manager->InvokeButton("Credits");
 		}
+		WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits = ImGui::IsItemHovered() ? WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits_Active : WidgetManager::GetInstance()->GetMainMenu().m_Texture_Credits_Normal;
 		if (ImGui::ImageButton((void*)m_Texture_MainMenu->GetRendererID(), PosScaleBySize(ImVec2(480, 100), windowsize), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0, 0, 0, 1)))
 		{
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			ImGui::OpenPopup("Main menu?");
 		}
+		m_Texture_MainMenu = ImGui::IsItemHovered() ? m_Texture_MainMenu_Active : m_Texture_MainMenu_Normal;
 		if (ImGui::BeginPopupModal("Main menu?", NULL, popupFlag))
 		{
 			ImGui::Text("Are you sure to go back?\n");
@@ -261,6 +280,7 @@ namespace gswy {
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
 			ImGui::OpenPopup("Quit?");
 		}
+		WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame = ImGui::IsItemHovered() ? WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame_Active : WidgetManager::GetInstance()->GetMainMenu().m_Texture_QuitGame_Normal;
 		if (ImGui::BeginPopupModal("Quit?", NULL, popupFlag))
 		{
 			ImGui::Text("Are you sure to quit game?\n");
