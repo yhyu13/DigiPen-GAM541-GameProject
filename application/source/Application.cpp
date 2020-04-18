@@ -157,7 +157,7 @@ namespace gswy
 				auto gameLogoSpriteCom = SpriteCom();
 				auto gameLogoSprite = gameLogoSpriteCom.Get();
 				gameLogoSprite->SetSpriteTexture(gameLogoTexture);
-				gameLogoSprite->SetSpriteScale(vec2(1, 1.0f / gameLogoTexture->GetWidth() * gameLogoTexture->GetHeight()));
+				gameLogoSprite->SetSpriteScale(vec2(2, 2.0f / gameLogoTexture->GetWidth() * gameLogoTexture->GetHeight()));
 				gameLogoSprite->SetSpritePosition(vec3(0));
 				m_gameLogo->AddComponent(gameLogoSpriteCom);
 				auto gameLogoTransform = TransformCom(0, 0, Z_ORDER(2000));
@@ -166,13 +166,13 @@ namespace gswy
 				// Fading logo
 				
 				auto _e = MemoryManager::Make_shared<FadeEvent>(m_DigipenLogo->GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
-				queue->Publish(_e, 2.0f);
+				queue->Publish(_e, 3.0f);
 				auto teamLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_TEAM_LOGO);
-				queue->Publish(teamLogoEvent, 3.0f);
+				queue->Publish(teamLogoEvent, 4.0f);
 				auto gameLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_GAME_LOGO);
-				queue->Publish(gameLogoEvent, 5.0f);
+				queue->Publish(gameLogoEvent, 6.0f);
 				auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-				queue->Publish(_e1, 9.0f);
+				queue->Publish(_e1, 10.0f);
 			}
 			else
 			{
