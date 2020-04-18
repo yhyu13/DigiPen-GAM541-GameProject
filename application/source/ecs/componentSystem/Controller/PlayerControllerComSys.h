@@ -76,6 +76,7 @@ namespace gswy
 		bool m_bDisableMoveInput = { false };
 		bool m_bDisableInput = { false };
 		HowToPlayState m_howToPlayState = { HowToPlayState::HOW_TO_PLAY_1 };
+		bool isShopMenuVisible;
 
 		std::vector<glm::ivec2> m_pathResult;
 		bool m_cubicSplineEnabled = { false };	// Cubic spline refinement of path finding should be disabled due to unstable result
@@ -108,6 +109,7 @@ namespace gswy
 			if (auto event = std::dynamic_pointer_cast<LoadHowToPlayEvent>(e))
 			{
 				m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
+				isShopMenuVisible = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
 			}
 		}
 
@@ -239,6 +241,7 @@ namespace gswy
 					// Set main menu back to visible
 					{
 						WidgetManager::GetInstance()->GetPauseMenu().SetVisible(true);
+						WidgetManager::GetInstance()->GetShopMenu().SetVisible(isShopMenuVisible);
 					}
 				}
 				else
@@ -247,7 +250,7 @@ namespace gswy
 					{
 					case HowToPlayState::HOW_TO_PLAY_1:
 					{
-						if (input->IsKeyTriggered(KEY_DOWN))
+						if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -261,7 +264,7 @@ namespace gswy
 
 					case HowToPlayState::HOW_TO_PLAY_2:
 					{
-						if (input->IsKeyTriggered(KEY_UP))
+						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -270,7 +273,7 @@ namespace gswy
 							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
 							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
 						}
-						else if (input->IsKeyTriggered(KEY_DOWN))
+						else if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -284,7 +287,7 @@ namespace gswy
 
 					case HowToPlayState::HOW_TO_PLAY_3:
 					{
-						if (input->IsKeyTriggered(KEY_UP))
+						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);

@@ -58,7 +58,7 @@ namespace gswy {
 	{
 		if (on)
 		{
-			//glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
+			glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_TRUE);
 			glfwWindowHint(GLFW_DECORATED, false);
 			glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, m_windowProperties.m_resolutionX, m_windowProperties.m_resolutionY, GLFW_DONT_CARE);
 			
@@ -75,6 +75,7 @@ namespace gswy {
 		}
 		else
 		{
+			glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
 			glfwWindowHint(GLFW_DECORATED, true);
 			int x = 0, y = 0, w = 1, h = 1;
 			glfwSetWindowMonitor(m_window, nullptr, x, y, w, h, GLFW_DONT_CARE);
@@ -85,11 +86,10 @@ namespace gswy {
 
 			//int x, y, w, h;
 			glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &x, &y, &w, &h);
-			//glfwSetWindowMonitor(m_window, nullptr, x, y, w, h, GLFW_DONT_CARE);
 			glfwSetWindowMonitor(m_window, nullptr, x, y, m_windowProperties.m_resolutionX, m_windowProperties.m_resolutionY, GLFW_DONT_CARE);
 
-			m_windowProperties.m_width = w;
-			m_windowProperties.m_height = h;
+			m_windowProperties.m_width = m_windowProperties.m_resolutionX;
+			m_windowProperties.m_height = m_windowProperties.m_resolutionY;
 			printf("No Full Screen : posX = %d, posY = %d width = %d, height = %d\n", x, y, w, h);
 
 		}
@@ -101,7 +101,8 @@ namespace gswy {
 		int w, h;
 		glfwGetFramebufferSize(m_window, &w, &h);
 		printf("Framebuffer Size : %d x %d\n", w, h);
-		
+
+		m_windowProperties.m_input->SetMouseMaxPositions(m_windowProperties.m_resolutionX, m_windowProperties.m_resolutionY);
 	}
 
 	void Window::SetResolution(int n)
@@ -212,6 +213,9 @@ namespace gswy {
 		m_windowProperties.m_monitorWidth = mode->width;
 		m_windowProperties.m_monitorHeight = mode->height;
 
+		m_windowProperties.m_resolutionX = m_windowProperties.m_width;
+		m_windowProperties.m_resolutionY = m_windowProperties.m_height;
+
 		if (m_windowProperties.IsFullScreen)
 		{
 			//Full Screen Settings
@@ -223,8 +227,8 @@ namespace gswy {
 			// Update window width and height
 			width = mode->width;
 			height = mode->height;
-			m_windowProperties.m_width = mode->width;
-			m_windowProperties.m_height = mode->height;
+			//m_windowProperties.m_width = mode->width;
+			//m_windowProperties.m_height = mode->height;
 
 			m_window = glfwCreateWindow(mode->width, mode->height, m_windowProperties.m_title.c_str(), monitor, nullptr);
 			m_windowProperties.m_input->SetMouseMaxPositions(mode->width, mode->height);

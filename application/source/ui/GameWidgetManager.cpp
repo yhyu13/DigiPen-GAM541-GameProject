@@ -57,14 +57,20 @@ namespace gswy {
 		
 		// Render widgets
 		{
-			if (m_Hud.GetVisible())              m_Hud.Render();
+			if (m_Hud.GetVisible() && !m_MainMenu.GetVisible() && !m_PauseMenu.GetVisible() && !m_OptionMenu.GetVisible())
+				m_Hud.Render();
+
 			if (m_MainMenu.GetVisible() && !m_OptionMenu.GetVisible())
 				m_MainMenu.Render();
+
 			if (m_PauseMenu.GetVisible() && !m_OptionMenu.GetVisible())
 				m_PauseMenu.Render();
-			if (m_OptionMenu.GetVisible())		 m_OptionMenu.Render();
-			if (m_ShopMenu.GetVisible())         m_ShopMenu.Render();
-			//if (m_InventoryMenu.GetVisible())    m_InventoryMenu.Render();
+
+			if (m_OptionMenu.GetVisible())		 
+				m_OptionMenu.Render();
+
+			if (m_ShopMenu.GetVisible())         
+				m_ShopMenu.Render();
 		}
 	}
 
@@ -195,7 +201,6 @@ namespace gswy {
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
-		//ImVec2 pauseMenuWindowSize = PosScaleBySize(m_PauseMenuWindowSize, windowsize);
 		ImVec2 pauseMenuWindowSize = ScaleSize(m_PauseMenuWindowSize);
 		ImGui::SetNextWindowSize(pauseMenuWindowSize);
 		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x + viewport->Size.x / 2 - pauseMenuWindowSize.x / 2, viewport->Pos.y + viewport->Size.y / 2 - pauseMenuWindowSize.y / 2));
