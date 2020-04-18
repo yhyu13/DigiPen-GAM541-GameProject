@@ -11,8 +11,8 @@
   {
   	"level_start":0,
 	"level_max":3,
-	"coins": 1200,
-	"coins_per_mob" : 5,
+	"coins": 1000,
+	"coins_per_mob" : 2,
 	"Level_0":{
 	"wave_start": 1,
 	"wave_max":2,
@@ -21,12 +21,12 @@
 	"Level_1":{
 	"wave_start": 1,
 	"wave_max":4,
-	"time_per_wave": 25
+	"time_per_wave": 15
 	},
 	"Level_2":{
 	"wave_start": 1,
 	"wave_max":4,
-	"time_per_wave": 25
+	"time_per_wave": 20
 	},
 	"Level_3":{
 	"wave_start": 1,
