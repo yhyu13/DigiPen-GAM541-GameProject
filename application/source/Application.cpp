@@ -943,7 +943,6 @@ namespace gswy
 				// Set widget
 				{
 					WidgetManager* manager = WidgetManager::GetInstance();
-					manager->GetHUD().SetVisible(false);
 					manager->GetInventoryMenu().SetVisible(false);
 					manager->GetPauseMenu().SetVisible(false);
 					manager->GetShopMenu().SetVisible(false);
@@ -986,7 +985,6 @@ namespace gswy
 				// Set widget
 				{
 					WidgetManager* manager = WidgetManager::GetInstance();
-					manager->GetHUD().SetVisible(false);
 					manager->GetInventoryMenu().SetVisible(false);
 					manager->GetPauseMenu().SetVisible(false);
 					manager->GetShopMenu().SetVisible(false);
