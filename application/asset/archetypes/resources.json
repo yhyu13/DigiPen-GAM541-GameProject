@@ -479,87 +479,87 @@
       "sounds": [
 		{
           "path": "./asset/Audio_Assets/BGM_Tracks/Track_1.ogg",
-          "stream": false
+          "loop": true
         },
         {
           "path": "./asset/Audio_Assets/BGM_Tracks/Track_2.ogg",
-          "stream": false
+          "loop": true
         },
 		{
           "path": "./asset/Audio_Assets/BGM_Tracks/Menu_Track.ogg",
-          "stream": false
+          "loop": true
         },
 		{
           "path": "./asset/Audio_Assets/Victory.mp3",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/Defeat.mp3",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/footstep02.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/footsteps1.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_shoot_lr1.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/Hit_Sounds/fireball_hit1.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/Weapons_Sounds/fireball_shoot_rl.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/Weapons_Sounds/ice_shoot1.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/Hit_Sounds/ice_hit1.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/Weapons_Sounds/lightning_shoot.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/Weapons_Sounds/fire_crackle.ogg",
-          "stream": false
+          "loop": false
         },
 		{
           "path": "./asset/Audio_Assets/Weapons_Sounds/razor_shoot2.ogg",
-          "stream": false
+          "loop": false
         },
 		{
           "path": "./asset/Audio_Assets/Weapons_Sounds/cyclone_shoot.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/HUD_Sounds/bind_sound.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/HUD_Sounds/click_sound.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/HUD_Sounds/purchase_install_sound.ogg",
-          "stream": false
+          "loop": false
         },
 		{
           "path": "./asset/Audio_Assets/Hit_Sounds/razor_hit.ogg",
-          "stream": false
+          "loop": false
         },
         {
           "path": "./asset/Audio_Assets/HUD_Sounds/purchase_sound.ogg",
-          "stream": false
+          "loop": false
         },
       ]
     }

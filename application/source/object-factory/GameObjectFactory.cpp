@@ -248,8 +248,8 @@ namespace gswy {
 				for (int j = 0; j < sounds.size(); ++j) {
 					Json::Value sound = sounds[j];
 					std::string path = sound["path"].asString();
-					bool stream = sound["stream"].asBool();
-					AudioManager::GetInstance()->LoadSound(path, stream);
+					bool loop = sound["loop"].asBool();
+					AudioManager::GetInstance()->LoadSound(path, loop);
 				}
 			}
 
