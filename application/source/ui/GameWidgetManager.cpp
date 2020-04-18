@@ -543,10 +543,10 @@ namespace gswy {
 	{
 		// Insufficent coins pop up lambda function
 		static void(*ShowPopup)() = []() {};
-
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImVec2 shopWindowSize = ImVec2(m_ShopMenuWindowSize.x, m_ShopMenuWindowSize.y);
 		ImGui::SetNextWindowSize(shopWindowSize);
-		ImGui::SetNextWindowPos(ImVec2(0, 0));
+		ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x , viewport->Pos.y));
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.0f);
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, GetStyle());
