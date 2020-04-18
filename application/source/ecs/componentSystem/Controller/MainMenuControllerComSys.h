@@ -102,7 +102,7 @@ namespace gswy
 					{
 					case HowToPlayState::HOW_TO_PLAY_1:
 					{
-						if (input->IsKeyTriggered(KEY_DOWN))
+						if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -116,7 +116,7 @@ namespace gswy
 
 					case HowToPlayState::HOW_TO_PLAY_2:
 					{
-						if (input->IsKeyTriggered(KEY_UP))
+						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -125,7 +125,7 @@ namespace gswy
 							howToPlaySprite->SetSpriteTexture(howToPlayTexture);
 							m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
 						}
-						else if (input->IsKeyTriggered(KEY_DOWN))
+						else if (input->IsKeyTriggered(KEY_DOWN) || input->IsMouseButtonTriggered(MOUSE_BUTTON_LEFT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
@@ -139,7 +139,7 @@ namespace gswy
 
 					case HowToPlayState::HOW_TO_PLAY_3:
 					{
-						if (input->IsKeyTriggered(KEY_UP))
+						if (input->IsKeyTriggered(KEY_UP) || input->IsMouseButtonTriggered(MOUSE_BUTTON_RIGHT))
 						{
 							ComponentDecorator<SpriteCom, GameObjectType> spriteCom;
 							m_parentWorld->Unpack(entity, spriteCom);
