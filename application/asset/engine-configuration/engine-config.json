@@ -11,5 +11,5 @@
 	},
 	"startup-screen": true,
 	"max-framerate" : 60,
-	"enable-cheat" : false
+	"enable-cheat" : true
 }

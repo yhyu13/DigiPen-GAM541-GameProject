@@ -94,9 +94,11 @@ namespace gswy
 				auto audio = AudioManager::GetInstance();
 				if (auto event = static_pointer_cast<CollisionEvent>(e))
 				{
-					if ((std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityA.m_type) != g_enemyTypes.end() &&
+					bool isEnemyA = std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityA.m_type) != g_enemyTypes.end();
+					bool isEnemyB = std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityB.m_type) != g_enemyTypes.end();
+					if ((isEnemyA &&
 						event->m_entityB.m_type == GameObjectType::FIREBALL) ||
-						(std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityB.m_type) != g_enemyTypes.end() &&
+						(isEnemyB &&
 							event->m_entityA.m_type == GameObjectType::FIREBALL))
 					{
 						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
@@ -106,10 +108,21 @@ namespace gswy
 							queue->Publish(e1);
 						}
 					}
-					else 
-					if ((std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityA.m_type) != g_enemyTypes.end() &&
+					else if ((isEnemyA &&
+						event->m_entityB.m_type == GameObjectType::BOLT_STRIKE) ||
+						(isEnemyB &&
+							event->m_entityA.m_type == GameObjectType::BOLT_STRIKE))
+					{
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("lightning_shoot", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+
+						if (!audio->IsPlaying(e1->soundName))
+						{
+							queue->Publish(e1);
+						}
+					}
+					else if ((isEnemyA &&
 						event->m_entityB.m_type == GameObjectType::ICEBALL) ||
-						(std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityB.m_type) != g_enemyTypes.end() &&
+						(isEnemyB &&
 						event->m_entityA.m_type == GameObjectType::ICEBALL))
 					{
 						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
@@ -119,10 +132,9 @@ namespace gswy
 							queue->Publish(e1);
 						}
 					}
-					else 
-					if ((std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityA.m_type) != g_enemyTypes.end() &&
+					else if ((isEnemyA &&
 						event->m_entityB.m_type == GameObjectType::RAZOR) ||
-						(std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityB.m_type) != g_enemyTypes.end() &&
+						(isEnemyB &&
 						event->m_entityA.m_type == GameObjectType::RAZOR))
 					{
 						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("razor_hit", GetComponent<TransformCom>(event->m_entityA)->GetPos());
@@ -132,10 +144,9 @@ namespace gswy
 							queue->Publish(e1);
 						}
 					}
-					else 
-					if ((std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityA.m_type) != g_enemyTypes.end() &&
+					else if ((isEnemyA &&
 						event->m_entityB.m_type == GameObjectType::CYCLONE_SFX) ||
-						(std::find(g_enemyTypes.begin(), g_enemyTypes.end(), event->m_entityB.m_type) != g_enemyTypes.end() &&
+						(isEnemyB &&
 						event->m_entityA.m_type == GameObjectType::CYCLONE_SFX))
 					{
 						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("razor_hit", GetComponent<TransformCom>(event->m_entityA)->GetPos());
