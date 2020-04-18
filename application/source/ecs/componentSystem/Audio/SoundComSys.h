@@ -101,7 +101,7 @@ namespace gswy
 						(isEnemyB &&
 							event->m_entityA.m_type == GameObjectType::FIREBALL))
 					{
-						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("fireball_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos(),-5);
 
 						if (!audio->IsPlaying(e1->soundName))
 						{
@@ -113,7 +113,7 @@ namespace gswy
 						(isEnemyB &&
 							event->m_entityA.m_type == GameObjectType::BOLT_STRIKE))
 					{
-						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("lightning_shoot", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("lightning_shoot", GetComponent<TransformCom>(event->m_entityA)->GetPos(),10);
 
 						if (!audio->IsPlaying(e1->soundName))
 						{
@@ -125,7 +125,7 @@ namespace gswy
 						(isEnemyB &&
 						event->m_entityA.m_type == GameObjectType::ICEBALL))
 					{
-						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("ice_hit1", GetComponent<TransformCom>(event->m_entityA)->GetPos(),-5);
 
 						if (!audio->IsPlaying(e1->soundName))
 						{
@@ -137,7 +137,7 @@ namespace gswy
 						(isEnemyB &&
 						event->m_entityA.m_type == GameObjectType::RAZOR))
 					{
-						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("razor_hit", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("razor_hit", GetComponent<TransformCom>(event->m_entityA)->GetPos(),-10);
 
 						if (!audio->IsPlaying(e1->soundName))
 						{
@@ -149,7 +149,7 @@ namespace gswy
 						(isEnemyB &&
 						event->m_entityA.m_type == GameObjectType::CYCLONE_SFX))
 					{
-						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("razor_hit", GetComponent<TransformCom>(event->m_entityA)->GetPos());
+						auto e1 = MemoryManager::Make_shared<WeaponSoundEvent>("razor_hit", GetComponent<TransformCom>(event->m_entityA)->GetPos(),-10);
 
 						if (!audio->IsPlaying(e1->soundName))
 						{
