@@ -46,6 +46,52 @@ namespace gswy
 			if (m_spawnZOrder > 5000) m_spawnZOrder = 1000;
 		}
 
+		float MobProbSpawnWithESBasedOnProgreesion(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = static_pointer_cast<SpawnEvent>(e))
+			{
+				DEBUG_PRINT("Receive " + Str(*e));
+
+				auto prob = 0.25f;
+				auto level = GameLevelMapManager::GetInstance()->m_currentLevel;
+				auto wave = GameLevelMapManager::GetInstance()->m_currentWave;
+
+				switch (level)
+				{
+				case 0:
+					prob *= 0;
+					break;
+				case 1:
+					prob *= 1 / 2;
+					break;
+				case 2:
+					prob *= 1 / 2;
+					break;
+				case 3:
+					prob *= 1;
+					break;
+				default:
+					break;
+				}
+
+				switch (event->m_type)
+				{
+				case GameObjectType::ENEMY_1:
+					break;
+				case GameObjectType::ENEMY_2:
+					break;
+				case GameObjectType::ENEMY_BOSS_1:
+					break;
+				case GameObjectType::ENEMY_BOSS_2:
+					break;
+				default:
+					break;
+				}
+
+				return prob;
+			}
+		}
+
 		void OnSPAWN(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			if (auto event = static_pointer_cast<SpawnEvent>(e))
@@ -187,34 +233,6 @@ namespace gswy
 			obj.AddComponent(sprite);
 		}
 
-		float MobProbSpawnWithES(EventQueue<GameObjectType, EventType>::EventPtr e)
-		{
-			if (auto event = static_pointer_cast<SpawnEvent>(e))
-			{
-				DEBUG_PRINT("Receive " + Str(*e));
-
-				auto prob = 0.25f;
-				auto level = GameLevelMapManager::GetInstance()->m_currentLevel;
-				auto wave = GameLevelMapManager::GetInstance()->m_currentWave;
-
-				switch (event->m_type)
-				{
-				case GameObjectType::ENEMY_1:
-					break;
-				case GameObjectType::ENEMY_2:
-					break;
-				case GameObjectType::ENEMY_BOSS_1:
-					break;
-				case GameObjectType::ENEMY_BOSS_2:
-					break;
-				default:
-					break;
-				}
-
-				return prob;
-			}
-		}
-
 		void SpawnEnemey1(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			auto spriteScale = vec2(0.5, 0.5);
@@ -253,7 +271,7 @@ namespace gswy
 			auto childrenCom = ChildrenCom<GameObjectType>();
 
 			auto buffCom = BuffCom();
-			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
+			if (RAND_F(0, 1) < MobProbSpawnWithESBasedOnProgreesion(e))
 			{
 				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
@@ -342,7 +360,7 @@ namespace gswy
 			auto childrenCom = ChildrenCom<GameObjectType>();
 
 			auto buffCom = BuffCom();
-			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
+			if (RAND_F(0, 1) < MobProbSpawnWithESBasedOnProgreesion(e))
 			{
 				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
@@ -430,7 +448,7 @@ namespace gswy
 			auto childrenCom = ChildrenCom<GameObjectType>();
 
 			auto buffCom = BuffCom();
-			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
+			if (RAND_F(0, 1) < MobProbSpawnWithESBasedOnProgreesion(e))
 			{
 				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
@@ -518,7 +536,7 @@ namespace gswy
 			auto childrenCom = ChildrenCom<GameObjectType>();
 
 			auto buffCom = BuffCom();
-			if (RAND_F(0, 1) < MobProbSpawnWithES(e))
+			if (RAND_F(0, 1) < MobProbSpawnWithESBasedOnProgreesion(e))
 			{
 				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);

@@ -39,6 +39,8 @@ namespace gswy
 				return;
 			}
 
+			auto enemyTypes = MobTypeSpawnBasedOnProgreesion();
+
 			for (auto& portal : allPortals)
 			{	
 				// Check active
@@ -61,10 +63,43 @@ namespace gswy
 				}
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				m_parentWorld->Unpack(portal, transform);
-				auto e = MemoryManager::Make_shared<SpawnEvent>(g_enemyTypes[RAND_I(0, g_enemyTypes.size())], transform->GetPos3D());
+				auto e = MemoryManager::Make_shared<SpawnEvent>(enemyTypes[RAND_I(0, enemyTypes.size())], transform->GetPos3D());
 				queue->Publish(e);
 				coolDownController->Update(dt);
 			}
+		}
+
+		std::vector<GameObjectType> MobTypeSpawnBasedOnProgreesion()
+		{
+			auto level = GameLevelMapManager::GetInstance()->m_currentLevel;
+			auto wave = GameLevelMapManager::GetInstance()->m_currentWave;
+			std::vector<GameObjectType> enemyTypes;
+			switch (level)
+			{
+			case 0:
+				enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2 };
+				break;
+			case 1:
+				enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2};
+				if (wave == 4)
+				{
+					enemyTypes.push_back(GameObjectType::ENEMY_BOSS_1);
+				}
+				break;
+			case 2:
+				enemyTypes = { GameObjectType::ENEMY_1, GameObjectType::ENEMY_2, GameObjectType::ENEMY_BOSS_1 };
+				if (wave == 4)
+				{
+					enemyTypes.push_back(GameObjectType::ENEMY_BOSS_2);
+				}
+				break;
+			case 3:
+				enemyTypes = g_enemyTypes;
+				break;
+			default:
+				break;
+			}
+			return enemyTypes;
 		}
 	};
 }

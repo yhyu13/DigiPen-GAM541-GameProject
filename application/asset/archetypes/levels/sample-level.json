@@ -9,12 +9,29 @@
   ],
   "data":
   {
-	"wave_start": 1,
-	"wave_max":1,
-	"level_start":3,
+  	"level_start":0,
 	"level_max":3,
 	"coins": 1000,
-	"time_per_wave": 2,
-	"coins_per_mob" : 2
+	"coins_per_mob" : 2,
+	"Level_0":{
+	"wave_start": 1,
+	"wave_max":1,
+	"time_per_wave": 2
+	},
+	"Level_1":{
+	"wave_start": 1,
+	"wave_max":1,
+	"time_per_wave": 2
+	},
+	"Level_2":{
+	"wave_start": 1,
+	"wave_max":1,
+	"time_per_wave": 2
+	},
+	"Level_3":{
+	"wave_start": 1,
+	"wave_max":1,
+	"time_per_wave": 2
+	},
   }
 }

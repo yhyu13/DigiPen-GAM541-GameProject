@@ -65,10 +65,12 @@ namespace gswy
 			GameObjectFactory* factory = GameObjectFactory::GetInstance();
 			factory->LoadResources("./asset/archetypes/resources.json");
 			// TODO: remove Load resources and entities
+			ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel0.png", "SampleLevel0");
 			ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel1.png", "SampleLevel1");
 			ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel2.png", "SampleLevel2");
 			ResourceAllocator<Texture2D>::GetInstance()->Create("./asset/SampleLevel3.png", "SampleLevel3");
 			// TODO : remove loading map test
+			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel0.json", "SampleLevel0");
 			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel1.json", "SampleLevel1");
 			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel2.json", "SampleLevel2");
 			ResourceAllocator<TileMap>::GetInstance()->Create("./asset/SampleLevel3.json", "SampleLevel3");
@@ -78,6 +80,7 @@ namespace gswy
 			InventoryManager::GetInstance()->LoadInventory("./asset/archetypes/levels/inventory-level-1.json");
 
 			GameLevelMapManager::GetInstance()->ResetLevelData();
+			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel0");
 			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel1");
 			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel2");
 			GameLevelMapManager::GetInstance()->AddTileMap("SampleLevel3");
@@ -288,6 +291,11 @@ namespace gswy
 		{
 			if (auto event = dynamic_pointer_cast<LoadLevelLogoEvent>(e))
 			{
+				// Level 0 does not have a level logo
+				if (event->m_level == 0)
+				{
+					return;
+				}
 				auto lvl = Str(event->m_level);
 				// Level Start logo
 				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Level_" + lvl);
@@ -345,33 +353,38 @@ namespace gswy
 		}
 		void OnLoadLevelClearLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
-			// Level CLear logo
-			auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Level_Clear");
-			auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-			auto active = ActiveCom();
-			logo.AddComponent(active);
-			auto sprite = SpriteCom();
-			auto m_sprite = sprite.Get();
-			m_sprite->SetSpriteTexture(logoTexture);
-			m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
-			m_sprite->SetSpritePosition(vec3(0));
-			logo.AddComponent(sprite);
-			auto transform = TransformCom(0, 0, Z_ORDER(9000));
-			logo.AddComponent(transform);
-			auto body = BodyCom();
-			body.SetPos(transform.GetPos());
-			logo.AddComponent(body);
-			auto attch = AttachedMovementCom();
-			attch.followPos = true;
-			attch.rPos = vec2(0, 0.25);
-			logo.AddComponent(attch);
-			auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
-			logo.AddComponent(owner);
-			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-			auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
-			queue->Publish(_e, 2.0f);
-			auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
-			queue->Publish(e2);
+			if (auto event = std::dynamic_pointer_cast<LoadLevelClearEvent>(e))
+			{
+				// Level CLear logo
+				auto logoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Level_Clear");
+				auto logo = m_world->GenerateEntity(GameObjectType::BACKGROUND);
+				auto active = ActiveCom();
+				logo.AddComponent(active);
+				auto sprite = SpriteCom();
+				auto m_sprite = sprite.Get();
+				m_sprite->SetSpriteTexture(logoTexture);
+				m_sprite->SetSpriteScale(vec2(1, 1.0 / logoTexture->GetWidth() * logoTexture->GetHeight()));
+				m_sprite->SetSpritePosition(vec3(0));
+				logo.AddComponent(sprite);
+				auto transform = TransformCom(0, 0, Z_ORDER(9000));
+				logo.AddComponent(transform);
+				auto body = BodyCom();
+				body.SetPos(transform.GetPos());
+				logo.AddComponent(body);
+				auto attch = AttachedMovementCom();
+				attch.followPos = true;
+				attch.rPos = vec2(0, 0.25);
+				logo.AddComponent(attch);
+				auto owner = OwnershiptCom<GameObjectType>(m_world->GetAllEntityWithType(GameObjectType::PLAYER)[0]);
+				logo.AddComponent(owner);
+				auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+				auto _e = MemoryManager::Make_shared<FadeEvent>(logo.GetEntity(), 1.f, -0.5f, 1.f, EventType::GC);
+				queue->Publish(_e, 2.0f);
+				auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
+				queue->Publish(e2);
+				auto e3 = MemoryManager::Make_shared<LoadGameWorldEvent>(event->m_level, false);
+				queue->Publish(e3, 3.1f);
+			}
 		}
 		void OnLoadWonLogo(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
@@ -402,7 +415,7 @@ namespace gswy
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtPlayerLocationEvent>("Victory", 1, 1);
 			queue->Publish(e3);
 			auto e4 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-			queue->Publish(e4, 3);
+			queue->Publish(e4, 3.1f);
 			auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
 			queue->Publish(e2);
 			auto audio = AudioManager::GetInstance();
@@ -437,7 +450,7 @@ namespace gswy
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtPlayerLocationEvent>("Defeat", 1, 1);
 			queue->Publish(e3);
 			auto e4 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-			queue->Publish(e4, 3);
+			queue->Publish(e4, 3.1f);
 			auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
 			queue->Publish(e2);
 			auto audio = AudioManager::GetInstance();
@@ -472,7 +485,7 @@ namespace gswy
 			auto e3 = MemoryManager::Make_shared<PlaySoundAtPlayerLocationEvent>("Defeat", 1, 1);
 			queue->Publish(e3);
 			auto e4 = MemoryManager::Make_shared<LoadMainMenuEvent>();
-			queue->Publish(e4, 3);
+			queue->Publish(e4, 3.1f);
 			auto e2 = MemoryManager::Make_shared<CanPlayerInputEvent>(false);
 			queue->Publish(e2);
 			auto audio = AudioManager::GetInstance();

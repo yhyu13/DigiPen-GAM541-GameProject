@@ -34,7 +34,7 @@ void gswy::GameLevelMapManager::StartWave()
 	DEBUG_PRINT("Start Wave " + Str(m_currentWave));
 	m_waveStart = true;
 	m_timeOut = false;
-	m_timeRemaining = m_timePerLevel;
+	m_timeRemaining = m_timePerWave;
 
 	if (m_world)
 	{
@@ -207,8 +207,6 @@ void gswy::GameLevelMapManager::Update(double dt)
 					auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 					auto e1 = MemoryManager::Make_shared<LoadLevelClearEvent>(m_currentLevel);
 					queue->Publish(e1);
-					auto e3 = MemoryManager::Make_shared<LoadGameWorldEvent>(m_currentLevel, false);
-					queue->Publish(e3, 3);
 					SetIsLoading(true);
 				}
 				else
@@ -242,23 +240,31 @@ void gswy::GameLevelMapManager::ResetLevelData()
 	Json::Value items = root["data"];
 
 	m_coins = items["coins"].asInt();
-
 	ASSERT(!(m_coins >= 0), "Coin must be positive or zero!");
-
-	m_currentWave = items["wave_start"].asInt();
-	m_maxWave = items["wave_max"].asInt();
-
-	ASSERT(!(m_maxWave >= m_currentWave && m_currentWave >=0), "Wave setup error!");
 
 	m_currentLevel = items["level_start"].asInt();
 	m_maxLevel = items["level_max"].asInt();
+	ASSERT(!(m_maxLevel >= m_currentLevel && m_currentLevel >= 0 && m_maxLevel<=3), "Level setup error!");
 
-	ASSERT(!(m_maxLevel >= m_currentLevel && m_currentLevel >= 0), "Level setup error!");
+	m_levelData.clear();
+	// Load all four levels
+	for (int i = 0; i < 4; i++)
+	{
+		LevelData data;
+		Json::Value data_ = items["Level_"+Str(i)];
+		data.wave_start = data_["wave_start"].asInt();
+		data.wave_max = data_["wave_max"].asInt();
+		ASSERT(!(data.wave_max >= data.wave_start && data.wave_start >= 0), "Wave setup error!");
 
-	m_timePerLevel = items["time_per_wave"].asInt();
-	m_timeRemaining = m_timePerLevel;
+		data.time_per_wave = data_["time_per_wave"].asDouble();
+		ASSERT(!(data.time_per_wave >= 0), "Time setup error!");
 
-	ASSERT(!(m_timePerLevel >= 0), "Time setup error!");
+		m_levelData.push_back(data);
+	}
+
+	m_currentWave = m_levelData[m_currentLevel].wave_start;
+	m_maxWave = m_levelData[m_currentLevel].wave_max;
+	m_timePerWave = m_levelData[m_currentLevel].time_per_wave;
 }
 
 /*
@@ -294,7 +300,9 @@ bool gswy::GameLevelMapManager::AdvanceLevel()
 {
 	if (++m_currentLevel <= m_maxLevel)
 	{
-		m_currentWave = 1;
+		m_currentWave = m_levelData[m_currentLevel].wave_start;
+		m_maxWave = m_levelData[m_currentLevel].wave_max;
+		m_timePerWave = m_levelData[m_currentLevel].time_per_wave;
 		return true;
 	}
 	else

@@ -369,6 +369,13 @@ namespace gswy {
 	private:
 		GameLevelMapManager();
 	public:
+		struct LevelData
+		{
+			int wave_start;
+			int wave_max;
+			double time_per_wave;
+		};
+
 		std::shared_ptr<GameWorld<GameObjectType>> m_world;
 
 		bool m_isAnyLevelLoaded;
@@ -384,7 +391,9 @@ namespace gswy {
 		int m_currentLevel;
 		int m_maxLevel;
 
-		double m_timePerLevel;
+		double m_timePerWave;
 		double m_timeRemaining;
+
+		std::vector<LevelData> m_levelData;
 	};
 }
