@@ -968,6 +968,7 @@ namespace gswy
 				m_world->SetPause(!m_world->IsPaused());
 				WidgetManager::GetInstance()->GetPauseMenu().SetVisible(m_world->IsPaused());
 				AudioManager::GetInstance()->PauseAllChannels(m_world->IsPaused());
+				WidgetManager::GetInstance()->GetHUD().SetVisible(true);
 			}
 			if (buttonName.compare("Main Menu") == 0)
 			{
