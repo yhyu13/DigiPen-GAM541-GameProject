@@ -173,6 +173,12 @@ namespace gswy
 				queue->Publish(gameLogoEvent, 6.0f);
 				auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
 				queue->Publish(_e1, 10.0f);
+
+				{
+					AudioManager::GetInstance()->StopAllChannels();
+					AudioManager::GetInstance()->Update(0);
+					AudioManager::GetInstance()->PlaySound("Menu_Track", AudioVector3{ 0,0,0 }, -10, 1);
+				}
 			}
 			else
 			{

@@ -32,7 +32,7 @@
       "purchased": 0,
       "installed": 0,
       "text": [
-        "Property : (Active, AOE, Projectile)",
+        "Property : (Active, AOE, Projectile, Pierce)",
         "Slow down enemy effectively",
         "Cost : 2000"
       ],
@@ -109,7 +109,7 @@
       "installed": 0,
       "text": [
         "Property : (Support, Projectile)",
-        "Create copies of projectiles on hit",
+        "Create copies of projectiles on hit (does not apply to Pierce skill)",
         "Cost : 2500"
       ],
       "icon": "./asset/Sprites/fork.png",
