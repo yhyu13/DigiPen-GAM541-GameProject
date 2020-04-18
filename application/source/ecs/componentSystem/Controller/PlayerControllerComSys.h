@@ -110,6 +110,8 @@ namespace gswy
 			{
 				m_howToPlayState = HowToPlayState::HOW_TO_PLAY_1;
 				isShopMenuVisible = WidgetManager::GetInstance()->GetShopMenu().GetVisible();
+
+				WidgetManager::GetInstance()->GetHUD().SetVisible(false);
 			}
 		}
 
@@ -227,6 +229,7 @@ namespace gswy
 					// Set main menu back to visible
 					{
 						WidgetManager::GetInstance()->GetPauseMenu().SetVisible(true);
+						WidgetManager::GetInstance()->GetHUD().SetVisible(true);
 					}
 				}
 				return;
@@ -242,6 +245,7 @@ namespace gswy
 					{
 						WidgetManager::GetInstance()->GetPauseMenu().SetVisible(true);
 						WidgetManager::GetInstance()->GetShopMenu().SetVisible(isShopMenuVisible);
+						WidgetManager::GetInstance()->GetHUD().SetVisible(true);
 					}
 				}
 				else

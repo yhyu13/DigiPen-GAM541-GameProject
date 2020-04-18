@@ -267,6 +267,8 @@ namespace gswy
 				auto cameraPos = event->m_cameraPosition;
 				auto creditsTransform = TransformCom(cameraPos.x, cameraPos.y, Z_ORDER(9500));
 				credit.AddComponent(creditsTransform);
+
+				WidgetManager::GetInstance()->GetHUD().SetVisible(false);
 			}
 		}
 		void OnLoadHowToPlay(EventQueue<GameObjectType, EventType>::EventPtr e)
