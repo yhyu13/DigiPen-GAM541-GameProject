@@ -173,7 +173,7 @@ namespace gswy {
 					auto player = world->GenerateEntity(GameObjectType::PLAYER);
 					player.AddComponent(ActiveCom());
 					auto buffCom = BuffCom();
-					auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.05, -1);
+					auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.1, -1);
 					buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 					player.AddComponent(buffCom);
 

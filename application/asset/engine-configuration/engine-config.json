@@ -9,7 +9,7 @@
 		"Resolution3_X" : 1280, "Resolution3_Y" : 1024,
 		"Resolution4_X" : 1024, "Resolution4_Y" : 768
 	},
-	"startup-screen": false,
+	"startup-screen": true,
 	"max-framerate" : 60,
-	"enable-cheat" : true
+	"enable-cheat" : false
 }

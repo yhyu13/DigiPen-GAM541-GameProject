@@ -62,10 +62,17 @@ namespace gswy
 					prob *= 0;
 					break;
 				case 1:
-					prob *= 1 / 2;
+					if (wave >= 2)
+					{
+						prob *= 1;
+					}
+					else
+					{
+						prob *= 0;
+					}
 					break;
 				case 2:
-					prob *= 1 / 2;
+					prob *= 1;
 					break;
 				case 3:
 					prob *= 1;
