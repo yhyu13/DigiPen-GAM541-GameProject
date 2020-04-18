@@ -155,7 +155,7 @@ namespace gswy {
 			glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &x, &y, nullptr, nullptr);
 			glfwSetWindowMonitor(m_window, nullptr, x, 6, m_windowProperties.m_resolutionX, m_windowProperties.m_resolutionY, GLFW_DONT_CARE);
 		}
-
+		m_windowProperties.m_input->SetMouseMaxPositions(m_windowProperties.m_resolutionX, m_windowProperties.m_resolutionY);
 	}
 
 	void Window::SetVSync(bool on)
