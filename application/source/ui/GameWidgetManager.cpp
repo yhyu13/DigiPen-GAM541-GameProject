@@ -328,6 +328,7 @@ namespace gswy {
 			if (ImGui::Combo("##Resolution", &resulutionPair, resItems, IM_ARRAYSIZE(resItems)))
 			{
 				engine.GetWindow().SetResolution(resulutionPair);
+				WidgetManager::GetInstance()->InvokeButton("Change Resolution");
 			}
 			ImGui::NewLine();
 			ImGui::Separator();

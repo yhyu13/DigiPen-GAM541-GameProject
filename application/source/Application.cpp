@@ -997,6 +997,11 @@ namespace gswy
 			{
 				//m_CameraController.SetAspectRatio(GSWY_GetWindowWidth() / GSWY_GetWindowHeight());
 			}
+			
+			if (buttonName.compare("Change Resolution") == 0)
+			{
+				m_CameraController.SetAspectRatio(GSWY_GetWindowWidth() / GSWY_GetWindowHeight());
+			}
 		}
 
 		void OnInterruption(const int& isFocussed)
