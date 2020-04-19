@@ -99,6 +99,71 @@ namespace gswy
 			}
 		}
 
+		float MobHPBasedOnProgreesion(EventQueue<GameObjectType, EventType>::EventPtr e)
+		{
+			if (auto event = static_pointer_cast<SpawnEvent>(e))
+			{
+				DEBUG_PRINT("Receive " + Str(*e));
+
+				float HP = 0;
+				float HP_multi = 1.0;
+				auto level = GameLevelMapManager::GetInstance()->m_currentLevel;
+				auto wave = GameLevelMapManager::GetInstance()->m_currentWave;
+
+				switch (level)
+				{
+				case 0:
+					HP_multi *= 1;
+					break;
+				case 1:
+					if (wave >= 2)
+					{
+						HP_multi *= 1;
+					}
+					else
+					{
+						HP_multi *= 1.5;
+					}
+					break;
+				case 2:
+					if (wave >= 2)
+					{
+						HP_multi *= 2;
+					}
+					else
+					{
+						HP_multi *= 2.5;
+					}
+					break;
+				case 3:
+					HP_multi *= 2.5;
+					break;
+				default:
+					break;
+				}
+
+				switch (event->m_type)
+				{
+				case GameObjectType::ENEMY_1:
+					HP = 100;
+					break;
+				case GameObjectType::ENEMY_2:
+					HP = 75;
+					break;
+				case GameObjectType::ENEMY_BOSS_1:
+					HP = 250;
+					break;
+				case GameObjectType::ENEMY_BOSS_2:
+					HP = 500;
+					break;
+				default:
+					break;
+				}
+
+				return HP * HP_multi;
+			}
+		}
+
 		void OnSPAWN(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
 			if (auto event = static_pointer_cast<SpawnEvent>(e))
@@ -270,7 +335,7 @@ namespace gswy
 			aabb1.SetPos(transform.GetPos());
 			aabb1.ChooseShape("AABB", bbScale.x, bbScale.y / 70 * 50);
 			obj.AddComponent(aabb1);
-			obj.AddComponent(HitPointCom(100));
+			obj.AddComponent(HitPointCom(MobHPBasedOnProgreesion(e)));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(5));
@@ -280,7 +345,7 @@ namespace gswy
 			auto buffCom = BuffCom();
 			if (RAND_F(0, 1) < MobProbSpawnWithESBasedOnProgreesion(e))
 			{
-				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.20, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 				// Mob energy shield
 				{
@@ -359,7 +424,7 @@ namespace gswy
 			aabb1.SetPos(transform.GetPos());
 			aabb1.ChooseShape("AABB", bbScale.x, bbScale.y / 70 * 50);
 			obj.AddComponent(aabb1);
-			obj.AddComponent(HitPointCom(75));
+			obj.AddComponent(HitPointCom(MobHPBasedOnProgreesion(e)));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(5));
@@ -369,7 +434,7 @@ namespace gswy
 			auto buffCom = BuffCom();
 			if (RAND_F(0, 1) < MobProbSpawnWithESBasedOnProgreesion(e))
 			{
-				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.20, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 				// Mob energy shield
 				{
@@ -447,7 +512,7 @@ namespace gswy
 			aabb1.SetPos(transform.GetPos());
 			aabb1.ChooseShape("AABB", bbScale.x, bbScale.y);
 			obj.AddComponent(aabb1);
-			obj.AddComponent(HitPointCom(200));
+			obj.AddComponent(HitPointCom(MobHPBasedOnProgreesion(e)));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(20));
@@ -457,7 +522,7 @@ namespace gswy
 			auto buffCom = BuffCom();
 			if (RAND_F(0, 1) < MobProbSpawnWithESBasedOnProgreesion(e))
 			{
-				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.20, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 				// Mob energy shield
 				{
@@ -535,7 +600,7 @@ namespace gswy
 			aabb1.SetPos(transform.GetPos());
 			aabb1.ChooseShape("AABB", bbScale.x, bbScale.y);
 			obj.AddComponent(aabb1);
-			obj.AddComponent(HitPointCom(500));
+			obj.AddComponent(HitPointCom(MobHPBasedOnProgreesion(e)));
 			auto cooldown = CoolDownCom(0.1);
 			obj.AddComponent(cooldown);
 			obj.AddComponent(DamageCom(30));
@@ -545,7 +610,7 @@ namespace gswy
 			auto buffCom = BuffCom();
 			if (RAND_F(0, 1) < MobProbSpawnWithESBasedOnProgreesion(e))
 			{
-				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.25, -1);
+				auto HPRegenBuff = MemoryManager::Make_shared<ModifyHPPercentBuff>(0.20, -1);
 				buffCom.AddBuff(HPRegenBuff, HPRegenBuff->m_duration, true);
 				// Mob energy shield
 				{

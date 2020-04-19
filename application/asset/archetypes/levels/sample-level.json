@@ -9,7 +9,7 @@
   ],
   "data":
   {
-  	"level_start":0,
+  	"level_start":3,
 	"level_max":3,
 	"coins": 1000,
 	"coins_per_mob" : 2,

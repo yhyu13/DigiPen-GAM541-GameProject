@@ -181,7 +181,8 @@ namespace gswy
 
 				if (!cooldown->IsFreezed() && !cooldown->IsCoolDown())
 				{
-					HitPoint->AddHitPoint(-Damage->GetDamange());
+					// Cyclone deals damage based on percentage of enemy health
+					HitPoint->AddHitPoint(-(Damage->GetDamange() + HitPoint->GetMaxHP() * 0.075));
 				}
 			}
 			break;

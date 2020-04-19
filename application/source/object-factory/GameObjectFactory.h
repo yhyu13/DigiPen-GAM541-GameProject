@@ -271,7 +271,7 @@ namespace gswy {
 						cyclone_sfx.AddComponent(body);
 						auto cooldown = CoolDownCom(0.15);
 						cyclone_sfx.AddComponent(cooldown);
-						cyclone_sfx.AddComponent(DamageCom(8));
+						cyclone_sfx.AddComponent(DamageCom(20));
 					}
 
 

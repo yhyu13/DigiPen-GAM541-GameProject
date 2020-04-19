@@ -13,7 +13,7 @@
       "installed": 0,
       "text": [
         "Property : (Active, AOE, Projectile)",
-        "Rapid damage",
+        "AOE damage effective to packs of monsters.",
         "Cost : 2000"
       ],
       "key-event": "TRIGGER",
@@ -33,7 +33,7 @@
       "installed": 0,
       "text": [
         "Property : (Active, AOE, Projectile, Pierce)",
-        "Slow down enemy effectively",
+        "Slow down enemy effectively.",
         "Cost : 2000"
       ],
       "key-event": "TRIGGER",
@@ -52,7 +52,7 @@
       "installed": 0,
       "text": [
         "Property : (Active, AOE)",
-        "Seek and destory enemies with AOE damage",
+        "Seek and destory enemies with high AOE damage.",
         "Cost : 2000"
       ],
       "key-event": "TRIGGER",
@@ -71,7 +71,7 @@
       "installed": 0,
       "text": [
         "Property : (Active, AOE)",
-        "Spin to vitory",
+        "Deals damage based on percentage of enemy health.",
         "Cost : 2000"
       ],
       "key-event": "PRESS",
@@ -90,7 +90,7 @@
       "installed": 0,
       "text": [
         "Property : (Support, Projectile)",
-        "Shoot multiple projectiles",
+        "Create multiple projectiles.",
         "Cost : 2500"
       ],
       "icon": "./asset/Sprites/multiple-projectile.png",
@@ -109,7 +109,7 @@
       "installed": 0,
       "text": [
         "Property : (Support, Projectile)",
-        "Create copies of projectiles on hit (does not apply to Pierce skill)",
+        "Create copies of projectiles on hit (does not apply to skill with Pierce Property).",
         "Cost : 2500"
       ],
       "icon": "./asset/Sprites/fork.png",
@@ -127,7 +127,7 @@
       "installed": 0,
       "text": [
         "Property : (Support, AOE)",
-        "Increase Area of Effect",
+        "Increase the Area of Effect (multiples of this skill stack).",
         "Cost : 2500"
       ],
       "icon": "./asset/Sprites/aoe.png",
@@ -145,7 +145,7 @@
       "installed": 0,
       "text": [
         "Property : (Support, AOE)",
-        "Decrease Area of Effect but increase damage",
+        "Decrease Area of Effect but increase damage by 50% (multiples of this skill stack).",
         "Cost : 2500"
       ],
       "icon": "./asset/Sprites/aoe-inactive.png",
