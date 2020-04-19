@@ -358,8 +358,8 @@ namespace gswy {
 			}
 			if (ImGui::BeginPopupModal("Change Resolution?", NULL, popupFlag))
 			{
-				ImGui::Text("Change resolution would restart the game.\n");
-				ImGui::Text("This will lose all the progress.\n");
+				ImGui::Text("A resolution change would restart the game.\n");
+				ImGui::Text("You will lose all the progress.\n");
 				ImGui::Separator();
 				WidgetManager::GetInstance()->PushPopModalStyle();
 				if (ImGui::Button("Yes", ImVec2(120, 0)))
