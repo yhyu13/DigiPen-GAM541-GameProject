@@ -558,16 +558,6 @@ namespace gswy
 			}
 			// Load entities
 			{
-				auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
-				auto active = ActiveCom();
-				background.AddComponent(active);
-				auto sprite = SpriteCom();
-				auto m_sprite = sprite.Get();
-				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel1"));
-				m_sprite->SetSpriteScale(vec2(10, 10));
-				m_sprite->SetSpritePosition(vec3(0,0,-0.5));
-				background.AddComponent(sprite);
-
 				auto gameLogoTexture = ResourceAllocator<Texture2D>::GetInstance()->Get("Game-Logo");
 				auto m_gameLogo = (m_world->GenerateEntity(GameObjectType::GAME_LOGO));
 				auto gameLogoActive = ActiveCom();
@@ -595,8 +585,8 @@ namespace gswy
 
 		void LoadGameWorld(int level, bool reloadGameWorld = false)
 		{
-			auto sampleID = Str(level);
-			DEBUG_PRINT("Loading map ID " + sampleID);
+			m_sampleID = Str(level);
+			DEBUG_PRINT("Loading map ID " + m_sampleID);
 			// Re-load game world
 			{
 				if (reloadGameWorld)
@@ -620,7 +610,7 @@ namespace gswy
 			}
 			// Set background
 			{
-				auto size = ResourceAllocator<TileMap>::GetInstance()->Get("SampleLevel"+ sampleID)->GetMap()->getSize();
+				auto size = ResourceAllocator<TileMap>::GetInstance()->Get("SampleLevel"+ m_sampleID)->GetMap()->getSize();
 				auto background = m_world->GenerateEntity(GameObjectType::BACKGROUND);
 				auto active = ActiveCom();
 				background.AddComponent(active);
@@ -628,7 +618,7 @@ namespace gswy
 				auto m_sprite = sprite.Get();
 				// 32.f is the tilewidth and tileheight of each tile in the tilemap
 				m_sprite->SetSpriteScale(vec2(size.x * 32.f / GSWY_GetPixel2WorldNumerator(), size.y * 32.f / GSWY_GetPixel2WorldNumerator()));
-				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"+ sampleID));
+				m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel"+ m_sampleID));
 				m_sprite->SetSpritePosition(vec3((size.x/2-0.5)* 32.f / GSWY_GetPixel2WorldNumerator(), -(size.y / 2 - 0.5) * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
 				background.AddComponent(sprite);
 			}
@@ -693,7 +683,7 @@ namespace gswy
 			// Load content of this level
 			{
 				
-				GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel" + sampleID);
+				GameLevelMapManager::GetInstance()->SetCurrentMapName("SampleLevel" + m_sampleID);
 				GameLevelMapManager::GetInstance()->LoadCurrentTileMap(m_world);
 				GameLevelMapManager::GetInstance()->SetIsLoading(false);
 			}
@@ -939,6 +929,7 @@ namespace gswy
 		OrthographicCameraController m_miniMapCameraController;
 		std::shared_ptr<gswy::Texture2D> m_miniMapTexture;
 		std::shared_ptr<GameWorld<GameObjectType>> m_world;
+		std::string m_sampleID;
 
 	/*
 	ImGui call back
@@ -1021,6 +1012,22 @@ namespace gswy
 			if (buttonName.compare("Change Resolution") == 0)
 			{
 				m_CameraController.SetAspectRatio(GSWY_GetWindowWidth() / GSWY_GetWindowHeight());
+				m_miniMapCameraController.SetAspectRatio(GSWY_GetWindowWidth() / GSWY_GetWindowHeight());
+				m_miniMapTexture = Texture2D::Create(GSWY_GetWindowWidth(), GSWY_GetWindowHeight());
+
+				auto background = m_world->GetAllEntityWithType(GameObjectType::BACKGROUND);
+				if (!background.empty())
+				{
+					auto entity = background[0];
+					ComponentDecorator<SpriteCom, GameObjectType> sprite;
+					m_world->Unpack(entity, sprite);
+					auto m_sprite = sprite->Get();
+					auto size = ResourceAllocator<TileMap>::GetInstance()->Get("SampleLevel" + m_sampleID)->GetMap()->getSize();
+					// 32.f is the tilewidth and tileheight of each tile in the tilemap
+					m_sprite->SetSpriteScale(vec2(size.x * 32.f / GSWY_GetPixel2WorldNumerator(), size.y * 32.f / GSWY_GetPixel2WorldNumerator()));
+					m_sprite->SetSpriteTexture(ResourceAllocator<Texture2D>::GetInstance()->Get("SampleLevel" + m_sampleID));
+					m_sprite->SetSpritePosition(vec3((size.x / 2 - 0.5) * 32.f / GSWY_GetPixel2WorldNumerator(), -(size.y / 2 - 0.5) * 32.f / GSWY_GetPixel2WorldNumerator(), -0.5));
+				}
 			}
 		}
 

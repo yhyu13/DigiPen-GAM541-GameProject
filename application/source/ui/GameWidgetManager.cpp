@@ -309,6 +309,8 @@ namespace gswy {
 
 	void OptionMenu::Render()
 	{
+		auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
+		auto manager = WidgetManager::GetInstance()->GetPauseMenu().manager;
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImVec2 windowsize = ImVec2(GetWindowSize_X(), GetWindowSize_Y());
 		//ImVec2 optionWindowSize = PosScaleBySize(ImVec2{ 500, 535 }, viewport->Size);
@@ -352,9 +354,35 @@ namespace gswy {
 			static int resulutionPair = 0;
 			if (ImGui::Combo("##Resolution", &resulutionPair, resItems, IM_ARRAYSIZE(resItems)))
 			{
-				engine.GetWindow().SetResolution(resulutionPair);
-				WidgetManager::GetInstance()->InvokeButton("Change Resolution");
+				ImGui::OpenPopup("Change Resolution?");
 			}
+			if (ImGui::BeginPopupModal("Change Resolution?", NULL, popupFlag))
+			{
+				ImGui::Text("Change resolution would restart the game.\n");
+				ImGui::Text("This will lose all the progress.\n");
+				ImGui::Separator();
+				WidgetManager::GetInstance()->PushPopModalStyle();
+				if (ImGui::Button("Yes", ImVec2(120, 0)))
+				{
+					auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
+					ImGui::CloseCurrentPopup();
+					manager->InvokeButton("Main Menu");
+					engine.GetWindow().SetResolution(resulutionPair);
+					WidgetManager::GetInstance()->InvokeButton("Change Resolution");
+					WidgetManager::GetInstance()->GetOptionMenu().SetVisible(false);
+					WidgetManager::GetInstance()->GetMainMenu().SetVisible(true);
+				}
+				ImGui::SetItemDefaultFocus();
+				ImGui::SameLine();
+				if (ImGui::Button("No", ImVec2(120, 0)))
+				{
+					auto e3 = MemoryManager::Make_shared<PlaySoundAtCameraLocationEvent>("click_sound", 1, 1); queue->Publish(e3);
+					ImGui::CloseCurrentPopup();
+				}
+				WidgetManager::GetInstance()->PopPopupModalStyle();
+				ImGui::EndPopup();
+			}
+
 			ImGui::NewLine();
 			ImGui::Separator();
 			ImGui::Dummy({ optionWindowSize.x, 30 });
