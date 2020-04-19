@@ -328,6 +328,23 @@ namespace gswy {
 			Engine& engine = Engine::Get();
 
 			int selectBarWidth = ScaleSize({ 120,0 }).x;
+
+			//Resolution
+			ImGui::SetCursorPosX(30);
+			ImGui::Text("Difficulty");
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(selectBarWidth);
+			ImGui::SetCursorPosX(ImGui::GetWindowSize().x - selectBarWidth * 2);
+			const char* diffItems[] = { "Easy", "Hard"};
+			if (ImGui::Combo("##Difficulty", &m_gameDifficulty, diffItems, IM_ARRAYSIZE(diffItems)))
+			{
+				DEBUG_PRINT("Difficulty is now: " + Str(diffItems[m_gameDifficulty]));
+			}
+			ImGui::NewLine();
+			ImGui::Separator();
+			ImGui::Dummy({ optionWindowSize.x, 30 });
+
+
 			//Full Screen
 			ImGui::SetCursorPosX(30);
 			ImGui::Text("Full Screen");
@@ -434,7 +451,7 @@ namespace gswy {
 			ImGui::Separator();
 
 			//Back Button
-			ImGui::SetCursorPos({ 30,550 });
+			ImGui::SetCursorPos({ 30,600 });
 			if (ImGui::Button("Back", ImVec2(100,30)) || ImGui::IsKeyReleased(ImGui::GetKeyIndex(ImGuiKey_Escape)))
 			{
 				WidgetManager::GetInstance()->GetOptionMenu().SetVisible(false);
@@ -458,6 +475,7 @@ namespace gswy {
 	{
 		SoundManager::GetInstance()->CallForMuteBGM(m_MuteMusic);
 		SoundManager::GetInstance()->CallForMuteSFX(m_MuteSFX);
+		GameLevelMapManager::GetInstance()->SetGameDifficulty(m_gameDifficulty);
 	}
 
 	HUD::HUD() 

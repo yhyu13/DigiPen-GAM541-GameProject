@@ -52,9 +52,10 @@ namespace gswy
 			{
 				DEBUG_PRINT("Receive " + Str(*e));
 
-				auto prob = 0.25f;
-				auto level = GameLevelMapManager::GetInstance()->m_currentLevel;
-				auto wave = GameLevelMapManager::GetInstance()->m_currentWave;
+				float prob = 0.25f;
+				int level = GameLevelMapManager::GetInstance()->m_currentLevel;
+				int wave = GameLevelMapManager::GetInstance()->m_currentWave;
+				int diff = GameLevelMapManager::GetInstance()->m_gameDifficulty;
 
 				switch (level)
 				{
@@ -107,8 +108,21 @@ namespace gswy
 
 				float HP = 0;
 				float HP_multi = 1.0;
-				auto level = GameLevelMapManager::GetInstance()->m_currentLevel;
-				auto wave = GameLevelMapManager::GetInstance()->m_currentWave;
+				int level = GameLevelMapManager::GetInstance()->m_currentLevel;
+				int wave = GameLevelMapManager::GetInstance()->m_currentWave;
+				int diff = GameLevelMapManager::GetInstance()->m_gameDifficulty;
+
+				switch (diff)
+				{
+				case 0:
+					HP_multi *= 0.75;
+					break;
+				case 1:
+					HP_multi *= 1;
+					break;
+				default:
+					break;
+				}
 
 				switch (level)
 				{

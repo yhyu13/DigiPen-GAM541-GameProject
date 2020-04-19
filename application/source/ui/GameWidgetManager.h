@@ -237,6 +237,7 @@ namespace gswy {
 		bool m_MuteMusic = false;
 		bool m_MuteSFX = false;
 		bool m_CallFromMainMenu = false;
+		int m_gameDifficulty = {0};
 	};
 
 	class WidgetManager

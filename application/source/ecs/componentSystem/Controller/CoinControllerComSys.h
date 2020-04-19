@@ -21,7 +21,8 @@ namespace gswy
 {
 	class CoinControllerComSys : public BaseComponentSystem<GameObjectType> {
 	private:
-		int m_coinsValue = { 2 };
+		int m_coinsBaseValue = { 2 };
+		int m_coinsValue = m_coinsBaseValue;
 	public:
 		CoinControllerComSys() {
 		}
@@ -33,7 +34,7 @@ namespace gswy
 			file >> root;
 			file.close();
 			Json::Value items = root["data"];
-			m_coinsValue = items["coins_per_mob"].asInt();
+			m_coinsBaseValue = items["coins_per_mob"].asInt();
 
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			queue->Subscribe<CoinControllerComSys>(this, EventType::ADD_COIN, &CoinControllerComSys::OnAddCoin);
@@ -76,6 +77,19 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
+			int diff = GameLevelMapManager::GetInstance()->m_gameDifficulty;
+			switch (diff)
+			{
+			case 0:
+				m_coinsValue = (int)((float)m_coinsBaseValue * 1.5f);
+				break;
+			case 1:
+				m_coinsValue = m_coinsBaseValue * 1;
+				break;
+			default:
+				break;
+			}
+
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto coins = m_parentWorld->GetAllEntityWithType(GameObjectType::COIN);
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];

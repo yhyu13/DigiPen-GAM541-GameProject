@@ -268,6 +268,24 @@ void gswy::GameLevelMapManager::ResetLevelData()
 }
 
 /*
+Get difficulty {0,1,2,...}
+*/
+
+int gswy::GameLevelMapManager::GetGameDifficulty()
+{
+	return m_gameDifficulty;
+}
+
+/*
+Set difficulty
+*/
+
+void gswy::GameLevelMapManager::SetGameDifficulty(int diff)
+{
+	m_gameDifficulty = diff;
+}
+
+/*
 A level is finished when there is no remaining enemy, this level remains started, and time is out.
 */
 

@@ -351,6 +351,16 @@ namespace gswy {
 		*/
 		void ResetLevelData();
 
+		/*
+			Get difficulty {0,1,2,...}
+		*/
+		int GetGameDifficulty();
+
+		/*
+			Set difficulty
+		*/
+		void SetGameDifficulty(int diff);
+
 	private:
 		/*
 			A level is finished when there is no remaining enemy, this level remains started, and time is out.
@@ -390,6 +400,8 @@ namespace gswy {
 
 		int m_currentLevel;
 		int m_maxLevel;
+
+		int m_gameDifficulty;
 
 		double m_timePerWave;
 		double m_timeRemaining;
