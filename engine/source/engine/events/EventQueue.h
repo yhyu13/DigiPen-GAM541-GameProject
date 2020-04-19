@@ -106,8 +106,6 @@ namespace gswy {
 
 		void RemoveDelayedEvent(EventType type)
 		{
-			//m_subscribers.erase(type);
-
 			std::vector<DelayedEventPtr> tempEvents;
 			tempEvents.reserve(m_events.size());
 

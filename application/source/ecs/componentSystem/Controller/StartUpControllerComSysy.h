@@ -73,36 +73,60 @@ namespace gswy
 				case SplashScreenState::DIGIPEN_LOGO:
 				{
 					queue->RemoveDelayedEvent(EventType::FADE);
+					queue->RemoveDelayedEvent(EventType::_FADE_ING);
+					queue->RemoveDelayedEvent(EventType::_FADE_END);
 					queue->RemoveDelayedEvent(EventType::LOAD_TEAM_LOGO);
+					queue->RemoveDelayedEvent(EventType::LOAD_GAME_LOGO);
+					queue->RemoveDelayedEvent(EventType::LOAD_MAIN_MENU);
 
-					auto m_DigipenLogo = m_parentWorld->GetAllEntityWithType(GameObjectType::DIGIPEN_LOGO)[0];
-					auto _e = MemoryManager::Make_shared<FadeEvent>(m_DigipenLogo, 1.f, -0.5f, 0.1f, EventType::GC);
-					queue->Publish(_e);
+					auto m_DigipenLogo = m_parentWorld->GetAllEntityWithType(GameObjectType::DIGIPEN_LOGO);
+					if (!m_DigipenLogo.empty())
+					{
+						auto _e = MemoryManager::Make_shared<GCEvent>(m_DigipenLogo[0]);
+						queue->Publish(_e);
+					}
 
 					auto teamLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_TEAM_LOGO);
 					queue->Publish(teamLogoEvent);
+
+					auto gameLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_GAME_LOGO);
+					queue->Publish(gameLogoEvent, 2.0f);
+					auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
+					queue->Publish(_e1, 6.0f);
 				}
 				break;
 
 				case SplashScreenState::TEAM_LOGO:
 				{
 					queue->RemoveDelayedEvent(EventType::FADE);
+					queue->RemoveDelayedEvent(EventType::_FADE_ING);
+					queue->RemoveDelayedEvent(EventType::_FADE_END);
 					queue->RemoveDelayedEvent(EventType::LOAD_GAME_LOGO);
+					queue->RemoveDelayedEvent(EventType::LOAD_MAIN_MENU);
 
-					auto m_teamLogo = m_parentWorld->GetAllEntityWithType(GameObjectType::TEAM_LOGO)[0];
-					auto _e = MemoryManager::Make_shared<FadeEvent>(m_teamLogo, 1.f, -0.5f, 0.1f, EventType::GC);
-					queue->Publish(_e);
+					auto m_teamLogo = m_parentWorld->GetAllEntityWithType(GameObjectType::TEAM_LOGO);
+					if (!m_teamLogo.empty())
+					{
+						auto _e = MemoryManager::Make_shared<GCEvent>(m_teamLogo[0]);
+						queue->Publish(_e);
+					}
 
 					auto gameLogoEvent = MemoryManager::Make_shared<Event<GameObjectType, EventType>>(EventType::LOAD_GAME_LOGO);
 					queue->Publish(gameLogoEvent);
+
+					auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
+					queue->Publish(_e1, 4.0f);
 				}
 				break;
 
 				case SplashScreenState::GAME_LOGO:
 				{
-					auto m_gameLogo = m_parentWorld->GetAllEntityWithType(GameObjectType::GAME_LOGO)[0];
-					auto _e = MemoryManager::Make_shared<FadeEvent>(m_gameLogo, 1.f, -0.5f, 0.1f, EventType::GC);
-					queue->Publish(_e);
+					auto m_gameLogo = m_parentWorld->GetAllEntityWithType(GameObjectType::GAME_LOGO);
+					if (!m_gameLogo.empty())
+					{
+						auto _e = MemoryManager::Make_shared<GCEvent>(m_gameLogo[0]);
+						queue->Publish(_e);
+					}
 
 					auto _e1 = MemoryManager::Make_shared<LoadMainMenuEvent>();
 					queue->Publish(_e1, dt);
