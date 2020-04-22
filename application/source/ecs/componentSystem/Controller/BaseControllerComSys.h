@@ -33,6 +33,7 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
+			SyncRegisteredEntities();
 			auto base = m_parentWorld->GetAllEntityWithType(GameObjectType::BASE)[0];
 			auto baseHPCom = GetComponent<HitPointCom>(base);
 

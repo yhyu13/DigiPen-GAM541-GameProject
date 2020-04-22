@@ -29,7 +29,7 @@ namespace gswy
 
 		virtual void Render(double dt) override
 		{
-			lock();
+			SyncRegisteredEntities();
 			for (auto& entity : m_registeredEntities) {
 				// Check active
 				ComponentDecorator<ActiveCom, GameObjectType> active;
@@ -44,7 +44,6 @@ namespace gswy
 				/* Drawing sprites */
 				sprite->Get()->Draw();
 			}
-			unlock();
 		}
 	};
 }

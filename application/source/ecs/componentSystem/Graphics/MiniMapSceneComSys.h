@@ -27,7 +27,7 @@ namespace gswy
 		}
 
 		virtual void PreRenderUpdate(double dt) override {
-			lock();
+			SyncRegisteredEntities();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				ComponentDecorator<MiniMapSprite, GameObjectType> sprite;
@@ -37,12 +37,11 @@ namespace gswy
 				/* Update sprite location */
 				m_ControlSprite->SetSpritePosition(transform->GetPos3D());
 			}
-			unlock();
 		}
 
 		virtual void Render2(double dt) override
 		{
-			lock();
+			SyncRegisteredEntities();
 			for (auto& entity : m_registeredEntities) {
 				// Check active
 				ComponentDecorator<ActiveCom, GameObjectType> active;
@@ -57,7 +56,6 @@ namespace gswy
 				/* Drawing sprites */
 				sprite->Get()->Draw();
 			}
-			unlock();
 		}
 	};
 }

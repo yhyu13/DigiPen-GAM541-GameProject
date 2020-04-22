@@ -22,14 +22,14 @@ Creation date	: 01/26/2020
 #endif
 
 
-#define ASSERT(x, ...) { if(x == true) { ENGINE_CRITICAL("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define ASSERT(x, ...) { if(x == false) { ENGINE_CRITICAL("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
 
 #ifdef _DEBUG 
 #define DEBUG_PRINT(x) ENGINE_DEBUG(Str(x))
 #define PRINT(x) ENGINE_INFO(Str(x));
 #else
 #define DEBUG_PRINT(x)
-#define PRINT(x) ENGINE_INFO(Str(x));
+#define PRINT(x) 
 #endif // DEBUG
 
 template <typename T>

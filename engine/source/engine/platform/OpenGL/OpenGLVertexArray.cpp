@@ -35,7 +35,7 @@ namespace gswy {
 		case gswy::ShaderDataType::Bool:     return GL_BOOL;
 		}
 
-		ASSERT(true, "Unknown ShaderDataType!");
+		ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	}
 
@@ -61,7 +61,7 @@ namespace gswy {
 
 	void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
 	{
-		ASSERT(vertexBuffer->GetLayout().GetElements().size() == 0, "Vertex Buffer has no layout!")
+		ASSERT(vertexBuffer->GetLayout().GetElements().size() != 0, "Vertex Buffer has no layout!")
 
 		glBindVertexArray(m_RendererID);
 		vertexBuffer->Bind();

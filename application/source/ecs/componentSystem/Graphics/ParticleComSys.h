@@ -46,7 +46,7 @@ namespace gswy
 
 		virtual void Render(double dt) override
 		{
-			lock();
+			SyncRegisteredEntities();
 			for (auto& entity : m_registeredEntities) {
 				// Check active
 				ComponentDecorator<ActiveCom, GameObjectType> active;
@@ -60,7 +60,6 @@ namespace gswy
 				/* Drawing particle */
 				particle->Get()->Render();
 			}
-			unlock();
 		}
 
 		virtual void PreRenderUpdate(double ts) override
@@ -70,7 +69,7 @@ namespace gswy
 				return;
 			}
 
-			lock();
+			SyncRegisteredEntities();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<ParticleCom, GameObjectType> particle;
 				ComponentDecorator<TransformCom, GameObjectType> transform;
@@ -79,7 +78,7 @@ namespace gswy
 				/*
 					Emit particles with different type of particle system
 				*/
-				if (dynamic_cast<ExplosionParticle*>(particle->Get().get()))
+				if (dynamic_pointer_cast<ExplosionParticle>(particle->Get()))
 				{
 					if (particle->IsActive())
 					{
@@ -93,7 +92,6 @@ namespace gswy
 				}
 				particle->Get()->Update(ts);
 			}
-			unlock();
 		}
 	private:
 		std::map<std::string, Particle> m_particleMap;

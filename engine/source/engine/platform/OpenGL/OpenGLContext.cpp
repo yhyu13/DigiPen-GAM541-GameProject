@@ -22,14 +22,14 @@ namespace gswy {
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 		: m_WindowHandle(windowHandle)
 	{
-		ASSERT(windowHandle == nullptr, "Window handle is null");
+		ASSERT(windowHandle != nullptr, "Window handle is null");
 	}
 
 	void OpenGLContext::Init()
 	{
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		ASSERT(status, "Failed to initialize Glad");
+		ASSERT(status==0, "Failed to initialize Glad");
 		
 		//Put info to Log
 		ENGINE_INFO(" OpenGL Info:");

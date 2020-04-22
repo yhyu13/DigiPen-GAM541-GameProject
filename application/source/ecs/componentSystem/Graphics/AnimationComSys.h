@@ -28,7 +28,7 @@ namespace gswy
 		}
 
 		virtual void PreRenderUpdate(double dt) override {
-			lock();
+			SyncRegisteredEntities();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<AnimationCom, GameObjectType> animation;
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
@@ -47,7 +47,6 @@ namespace gswy
 					m_sprite->SetSpriteHeight(currentFrame->height);
 				}
 			}
-			unlock();
 		}
 
 	};

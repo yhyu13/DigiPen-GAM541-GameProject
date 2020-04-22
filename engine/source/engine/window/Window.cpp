@@ -203,7 +203,7 @@ namespace gswy {
 		m_windowProperties.m_Res4 = { windowConfiguration["Resolution4_X"].asInt(), windowConfiguration["Resolution4_Y"].asInt() };
 
 		int success = glfwInit();
-		ASSERT(success < 0, "Failed to initialize GLFW!");
+		ASSERT(success >= 0, "Failed to initialize GLFW!");
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
@@ -238,13 +238,13 @@ namespace gswy {
 			m_window = glfwCreateWindow(m_windowProperties.m_width, m_windowProperties.m_height, m_windowProperties.m_title.c_str(), nullptr, nullptr);
 			m_windowProperties.m_input->SetMouseMaxPositions(m_windowProperties.m_width, m_windowProperties.m_height);
 		}
-		ASSERT(m_window == nullptr, "Failed to create window!");
+		ASSERT(m_window != nullptr, "Failed to create window!");
 
 		glfwMakeContextCurrent(m_window);
 		glfwSetWindowUserPointer(m_window, &m_windowProperties);
 
 		success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		ASSERT(success < 0, "Could not initialize Glad!");
+		ASSERT(success >= 0, "Could not initialize Glad!");
 
 		//Put info to Log
 		ENGINE_INFO(" OpenGL Info:");

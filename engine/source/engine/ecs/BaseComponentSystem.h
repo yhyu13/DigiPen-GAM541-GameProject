@@ -12,7 +12,7 @@ Creation date	: 02/03/2020
 - End Header ----------------------------*/
 
 #pragma once
-#include <atomic>
+#include "engine/thread/Lock.h"
 #include "Entity.h"
 #include "BitMaskSignature.h"
 #include "ComponentDecorator.h"
@@ -64,10 +64,10 @@ namespace gswy {
 		BaseComponentSystem::BaseComponentSystem() : m_parentWorld(nullptr) {
 			m_flag.clear();
 		}
-
 		virtual ~BaseComponentSystem() = default;
-		BaseComponentSystem(const BaseComponentSystem&) = default;
-		BaseComponentSystem& operator=(const BaseComponentSystem&) = default;
+
+		BaseComponentSystem(const BaseComponentSystem&) = delete;
+		BaseComponentSystem& operator=(const BaseComponentSystem&) = delete;
 
 		virtual void Init() {
 		}
@@ -102,42 +102,40 @@ namespace gswy {
 			m_parentWorld = world;
 		}
 
+		void SyncRegisteredEntities()
+		{
+			atomic_lock_guard lock(m_flag);
+			{
+				m_registeredEntities = m_bufferedRegisteredEntities;
+			}
+		}
+
 		void AddEntity(const Entity<EntityType>& entity) {
-			lock();
-			m_registeredEntities.push_back(entity);
-			unlock();
+			atomic_lock_guard lock(m_flag);
+			{
+				m_bufferedRegisteredEntities.push_back(entity);
+			}
 		}
 
 		void RemoveEntity(const Entity<EntityType>& entity) {
-			lock();
-			if (!m_registeredEntities.empty())
+			atomic_lock_guard lock(m_flag);
 			{
-				m_registeredEntities.erase(std::remove(m_registeredEntities.begin(), m_registeredEntities.end(), entity), m_registeredEntities.end());
+				if (!m_bufferedRegisteredEntities.empty())
+				{
+					m_bufferedRegisteredEntities.erase(std::remove(m_bufferedRegisteredEntities.begin(), m_bufferedRegisteredEntities.end(), entity), m_bufferedRegisteredEntities.end());
+				}
 			}
-			unlock();
 		}
 
 		BitMaskSignature& GetSystemSignature() {
 			return m_systemSignature;
 		}
-		
-		inline void lock()
-		{
-			while (m_flag.test_and_set(std::memory_order_acquire)) {}
-		}
-
-		inline void unlock()
-		{
-			m_flag.clear(std::memory_order_release);
-		}
 
 	protected:
-
 		std::vector<Entity<EntityType>> m_registeredEntities;
+		std::vector<Entity<EntityType>> m_bufferedRegisteredEntities;
 		BitMaskSignature m_systemSignature;
 		GameWorld<EntityType>* m_parentWorld;
-
-	private:
 		std::atomic_flag m_flag;
 	};
 }

@@ -19,7 +19,6 @@ Creation date	: 01/26/2020
 #include "engine/Main.h"
 #include "ecs/componentSystem/Audio/SoundManager.h"
 
-using namespace gswy;
 
 namespace gswy
 {
@@ -851,6 +850,7 @@ namespace gswy
 
 		virtual void OnUpdate(double ts) override
 		{
+			static ThreadPool pool(4);
 			BeforeFrame();
 			double dt = (!m_world->IsPaused())? ts: 0;
 			{
@@ -868,6 +868,14 @@ namespace gswy
 					TIME("System Update");
 					Update(dt);
 				}
+				auto task1 = pool.enqueue(
+					[this, dt] {
+						/*{
+							TIME("System Update");
+							Update(dt);
+						}*/
+					}
+				);
 				{
 					TIME("PreRender Update");
 					PreRenderUpdate(dt);
@@ -880,6 +888,7 @@ namespace gswy
 					}
 					Render(dt);
 				}
+				task1.wait();
 				{
 					TIME("Manager Update");
 					EventQueue<GameObjectType, EventType>::GetInstance()->Update(dt);
@@ -901,7 +910,7 @@ namespace gswy
 
 
 			WidgetManager::GetInstance()->RenderUI();
-	#ifdef _DEBUG
+	//#ifdef _DEBUG
 			Instrumentor* instrumentor = Instrumentor::GetInstance();
 			ImGui::SetNextWindowBgAlpha(0.0f);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -918,7 +927,7 @@ namespace gswy
 			ImGui::End();
 			ImGui::PopStyleVar(1);
 			ImGui::PopStyleColor(3);
-	#endif // _DEBUG
+	//#endif // _DEBUG
 
 		}
 
@@ -1046,6 +1055,8 @@ namespace gswy
 		}
 	};
 }
+
+using namespace gswy;
 
 class Application : public Engine {
 public:

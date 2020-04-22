@@ -173,7 +173,7 @@ namespace gswy
 		}
 
 		virtual void Update(double dt) override {
-
+			SyncRegisteredEntities();
 			{
 				// Process constant input regardless of whether the game is paused or not
 				ProcessConstantInput();
@@ -570,12 +570,6 @@ namespace gswy
 
 		void HandlePlayerMovement(double dt)
 		{
-			// Do nothing if delta time has been set to 0 (game is paused)
-			if (!dt)
-			{
-				return;
-			}
-
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			auto tileMapObj = GameLevelMapManager::GetInstance()->GetCurrentMap();
 			auto entity = m_parentWorld->GetAllEntityWithType(GameObjectType::PLAYER)[0];

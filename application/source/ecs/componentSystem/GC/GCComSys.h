@@ -89,11 +89,13 @@ namespace gswy
 		}
 
 		virtual void PostRenderUpdate(double dt) override {
+			SyncRegisteredEntities();
 			GC();
 		}
 
 		void OnGC(EventQueue<GameObjectType, EventType>::EventPtr e)
 		{
+			atomic_lock_guard lock(m_flag);
 			if (auto event = static_pointer_cast<GCEvent>(e))
 			{
 				DEBUG_PRINT("Receive " + Str(*e));

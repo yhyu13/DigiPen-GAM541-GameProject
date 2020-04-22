@@ -33,7 +33,11 @@ namespace gswy
 		}
 
 		virtual void Update(double dt) override {
-
+			if (!dt)
+			{
+				return;
+			}
+			SyncRegisteredEntities();
 			static double timer = m_updateTimer;
 			timer += dt;
 			if (timer < m_updateTimer)

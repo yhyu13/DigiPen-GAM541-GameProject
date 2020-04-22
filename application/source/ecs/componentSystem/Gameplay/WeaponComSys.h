@@ -37,6 +37,7 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
+			SyncRegisteredEntities();
 			if (m_spawnZOrder > 9000) m_spawnZOrder = 5000;
 		}
 

@@ -73,7 +73,7 @@ namespace gswy
 			}
 			if (debugDraw)
 			{
-				lock();
+				SyncRegisteredEntities();
 				for (auto& entity : m_registeredEntities)
 				{
 					// Check active
@@ -103,7 +103,6 @@ namespace gswy
 							transform->GetRotation(), glm::vec4(1.0f));
 					}
 				}
-				unlock();
 			}
 		}
 #endif // _DEBUG
@@ -115,6 +114,7 @@ namespace gswy
 			{
 				return;
 			}
+			SyncRegisteredEntities();
 
 			//Updating Positions
 			for (auto& entity : m_registeredEntities)
@@ -135,9 +135,8 @@ namespace gswy
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			//For Collisions
 			auto collision = Collisions::GetInstance();
-			vector<Entity<GameObjectType>> new_(m_registeredEntities);
-			auto first_Entity = new_.begin();
-			auto last_Entity = new_.end();
+			auto first_Entity = m_registeredEntities.begin();
+			auto last_Entity = m_registeredEntities.end();
 			for (; first_Entity != last_Entity; ++first_Entity)
 			{
 				// Check active

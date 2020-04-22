@@ -24,8 +24,9 @@ Creation date	: 01/26/2020
 #include "engine/framerate-controller/FramerateController.h"
 #include "engine/input/InputManager.h"
 
-///// Entry point /////
-//#include "engine/Main.h"
+///// Thread /////
+#include "engine/thread/Lock.h"
+#include "engine/thread/ThreadPool.h"
 
 ///// Memory point /////
 #include "engine/allocator/MemoryManager.h"

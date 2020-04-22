@@ -240,11 +240,11 @@ void gswy::GameLevelMapManager::ResetLevelData()
 	Json::Value items = root["data"];
 
 	m_coins = items["coins"].asInt();
-	ASSERT(!(m_coins >= 0), "Coin must be positive or zero!");
+	ASSERT((m_coins >= 0), "Coin must be positive or zero!");
 
 	m_currentLevel = items["level_start"].asInt();
 	m_maxLevel = items["level_max"].asInt();
-	ASSERT(!(m_maxLevel >= m_currentLevel && m_currentLevel >= 0 && m_maxLevel<=3), "Level setup error!");
+	ASSERT((m_maxLevel >= m_currentLevel && m_currentLevel >= 0 && m_maxLevel<=3), "Level setup error!");
 
 	m_levelData.clear();
 	// Load all four levels
@@ -254,10 +254,10 @@ void gswy::GameLevelMapManager::ResetLevelData()
 		Json::Value data_ = items["Level_"+Str(i)];
 		data.wave_start = data_["wave_start"].asInt();
 		data.wave_max = data_["wave_max"].asInt();
-		ASSERT(!(data.wave_max >= data.wave_start && data.wave_start >= 0), "Wave setup error!");
+		ASSERT((data.wave_max >= data.wave_start && data.wave_start >= 0), "Wave setup error!");
 
 		data.time_per_wave = data_["time_per_wave"].asDouble();
-		ASSERT(!(data.time_per_wave >= 0), "Time setup error!");
+		ASSERT((data.time_per_wave >= 0), "Time setup error!");
 
 		m_levelData.push_back(data);
 	}

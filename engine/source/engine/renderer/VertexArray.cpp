@@ -27,7 +27,7 @@ namespace gswy {
 			case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLVertexArray>();
 		}
 
-		ASSERT(true, "Unknown RendererAPI!");
+		ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
 }

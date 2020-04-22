@@ -51,6 +51,12 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
+			if (!dt)
+			{
+				return;
+			}
+			SyncRegisteredEntities();
+
 			// Lock a random enemy as target
 			std::vector<Entity<GameObjectType>> enemies = m_parentWorld->GetAllEntityWithType(g_enemyTypes);
 

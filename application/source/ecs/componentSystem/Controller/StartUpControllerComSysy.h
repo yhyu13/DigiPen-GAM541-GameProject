@@ -54,6 +54,7 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
+			SyncRegisteredEntities();
 			auto input = InputManager::GetInstance();
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 

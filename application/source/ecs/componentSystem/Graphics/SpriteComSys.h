@@ -28,7 +28,7 @@ namespace gswy
 		}
 
 		virtual void PreRenderUpdate(double dt) override {
-			lock();
+			SyncRegisteredEntities();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<TransformCom, GameObjectType> transform;
 				ComponentDecorator<SpriteCom, GameObjectType> sprite;
@@ -39,7 +39,6 @@ namespace gswy
 				m_ControlSprite->SetSpritePosition(transform->GetPos3D());
 				m_ControlSprite->SetSpriteRotation(transform->GetRotation());
 			}
-			unlock();
 		}
 	};
 }

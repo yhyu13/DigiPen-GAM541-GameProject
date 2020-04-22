@@ -26,7 +26,7 @@ namespace gswy {
 		case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLTexture2D>(width, height);
 		}
 
-		ASSERT(true, "Unknown RendererAPI!");
+		ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
 	std::shared_ptr<Texture2D> Texture2D::Create(const std::string& path)
@@ -37,7 +37,7 @@ namespace gswy {
 			case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLTexture2D>(path);
 		}
 
-		ASSERT(true, "Unknown RendererAPI!");
+		ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
 	

@@ -63,12 +63,12 @@ namespace gswy {
 	}
 
 	bool InputManager::IsKeyPressed(const int& keyCode) {
-		ASSERT(keyCode > KEY_LAST, "Invalid key-code.");
+		ASSERT(keyCode <= KEY_LAST, "Invalid key-code.");
 		return m_currentKeyBoardState[keyCode];
 	}
 
 	bool InputManager::IsKeyTriggered(const int& keyCode) {
-		ASSERT(keyCode > KEY_LAST, "Invalid key-code.");
+		ASSERT(keyCode <= KEY_LAST, "Invalid key-code.");
 
 		if (m_currentKeyBoardState[keyCode] && !m_previousKeyBoardState[keyCode]) {
 			return true;
@@ -77,7 +77,7 @@ namespace gswy {
 	}
 
 	bool InputManager::IsKeyReleased(const int& keyCode) {
-		ASSERT(keyCode > KEY_LAST, "Invalid key-code.");
+		ASSERT(keyCode <= KEY_LAST, "Invalid key-code.");
 
 		if (!m_currentKeyBoardState[keyCode] && m_previousKeyBoardState[keyCode]) {
 			return true;
@@ -87,7 +87,7 @@ namespace gswy {
 
 	bool InputManager::IsMouseButtonTriggered(const int& mouseButton)
 	{
-		ASSERT(mouseButton > MOUSE_BUTTON_LAST, "Invalid mouse-button.");
+		ASSERT(mouseButton <= MOUSE_BUTTON_LAST, "Invalid mouse-button.");
 		if (m_currentMouseButtonState[mouseButton] && !m_previousMouseButtonState[mouseButton]) {
 			return true;
 		}
@@ -96,12 +96,12 @@ namespace gswy {
 
 
 	bool InputManager::IsMouseButtonPressed(const int& mouseButton) {
-		ASSERT(mouseButton > MOUSE_BUTTON_LAST, "Invalid mouse-button.");
+		ASSERT(mouseButton <= MOUSE_BUTTON_LAST, "Invalid mouse-button.");
 		return m_currentMouseButtonState[mouseButton];
 	}
 
 	bool InputManager::IsMouseButtonReleased(const int& mouseButton) {
-		ASSERT(mouseButton > MOUSE_BUTTON_LAST, "Invalid mouse-button.");
+		ASSERT(mouseButton <= MOUSE_BUTTON_LAST, "Invalid mouse-button.");
 
 		if (!m_currentMouseButtonState[mouseButton] && m_previousMouseButtonState[mouseButton]) {
 			return true;

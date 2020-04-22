@@ -30,6 +30,7 @@ namespace gswy
 
 		virtual void Update(double ts) override
 		{
+			SyncRegisteredEntities();
 			for (auto& entity : m_registeredEntities)
 			{
 				auto active = GetComponent<ActiveCom>(entity);

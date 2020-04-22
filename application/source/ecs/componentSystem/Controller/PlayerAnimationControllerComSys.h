@@ -58,8 +58,12 @@ namespace gswy
 		}
 
 		virtual void Update(double dt) override {
+			if (!dt)
+			{
+				return;
+			}
+			SyncRegisteredEntities();
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
-
 			{
 				// Turn on or off the razer sfx
 				auto razer_sfx = m_parentWorld->GetAllEntityWithType(GameObjectType::CYCLONE_SFX)[0];

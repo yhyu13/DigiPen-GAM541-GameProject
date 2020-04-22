@@ -26,6 +26,11 @@ namespace gswy
 		}
 
 		virtual void Update(double dt) override {
+			if (!dt)
+			{
+				return;
+			}
+			SyncRegisteredEntities();
 			auto queue = EventQueue<GameObjectType, EventType>::GetInstance();
 			for (auto& entity : m_registeredEntities) {
 				ComponentDecorator<LifeTimeCom, GameObjectType> lifeTime;

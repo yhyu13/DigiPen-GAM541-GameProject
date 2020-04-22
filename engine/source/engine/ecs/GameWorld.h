@@ -15,7 +15,7 @@ Creation date	: 02/02/2020
 #include <memory>
 #include <vector>
 #include <map>
-
+#include "engine/thread/ThreadPool.h"
 #include "EntityManager.h"
 #include "ComponentManager.h"
 #include "BaseComponentSystem.h"
@@ -209,6 +209,5 @@ namespace gswy {
 		std::vector<std::shared_ptr<BaseComponentSystem<EntityType>>> m_systems;
 		std::vector<std::shared_ptr<BaseComponentManager>> m_componentManagers;
 		std::map<Entity<EntityType>, BitMaskSignature> m_entityMasks;
-
 	};
 }

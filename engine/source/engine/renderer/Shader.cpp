@@ -25,7 +25,7 @@ namespace gswy {
 			case RendererAPI::API::OpenGL: return MemoryManager::Make_shared<OpenGLShader>(vertexShaderPath, fragmentShaderPath);
 		}
 		
-		ASSERT(true, "Unknown RendererAPI");
+		ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
 

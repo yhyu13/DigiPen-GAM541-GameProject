@@ -77,6 +77,11 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
+			if (!dt)
+			{
+				return;
+			}
+			SyncRegisteredEntities();
 			int diff = GameLevelMapManager::GetInstance()->m_gameDifficulty;
 			switch (diff)
 			{
@@ -110,7 +115,6 @@ namespace gswy
 				{
 					bodyCom->SetVelocity(glm::normalize(delta) * 1.5f);
 				}
-				
 			}
 		}
 	};

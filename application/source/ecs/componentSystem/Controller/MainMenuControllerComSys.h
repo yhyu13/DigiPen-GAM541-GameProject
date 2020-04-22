@@ -53,6 +53,7 @@ namespace gswy
 		}
 
 		virtual void Update(double dt) override {
+			SyncRegisteredEntities();
 			{
 				ProcessConstantInput();
 			}

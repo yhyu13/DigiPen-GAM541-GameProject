@@ -48,14 +48,19 @@ namespace gswy
 
 		virtual void Update(double dt) override
 		{
-			m_registeredEntities = m_parentWorld->GetAllEntityWithType(GameObjectType::TOWER_BUILD);
+			if (!dt)
+			{
+				return;
+			}
+			SyncRegisteredEntities();
+			auto towers = m_parentWorld->GetAllEntityWithType(GameObjectType::TOWER_BUILD);
 			m_bCanBuild = GameLevelMapManager::GetInstance()->GetCoins() >= m_towerBuildCost;
 
 			// Manage tower icon color
 			if (!m_bCanBuild)
 			{
 				// Turn all tower to off due to insufficent coins
-				for (auto& tower : m_registeredEntities)
+				for (auto& tower : towers)
 				{
 					if (GetComponent<ActiveCom>(tower)->IsActive())
 					{
@@ -66,7 +71,7 @@ namespace gswy
 			else
 			{
 				// Turn on all un-selected tower if enough coins
-				for (auto& tower : m_registeredEntities)
+				for (auto& tower : towers)
 				{
 					auto children = GetComponent<ChildrenCom<GameObjectType>>(tower)->GetEntities();
 					if (!children.empty())
@@ -89,8 +94,8 @@ namespace gswy
 			{
 				for (auto& towerType : g_towerTypes)
 				{
-					m_registeredEntities = m_parentWorld->GetAllEntityWithType(towerType);
-					for (auto& tower : m_registeredEntities)
+					towers = m_parentWorld->GetAllEntityWithType(towerType);
+					for (auto& tower : towers)
 					{
 						// Check active
 						ComponentDecorator<ActiveCom, GameObjectType> active;
