@@ -213,6 +213,7 @@ namespace gswy
 
 					auto e = MemoryManager::Make_shared<GCEvent>(entityB);
 					queue->Publish(e, 0.15);
+					
 
 					if (owner->GetEntity().m_type == GameObjectType::PLAYER)
 					{

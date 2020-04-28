@@ -287,8 +287,8 @@ namespace gswy {
 						Json::Value component = components[j];
 						std::string name = component["component"].asString();
 						if (name._Equal("transform")) {
-							int x = component["x"].asInt();
-							int y = component["y"].asInt();
+							float x = component["x"].asFloat();
+							float y = component["y"].asFloat();
 							float z = component["z"].asFloat();
 							background.AddComponent(TransformCom(x, y, z));
 							continue;

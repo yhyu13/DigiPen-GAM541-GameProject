@@ -850,7 +850,6 @@ namespace gswy
 
 		virtual void OnUpdate(double ts) override
 		{
-			static ThreadPool pool(4);
 			BeforeFrame();
 			double dt = (!m_world->IsPaused())? ts: 0;
 			{
@@ -866,16 +865,10 @@ namespace gswy
 				}
 				{
 					TIME("System Update");
-					Update(dt);
+					//Update(dt);
+					m_world->MultiThreadUpdate(dt);
+					m_world->MultiThreadJoin();
 				}
-				auto task1 = pool.enqueue(
-					[this, dt] {
-						/*{
-							TIME("System Update");
-							Update(dt);
-						}*/
-					}
-				);
 				{
 					TIME("PreRender Update");
 					PreRenderUpdate(dt);
@@ -888,7 +881,6 @@ namespace gswy
 					}
 					Render(dt);
 				}
-				task1.wait();
 				{
 					TIME("Manager Update");
 					EventQueue<GameObjectType, EventType>::GetInstance()->Update(dt);

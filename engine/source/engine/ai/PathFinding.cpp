@@ -20,6 +20,7 @@ gswy::PathFinding::PathFinding(int x, int y)
 	ROW(x),
 	COL(y)
 {
+	m_flag.clear();
 	// Create a closed list and initialise it to false which means 
 	// that no cell has been included yet 
 	// This closed list is implemented as a boolean 2D array 
@@ -49,6 +50,17 @@ gswy::PathFinding::~PathFinding()
 	MemoryManager::Free(cellDetails, sizeof(cell*) * ROW);
 }
 
+const std::vector<ivec2> gswy::PathFinding::SearchAndReturnResult(const Grid_float& grid, const ivec2& src, const ivec2& dest)
+{
+	atomic_lock_guard lock(m_flag);
+	std::vector<ivec2> result;
+	if (Search(grid, src, dest))
+	{
+		result = GetResult();
+	}
+	return result;
+}
+
 bool gswy::PathFinding::Search(const Grid_float & grid, const ivec2 & src, const ivec2 & dest)
 {
 	Pair _src = Pair(src.x, src.y);
@@ -56,7 +68,7 @@ bool gswy::PathFinding::Search(const Grid_float & grid, const ivec2 & src, const
 	return aStarSearch(grid, _src, _dest);
 }
 
-const std::vector<ivec2>& gswy::PathFinding::GetResult()
+const std::vector<ivec2> gswy::PathFinding::GetResult()
 {
 	return m_reuslt;
 }
@@ -108,7 +120,7 @@ double gswy::PathFinding::calculateHValue(int row, int col, Pair dest)
 		// L2
 		return D * sqrt(dx * dx + dy * dy);
 	case 2:
-		// L-infinity
+		// Octile
 		return D * (dx + dy) + (D2 - 2 * D) * MIN(dx, dy);
 	}
 }

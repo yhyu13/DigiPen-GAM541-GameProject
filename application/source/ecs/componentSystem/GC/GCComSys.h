@@ -63,7 +63,6 @@ namespace gswy
 			for (auto& e : m_GCList)
 			{
 				DEBUG_PRINT("Delete: " + Str(e));
-
 				m_parentWorld->RemoveComponent<ActiveCom>(e);
 				m_parentWorld->RemoveComponent<AnimationCom>(e);
 				m_parentWorld->RemoveComponent<AttachedMovementCom>(e);
@@ -89,7 +88,6 @@ namespace gswy
 		}
 
 		virtual void PostRenderUpdate(double dt) override {
-			SyncRegisteredEntities();
 			GC();
 		}
 

@@ -21,6 +21,8 @@ Creation date	: 01/26/2020
 #define ENGINE_API 
 #endif
 
+#define NONCOPYABLE(Class) Class( const Class& ) = delete; Class( const Class&& ) = delete; \
+							Class& operator=(const Class&) = delete; Class& operator=(const Class&&) = delete;
 
 #define ASSERT(x, ...) { if(x == false) { ENGINE_CRITICAL("Assertion failed: {0}", __VA_ARGS__); __debugbreak(); } }
 

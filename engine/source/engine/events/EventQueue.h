@@ -89,7 +89,7 @@ namespace gswy {
 			}
 		}
 
-		void Publish(EventPtr event, const float& delay) {
+		void Publish(EventPtr event, const double delay) {
 			DelayedEventPtr delayedEvent = MemoryManager::Make_shared<DelayedEvent<EntityType, EventType>>(event, delay);
 			m_events.push(delayedEvent);
 		}

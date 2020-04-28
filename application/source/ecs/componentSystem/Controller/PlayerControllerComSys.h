@@ -515,9 +515,10 @@ namespace gswy
 
 			m_pathResult.clear();
 			m_pathResultCubicSplline.clear();
-			if (Astar->Search(*pathGrid, _src, _dest))
+			auto result = Astar->SearchAndReturnResult(*pathGrid, _src, _dest);
+			if (!result.empty())
 			{
-				m_pathResult = Astar->GetResult();
+				m_pathResult = result;
 				int step = 1;
 				for (int i = 0; i < m_pathResult.size() - step; i += step)
 				{

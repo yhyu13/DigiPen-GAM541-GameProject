@@ -15,6 +15,7 @@ Creation date	: 02/03/2020
 #include <map>
 #include "Entity.h"
 #include "engine/allocator/MemoryManager.h"
+#include "engine/thread/Lock.h"
 
 #define RESERVED_SIZE 2048
 
@@ -58,12 +59,14 @@ namespace gswy {
 
 		ComponentManager() {
 			m_entities.reserve(RESERVED_SIZE);
+			m_flag.clear();
 		}
 
 		~ComponentManager() {
 		}
 
 		uint32_t AddComponentToEntity(Entity<EntityType> entity, ComponentType& component) {
+			atomic_lock_guard lock(m_flag);
 			uint32_t index = m_components.m_size++;
 			m_components.m_data.push_back(component);
 			m_entitiesAndComponentIndexes[entity] = index;
@@ -72,6 +75,7 @@ namespace gswy {
 		}
 
 		ComponentType* GetComponentByEntity(Entity<EntityType> entity) {
+			atomic_lock_guard lock(m_flag);
 			if (m_entitiesAndComponentIndexes.find(entity) != m_entitiesAndComponentIndexes.end())
 			{
 				return &m_components.m_data.at(m_entitiesAndComponentIndexes[entity]);
@@ -89,26 +93,35 @@ namespace gswy {
 			component instance.
 		*/
 		void RemoveComponentFromEntity(Entity<EntityType> entity) {
+			atomic_lock_guard lock(m_flag);
 
-			if (m_entitiesAndComponentIndexes.find(entity) == m_entitiesAndComponentIndexes.end())
-				return;
+			auto it = m_entitiesAndComponentIndexes.find(entity);
+			if (it != m_entitiesAndComponentIndexes.end())
+			{
+				uint32_t index = it->second;
+				uint32_t lastIndex = --m_components.m_size;
 
-			uint32_t index = m_entitiesAndComponentIndexes[entity];
-			uint32_t lastIndex = --m_components.m_size;
-			
-			// move the component data from last index to the index of the component data just removed
-			std::swap(m_components.m_data[index], m_components.m_data[lastIndex]);
-			m_components.m_data.pop_back();
-			
-			// updating the mapping for the moved entity
-			m_entitiesAndComponentIndexes[m_entities[lastIndex]] = index;
-			std::swap(m_entities[index], m_entities[lastIndex]);
-			m_entities.pop_back(); // reduce the m_entities as entities are being destroyed
+				// move the component data from last index to the index of the component data just removed
+				std::swap(m_components.m_data[index], m_components.m_data[lastIndex]);
+				m_components.m_data.pop_back();
 
-			m_entitiesAndComponentIndexes.erase(entity);
+				// updating the mapping for the moved entity
+				m_entitiesAndComponentIndexes[m_entities[lastIndex]] = index;
+				std::swap(m_entities[index], m_entities[lastIndex]);
+				m_entities.pop_back(); // reduce the m_entities as entities are being destroyed
+
+				m_entitiesAndComponentIndexes.erase(entity);
+			}
+		}
+
+		bool HasEntity(Entity<EntityType> entity)
+		{
+			atomic_lock_guard lock(m_flag);
+			return (m_entitiesAndComponentIndexes.find(entity) != m_entitiesAndComponentIndexes.end());
 		}
 
 	private:
+		std::atomic_flag m_flag;
 
 		/*
 			Stores all the component instances in an array

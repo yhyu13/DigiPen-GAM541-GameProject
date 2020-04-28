@@ -35,12 +35,12 @@ namespace gswy {
 	public:
 		template<typename ComponentType>
 		void AddComponent() {
-			m_mask |= (1 << GetComponentTypeIndex<ComponentType>());
+			m_mask |= ((uint64_t)1 << GetComponentTypeIndex<ComponentType>());
 		}
 
 		template<typename ComponentType>
 		void RemoveComponent() {
-			m_mask &= ~(1 << GetComponentTypeIndex<ComponentType>());
+			m_mask &= ~((uint64_t)1 << GetComponentTypeIndex<ComponentType>());
 		}
 
 		bool IsNewMatch(BitMaskSignature oldMask, BitMaskSignature systemMask);
@@ -48,8 +48,7 @@ namespace gswy {
 		bool IsAMatch(BitMaskSignature systemMask);
 
 	private:
-		unsigned int m_mask = 0;
-
+		uint64_t m_mask = 0;
 	};
 
 }

@@ -35,7 +35,7 @@ namespace gswy {
 		void  SetTimeSecond(int timeSec) { m_TimerSec = timeSec; }
 		void  SetWave(int wave) { m_Wave = wave; }
 		void  SetCoinNum(int coinNum) { m_Coins = coinNum; }
-		void  SetLevel(float lvl) { m_Level = lvl; }
+		void  SetLevel(int lvl) { m_Level = lvl; }
 		void  SetBaseHP(float val) { m_BaseHP = val; }
 		void  SetPlayerHP(float val) { m_PlayerHP = val; }
 		void  SetGameProgress(float val) { m_Progress = val; }

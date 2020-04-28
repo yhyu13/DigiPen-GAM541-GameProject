@@ -96,9 +96,9 @@ namespace gswy
 					auto _dest = tileMapObj->World2Grid(dest);
 					auto _src = tileMapObj->World2Grid(src);
 
-					if (Astar->Search(*pathGrid, _src, _dest))
+					auto result = Astar->SearchAndReturnResult(*pathGrid, _src, _dest);
+					if (!result.empty())
 					{
-						auto result = Astar->GetResult();
 						// 1. Rotate
 						auto nextPos = tileMapObj->Grid2World((result.size() > 3) ? result[3] : result.back());
 						auto delta = nextPos - src;

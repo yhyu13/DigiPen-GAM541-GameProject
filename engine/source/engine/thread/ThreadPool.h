@@ -20,12 +20,14 @@ Creation date: 04/21/2020
 #include <future>
 #include <functional>
 #include <stdexcept>
+#include "engine/EngineCore.h"
 
 namespace gswy
 {
     class ThreadPool {
     public:
-        ThreadPool(size_t threads = 4);
+        NONCOPYABLE(ThreadPool);
+        ThreadPool();
         template<class F, class... Args>
         auto enqueue(F&& f, Args&&... args)
             ->std::future<typename std::result_of<F(Args...)>::type>;
@@ -43,9 +45,10 @@ namespace gswy
     };
 
     // the constructor just launches some amount of workers
-    inline ThreadPool::ThreadPool(size_t threads)
+    inline ThreadPool::ThreadPool()
         : stop(false)
     {
+        size_t threads = (size_t)std::thread::hardware_concurrency();
         for (size_t i = 0; i < threads; ++i)
             workers.emplace_back(
                 [this]

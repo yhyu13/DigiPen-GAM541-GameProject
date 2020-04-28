@@ -15,6 +15,7 @@ Creation date	: 02/03/2020
 
 #include "Entity.h"
 #include "engine/exception/EngineException.h"
+#include "engine/thread/Lock.h"
 
 namespace gswy {
 
@@ -29,23 +30,27 @@ namespace gswy {
 	public:
 
 		EntityManager() : m_entityCount(0) {
+			m_flag.clear();
 		}
 
 		~EntityManager() {
 		}
 
 		const Entity<EntityType> Create(EntityType type) {
+			atomic_lock_guard lock(m_flag);
 			m_typeToEntity[type].push_back(++m_entityCount);
 			return Entity<EntityType>(m_entityCount, type);
 		}
 
 		void Destroy(Entity<EntityType>& entity) {
+			atomic_lock_guard lock(m_flag);
 			std::vector<unsigned int>& vec = m_typeToEntity[entity.m_type];
 			vec.erase(std::remove(vec.begin(), vec.end(), entity.m_id), vec.end());
 		}
 
-		const std::vector<unsigned int>& GetAllEntityIDWithType(EntityType type)
+		const std::vector<unsigned int> GetAllEntityIDWithType(EntityType type)
 		{
+			atomic_lock_guard lock(m_flag);
 			if (m_typeToEntity.find(type) != m_typeToEntity.end())
 			{
 				return m_typeToEntity[type];
@@ -55,9 +60,9 @@ namespace gswy {
 				return std::vector<unsigned int>();
 			}
 		}
-	protected:
 
 	private:
+		std::atomic_flag m_flag;
 		std::map<EntityType, std::vector<unsigned int>> m_typeToEntity;
 		unsigned int m_entityCount;
 	};

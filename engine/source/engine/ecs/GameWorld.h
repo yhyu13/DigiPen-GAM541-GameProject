@@ -74,6 +74,25 @@ namespace gswy {
 			}
 		}
 
+		void MultiThreadUpdate(double frameTime) {
+			for (auto&& system : m_systems) {
+				m_jobs.push_back(
+					m_pool.enqueue([frameTime, system]() {
+					system->Update(frameTime);
+				})
+				);
+			}
+		}
+
+		void MultiThreadJoin()
+		{
+			for (auto& job : m_jobs)
+			{
+				job.wait();
+			}
+			m_jobs.clear();
+		}
+
 		void PreRenderUpdate(double frameTime) {
 			for (auto&& system : m_systems) {
 				system->PreRenderUpdate(frameTime);
@@ -171,10 +190,13 @@ namespace gswy {
 		template<typename ComponentType>
 		void RemoveComponent(const Entity<EntityType>& entity) {
 			ComponentManager<ComponentType, EntityType>* manager = GetComponentManager<ComponentType>();
-			manager->RemoveComponentFromEntity(entity);
-			BitMaskSignature oldMask = m_entityMasks[entity];
-			m_entityMasks[entity].RemoveComponent<ComponentType>();
-			UpdateComponentSystems(entity, oldMask);
+			if (manager->HasEntity(entity))
+			{
+				manager->RemoveComponentFromEntity(entity);
+				BitMaskSignature oldMask = m_entityMasks[entity];
+				m_entityMasks[entity].RemoveComponent<ComponentType>();
+				UpdateComponentSystems(entity, oldMask);
+			}
 		}
 
 		/*
@@ -209,5 +231,8 @@ namespace gswy {
 		std::vector<std::shared_ptr<BaseComponentSystem<EntityType>>> m_systems;
 		std::vector<std::shared_ptr<BaseComponentManager>> m_componentManagers;
 		std::map<Entity<EntityType>, BitMaskSignature> m_entityMasks;
+
+		ThreadPool m_pool;
+		std::vector<std::future<void>> m_jobs;
 	};
 }

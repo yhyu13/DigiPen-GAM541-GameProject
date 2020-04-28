@@ -234,8 +234,8 @@ namespace gswy
 			//Simulating Friction
 			if (!m_overrideFriction)
 			{
-				m_VelX *= 0.99;
-				m_VelY *= 0.99;
+				m_VelX *= 0.99f;
+				m_VelY *= 0.99f;
 			}
 
 			//Nullifying All Forces To Activate with Press of a button

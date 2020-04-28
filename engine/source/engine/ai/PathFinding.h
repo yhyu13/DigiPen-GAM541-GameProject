@@ -13,6 +13,7 @@ Creation date: 03/04/2020
 #include <vector>
 #include <stack>
 #include <set>
+#include "engine/thread/Lock.h"
 #include "Grid_float.h"
 #include "Math_ai.h"
 
@@ -48,10 +49,16 @@ namespace gswy
 		explicit PathFinding(int x, int y);
 		~PathFinding();
 
+		/*
+			Thread safe function that retuns the path finding result.
+			Return an empty vector if failed.
+		*/
+		const std::vector<ivec2> SearchAndReturnResult(const Grid_float& grid, const ivec2& src, const ivec2& dest);
 		bool Search(const Grid_float& grid, const ivec2& src, const ivec2& dest);
-		const std::vector<ivec2>& GetResult();
+		const std::vector<ivec2> GetResult();
 
 	private:
+		std::atomic_flag m_flag;
 		std::vector<ivec2> m_reuslt;
 		int ROW;
 		int COL;
