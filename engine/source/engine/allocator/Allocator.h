@@ -16,13 +16,12 @@ Creation date: 02/14/2020
 
 namespace gswy {
 
-	typedef uint16_t header_t;
+	typedef uint16_t blockSize_t;
 
 	struct BlockHeader {
-		// union-ed with data
-		header_t size;
+        BlockHeader* pNext;
+		blockSize_t size;
 		bool free;
-		BlockHeader* pNext;
 	};
 
     struct PageHeader {
@@ -38,6 +37,14 @@ namespace gswy {
                 static const uint8_t PATTERN_ALIGN = 0xFC;
                 static const uint8_t PATTERN_ALLOC = 0xFD;
                 static const uint8_t PATTERN_FREE  = 0xFE;
+                inline static void* GetContent(BlockHeader* block)
+                {
+                    return reinterpret_cast<void*>(block + 1);
+                }
+                inline static BlockHeader* GetBlock(void* content)
+                {
+                    return reinterpret_cast<BlockHeader*>(content) - 1;
+                }
 
                 Allocator() noexcept;
                 explicit Allocator(size_t data_size, size_t page_size, size_t alignment) noexcept;

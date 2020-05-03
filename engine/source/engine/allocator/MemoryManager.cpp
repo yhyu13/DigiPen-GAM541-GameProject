@@ -138,7 +138,7 @@ void gswy::MemoryManager::Free(void* p, size_t size) noexcept
 		/*
 			Find the block size that was used to allocate pointer p by querying the block header.
 		*/
-		(m_pAllocators + m_pBlockSizeLookup[(reinterpret_cast<BlockHeader*>(p) - 1)->size])->Free(p);
+		(m_pAllocators + m_pBlockSizeLookup[Allocator::GetBlock(p)->size])->Free(p);
 	}
 	else
 	{

@@ -48,6 +48,8 @@ void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment
 {
     FreeAll();
 
+	while (m_flag.test_and_set(std::memory_order_acquire)) {}
+
     m_szDataSize = data_size;
 	m_szPageSize = page_size;
 
@@ -59,11 +61,13 @@ void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment
 
     m_szBlockSize = ALIGN(minimal_size, alignment);
 	
-	// Storing m_szDataSize as header_t right before each block
-	assert(m_szBlockSize == (size_t)header_t(m_szBlockSize));
+	// Storing m_szDataSize as blockSize_t right before each block
+	assert(m_szBlockSize == (size_t)blockSize_t(m_szBlockSize));
 
     m_szAlignmentSize = m_szBlockSize - minimal_size;
 	m_nBlocksPerPage = (m_szPageSize - sizeof(PageHeader)) / (m_szBlockSize + sizeof(BlockHeader));
+
+	m_flag.clear(std::memory_order_release);
 }
 
 void* gswy::Allocator::Allocate() noexcept
@@ -89,14 +93,14 @@ void* gswy::Allocator::Allocate() noexcept
 		m_pPageList = pNewPage;
 
 		BlockHeader* pBlock = pNewPage->Blocks();
-		auto size = static_cast<header_t>(m_szBlockSize);
+		auto size = static_cast<blockSize_t>(m_szBlockSize);
 		// link each block in the page
 		for (uint32_t i = 1; i < m_nBlocksPerPage; i++) {
-			// Storing m_szBlockSize as header_t right before each block
+			// Storing m_szBlockSize as blockSize_t right before each block
 			pBlock->size = size;
 			pBlock->free = true;
 			pBlock->pNext = NextBlock(pBlock);
-			pBlock = NextBlock(pBlock);
+			pBlock = pBlock->pNext;
 		}
 		//link the last block
 		pBlock->size = size;
@@ -109,30 +113,29 @@ void* gswy::Allocator::Allocate() noexcept
 	freeBlock->free = false;
 	m_pFreeList = freeBlock->pNext;
 	--m_nFreeBlocks;
-	m_flag.clear(std::memory_order_release);
-
 #if defined(_DEBUG)
-    FillAllocatedBlock(freeBlock);
+	FillAllocatedBlock(freeBlock);
 #endif
+	m_flag.clear(std::memory_order_release);
 
 	/*
 		return blockheader + 1 as the diagram below:
 			 BlockHeader*  void*
 			[Header block][User content]
 	*/
-    return reinterpret_cast<void*>(freeBlock+1);
+    return Allocator::GetContent(freeBlock);
 }
 
 void gswy::Allocator::Free(void* p) noexcept
 {
-    BlockHeader* block = reinterpret_cast<BlockHeader*>(p)-1;
-
 	while (m_flag.test_and_set(std::memory_order_acquire)) {}
+    BlockHeader* block = reinterpret_cast<BlockHeader*>(p)-1;
+	
 	if (block->free)
 	{
 		throw std::runtime_error(std::string("Double free!"));
 	}
-	if (block->size != static_cast<header_t>(m_szBlockSize))
+	if (block->size != static_cast<blockSize_t>(m_szBlockSize))
 	{
 		throw std::runtime_error(std::string("Segementation fault!"));
 	}
@@ -140,15 +143,15 @@ void gswy::Allocator::Free(void* p) noexcept
 	block->pNext = m_pFreeList;
 	m_pFreeList = block;
 	++m_nFreeBlocks;
-	m_flag.clear(std::memory_order_release);
 #if defined(_DEBUG)
-    FillFreeBlock(block);
+	FillFreeBlock(block);
 #endif
-
+	m_flag.clear(std::memory_order_release);
 }
 
 void gswy::Allocator::FreeAll() noexcept
 {
+	while (m_flag.test_and_set(std::memory_order_acquire)) {}
     PageHeader* pPage = m_pPageList;
 	uint8_t* _p = reinterpret_cast<uint8_t*>(pPage);
     while(pPage) {
@@ -163,6 +166,7 @@ void gswy::Allocator::FreeAll() noexcept
     m_nPages        = 0;
     m_nBlocks       = 0;
     m_nFreeBlocks   = 0;
+	m_flag.clear(std::memory_order_release);
 }
 
 #if defined(_DEBUG)
