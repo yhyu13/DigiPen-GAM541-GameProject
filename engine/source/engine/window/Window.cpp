@@ -303,7 +303,7 @@ namespace gswy {
 			WindowProperties& properties = *(WindowProperties*)glfwGetWindowUserPointer(window);
 			properties.m_width = width;
 			properties.m_height = height;
-
+			properties.m_input->SetMouseMaxPositions(width, height);
 			Renderer2D::OnWindowResize(width, height);
 		});
 

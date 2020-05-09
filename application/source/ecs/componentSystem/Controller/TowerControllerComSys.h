@@ -148,7 +148,7 @@ namespace gswy
 
 						if (find_nearest)
 						{
-							auto e = MemoryManager::Make_shared<FireWeaponEvent>(tower, transform->GetPos(), LookAt(closest_enmey_delta));
+							auto e = MemoryManager::Make_shared<FireWeaponEvent>(tower, transform->GetPos(), GameMathHelper::instance->LookAt(closest_enmey_delta));
 							queue->Publish(e);
 						}
 					}

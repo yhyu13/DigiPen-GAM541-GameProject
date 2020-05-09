@@ -90,6 +90,7 @@ namespace gswy
 		*/
 		void InitFramework()
 		{
+			new GameMathHelper();
 			// Renderer
 			Renderer2D::Init();
 			OpenGLDebugDraw::Init();

@@ -616,7 +616,7 @@ namespace gswy
 				//auto e1 = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Move", false);
 				//queue->Publish(e1);
 				//// 1. Rotate
-				//transform->SetRotation(LookAt(delta));
+				//transform->SetRotation(GameMathHelper::instance->LookAt(delta));
 				//// 2. Move
 				//body->SetVelocity(glm::normalize(delta) * m_speed);
 				//// 3. Play sound
@@ -647,7 +647,7 @@ namespace gswy
 				auto e1 = MemoryManager::Make_shared<PlayerSetPendingAnimationEvent>(entity, "Move", false);
 				queue->Publish(e1);
 				// 1. Rotate
-				transform->SetRotation(LookAt(delta));
+				transform->SetRotation(GameMathHelper::instance->LookAt(delta));
 				// 2. Move
 				body->SetVelocity(glm::normalize(delta) * m_speed);
 				// 3. Play sound

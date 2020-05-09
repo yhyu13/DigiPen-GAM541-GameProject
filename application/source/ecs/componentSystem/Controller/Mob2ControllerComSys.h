@@ -106,10 +106,10 @@ namespace gswy
 						{
 							animation->SetCurrentAnimationState("Attack");
 							body->SetVelocity(vec2(0));
-							transform->SetRotation(LookAt(delta1));
+							transform->SetRotation(GameMathHelper::instance->LookAt(delta1));
 							if (!coolDownController->IsCoolDown())
 							{
-								auto e = MemoryManager::Make_shared<FireWeaponEvent>(entity, transform->GetPos(), LookAt(delta1));
+								auto e = MemoryManager::Make_shared<FireWeaponEvent>(entity, transform->GetPos(), GameMathHelper::instance->LookAt(delta1));
 								queue->Publish(e);
 							}
 							continue;
@@ -125,7 +125,7 @@ namespace gswy
 						// 1. Rotate
 						auto nextPos = tileMapObj->Grid2World((result.size() > 3) ? result[3] : result.back());
 						auto delta = nextPos - src;
-						transform->SetRotation(LookAt(delta));
+						transform->SetRotation(GameMathHelper::instance->LookAt(delta));
 
 						// 2. Move
 						//transform->SetVelocity(glm::normalize(delta) * speed);

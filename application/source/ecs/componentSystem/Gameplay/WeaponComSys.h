@@ -73,7 +73,7 @@ namespace gswy
 						auto aabb = BodyCom();
 						aabb.ChooseShape("Circle", 0.1);
 						aabb.SetPos(transform.GetPos());
-						aabb.SetVelocity(ToVec(weapon_rot) * 1.0f);
+						aabb.SetVelocity(GameMathHelper::instance->ToVec(weapon_rot) * 1.0f);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1));
 						weapon.AddComponent(HitPreventionCom<GameObjectType>());
@@ -121,7 +121,7 @@ namespace gswy
 							// Collision box
 							auto aabb = BodyCom();
 							aabb.SetPos(transform.GetPos());
-							aabb.SetVelocity(ToVec(weapon_rot) * 5.0f);
+							aabb.SetVelocity(GameMathHelper::instance->ToVec(weapon_rot) * 5.0f);
 							aabb.ChooseShape("Circle", 0.1);
 							weapon.AddComponent(aabb);
 
@@ -163,7 +163,7 @@ namespace gswy
 							auto aabb = BodyCom();
 							aabb.ChooseShape("Circle", 0.1);
 							aabb.SetPos(transform.GetPos());
-							aabb.SetVelocity(ToVec(weapon_rot) * 5.0f);
+							aabb.SetVelocity(GameMathHelper::instance->ToVec(weapon_rot) * 5.0f);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(1.0));
 							weapon.AddComponent(HitPreventionCom<GameObjectType>());
@@ -189,7 +189,7 @@ namespace gswy
 							weapon.AddComponent(transform);
 							auto attach = AttachedMovementCom();
 							attach.followPos = true;
-							attach.rPos = ToVec(weapon_rot) * .5f;
+							attach.rPos = GameMathHelper::instance->ToVec(weapon_rot) * .5f;
 							weapon.AddComponent(attach);
 							auto animCom = AnimationCom();
 							animCom.Add("boltAnim1", "Move");

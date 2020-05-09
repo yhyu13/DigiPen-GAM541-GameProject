@@ -10,9 +10,6 @@ Creation date: 02/16/2020
 - End Header ----------------------------*/
 
 #pragma once
-//#define GLM_FORCE_SSE2
-#define GLM_FORCE_AVX2
-#define GLM_FORCE_INLINE
 #include <glm/glm.hpp>
 using namespace glm;
 
@@ -54,20 +51,21 @@ using namespace glm;
 
 namespace gswy
 {
-	/*
-		Return the lookat angle in radian
-	*/
-	float LookAt(const vec2& delta);
+	class MathHelper
+	{
+	public:
+		/*
+			Return the lookat angle in radian
+		*/
+		virtual float LookAt(const vec2& delta) = 0;
 
-	/*
-	Return the vec2 form of a angle used in game (rotated 90 degree counterclockwise)
-	*/
-	vec2 ToVec(float rotation);
-
-	/*
-	Return the vec2 form of a angle in radiance (usual coordinate)
-	*/
-	vec2 RadToVec(float rotation);
+		/*
+		Return the vec2 form of a angle used in game
+		*/
+		virtual vec2 ToVec(float rotation) = 0;
+	public:
+		static MathHelper* instance;
+	};
 }
 
 std::ostream& operator<<(std::ostream& o, const glm::vec3& n);

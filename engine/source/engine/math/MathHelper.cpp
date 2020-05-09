@@ -12,22 +12,9 @@ Creation date: 02/16/2020
 #include "engine-precompiled-header.h"
 #include "MathHelper.h"
 
-/*
-Return the lookat angle in radian
-*/
-float gswy::LookAt(const vec2& delta)
+namespace gswy
 {
-	return (delta.y) > 0 ? -atanf(delta.x / (delta.y + 1e-4f)) : PI - atanf(delta.x / (delta.y + 1e-4f));
-}
-
-vec2 gswy::RadToVec(float rotation)
-{
-	return vec2(cosf(rotation), sinf(rotation));
-}
-
-vec2 gswy::ToVec(float rotation)
-{
-	return vec2(-sinf(rotation),cosf(rotation));
+	MathHelper* MathHelper::instance = nullptr;
 }
 
 std::ostream& operator<<(std::ostream& o, const glm::vec3& n) {

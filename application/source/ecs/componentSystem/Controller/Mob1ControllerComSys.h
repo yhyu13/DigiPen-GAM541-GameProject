@@ -99,7 +99,7 @@ namespace gswy
 						// 1. Rotate
 						auto nextPos = tileMapObj->Grid2World((result.size() > 3)? result[3]: result.back());
 						auto delta = nextPos - src;
-						transform->SetRotation(LookAt(delta));
+						transform->SetRotation(GameMathHelper::instance->LookAt(delta));
 
 						// 2. Move
 						//float speed = .5f;

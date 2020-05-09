@@ -28,6 +28,9 @@ Creation date: 02/10/2020
 #include <queue>
 
 #include <math.h>
+//#define GLM_FORCE_SSE2
+#define GLM_FORCE_AVX2 
+#include <glm/glm.hpp>
 
 
 #include "engine/logging/LoggingCore.h"

@@ -238,8 +238,8 @@ namespace gswy
 				auto active = ActiveCom(false);
 				_tower.AddComponent(active);
 				_tower.AddComponent(OwnershiptCom<GameObjectType>(tower));
-				auto angle = 45 * DEG2RAD;
-				auto relativeDistance = RadToVec(angle) * .4f;
+				auto angle = (45-90) * DEG2RAD;
+				auto relativeDistance = GameMathHelper::instance->ToVec(angle) * .4f;
 				auto transform = TransformCom(vec3(event->m_pos.x+relativeDistance.x, event->m_pos.y+relativeDistance.y, Z_ORDER(m_spawnZOrder++)), 0);
 				_tower.AddComponent(transform);
 				auto sprite = SpriteCom();
@@ -261,8 +261,8 @@ namespace gswy
 				auto active = ActiveCom(false);
 				_tower.AddComponent(active);
 				_tower.AddComponent(OwnershiptCom<GameObjectType>(tower));
-				auto angle = 90 * DEG2RAD;
-				auto relativeDistance = RadToVec(angle) * .4f;
+				auto angle = (90-90) * DEG2RAD;
+				auto relativeDistance = GameMathHelper::instance->ToVec(angle) * .4f;
 				auto transform = TransformCom(vec3(event->m_pos.x + relativeDistance.x, event->m_pos.y + relativeDistance.y, Z_ORDER(m_spawnZOrder++)), 0);
 				_tower.AddComponent(transform);
 				auto sprite = SpriteCom();
@@ -283,8 +283,8 @@ namespace gswy
 				auto active = ActiveCom(false);
 				_tower.AddComponent(active);
 				_tower.AddComponent(OwnershiptCom<GameObjectType>(tower));
-				auto angle = 135 * DEG2RAD;
-				auto relativeDistance = RadToVec(angle) * .4f;
+				auto angle = (135-90) * DEG2RAD;
+				auto relativeDistance = GameMathHelper::instance->ToVec(angle) * .4f;
 				auto transform = TransformCom(vec3(event->m_pos.x + relativeDistance.x, event->m_pos.y + relativeDistance.y, Z_ORDER(m_spawnZOrder++)), 0);
 				_tower.AddComponent(transform);
 				auto sprite = SpriteCom();

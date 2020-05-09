@@ -16,6 +16,14 @@ Creation date: 02/15/2020
 #include <glm/gtc/type_ptr.hpp>
 #include "imgui/imgui.h"
 
+///// Client application framework /////
+#include "math/GameMathHelper.h"
+#include "object-factory/GameObjectFactory.h"
+#include "level/GameLevelMapManager.h"
+#include "ui/GameWidgetManager.h"
+#include "inventory-manager/InventoryManager.h"
+#include "skill-manager/SkillManager.h"
+
 ///// Client application gameplay /////
 #include "ecs/componentSystem/Audio/SoundComSys.h"
 #include "ecs/componentSystem/Controller/StartUpControllerComSysy.h"
@@ -47,10 +55,3 @@ Creation date: 02/15/2020
 #include "ecs/componentSystem/Gameplay/PlayerSkillSystem.h"
 #include "ecs/componentSystem/Gameplay/TargetEntityComponentSystem.h"
 #include "ecs/componentSystem/Controller/CoinControllerComSys.h"
-
-///// Client application framework /////
-#include "object-factory/GameObjectFactory.h"
-#include "level/GameLevelMapManager.h"
-#include "ui/GameWidgetManager.h"
-#include "inventory-manager/InventoryManager.h"
-#include "skill-manager/SkillManager.h"

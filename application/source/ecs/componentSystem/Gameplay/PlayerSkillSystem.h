@@ -138,7 +138,7 @@ namespace gswy
 						weapon.AddComponent(sprite);
 						auto aabb = BodyCom();
 						aabb.SetPos(transform.GetPos());
-						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+						aabb.SetVelocity(GameMathHelper::instance->ToVec(weapon_rot) * 2.0f);
 						aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
@@ -181,7 +181,7 @@ namespace gswy
 
 						auto aabb = BodyCom();
 						aabb.SetPos(transform.GetPos());
-						aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+						aabb.SetVelocity(GameMathHelper::instance->ToVec(weapon_rot) * 2.0f);
 						aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 						weapon.AddComponent(aabb);
 						weapon.AddComponent(LifeTimeCom(1.0));
@@ -247,7 +247,7 @@ namespace gswy
 				auto aabb = BodyCom();
 				aabb.m_overrideFriction = true;
 				aabb.SetPos(transform.GetPos());
-				aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+				aabb.SetVelocity(GameMathHelper::instance->ToVec(weapon_rot) * 2.0f);
 				aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 				weapon.AddComponent(aabb);
 
@@ -310,7 +310,7 @@ namespace gswy
 							weapon.AddComponent(sprite);
 							auto aabb = BodyCom();
 							aabb.SetPos(transform.GetPos());
-							aabb.SetVelocity(ToVec(weapon_rot) * 2.0f);
+							aabb.SetVelocity(GameMathHelper::instance->ToVec(weapon_rot) * 2.0f);
 							aabb.ChooseShape("Circle", 0.1* aoe_multipler);
 							weapon.AddComponent(aabb);
 							weapon.AddComponent(LifeTimeCom(1.0));
