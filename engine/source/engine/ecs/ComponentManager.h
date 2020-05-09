@@ -53,20 +53,20 @@ namespace gswy {
 		from a contiguous memory.
 	*/
 	template<typename ComponentType, typename EntityType>
-	class ComponentManager :public BaseComponentManager {
+	class ComponentManager :public BaseComponentManager, BaseClassAtomicFlag {
 
 	public:
 
 		ComponentManager() {
 			m_entities.reserve(RESERVED_SIZE);
-			m_flag.clear();
+			//m_flag.clear();
 		}
 
 		~ComponentManager() {
 		}
 
 		uint32_t AddComponentToEntity(Entity<EntityType> entity, ComponentType& component) {
-			atomic_lock_guard lock(m_flag);
+			LOCK_GUARD()
 			uint32_t index = m_components.m_size++;
 			m_components.m_data.push_back(component);
 			m_entitiesAndComponentIndexes[entity] = index;
@@ -75,7 +75,7 @@ namespace gswy {
 		}
 
 		ComponentType* GetComponentByEntity(Entity<EntityType> entity) {
-			atomic_lock_guard lock(m_flag);
+			LOCK_GUARD()
 			if (m_entitiesAndComponentIndexes.find(entity) != m_entitiesAndComponentIndexes.end())
 			{
 				return &m_components.m_data.at(m_entitiesAndComponentIndexes[entity]);
@@ -93,7 +93,7 @@ namespace gswy {
 			component instance.
 		*/
 		void RemoveComponentFromEntity(Entity<EntityType> entity) {
-			atomic_lock_guard lock(m_flag);
+			LOCK_GUARD()
 
 			auto it = m_entitiesAndComponentIndexes.find(entity);
 			if (it != m_entitiesAndComponentIndexes.end())
@@ -116,12 +116,12 @@ namespace gswy {
 
 		bool HasEntity(Entity<EntityType> entity)
 		{
-			atomic_lock_guard lock(m_flag);
+			LOCK_GUARD()
 			return (m_entitiesAndComponentIndexes.find(entity) != m_entitiesAndComponentIndexes.end());
 		}
 
 	private:
-		std::atomic_flag m_flag;
+		//std::atomic_flag m_flag;
 
 		/*
 			Stores all the component instances in an array

@@ -10,6 +10,7 @@ Creation date: 04/21/2020
 - End Header ----------------------------*/
 #pragma once
 #include <atomic>
+#include "engine/EngineCore.h"
 namespace gswy
 {
 	struct atomic_lock_guard {
@@ -21,5 +22,21 @@ namespace gswy
 		~atomic_lock_guard();
 	private:
 		std::atomic_flag* m_lock;
+	};
+
+	class BaseClassAtomicFlag
+	{
+	public:
+		NONCOPYABLE(BaseClassAtomicFlag);
+
+#define LOCK_GUARD() atomic_lock_guard lock(m_flag);
+
+		BaseClassAtomicFlag()
+		{
+			m_flag.clear();
+		}
+
+	protected:
+		std::atomic_flag m_flag;
 	};
 }

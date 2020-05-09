@@ -11,8 +11,7 @@ Creation date: 02/14/2020
 #pragma once
 #include <stddef.h>
 #include <stdint.h>
-#include <mutex>
-#include <atomic>
+#include "engine/thread/Lock.h"
 
 namespace gswy {
 
@@ -31,7 +30,8 @@ namespace gswy {
         }
     };
 
-    class Allocator {
+    class Allocator : public BaseClassAtomicFlag
+    {
         public:
                 // debug patterns
                 static const uint8_t PATTERN_ALIGN = 0xFC;
@@ -92,7 +92,6 @@ namespace gswy {
                 size_t    m_nPages;
                 size_t    m_nBlocks;
 				size_t    m_nFreeBlocks;
-				std::atomic_flag 	   m_flag;
     };
 }
 

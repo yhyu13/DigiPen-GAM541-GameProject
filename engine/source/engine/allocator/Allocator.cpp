@@ -26,7 +26,6 @@ gswy::Allocator::Allocator() noexcept
         m_szAlignmentSize(0), m_szBlockSize(0), m_nBlocksPerPage(0),
 		m_nPages(0), m_nBlocks(0),m_nFreeBlocks(0)
 {
-	m_flag.clear();
 }
 
 gswy::Allocator::Allocator(size_t data_size, size_t page_size, size_t alignment) noexcept
@@ -35,7 +34,6 @@ gswy::Allocator::Allocator(size_t data_size, size_t page_size, size_t alignment)
 		m_szAlignmentSize(0), m_szBlockSize(0), m_nBlocksPerPage(0),
 		m_nPages(0), m_nBlocks(0), m_nFreeBlocks(0)
 {
-	m_flag.clear();
     Reset(data_size, page_size, alignment);
 }
 
@@ -47,8 +45,6 @@ gswy::Allocator::~Allocator() noexcept
 void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment) noexcept
 {
     FreeAll();
-
-	while (m_flag.test_and_set(std::memory_order_acquire)) {}
 
     m_szDataSize = data_size;
 	m_szPageSize = page_size;
@@ -66,13 +62,11 @@ void gswy::Allocator::Reset(size_t data_size, size_t page_size, size_t alignment
 
     m_szAlignmentSize = m_szBlockSize - minimal_size;
 	m_nBlocksPerPage = (m_szPageSize - sizeof(PageHeader)) / (m_szBlockSize + sizeof(BlockHeader));
-
-	m_flag.clear(std::memory_order_release);
 }
 
 void* gswy::Allocator::Allocate() noexcept
 {
-	while (m_flag.test_and_set(std::memory_order_acquire)) { }
+	LOCK_GUARD();
 	if (!m_pFreeList)
 	{
 		// allocate a new page
@@ -116,7 +110,6 @@ void* gswy::Allocator::Allocate() noexcept
 #if defined(_DEBUG)
 	FillAllocatedBlock(freeBlock);
 #endif
-	m_flag.clear(std::memory_order_release);
 
 	/*
 		return blockheader + 1 as the diagram below:
@@ -128,7 +121,7 @@ void* gswy::Allocator::Allocate() noexcept
 
 void gswy::Allocator::Free(void* p) noexcept
 {
-	while (m_flag.test_and_set(std::memory_order_acquire)) {}
+	LOCK_GUARD();
     BlockHeader* block = reinterpret_cast<BlockHeader*>(p)-1;
 	
 	if (block->free)
@@ -146,12 +139,10 @@ void gswy::Allocator::Free(void* p) noexcept
 #if defined(_DEBUG)
 	FillFreeBlock(block);
 #endif
-	m_flag.clear(std::memory_order_release);
 }
 
 void gswy::Allocator::FreeAll() noexcept
 {
-	while (m_flag.test_and_set(std::memory_order_acquire)) {}
     PageHeader* pPage = m_pPageList;
 	uint8_t* _p = reinterpret_cast<uint8_t*>(pPage);
     while(pPage) {
@@ -166,7 +157,6 @@ void gswy::Allocator::FreeAll() noexcept
     m_nPages        = 0;
     m_nBlocks       = 0;
     m_nFreeBlocks   = 0;
-	m_flag.clear(std::memory_order_release);
 }
 
 #if defined(_DEBUG)
