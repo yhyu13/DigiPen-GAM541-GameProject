@@ -13,10 +13,12 @@ Creation date	: 02/02/2020
 
 #pragma once
 
+#include <set>
 #include "BaseComponent.h"
 
-namespace gswy {
+#define USE_BITMASK 1
 
+namespace gswy {
 	/*
 		This class holds bit-masking functionality.
 
@@ -35,20 +37,32 @@ namespace gswy {
 	public:
 		template<typename ComponentType>
 		void AddComponent() {
+#if USE_BITMASK
 			m_mask |= ((uint64_t)1 << GetComponentTypeIndex<ComponentType>());
+#else
+			m_mask.insert(GetComponentTypeIndex<ComponentType>());
+#endif // USE_BITMASK
 		}
 
 		template<typename ComponentType>
 		void RemoveComponent() {
+#if USE_BITMASK
 			m_mask &= ~((uint64_t)1 << GetComponentTypeIndex<ComponentType>());
+#else
+			m_mask.erase(GetComponentTypeIndex<ComponentType>());
+#endif // USE_BITMASK
 		}
 
-		bool IsNewMatch(BitMaskSignature oldMask, BitMaskSignature systemMask);
-		bool IsNoLongerMatched(BitMaskSignature oldMask, BitMaskSignature systemMask);
-		bool IsAMatch(BitMaskSignature systemMask);
+		bool IsNewMatch(BitMaskSignature& oldMask,  BitMaskSignature& systemMask) ;
+		bool IsNoLongerMatched( BitMaskSignature& oldMask,  BitMaskSignature& systemMask) ;
 
 	private:
+		bool IsAMatch( BitMaskSignature& systemMask) ;
+#if USE_BITMASK
 		uint64_t m_mask = 0;
+#else
+		std::set<unsigned int> m_mask;
+#endif // USE_BITMASK
 	};
 
 }

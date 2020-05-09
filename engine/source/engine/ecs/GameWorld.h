@@ -127,7 +127,7 @@ namespace gswy {
 			return EntityDecorator(m_entityManager->Create(type), this);
 		}
 
-		void UpdateComponentSystems(const Entity<EntityType>& entity, const BitMaskSignature& oldMask) {
+		void UpdateComponentSystems(const Entity<EntityType>& entity, BitMaskSignature& oldMask) {
 			BitMaskSignature updatedMask = m_entityMasks[entity];
 			for (auto&& system : m_systems) {
 				BitMaskSignature systemSignature = system->GetSystemSignature();

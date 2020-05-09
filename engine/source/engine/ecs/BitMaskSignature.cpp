@@ -16,15 +16,19 @@ Creation date	: 02/02/2020
 
 namespace gswy {
 
-	bool BitMaskSignature::IsNewMatch(BitMaskSignature oldMask, BitMaskSignature systemSignature) {
+	bool BitMaskSignature::IsNewMatch(BitMaskSignature& oldMask, BitMaskSignature& systemSignature) {
 		return IsAMatch(systemSignature) && !oldMask.IsAMatch(systemSignature);
 	}
 
-	bool BitMaskSignature::IsNoLongerMatched(BitMaskSignature oldMask, BitMaskSignature systemSignature) {
+	bool BitMaskSignature::IsNoLongerMatched(BitMaskSignature& oldMask, BitMaskSignature& systemSignature) {
 		return oldMask.IsAMatch(systemSignature) && !IsAMatch(systemSignature);
 	}
 
-	bool BitMaskSignature::IsAMatch(BitMaskSignature systemSignature) {
+	bool BitMaskSignature::IsAMatch(BitMaskSignature& systemSignature) {
+#if USE_BITMASK
 		return ((m_mask & systemSignature.m_mask) == systemSignature.m_mask);
+#else
+		return std::includes(m_mask.begin(), m_mask.end(), systemSignature.m_mask.begin(), systemSignature.m_mask.end());
+#endif // USE_BITMASK
 	}
 }
