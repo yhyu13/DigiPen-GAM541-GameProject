@@ -27,11 +27,14 @@ namespace gswy
     class ThreadPool {
     public:
         NONCOPYABLE(ThreadPool);
+        // the constructor just launches some amount of workers
         ThreadPool();
+        // the destructor joins all threads
+        ~ThreadPool();
+        // add new work item to the pool
         template<class F, class... Args>
         auto enqueue(F&& f, Args&&... args)
             ->std::future<typename std::result_of<F(Args...)>::type>;
-        ~ThreadPool();
     private:
         // need to keep track of threads so we can join them
         std::vector< std::thread > workers;
@@ -44,39 +47,11 @@ namespace gswy
         bool stop;
     };
 
-    // the constructor just launches some amount of workers
-    inline ThreadPool::ThreadPool()
-        : stop(false)
-    {
-        size_t threads = (size_t)std::thread::hardware_concurrency();
-        for (size_t i = 0; i < threads; ++i)
-            workers.emplace_back(
-                [this]
-        {
-            for (;;)
-            {
-                std::function<void()> task;
-
-                {
-                    std::unique_lock<std::mutex> lock(this->queue_mutex);
-                    this->condition.wait(lock,
-                        [this] { return this->stop || !this->tasks.empty(); });
-                    if (this->stop && this->tasks.empty())
-                        return;
-                    task = std::move(this->tasks.front());
-                    this->tasks.pop();
-                }
-
-                task();
-            }
-        }
-        );
-    }
 
     // add new work item to the pool
-    template<class F, class... Args>
-    auto ThreadPool::enqueue(F&& f, Args&&... args)
-        -> std::future<typename std::result_of<F(Args...)>::type>
+
+    template<class F, class ...Args>
+    inline auto ThreadPool::enqueue(F&& f, Args&& ...args) -> std::future<typename std::result_of<F(Args ...)>::type>
     {
         using return_type = typename std::result_of<F(Args...)>::type;
 
@@ -98,15 +73,4 @@ namespace gswy
         return res;
     }
 
-    // the destructor joins all threads
-    inline ThreadPool::~ThreadPool()
-    {
-        {
-            std::unique_lock<std::mutex> lock(queue_mutex);
-            stop = true;
-        }
-        condition.notify_all();
-        for (std::thread& worker : workers)
-            worker.join();
-    }
 }

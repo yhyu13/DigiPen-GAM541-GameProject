@@ -37,6 +37,12 @@ namespace gswy
 		unsigned int line;
 	};
 
+	class NotImplementedException : public std::logic_error
+	{
+	public:
+		NotImplementedException() : std::logic_error("Function not yet implemented!") { };
+	};
+
 	std::wstring str2wstr(const std::string& str);
 
 	std::string wstr2str(const std::wstring& wstr);

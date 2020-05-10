@@ -27,9 +27,7 @@ extern gswy::Engine* gswy::CreateEngineApplication();
 int main(int argc, char** argv) {
 	try
 	{
-		auto application = gswy::CreateEngineApplication();
-		application->Run();
-		delete application;
+		gswy::CreateEngineApplication()->Run();
 	}
 	catch (const EngineException & e)
 	{
