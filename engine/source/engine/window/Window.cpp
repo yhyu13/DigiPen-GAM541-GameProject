@@ -310,7 +310,10 @@ namespace gswy {
 		glfwSetWindowFocusCallback(m_window, [](GLFWwindow* window, int focussed)
 		{
 			WindowProperties& properties = *(WindowProperties*)glfwGetWindowUserPointer(window);
-			properties.m_interruptHandler(focussed);
+			if (properties.m_interruptHandler)
+			{
+				properties.m_interruptHandler(focussed);
+			}
 		});
 	}
 }

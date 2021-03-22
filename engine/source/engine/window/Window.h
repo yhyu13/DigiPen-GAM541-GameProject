@@ -32,7 +32,7 @@ namespace gswy {
 		std::string m_title;
 		InputManager* m_input = nullptr;
 		bool IsFullScreen = false;
-		InterruptHandler m_interruptHandler;
+		InterruptHandler m_interruptHandler = nullptr;
 		bool IsVSync = false;
 
 		std::pair<unsigned int, unsigned int> m_Res1;
